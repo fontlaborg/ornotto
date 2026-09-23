@@ -1069,6 +1069,8 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
@@ -1076,7 +1078,7 @@
 
 <h1 id="1-deciding-not-generating">1. Deciding, not generating<a class="headerlink" href="#1-deciding-not-generating" title="Permanent link">&para;</a></h1>
 <p>A System One decision asks a language model to pick, not to write. You hand it a <em>state</em> (a message, a ticket, a slice of application data) and a set of named <em>questions</em>, each with a closed set of answers. The model returns one probability for every allowed answer. It never produces free text, so there is nothing to parse, repair or retry: the answer is always one of the values you listed.</p>
-<p>This book is about running those decisions on your own machine. It compares five ways of reading a decision out of a model, more than two hundred model and engine combinations, and the Python package, <code>ornotto</code>, that puts the two local engines behind one API.</p>
+<p>This book is about running those decisions on your own machine. It compares five ways of reading a decision out of a model, 208 benchmark methods, and the Python package, <code>ornotto</code>, that puts the two local engines behind one API.</p>
 <h2 id="what-a-decision-looks-like">What a decision looks like<a class="headerlink" href="#what-a-decision-looks-like" title="Permanent link">&para;</a></h2>
 <p>A decision request has two parts. The state is whatever the model should judge. The questions say what to judge about it:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
@@ -1097,7 +1099,7 @@
 <li>A <strong>score</strong> places the state on an ordered rubric and returns the expected level, which can fall between two levels.</li>
 </ul>
 <p>The reply has one answer per question name. A choice comes back with the winning option and a probability for every option; a yes/no comes back as a single number between 0 and 1; a score comes back as an expected level plus the distribution over the levels. <a href="../02-decisions/">Chapter 2</a> goes through every field.</p>
-<p>Because the answer set is closed, the output is valid by construction. A model that generates JSON can forget a brace, invent a field, or answer "probably billing" when the schema wanted <code>billing</code>. A model that only assigns probabilities to <code>billing</code>, <code>shipping</code> and <code>other</code> cannot. The engines in this book never let the model generate more than the one position they read, and several of them do not generate at all.</p>
+<p>Because the answer set is closed, the output is valid by construction. A model that generates JSON can forget a brace, invent a field, or answer "probably billing" when the schema wanted <code>billing</code>. A model that only assigns probabilities to <code>billing</code>, <code>shipping</code> and <code>other</code> cannot. None of the readouts in this book lets the model write its answer: each reads probabilities at one position. (slot asks llama-server for a single token only to see the log-probabilities of the candidates.)</p>
 <h2 id="where-decisions-fit">Where decisions fit<a class="headerlink" href="#where-decisions-fit" title="Permanent link">&para;</a></h2>
 <p>Decisions are small, frequent and cheap to check. That makes them useful wherever software has to branch on the meaning of text:</p>
 <ul>
@@ -1120,10 +1122,10 @@
 <p>The categories overlap on purpose. "How do I write a liga feature?" is a documentation question about feature code. "Show me how a glyph is stored in a VFJ file" asks for an explanation, not a glyph. The router set has 67 queries in 30 languages, and ten of them were written to sit on these boundaries. <a href="../05-method/">Chapter 5</a> describes the set and how it was scored.</p>
 <p>A router is a good test because it is a real decision with a known right answer, it runs on every message, and a wrong answer is expensive: the user gets a script when they asked how a menu works.</p>
 <h2 id="jev-the-hosted-reference">jev, the hosted reference<a class="headerlink" href="#jev-the-hosted-reference" title="Permanent link">&para;</a></h2>
-<p>TypeSafe's <strong>jev</strong> is a hosted System One model. You send a state and questions to an API and get calibrated probabilities back; our benchmark harness reaches it through OpenRouter's System One API as <code>jev-latest</code>. It is the reference point in this book because it is the model the local stack has to match. On the router set jev scores 65 of 67, both on translated queries and on the original text.</p>
+<p>TypeSafe's <strong>jev</strong> is a hosted System One model. You send a state and questions to an API and get calibrated probabilities back; our benchmark harness reaches it through OpenRouter's System One API as <code>jev-latest</code>. It is the reference point in this book because it is the model the local engines have to match. On the router set jev scores 65 of 67, both on translated queries and on the original text.</p>
 <p>jev also defined the vocabulary. The request and answer shapes shown above are its API, and pydantic-ai's <code>TypeSafeModel</code> speaks it. dohnuts, one of the two local engines, answers the same requests at the same <code>/v1/systemone</code> path, which is why an agent written for jev can run locally with a changed base URL (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="why-run-decisions-locally">Why run decisions locally<a class="headerlink" href="#why-run-decisions-locally" title="Permanent link">&para;</a></h2>
-<p>jev answers the router question in 466 ms on average, measured from our client, network included. The best local model on the same set, Qwen3.5-4B-Hmm on pcdServer, answers in 88 ms and scores 64 of 67 translated, 65 direct. decider-0.8b on dohnuts's Metal build answers in 52 ms and scores 62. <a href="../06-results/">Chapter 6</a> has the full table.</p>
+<p>jev answers the router question in 466 ms on average, measured from our client, network included. The local methods that come within three answers of it take 52 to 95 ms on the same machine (<a href="../06-results/">chapter 6</a>).</p>
 <p>Latency is the first reason to run locally. A router that sits in front of every message adds its delay to every message, and a gate in front of every tool call adds it to every step of an agent. At 50 ms the decision disappears into the time the interface needs to redraw; at 500 ms the user waits for it.</p>
 <p>Cost per call is the second reason. A decision is small, but a router or a gate runs on every request, so the number of calls grows with the product rather than with the difficulty of the question. A local model costs the same whether you ask once or a million times.</p>
 <p>Privacy is the third. The state is often exactly the data you would rather not send anywhere: a customer's message, the contents of a document, the file a user has open. A local engine reads it on the machine where it already is.</p>
@@ -1146,6 +1148,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1268,10 +1272,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

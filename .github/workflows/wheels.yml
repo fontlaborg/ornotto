@@ -56,7 +56,7 @@ jobs:
           uv venv check --python 3.12
           py=check/bin/python; [[ -f check/Scripts/python.exe ]] && py=check/Scripts/python.exe
           uv pip install --python "$py" dist/ornotto-*.whl
-          "$py" -c "import ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), e.find_binary('pcd'))"
+          "$py" -c "import sys, ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), sys.platform == 'win32' or e.find_binary('pcd'))"
         shell: bash
       - uses: actions/upload-artifact@v4
         with:

@@ -2,9 +2,9 @@
 # this_file: src_docs/gen_tables.py
 """Render the benchmark data in src_docs/data/*.json as HTML table snippets in src_docs/md/tables/.
 
-Chapters include them with `--8<-- "tables/<name>.html"`. Every table is sortable (tablesort, wired up in
-md/js/tables.js): numeric cells carry `data-sort` so "62/67" and "1,234" sort as numbers. Tables marked
-filterable get a text box that hides rows not matching what you type.
+Chapters include them with `--8<-- "tables/<name>.html"`. Every table is sortable (md/js/tables.js):
+numeric cells carry `data-sort` so "62/67" and "1,234" sort as numbers, and empty cells, meaning "not
+measured", sort last. Tables marked filterable get a text box that hides rows not matching what you type.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ def cell(value, sort=None, cls: str = "") -> str:
 
 def num(value, digits: int = 0, suffix: str = "") -> str:
     if value is None:
-        return '<td data-sort="-1"></td>'
+        return '<td class="num"></td>'
     text = f"{value:,.{digits}f}{suffix}"
     return cell(text, value, "num")
 
@@ -44,6 +44,7 @@ def score(value: int, total: int = TASKS) -> str:
 
 
 def table(name: str, headers: list[str], rows: list[str], caption: str = "", filterable: bool = False) -> None:
+    caption = caption or "Click a column header to sort."
     head = "".join(f"<th>{html.escape(h)}</th>" for h in headers)
     body = "\n".join(f"<tr>{r}</tr>" for r in rows)
     box = (f'<input class="table-filter" type="search" placeholder="Filter {len(rows)} rows" '
@@ -74,12 +75,13 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     rows = load("classifiers")
 
-    table("classifiers", CLASSIFIER_HEADERS, classifier_rows(rows), filterable=True)
+    table("classifiers", CLASSIFIER_HEADERS, classifier_rows(rows), filterable=True,
+          caption="All 208 methods, best first. Click a header to sort; empty cells were not measured.")
     top = sorted(rows, key=lambda r: (-r["translated"], -r["direct"], r["ms"]))[:15]
-    table("top", CLASSIFIER_HEADERS[:9],
-          ["".join([cell(r["method"], cls="method"), cell(r["engine"]), cell(r["model"]), cell(r["family"]),
-                    cell(r["quant"]), num(r["gb"], 2), num(r["ms"], 1), score(r["translated"]), score(r["direct"])])
-           for r in top])
+    table("top", CLASSIFIER_HEADERS[1:9],
+          ["".join([cell(r["engine"]), cell(r["model"]), cell(r["family"]), cell(r["quant"]), num(r["gb"], 2),
+                    num(r["ms"], 1), score(r["translated"]), score(r["direct"])]) for r in top],
+          caption="The 15 best methods by translated score, then direct score, then speed. Click a header to sort.")
 
     # One model, many engines: the decider-0.8b and decider-2b rows side by side.
     same = [r for r in rows if r["model"] in ("decider-0.8b", "decider-0.8b-dreamblooms", "decider-2b",
@@ -95,9 +97,9 @@ def main() -> None:
         if r["model"] not in best or (r["translated"], -r["ms"]) > (best[r["model"]]["translated"], -best[r["model"]]["ms"]):
             best[r["model"]] = r
     fam = sorted(best.values(), key=lambda r: (r["family"], -r["translated"], r["ms"]))
-    table("families", ["Family", "Model", "Best method", "Engine", "GB", "ms/query", "Translated", "Direct"],
-          ["".join([cell(r["family"]), cell(r["model"]), cell(r["method"], cls="method"), cell(r["engine"]),
-                    num(r["gb"], 2), num(r["ms"], 1), score(r["translated"]), score(r["direct"])]) for r in fam],
+    table("families", ["Family", "Model", "Engine", "GB", "ms/query", "Translated", "Direct", "Best method"],
+          ["".join([cell(r["family"]), cell(r["model"]), cell(r["engine"]), num(r["gb"], 2), num(r["ms"], 1),
+                    score(r["translated"]), score(r["direct"]), cell(r["method"], cls="method")]) for r in fam],
           filterable=True)
 
     # Quantization sweeps: models with four or more quantizations on one engine, as a model x quant grid.
@@ -113,7 +115,7 @@ def main() -> None:
         for q in quants:
             r = by_q.get(q)
             cells.append(cell(f"{r['translated']} · {r['ms']:.0f} ms", r["translated"], "num") if r
-                         else '<td data-sort="-1"></td>')
+                         else '<td class="num"></td>')
         sweep_rows.append("".join(cells))
     table("quant-sweeps", ["Model", "Engine", *quants], sweep_rows, filterable=True,
           caption="Translated score out of 67 and mean ms per query, per quantization")

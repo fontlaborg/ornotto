@@ -1069,6 +1069,8 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
@@ -1081,9 +1083,9 @@
 <p>The dedicated models get calibrated during training. decider divides the letter logits by a fitted temperature before the softmax (T 1.03 for decider-0.8b, 1.3 for DreamBlooms' decider-2b), and laya picks a temperature per bucket of option count and question type. pcdServer applies no temperature: its probabilities are the model's raw softmax over the first tokens of the allowed values, which says how strongly the model prefers one value, not how often it is right. The <code>ornotto</code> package marks the difference on every answer with <code>Answer.calibrated</code>, <code>True</code> on dohnuts and <code>False</code> on pcdServer, so that you do not compare the two as if they were one scale.</p>
 <p>To check calibration you need labelled examples: group the answers by their top probability, and count how many in each group were right.</p>
 <h2 id="decider-08b-on-the-router-set">decider-0.8b on the router set<a class="headerlink" href="#decider-08b-on-the-router-set" title="Permanent link">&para;</a></h2>
-<p>These are the 67 router queries answered by decider-0.8b (<code>q5</code>) on dohnuts (Metal), grouped by top probability. First with translation:</p>
+<p>These are the 67 router queries answered by decider-0.8b (mradermacher <code>q5</code>) on dohnuts (Metal), grouped by top probability. First with translation:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="calibration-translated"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
+<table class="sortable" id="calibration-translated"><caption>Click a column header to sort.</caption><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
 <tbody>
 <tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="7" class="num">7</td><td data-sort="87.5" class="num">88 %</td></tr>
 <tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="13" class="num">13</td><td data-sort="100.0" class="num">100 %</td></tr>
@@ -1094,7 +1096,7 @@
 
 <p>And on the original text:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="calibration-direct"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
+<table class="sortable" id="calibration-direct"><caption>Click a column header to sort.</caption><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
 <tbody>
 <tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="5" class="num">5</td><td data-sort="62.5" class="num">62 %</td></tr>
 <tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="12" class="num">12</td><td data-sort="92.3076923076923" class="num">92 %</td></tr>
@@ -1103,21 +1105,18 @@
 </tbody></table>
 </div>
 
-<p>Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several points. The signal is usable for separating very unsure answers from the rest, and weak above that.</p>
-<div class="admonition note">
-<p class="admonition-title">Two numbers called confidence</p>
-<p>dohnuts returns <code>answers.&lt;name&gt;.confidence</code> as the entropy certainty, 1 − H/ln K, which is near 0 whenever the distribution is spread out, even if the top option is at 0.7. Its top probability is under <code>native.confidence</code>. The two are easy to swap. In <code>ornotto</code>, <code>Answer.confidence</code> is always the top probability, and the entropy figure stays in <code>Answer.raw</code>.</p>
-</div>
+<p>Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several percentage points. The signal is usable for separating very unsure answers from the rest, and weak above that.</p>
+<p>The bands use the top probability, which dohnuts reports as <code>native.confidence</code>; its plain <code>confidence</code> field is an entropy measure (<a href="../02-decisions/#the-confidence-trap">chapter 2</a>).</p>
 <h2 id="a-fallback-gate">A fallback gate<a class="headerlink" href="#a-fallback-gate" title="Permanent link">&para;</a></h2>
 <p>The fastest accurate local model and the most accurate local model are different models:</p>
 <ul>
-<li>decider-0.8b (<code>q5</code>) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.</li>
-<li>Qwen3.5-4B-Hmm (<code>q8</code>) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query.</li>
+<li>decider-0.8b (mradermacher <code>q5</code>) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.</li>
+<li>Qwen3.5-4B-Hmm (<code>q8</code>, 4.48 GB) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query. The <code>q4</code> file that <code>ornotto</code> registers scores the same at 93 ms from 2.7 GB.</li>
 </ul>
 <p>A gate asks the fast model first and sends the query to the slow one only when the fast model's top probability is below a threshold. The tables replay the benchmark's cached answers through such a gate at several thresholds. "Mean ms" is the cost per query averaged over all 67, where a query that falls back pays for both calls.</p>
 <p>With translation:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="cascade-translated"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
+<table class="sortable" id="cascade-translated"><caption>Click a column header to sort.</caption><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
 <tbody>
 <tr><td data-sort="0.5" class="num">0.50</td><td data-sort="3" class="num">3/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="59.1" class="num">59.1</td></tr>
 <tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.4" class="num">65.4</td></tr>
@@ -1131,7 +1130,7 @@
 
 <p>On the original text:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="cascade-direct"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
+<table class="sortable" id="cascade-direct"><caption>Click a column header to sort.</caption><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
 <tbody>
 <tr><td data-sort="0.5" class="num">0.50</td><td data-sort="4" class="num">4/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="60.5" class="num">60.5</td></tr>
 <tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.5" class="num">65.5</td></tr>
@@ -1149,6 +1148,7 @@
 <p>Some of decider's errors no threshold catches, because decider is sure of them. "Can FontLab batch rename glyphs?" (a docs question) got python at 0.97, and "Show me how a glyph is stored in a VFJ file" (also docs) got vfj at 0.99. Both are questions about FontLab, worded with the vocabulary of the task they are not. Qwen3.5-4B-Hmm answers both correctly.</p>
 <div class="admonition warning">
 <p class="admonition-title">Read these gains with care</p>
+<p>The gate and the calibration bands were replayed with decider-0.8b's <code>q5</code> file. The <code>ornotto</code> package registers the DreamBlooms <code>q8</code> file, which scores the same 62/67 translated but was not replayed through the gate, so its thresholds may sit elsewhere.</p>
 <p>The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.</p>
 </div>
 <h2 id="a-gate-in-ornotto">A gate in ornotto<a class="headerlink" href="#a-gate-in-ornotto" title="Permanent link">&para;</a></h2>
@@ -1176,7 +1176,7 @@
 <p>Some queries defeat most of the 208 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.</p>
 <div class="bench" markdown="0">
 <input class="table-filter" type="search" placeholder="Filter 67 rows" aria-label="Filter the table" data-table="queries">
-<table class="sortable" id="queries"><thead><tr><th>Query</th><th>Lang</th><th>Task</th><th>Right, translated</th><th>Right, direct</th><th>jev</th></tr></thead>
+<table class="sortable" id="queries"><caption>Click a column header to sort.</caption><thead><tr><th>Query</th><th>Lang</th><th>Task</th><th>Right, translated</th><th>Right, direct</th><th>jev</th></tr></thead>
 <tbody>
 <tr><td class="query">How do I write a liga feature?</td><td>en</td><td>docs</td><td data-sort="8.7" class="num">9 %</td><td data-sort="8.7" class="num">9 %</td><td>fea</td></tr>
 <tr><td class="query">Which words should I look at to judge the spacing of round letters?</td><td>en</td><td>sample</td><td data-sort="22.1" class="num">22 %</td><td data-sort="22.1" class="num">22 %</td><td>sample</td></tr>
@@ -1270,6 +1270,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1392,10 +1394,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

@@ -18,7 +18,7 @@ uv add ornotto                      # or: pip install ornotto
 uv add "ornotto[pydantic-ai]"       # with the pydantic-ai integration
 ```
 
-Wheels bundle both engines for macOS on Apple silicon (Metal) and Linux x86_64 and aarch64 (CPU), and for Windows x64 when that build succeeds. On another platform, install from source with CMake, or put `dohnuts-cli` and `pcd_server` on your `PATH` (or point `ORNOTTO_DOHNUTS_BIN` and `ORNOTTO_PCD_BIN` at them).
+Wheels bundle both engines for macOS 14+ on Apple silicon (Metal) and for Linux x86_64 and aarch64 (manylinux_2_28, CPU only: no CUDA or Vulkan). Windows x64 wheels carry dohnuts only: pcdServer does not build on Windows yet. Elsewhere pip installs the Python code without engines: clone with `--recursive` and run `./build.sh`, or put `dohnuts-cli` and `pcd_server` on your `PATH` (or point `ORNOTTO_DOHNUTS_BIN` and `ORNOTTO_PCD_BIN` at them).
 
 Models download from Hugging Face on first use into the usual Hugging Face cache. `HF_HUB_CACHE` moves it.
 
@@ -66,14 +66,14 @@ remote = ornotto.Decider("decider", url="http://127.0.0.1:8298")   # an engine y
 
 `ornotto models` lists the registered models:
 
-| name | engines | family | licence |
-|---|---|---|---|
-| `decider-0.8b` | dohnuts, pcd | dedicated | Apache-2.0 |
-| `decider-2b` | dohnuts, pcd | dedicated | Apache-2.0 |
-| `kev-0.8b` | dohnuts | dedicated | Apache-2.0 |
-| `dohnuts-0.8b` | dohnuts | dedicated | CC-BY-NC-SA-4.0 |
-| `qwen3.5-0.8b`, `qwen3.5-2b`, `qwen3.5-4b` | pcd | vanilla | Apache-2.0 |
-| `qwen3.5-4b-hmm` | pcd | fine-tuned | Apache-2.0 |
+| name | engines | family | GB | licence |
+|---|---|---|---:|---|
+| `decider-0.8b` | dohnuts, pcd | dedicated | 0.8 | apache-2.0 |
+| `decider-2b` | dohnuts, pcd | dedicated | 2.0 | apache-2.0 |
+| `kev-0.8b` | dohnuts | dedicated | 0.8 | apache-2.0 |
+| `dohnuts-0.8b` | dohnuts | dedicated | 0.8 | cc-by-nc-sa-4.0 |
+| `qwen3.5-0.8b`, `qwen3.5-2b`, `qwen3.5-4b` | pcd | vanilla | 0.8, 1.4, 3.0 | apache-2.0 |
+| `qwen3.5-4b-hmm` | pcd | fine-tuned | 2.7 | apache-2.0 |
 
 The engine starts on the first question, on a free loopback port, and stops when Python exits. Every `Decider` in a process that names the same model, engine and device shares one engine process. `ornotto.shutdown()` stops them all now.
 

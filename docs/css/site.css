@@ -7,13 +7,14 @@ fontlab-menu { display: block; position: sticky; top: 0; z-index: 100; }
 .md-typeset img { max-width: 100%; height: auto; }
 
 /* Benchmark tables: wide, dense, sortable, scroll sideways on narrow screens. */
-.md-typeset .bench { overflow-x: auto; margin: 1em 0 1.5em; }
+/* The wrapper scrolls both ways, so the header row can stick to its top edge. */
+.md-typeset .bench { overflow: auto; max-height: 75vh; margin: 1em 0 1.5em; }
 .md-typeset .bench table { display: table; font-size: .68rem; border-collapse: collapse; min-width: 100%; }
 .md-typeset .bench caption { caption-side: top; text-align: left; font-size: .72rem; padding-bottom: .4em;
   color: var(--md-default-fg-color--light); }
 .md-typeset .bench th, .md-typeset .bench td { padding: .3em .55em; white-space: nowrap;
   border-bottom: 1px solid var(--md-default-fg-color--lightest); }
-.md-typeset .bench th { position: sticky; top: 0; background: var(--md-default-bg-color); cursor: pointer;
+.md-typeset .bench th { position: sticky; top: 0; z-index: 1; background: var(--md-default-bg-color); cursor: pointer;
   user-select: none; font-weight: 600; }
 .md-typeset .bench th[aria-sort="ascending"]::after { content: " ▲"; font-size: .8em; }
 .md-typeset .bench th[aria-sort="descending"]::after { content: " ▼"; font-size: .8em; }
@@ -25,3 +26,5 @@ fontlab-menu { display: block; position: sticky; top: 0; z-index: 100; }
   font: inherit; font-size: .75rem; border: 1px solid var(--md-default-fg-color--lighter); border-radius: .25rem;
   background: var(--md-default-bg-color); color: var(--md-default-fg-color); }
 .md-typeset .bench td.score[data-sort] { font-weight: 500; }
+.md-typeset .bench th:not([aria-sort])::after { content: " ↕"; font-size: .8em; opacity: .35; }
+.md-typeset .bench .table-filter { position: sticky; left: 0; }

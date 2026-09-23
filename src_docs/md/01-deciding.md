@@ -6,7 +6,7 @@ this_file: src_docs/md/01-deciding.md
 
 A System One decision asks a language model to pick, not to write. You hand it a *state* (a message, a ticket, a slice of application data) and a set of named *questions*, each with a closed set of answers. The model returns one probability for every allowed answer. It never produces free text, so there is nothing to parse, repair or retry: the answer is always one of the values you listed.
 
-This book is about running those decisions on your own machine. It compares five ways of reading a decision out of a model, more than two hundred model and engine combinations, and the Python package, `ornotto`, that puts the two local engines behind one API.
+This book is about running those decisions on your own machine. It compares five ways of reading a decision out of a model, 208 benchmark methods, and the Python package, `ornotto`, that puts the two local engines behind one API.
 
 ## What a decision looks like
 
@@ -33,7 +33,7 @@ There are three kinds of question:
 
 The reply has one answer per question name. A choice comes back with the winning option and a probability for every option; a yes/no comes back as a single number between 0 and 1; a score comes back as an expected level plus the distribution over the levels. [Chapter 2](02-decisions.md) goes through every field.
 
-Because the answer set is closed, the output is valid by construction. A model that generates JSON can forget a brace, invent a field, or answer "probably billing" when the schema wanted `billing`. A model that only assigns probabilities to `billing`, `shipping` and `other` cannot. The engines in this book never let the model generate more than the one position they read, and several of them do not generate at all.
+Because the answer set is closed, the output is valid by construction. A model that generates JSON can forget a brace, invent a field, or answer "probably billing" when the schema wanted `billing`. A model that only assigns probabilities to `billing`, `shipping` and `other` cannot. None of the readouts in this book lets the model write its answer: each reads probabilities at one position. (slot asks llama-server for a single token only to see the log-probabilities of the candidates.)
 
 ## Where decisions fit
 
@@ -64,13 +64,13 @@ A router is a good test because it is a real decision with a known right answer,
 
 ## jev, the hosted reference
 
-TypeSafe's **jev** is a hosted System One model. You send a state and questions to an API and get calibrated probabilities back; our benchmark harness reaches it through OpenRouter's System One API as `jev-latest`. It is the reference point in this book because it is the model the local stack has to match. On the router set jev scores 65 of 67, both on translated queries and on the original text.
+TypeSafe's **jev** is a hosted System One model. You send a state and questions to an API and get calibrated probabilities back; our benchmark harness reaches it through OpenRouter's System One API as `jev-latest`. It is the reference point in this book because it is the model the local engines have to match. On the router set jev scores 65 of 67, both on translated queries and on the original text.
 
 jev also defined the vocabulary. The request and answer shapes shown above are its API, and pydantic-ai's `TypeSafeModel` speaks it. dohnuts, one of the two local engines, answers the same requests at the same `/v1/systemone` path, which is why an agent written for jev can run locally with a changed base URL ([chapter 11](11-typed.md)).
 
 ## Why run decisions locally
 
-jev answers the router question in 466 ms on average, measured from our client, network included. The best local model on the same set, Qwen3.5-4B-Hmm on pcdServer, answers in 88 ms and scores 64 of 67 translated, 65 direct. decider-0.8b on dohnuts's Metal build answers in 52 ms and scores 62. [Chapter 6](06-results.md) has the full table.
+jev answers the router question in 466 ms on average, measured from our client, network included. The local methods that come within three answers of it take 52 to 95 ms on the same machine ([chapter 6](06-results.md)).
 
 Latency is the first reason to run locally. A router that sits in front of every message adds its delay to every message, and a gate in front of every tool call adds it to every step of an agent. At 50 ms the decision disappears into the time the interface needs to redraw; at 500 ms the user waits for it.
 

@@ -42,6 +42,7 @@ __all__ = [
     "classify",
     "decide",
     "decision",
+    "default",
     "extract",
     "questions_for",
     "rate",

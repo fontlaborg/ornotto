@@ -16,7 +16,7 @@ To check calibration you need labelled examples: group the answers by their top 
 
 ## decider-0.8b on the router set
 
-These are the 67 router queries answered by decider-0.8b (`q5`) on dohnuts (Metal), grouped by top probability. First with translation:
+These are the 67 router queries answered by decider-0.8b (mradermacher `q5`) on dohnuts (Metal), grouped by top probability. First with translation:
 
 --8<-- "tables/calibration-translated.html"
 
@@ -24,17 +24,16 @@ And on the original text:
 
 --8<-- "tables/calibration-direct.html"
 
-Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several points. The signal is usable for separating very unsure answers from the rest, and weak above that.
+Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several percentage points. The signal is usable for separating very unsure answers from the rest, and weak above that.
 
-!!! note "Two numbers called confidence"
-    dohnuts returns `answers.<name>.confidence` as the entropy certainty, 1 − H/ln K, which is near 0 whenever the distribution is spread out, even if the top option is at 0.7. Its top probability is under `native.confidence`. The two are easy to swap. In `ornotto`, `Answer.confidence` is always the top probability, and the entropy figure stays in `Answer.raw`.
+The bands use the top probability, which dohnuts reports as `native.confidence`; its plain `confidence` field is an entropy measure ([chapter 2](02-decisions.md#the-confidence-trap)).
 
 ## A fallback gate
 
 The fastest accurate local model and the most accurate local model are different models:
 
-- decider-0.8b (`q5`) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.
-- Qwen3.5-4B-Hmm (`q8`) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query.
+- decider-0.8b (mradermacher `q5`) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.
+- Qwen3.5-4B-Hmm (`q8`, 4.48 GB) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query. The `q4` file that `ornotto` registers scores the same at 93 ms from 2.7 GB.
 
 A gate asks the fast model first and sends the query to the slow one only when the fast model's top probability is below a threshold. The tables replay the benchmark's cached answers through such a gate at several thresholds. "Mean ms" is the cost per query averaged over all 67, where a query that falls back pays for both calls.
 
@@ -55,6 +54,8 @@ The two runs lead to different decisions.
 Some of decider's errors no threshold catches, because decider is sure of them. "Can FontLab batch rename glyphs?" (a docs question) got python at 0.97, and "Show me how a glyph is stored in a VFJ file" (also docs) got vfj at 0.99. Both are questions about FontLab, worded with the vocabulary of the task they are not. Qwen3.5-4B-Hmm answers both correctly.
 
 !!! warning "Read these gains with care"
+    The gate and the calibration bands were replayed with decider-0.8b's `q5` file. The `ornotto` package registers the DreamBlooms `q8` file, which scores the same 62/67 translated but was not replayed through the gate, so its thresholds may sit elsewhere.
+
     The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.
 
 ## A gate in ornotto

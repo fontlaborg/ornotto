@@ -1125,14 +1125,23 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
 
 
 <h1 id="3-five-ways-to-read-an-answer">3. Five ways to read an answer<a class="headerlink" href="#3-five-ways-to-read-an-answer" title="Permanent link">&para;</a></h1>
-<p>A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The engines in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models an engine can run, how fast it answers, and whether its probabilities mean what they say.</p>
-<p>Five engines ran in our benchmark. Two of them, dohnuts and pcdServer, are the engines the <code>ornotto</code> package bundles. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model altogether.</p>
+<p>A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The readouts in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models a readout can use, how fast it answers, and whether its probabilities mean what they say.</p>
+<p>Four words recur in the rest of this book, each with one meaning:</p>
+<ul>
+<li>A <strong>readout</strong> is how the answer is read out of the model: jev's (not public), dohnuts' answer slot, pcdServer's first-token scoring, slot's top-100 log-probabilities, and laya's decision head. This chapter has one section per readout.</li>
+<li>A <strong>runtime</strong> is what executes the network: llama.cpp on Metal or on the CPU, MLX, Core ML, ONNX Runtime, PyTorch or ExecuTorch.</li>
+<li>An <strong>engine</strong> is a server you run: dohnuts, pcdServer, llama-server or laya.cpp. jev is a hosted service, not something you run.</li>
+<li>A <strong>method</strong> is one row of the benchmark: one model file, read by one readout, on one engine or runtime, such as <code>pcdserver@qwen3.5-4b-hmm-q8</code>.</li>
+</ul>
+<p>Two of the readouts belong to the engines the <code>ornotto</code> package bundles, dohnuts and pcdServer. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model with a readout of its own.</p>
 <h2 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h2>
 <p>jev is TypeSafe's hosted System One model. You send the request shape from <a href="../02-decisions/">chapter 2</a> to <code>/v1/systemone</code> and get answers with <code>choice</code>, <code>confidence</code> and <code>probabilities</code>, plus <code>usage.billing_units</code>. Our harness reaches it through OpenRouter's System One API as <code>jev-latest</code>.</p>
 <p>What jev does inside is not public: we know its inputs and outputs, not its prompt or its readout. Its answers are calibrated by its provider. On the router set it scores 65 of 67, translated or direct, at 466 ms per query measured from our client, network included.</p>
@@ -1188,7 +1197,7 @@
 <p>Only the winning group is expanded. A losing group's probability is split <strong>equally</strong> among its members, so two losing options that share a first token always report the same probability, whatever the model thought of them. In a 14-option panel example, "Font Info" and "Font Audit" both came back at 0.0105. If the probability of an alternative matters to you, give it a distinct first word.</p>
 <h3 id="what-pcdserver-returns">What pcdServer returns<a class="headerlink" href="#what-pcdserver-returns" title="Permanent link">&para;</a></h3>
 <p><code>values</code> holds the assembled object and <code>fields[]</code> holds <code>value</code>, <code>probability</code>, <code>probabilities</code> and <code>levels</code> for each field. <code>metrics</code> reports <code>elapsedMs</code>, <code>forwardPasses</code>, <code>schemaCacheStatus</code> (<code>miss</code>, <code>hit</code> or <code>fallback</code>), <code>checkpointBytes</code> and the milliseconds of each phase. The probabilities are a raw softmax, not temperature-scaled (<a href="../02-decisions/#calibration">chapter 2</a>).</p>
-<p>With the same decider-0.8b Q8_0 file that dohnuts reads at its answer slot, pcdServer answers a router query in 28 ms, the fastest accurate path in this book. It scores 55 of 67 translated, against 62 for the answer-slot readout: the decider model was trained to answer at <code>Answer: (</code>, not inside a JSON object. With a model trained for chat, Qwen3.5-4B-Hmm at Q8_0, pcdServer scores 64 of 67 at 88 ms.</p>
+<p>With the same decider-0.8b Q8_0 file that dohnuts reads at its answer slot, pcdServer answers a router query in 28 ms, the fastest way to run this GGUF. It scores 55 of 67 translated, against 62 for the answer-slot readout: the decider model was trained to answer at <code>Answer: (</code>, not inside a JSON object. With a model trained for chat, pcdServer does much better: <a href="../06-results/">chapter 6</a> has the numbers.</p>
 <h2 id="slot">slot<a class="headerlink" href="#slot" title="Permanent link">&para;</a></h2>
 <p>slot is how our benchmark harness reads a decision model through a stock <code>llama-server</code>, with no decision-specific server at all. It asks for one token and the log-probabilities of the top candidates:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"n_predict"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"n_probs"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="nt">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"cache_prompt"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span>
@@ -1199,12 +1208,12 @@
 <li><strong>Hmm readout.</strong> For <a href="https://github.com/n4ze3m/hmm">n4ze3m/hmm</a> models, the prompt is a Qwen chat turn with thinking turned off: the state, the question, one <code>A: name — description</code> line per option, and <code>Return only the option letter.</code> The harness sums the probabilities of every top token whose trimmed text is a single option letter, then renormalises over the options.</li>
 </ul>
 <p>A letter that falls outside the top 100 tokens gets probability 0, and the harness counts it as a miss.</p>
-<p>slot is the control for dohnuts. On every decider GGUF we ran, dohnuts's Metal build picked the same task as the decider readout on slot for 106 of 106 texts, with probabilities at most 0.0004 apart: dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with decider-0.8b Q8_0, against 52 ms for dohnuts.</p>
+<p>slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.</p>
 <h2 id="laya">laya<a class="headerlink" href="#laya" title="Permanent link">&para;</a></h2>
 <p>laya (<a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya</a>) is not a language model. It is a multilingual encoder, mmBERT-base, with a decision head trained for System One questions. Its input is one sequence:</p>
 <div class="language-text highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[CLS] choice question: &lt;instructions&gt; [SEP] [MASK] &lt;option 1&gt; [MASK] &lt;option 2&gt; … [SEP] &lt;state&gt; [SEP]
 </code></pre></div>
-<p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the engines here, and our benchmark does not use it yet.</p>
+<p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet.</p>
 <p>An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.</p>
 <p>The same checkpoint ran on six runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. <a href="../06-results/">Chapter 6</a> lists them all.</p>
 <h2 id="side-by-side">Side by side<a class="headerlink" href="#side-by-side" title="Permanent link">&para;</a></h2>
@@ -1221,12 +1230,12 @@
 </thead>
 <tbody>
 <tr>
-<td>Runs</td>
+<td>Runtime</td>
 <td>hosted</td>
-<td>local, llama.cpp</td>
-<td>local, llama.cpp</td>
-<td>local, stock llama-server</td>
-<td>local, MLX, Core ML, ONNX, llama.cpp</td>
+<td>llama.cpp, Metal or CPU</td>
+<td>llama.cpp, Metal or CPU</td>
+<td>llama.cpp, in a stock llama-server</td>
+<td>MLX, Core ML, Core AI, ONNX Runtime, llama.cpp</td>
 </tr>
 <tr>
 <td>Models</td>
@@ -1257,7 +1266,7 @@
 <td>yes</td>
 <td>yes, temperature from metadata</td>
 <td>no</td>
-<td>yes, temperature applied by the client</td>
+<td>decider readout: yes, temperature applied by the client; Hmm readout: no</td>
 <td>yes, by bucket</td>
 </tr>
 <tr>
@@ -1285,16 +1294,16 @@
 <td>52/67</td>
 </tr>
 <tr>
-<td>ms per query, 0.8B decider</td>
+<td>ms per query, decider-0.8b (DreamBlooms Q8_0)</td>
 <td></td>
 <td>52 (Metal), 275 (CPU)</td>
 <td>28</td>
 <td>65</td>
-<td>7 (laya on MLX)</td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<p>The best dohnuts row, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms.</p>
+<p>laya does not run decider; its own encoder answers in 6.9 ms on MLX. The best dohnuts method, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms.</p>
 
 
 
@@ -1308,6 +1317,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1430,10 +1441,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

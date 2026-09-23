@@ -1069,13 +1069,15 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
 
 
 <h1 id="8-speed-memory-and-caching">8. Speed, memory and caching<a class="headerlink" href="#8-speed-memory-and-caching" title="Permanent link">&para;</a></h1>
-<p>A decision costs one forward pass over the prompt and nothing more: no engine in this book generates tokens. So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.</p>
+<p>A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.</p>
 <h2 id="same-weights-four-engines">Same weights, four engines<a class="headerlink" href="#same-weights-four-engines" title="Permanent link">&para;</a></h2>
 <p>The DreamBlooms conversion of decider-0.8b (<code>decider-0.8b-q8_0.gguf</code>) ran on four engines. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:</p>
 <table>
@@ -1115,11 +1117,11 @@
 </tbody>
 </table>
 <p>A separate run of the same four engines earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.</p>
-<p>The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for (<a href="../03-engines/">chapter 3</a>). dohnuts and slot read the same slot and agree on 106 of 106 texts, with probabilities within 0.0004 of each other; they differ only in how they get there. The full grid of models against engines is in <a href="../06-results/">chapter 6</a>.</p>
+<p>The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for (<a href="../03-engines/">chapter 3</a>). dohnuts and slot read the same slot and give the same answers (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>); they differ only in how they get there.</p>
 <h2 id="where-the-time-goes">Where the time goes<a class="headerlink" href="#where-the-time-goes" title="Permanent link">&para;</a></h2>
 <p>The four engines do different amounts of work per question.</p>
 <p><strong>slot</strong> sends the whole prompt to a stock <code>llama-server</code> with <code>cache_prompt: false</code>, asks for one token with the top 100 log-probabilities, and reads the option letters out of that list on the client. Every query prefills everything, and the response carries 100 candidates it mostly throws away.</p>
-<p><strong>dohnuts</strong> builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with <code>Context:</code> and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 51 ms on its own.</p>
+<p><strong>dohnuts</strong> builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with <code>Context:</code> and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 52 ms on its own.</p>
 <p><strong>pcdServer</strong> puts the fixed part of the prompt first. The system prompt lists every field, its description and its allowed values; the user's text comes after it. The fixed part is the same for every request with the same schema, so pcdServer computes it once, saves the model's state after it, and restores that state for later requests. Only the user text and a short suffix per field are decoded per request.</p>
 <pre class="mermaid"><code>flowchart LR
     A[Request: context + fields] --&gt; B{Schema checkpoint&lt;br&gt;in the LRU?}
@@ -1137,12 +1139,12 @@
 <p>Qwen3.5 keeps recurrent state in its delta-net layers, and recurrent state cannot be rewound to an earlier position. The usual llama.cpp trick for reusing a prompt prefix (keep the KV cache, drop the tokens after the prefix with <code>llama_memory_seq_rm</code>) returns <code>false</code> on these models and leaves the sequence unchanged. pcdServer therefore saves a <strong>complete</strong> checkpoint of the sequence state after the schema prefix (<code>llama_state_seq_get_data_ext</code>) and restores the whole thing on a hit.</p>
 <p>Complete checkpoints are large, and their size decides how many schemas stay warm:</p>
 <ul>
-<li>A three-field Qwen3.5-0.8B checkpoint is about 22 MiB and restores in about 6 ms, against about 36 ms to prefill the same prefix (pcdServer's own figures on Apple silicon).</li>
+<li>A three-field Qwen3.5-0.8B checkpoint is about 22 MB (22,332,068 bytes in pcdServer's example) and restores in about 6 ms, against about 36 ms to prefill the same prefix (pcdServer's own figures on Apple silicon).</li>
 <li>A Qwen3.5-4B checkpoint measured 56 to 63 MB in our runs.</li>
 <li>The cache is an LRU bounded by <code>--cache-entries</code> (default 32) and <code>--cache-bytes</code> (default 512 MiB). <code>metrics.schemaCacheStatus</code> reports <code>hit</code>, <code>miss</code> or <code>fallback</code> for every request.</li>
 </ul>
-<p>Our benchmark servers ran with <code>--cache-bytes 64 MB</code>, which holds one 4B checkpoint. With the router schema warm, a four-field request evicted it, and the next router call was a miss: 244 ms against 79 ms on a hit. First calls to a new schema took 200 to 360 ms with the 4B model; repeats took 79 to 154 ms. If your application rotates between several schemas, set <code>--cache-bytes</code> above the checkpoint size times the number of schemas. The <code>ornotto</code> package starts pcdServer with 512 MiB.</p>
-<p>Extra fields are cheap once the prefix is cached: with the 4B model, three more fields added 35 ms to the router's 79 ms. On dohnuts before the change below, three short extra questions added 50 ms to a 51 ms routing row, because every question paid for the state again.</p>
+<p>Our benchmark servers ran with <code>--cache-bytes 67108864</code> (64 MiB), which holds one 4B checkpoint. With the router schema warm, a four-field request evicted it, and the next router call was a miss: 244 ms against 79 ms on a hit. First calls to a new schema took 200 to 360 ms with the 4B model; repeats took 79 to 154 ms. If your application rotates between several schemas, set <code>--cache-bytes</code> above the checkpoint size times the number of schemas. The <code>ornotto</code> package starts pcdServer with 512 MiB.</p>
+<p>Extra fields are cheap once the prefix is cached: with the 4B model, three more fields added 35 ms to the router's 79 ms. On dohnuts before the change below, three short extra questions added 50 ms to a 51 ms routing row (decider-0.8b <code>q5</code>), because every question paid for the state again.</p>
 <h2 id="prefix-caching-in-dohnuts">Prefix caching in dohnuts<a class="headerlink" href="#prefix-caching-in-dohnuts" title="Permanent link">&para;</a></h2>
 <p>dohnuts' decider and kev profiles lay out every row as the state followed by the question, and every row of a request starts with the same state. The runner nevertheless cleared the model's memory and prefilled each row from token zero. A request with three questions, one of them a five-level <code>score</code> (which dohnuts expands into one yes/no row per level), prefilled the same state seven times.</p>
 <p>We contributed prefix reuse upstream as <a href="https://github.com/DreamBlooms/dohnuts.cpp/pull/1">DreamBlooms/dohnuts.cpp#1</a>. The change follows pcdServer's approach, because the model is the same hybrid:</p>
@@ -1322,16 +1324,15 @@
 </tr>
 </tbody>
 </table>
-<p>The laya rows are the latency floor of this benchmark. laya-multilingual is an encoder (mmBERT-base) with a decision head: one bidirectional pass over at most 1,024 tokens shared by question, options and state. On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, ten answers below decider-0.8b. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. The hosted jev takes 466 ms per query, the round trip to its API included.</p>
+<p>The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes (<a href="../03-engines/#laya">chapter 3</a>). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. The hosted jev takes 466 ms per query, the round trip to its API included.</p>
 <h2 id="memory-one-model-at-a-time">Memory: one model at a time<a class="headerlink" href="#memory-one-model-at-a-time" title="Permanent link">&para;</a></h2>
-<p>Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. The benchmark machine has 48 GB. An early benchmark driver loaded several GGUF files per batch (up to 9 GB of weights at once) next to the resident translation model, while other experiments ran beside it. The machine swapped until the boot disk was full, and macOS hung.</p>
+<p>Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. Loading several models at once on the 48 GB benchmark machine filled its boot disk with swap and hung macOS (<a href="../05-method/#one-model-at-a-time">chapter 5</a>).</p>
 <p>The fix was procedural, and it is worth copying if you benchmark models yourself:</p>
 <ul>
 <li>Load one model process at a time, and check that none is resident before you load the next.</li>
 <li>Stop a server by its process and then confirm that its port is free; a server that ignores the stop signal still holds its memory.</li>
 <li>Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit.</li>
 </ul>
-<p>With those rules every model ran with swap flat at about 2.7 GB, the 21 GB decider-35b-a3b included.</p>
 <p>The <code>ornotto</code> package applies the same discipline to itself. Each <code>Decider</code> shares one engine process per model, engine and device; the processes stop when Python exits, and <code>ornotto.shutdown()</code> stops them earlier (<a href="../10-package/">chapter 10</a>). If your code opens several models at once, add up their GGUF sizes plus the pcdServer checkpoint budget before you do.</p>
 
 
@@ -1346,6 +1347,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1468,10 +1471,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

@@ -101,6 +101,4 @@ extra_css:
 extra_javascript:
   - https://i.fontlab.com/fltheme26/1.0.0/basecoat.js
   - https://i.fontlab.com/fltheme26/1.0.0/theme.js
-  - https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js
-  - https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js
   - js/tables.js

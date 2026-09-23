@@ -4,7 +4,7 @@ this_file: src_docs/md/08-speed.md
 
 # 8. Speed, memory and caching
 
-A decision costs one forward pass over the prompt and nothing more: no engine in this book generates tokens. So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.
+A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.
 
 ## Same weights, four engines
 
@@ -19,7 +19,7 @@ The DreamBlooms conversion of decider-0.8b (`decider-0.8b-q8_0.gguf`) ran on fou
 
 A separate run of the same four engines earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.
 
-The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for ([chapter 3](03-engines.md)). dohnuts and slot read the same slot and agree on 106 of 106 texts, with probabilities within 0.0004 of each other; they differ only in how they get there. The full grid of models against engines is in [chapter 6](06-results.md).
+The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for ([chapter 3](03-engines.md)). dohnuts and slot read the same slot and give the same answers ([chapter 6](06-results.md#one-set-of-weights-three-scores)); they differ only in how they get there.
 
 ## Where the time goes
 
@@ -27,7 +27,7 @@ The four engines do different amounts of work per question.
 
 **slot** sends the whole prompt to a stock `llama-server` with `cache_prompt: false`, asks for one token with the top 100 log-probabilities, and reads the option letters out of that list on the client. Every query prefills everything, and the response carries 100 candidates it mostly throws away.
 
-**dohnuts** builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with `Context:` and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 51 ms on its own.
+**dohnuts** builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with `Context:` and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 52 ms on its own.
 
 **pcdServer** puts the fixed part of the prompt first. The system prompt lists every field, its description and its allowed values; the user's text comes after it. The fixed part is the same for every request with the same schema, so pcdServer computes it once, saves the model's state after it, and restores that state for later requests. Only the user text and a short suffix per field are decoded per request.
 
@@ -54,13 +54,13 @@ Qwen3.5 keeps recurrent state in its delta-net layers, and recurrent state canno
 
 Complete checkpoints are large, and their size decides how many schemas stay warm:
 
-- A three-field Qwen3.5-0.8B checkpoint is about 22 MiB and restores in about 6 ms, against about 36 ms to prefill the same prefix (pcdServer's own figures on Apple silicon).
+- A three-field Qwen3.5-0.8B checkpoint is about 22 MB (22,332,068 bytes in pcdServer's example) and restores in about 6 ms, against about 36 ms to prefill the same prefix (pcdServer's own figures on Apple silicon).
 - A Qwen3.5-4B checkpoint measured 56 to 63 MB in our runs.
 - The cache is an LRU bounded by `--cache-entries` (default 32) and `--cache-bytes` (default 512 MiB). `metrics.schemaCacheStatus` reports `hit`, `miss` or `fallback` for every request.
 
-Our benchmark servers ran with `--cache-bytes 64 MB`, which holds one 4B checkpoint. With the router schema warm, a four-field request evicted it, and the next router call was a miss: 244 ms against 79 ms on a hit. First calls to a new schema took 200 to 360 ms with the 4B model; repeats took 79 to 154 ms. If your application rotates between several schemas, set `--cache-bytes` above the checkpoint size times the number of schemas. The `ornotto` package starts pcdServer with 512 MiB.
+Our benchmark servers ran with `--cache-bytes 67108864` (64 MiB), which holds one 4B checkpoint. With the router schema warm, a four-field request evicted it, and the next router call was a miss: 244 ms against 79 ms on a hit. First calls to a new schema took 200 to 360 ms with the 4B model; repeats took 79 to 154 ms. If your application rotates between several schemas, set `--cache-bytes` above the checkpoint size times the number of schemas. The `ornotto` package starts pcdServer with 512 MiB.
 
-Extra fields are cheap once the prefix is cached: with the 4B model, three more fields added 35 ms to the router's 79 ms. On dohnuts before the change below, three short extra questions added 50 ms to a 51 ms routing row, because every question paid for the state again.
+Extra fields are cheap once the prefix is cached: with the 4B model, three more fields added 35 ms to the router's 79 ms. On dohnuts before the change below, three short extra questions added 50 ms to a 51 ms routing row (decider-0.8b `q5`), because every question paid for the state again.
 
 ## Prefix caching in dohnuts
 
@@ -115,18 +115,16 @@ Load time is paid once per process, but it decides whether an engine suits a com
 | laya, Core ML on the Neural Engine (compact prompt) | 20,130 | 4.2 | 47/67 |
 | decider-4b, PyTorch | 16,802 | 348.2 | 63/67 |
 
-The laya rows are the latency floor of this benchmark. laya-multilingual is an encoder (mmBERT-base) with a decision head: one bidirectional pass over at most 1,024 tokens shared by question, options and state. On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, ten answers below decider-0.8b. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. The hosted jev takes 466 ms per query, the round trip to its API included.
+The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes ([chapter 3](03-engines.md#laya)). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. The hosted jev takes 466 ms per query, the round trip to its API included.
 
 ## Memory: one model at a time
 
-Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. The benchmark machine has 48 GB. An early benchmark driver loaded several GGUF files per batch (up to 9 GB of weights at once) next to the resident translation model, while other experiments ran beside it. The machine swapped until the boot disk was full, and macOS hung.
+Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. Loading several models at once on the 48 GB benchmark machine filled its boot disk with swap and hung macOS ([chapter 5](05-method.md#one-model-at-a-time)).
 
 The fix was procedural, and it is worth copying if you benchmark models yourself:
 
 - Load one model process at a time, and check that none is resident before you load the next.
 - Stop a server by its process and then confirm that its port is free; a server that ignores the stop signal still holds its memory.
 - Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit.
-
-With those rules every model ran with swap flat at about 2.7 GB, the 21 GB decider-35b-a3b included.
 
 The `ornotto` package applies the same discipline to itself. Each `Decider` shares one engine process per model, engine and device; the processes stop when Python exits, and `ornotto.shutdown()` stops them earlier ([chapter 10](10-package.md)). If your code opens several models at once, add up their GGUF sizes plus the pcdServer checkpoint budget before you do.

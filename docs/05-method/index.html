@@ -679,10 +679,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-each-engine-was-asked" class="md-nav__link">
+  <a href="#what-each-method-was-asked" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What each engine was asked
+        What each method was asked
       
     </span>
   </a>
@@ -705,6 +705,17 @@
     <span class="md-ellipsis">
       
         What the numbers mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility
       
     </span>
   </a>
@@ -1089,10 +1100,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-each-engine-was-asked" class="md-nav__link">
+  <a href="#what-each-method-was-asked" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What each engine was asked
+        What each method was asked
       
     </span>
   </a>
@@ -1115,6 +1126,17 @@
     <span class="md-ellipsis">
       
         What the numbers mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility
       
     </span>
   </a>
@@ -1147,13 +1169,15 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
 
 
 <h1 id="5-how-we-measured">5. How we measured<a class="headerlink" href="#5-how-we-measured" title="Permanent link">&para;</a></h1>
-<p>The benchmark asks one question 67 times: which of five things does this FontLab user want the built-in assistant to do? It is the router in front of the FontLab assistant, and it is the decision this book was written to get right. Every engine and model got the same 67 queries, and every answer was scored against a label we assigned before the run.</p>
+<p>The benchmark asks one question 67 times: which of five things does this FontLab user want the built-in assistant to do? It is the router in front of the FontLab assistant, and it is the decision this book was written to get right. Every method got the same 67 queries, and every answer was scored against a label we assigned before the run.</p>
 <h2 id="the-router-question">The router question<a class="headerlink" href="#the-router-question" title="Permanent link">&para;</a></h2>
 <p>The assistant can do five kinds of work, and each query belongs to exactly one:</p>
 <table>
@@ -1187,7 +1211,7 @@
 </tbody>
 </table>
 <p>The labels split 17 <code>docs</code>, 14 <code>fea</code>, 14 <code>sample</code>, 13 <code>python</code> and 9 <code>vfj</code>.</p>
-<p>System One engines received the question as the instruction <em>"This message was sent to the assistant built into FontLab, the font editor. What is the user asking the assistant to do? Pick the single best match."</em> and each task as an option with a description of one to three sentences. Other engines needed shorter prompts, which the section on <a href="#what-each-engine-was-asked">prompts</a> lists.</p>
+<p>System One methods received the question as the instruction <em>"This message was sent to the assistant built into FontLab, the font editor. What is the user asking the assistant to do? Pick the single best match."</em> and each task as an option with a description of one to three sentences. Other methods needed shorter prompts, which the section on <a href="#what-each-method-was-asked">prompts</a> lists.</p>
 <h2 id="the-67-queries">The 67 queries<a class="headerlink" href="#the-67-queries" title="Permanent link">&para;</a></h2>
 <p>28 queries are in English and 39 are in 29 other languages, 30 languages in all: Polish (3); German, French, Spanish, Italian, Russian, Japanese, Chinese and Korean (2 each); and Czech, Portuguese, Dutch, Turkish, Hungarian, Finnish, Swedish, Ukrainian, Bulgarian, Greek, Armenian, Georgian, Arabic, Persian, Hebrew, Urdu, Hindi, Bengali, Thai and Vietnamese (1 each). They cover Latin with diacritics, Cyrillic, Greek, Arabic, Hebrew, Devanagari, Bengali, Thai, Georgian, Armenian, Han, Hangul and Kana.</p>
 <p>Ten of the queries were written to be hard. They sit on the border between two tasks, and a reasonable person could hesitate over each:</p>
@@ -1209,7 +1233,7 @@
 <h3 id="language-detection">Language detection<a class="headerlink" href="#language-detection" title="Permanent link">&para;</a></h3>
 <p>The pipeline has to know whether a query is English before it can decide to translate it. Two detectors were measured over 100 passes of the 67 queries, single-threaded, after a warm-up:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
+<table class="sortable" id="detectors"><caption>Click a column header to sort.</caption><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
 <tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="604.316937" class="num">604.3</td><td data-sort="1654.760835" class="num">1,655</td></tr>
 <tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.130034" class="num">12.1</td><td data-sort="82439.998385" class="num">82,440</td></tr>
@@ -1223,7 +1247,7 @@
 <p>The 39 translations, with the time each took:</p>
 <div class="bench" markdown="0">
 <input class="table-filter" type="search" placeholder="Filter 39 rows" aria-label="Filter the table" data-table="translator">
-<table class="sortable" id="translator"><thead><tr><th>Query</th><th>Lang</th><th>English</th><th>ms</th></tr></thead>
+<table class="sortable" id="translator"><caption>Click a column header to sort.</caption><thead><tr><th>Query</th><th>Lang</th><th>English</th><th>ms</th></tr></thead>
 <tbody>
 <tr><td class="query">Jak zmienić kąt pochylenia kursywy w FontLab?</td><td>pl</td><td class="query">How can I change the italic angle in FontLab?</td><td data-sort="149.26725" class="num">149</td></tr>
 <tr><td class="query">Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp</td><td>pl</td><td class="query">Write a Python script that changes the names of all glyphs from .sc to .smcp</td><td data-sort="112.075625" class="num">112</td></tr>
@@ -1268,12 +1292,12 @@
 </div>
 
 <p>Each query was translated once and the English text was cached, so every classifier in translated mode saw the same English.</p>
-<h2 id="what-each-engine-was-asked">What each engine was asked<a class="headerlink" href="#what-each-engine-was-asked" title="Permanent link">&para;</a></h2>
-<p>Engines take different request shapes, so the same decision was phrased in the shape each engine was built for:</p>
+<h2 id="what-each-method-was-asked">What each method was asked<a class="headerlink" href="#what-each-method-was-asked" title="Permanent link">&para;</a></h2>
+<p>Engines and runtimes take different request shapes, so the same decision was phrased in the shape each readout was built for:</p>
 <table>
 <thead>
 <tr>
-<th>engine</th>
+<th>engine or readout</th>
 <th>prompt</th>
 </tr>
 </thead>
@@ -1300,10 +1324,10 @@
 </tr>
 </tbody>
 </table>
-<p>pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. <a href="../03-engines/">Chapter 3</a> explains what each engine does with its prompt.</p>
+<p>pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. <a href="../03-engines/">Chapter 3</a> explains what each readout does with its prompt.</p>
 <h2 id="one-model-at-a-time">One model at a time<a class="headerlink" href="#one-model-at-a-time" title="Permanent link">&para;</a></h2>
-<p>Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early run loaded several GGUFs in one batch, next to the translator. The machine, an Apple M4 Max with 48 GB of memory, swapped its boot disk full and macOS stopped responding.</p>
-<p>Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat for every model, the 35B mixture-of-experts model included.</p>
+<p>Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early driver loaded several GGUF files per batch (up to 9 GB of weights at once) next to the resident translation model, while other experiments ran beside it. The machine, an Apple M4 Max with 48 GB of memory, swapped until its boot disk was full and macOS stopped responding.</p>
+<p>Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat at about 2.7 GB for every model, the 21 GB decider-35b-a3b included. <a href="../08-speed/#memory-one-model-at-a-time">Chapter 8</a> turns this into rules for your own code.</p>
 <p>One model at a time also makes the timings fair: no model competes with another for the GPU or for memory bandwidth.</p>
 <h2 id="what-the-numbers-mean">What the numbers mean<a class="headerlink" href="#what-the-numbers-mean" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1314,12 +1338,19 @@
 <li><strong>GB</strong> is the size of the GGUF file as published on Hugging Face.</li>
 </ul>
 <p>In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so compare their milliseconds with a server's only loosely.</p>
+<h2 id="reproducibility">Reproducibility<a class="headerlink" href="#reproducibility" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Engines.</strong> dohnuts.cpp at upstream commit <code>9a894b0</code>, with llama.cpp pinned by its submodule at <code>b29c606</code>. The benchmark predates our prefix cache (<a href="../08-speed/#prefix-caching-in-dohnuts">chapter 8</a>), which leaves single-question requests unchanged. pcdServer at commit <code>1ce9e55</code>, which fetches llama.cpp tag <code>v0.4.1</code> when it is configured. slot used a stock llama-server.</li>
+<li><strong>Translator.</strong> Hy-MT2-1.8B at Q4_K_M, temperature 0, with the glossary above.</li>
+<li><strong>Dates.</strong> The runs, the jev calls included, took place on 2026-09-22 and 2026-09-23.</li>
+<li><strong>Data.</strong> The harness itself is private. Every method's scores, timings and file sizes are published in <code>src_docs/data/</code> in the <a href="https://github.com/fontlaborg/ornotto">ornotto repository</a>, and the tables in this book are generated from them.</li>
+</ul>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>67 queries is a small set.</strong> One query is 1.5 points of accuracy. Differences of one or two queries between models are within what a different set of 67 would change.</li>
+<li><strong>67 queries is a small set.</strong> One query is 1.5 percentage points of accuracy. Differences of one or two queries between models are within what a different set of 67 would change.</li>
 <li><strong>The labels are ours.</strong> For the ten ambiguous queries another person could label a few differently. jev's two errors are both on ambiguous queries.</li>
 <li><strong>Thresholds are in-sample.</strong> The confidence gates in <a href="../09-confidence/">chapter 9</a> were tuned on the same 67 queries they are scored on. Expect them to do somewhat worse on new traffic.</li>
-<li><strong>One machine.</strong> All timings come from one Apple M4 Max, on Metal where the engine supports it. CPU-only machines are several times slower: dohnuts on the CPU with eight threads took 275 ms per query against 52 ms on Metal.</li>
+<li><strong>One machine.</strong> All timings come from one Apple M4 Max, on Metal where the engine or runtime supports it. CPU-only machines are several times slower: dohnuts on the CPU with eight threads took 275 ms per query against 52 ms on Metal.</li>
 <li><strong>One task.</strong> A five-way router is one decision. Yes/no questions, rubrics and long option lists behave differently, and <a href="../02-decisions/">chapter 2</a> shows examples of each.</li>
 <li><strong>Only the winner is scored.</strong> Accuracy looks at the most likely option. It ignores how confident the model was, which matters as soon as you gate on confidence (<a href="../09-confidence/">chapter 9</a>).</li>
 </ul>
@@ -1336,6 +1367,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1458,10 +1491,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

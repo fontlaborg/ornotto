@@ -1147,6 +1147,8 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
@@ -1161,7 +1163,7 @@
 <th>family</th>
 <th>where the answer comes from</th>
 <th>engines in <code>ornotto</code></th>
-<th>engines in the benchmark</th>
+<th>engines and runtimes in the benchmark</th>
 </tr>
 </thead>
 <tbody>
@@ -1188,55 +1190,55 @@
 <p>The best row of every model in the benchmark, grouped by family:</p>
 <div class="bench" markdown="0">
 <input class="table-filter" type="search" placeholder="Filter 47 rows" aria-label="Filter the table" data-table="families">
-<table class="sortable" id="families"><thead><tr><th>Family</th><th>Model</th><th>Best method</th><th>Engine</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th></tr></thead>
+<table class="sortable" id="families"><caption>Click a column header to sort.</caption><thead><tr><th>Family</th><th>Model</th><th>Engine</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th><th>Best method</th></tr></thead>
 <tbody>
-<tr><td>dedicated</td><td>jev</td><td class="method">jev</td><td>jev (hosted)</td><td data-sort="-1"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
-<tr><td>dedicated</td><td>decider-35b-a3b</td><td class="method">dohnuts-metal@decider-35b-a3b-q4</td><td>dohnuts (Metal)</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>dedicated</td><td>decider-4b</td><td class="method">torch@decider-4b-bf16</td><td>PyTorch</td><td data-sort="-1"></td><td data-sort="348.210448" class="num">348.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="65" class="num score">65/67</td></tr>
-<tr><td>dedicated</td><td>decider-0.8b</td><td class="method">dohnuts-metal@decider-0.8b-q8</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="51.379104" class="num">51.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td></tr>
-<tr><td>dedicated</td><td>decider-0.8b-dreamblooms</td><td class="method">dohnuts-metal@decider-0.8b-dreamblooms-q8</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="52.238806" class="num">52.2</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td></tr>
-<tr><td>dedicated</td><td>kev-4b</td><td class="method">kev-4b-gguf</td><td>laya.cpp</td><td data-sort="-1"></td><td data-sort="1103.074627" class="num">1,103.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="55" class="num score">55/67</td></tr>
-<tr><td>dedicated</td><td>decider-2b</td><td class="method">pcdserver@decider-2b-f16</td><td>pcdServer</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td></tr>
-<tr><td>dedicated</td><td>decider-2b-dreamblooms</td><td class="method">pcdserver@decider-2b-dreamblooms-q8</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td></tr>
-<tr><td>dedicated</td><td>kev-0.8b</td><td class="method">kev-0.8b-gguf</td><td>laya.cpp</td><td data-sort="-1"></td><td data-sort="231.504478" class="num">231.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="45" class="num score">45/67</td></tr>
-<tr><td>dedicated</td><td>laya-multilingual</td><td class="method">laya-mlx</td><td>MLX</td><td data-sort="-1"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td></tr>
-<tr><td>dedicated</td><td>laya-typed-decisions</td><td class="method">laya-typed-decisions</td><td>PyTorch</td><td data-sort="-1"></td><td data-sort="17.659701" class="num">17.7</td><td data-sort="48" class="num score">48/67</td><td data-sort="43" class="num score">43/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3.5-4b-hmm</td><td class="method">pcdserver@qwen3.5-4b-hmm-q8</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="87.559701" class="num">87.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3.8-4b-distill</td><td class="method">pcdserver@qwen3.8-4b-distill-q4</td><td>pcdServer</td><td data-sort="2.78" class="num">2.78</td><td data-sort="93.58209" class="num">93.6</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3.8-9b-distill</td><td class="method">pcdserver@qwen3.8-9b-distill-q4</td><td>pcdServer</td><td data-sort="5.78" class="num">5.78</td><td data-sort="137.80597" class="num">137.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3.5-4b-supercoder</td><td class="method">pcdserver@qwen3.5-4b-supercoder-q4</td><td>pcdServer</td><td data-sort="2.61" class="num">2.61</td><td data-sort="84.198507" class="num">84.2</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen2.5-coder-7b</td><td class="method">pcdserver@qwen2.5-coder-7b-q4</td><td>pcdServer</td><td data-sort="4.68" class="num">4.68</td><td data-sort="108.885075" class="num">108.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen2.5-coder-3b</td><td class="method">pcdserver@qwen2.5-coder-3b-q4</td><td>pcdServer</td><td data-sort="2.1" class="num">2.10</td><td data-sort="60.222388" class="num">60.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td></tr>
-<tr><td>fine-tuned</td><td>pulse-0.6b</td><td class="method">pcdserver@pulse-0.6b-q4</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="27.864179" class="num">27.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="52" class="num score">52/67</td></tr>
-<tr><td>fine-tuned</td><td>lq-decide-1.7b</td><td class="method">pcdserver@lq-decide-1.7b-q8</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.149254" class="num">35.1</td><td data-sort="50" class="num score">50/67</td><td data-sort="46" class="num score">46/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3.8-2b-distill</td><td class="method">pcdserver@qwen3.8-2b-distill-q4</td><td>pcdServer</td><td data-sort="1.31" class="num">1.31</td><td data-sort="42.910448" class="num">42.9</td><td data-sort="49" class="num score">49/67</td><td data-sort="51" class="num score">51/67</td></tr>
-<tr><td>fine-tuned</td><td>zerocoder-0.8b</td><td class="method">pcdserver@zerocoder-0.8b-q2</td><td>pcdServer</td><td data-sort="0.38" class="num">0.38</td><td data-sort="34.71791" class="num">34.7</td><td data-sort="42" class="num score">42/67</td><td data-sort="36" class="num score">36/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen3-reranker-0.6b</td><td class="method">pcdserver@qwen3-reranker-0.6b-q5</td><td>pcdServer</td><td data-sort="0.44" class="num">0.44</td><td data-sort="24.728358" class="num">24.7</td><td data-sort="40" class="num score">40/67</td><td data-sort="44" class="num score">44/67</td></tr>
-<tr><td>fine-tuned</td><td>lyco-router-0.6b</td><td class="method">pcdserver@lyco-router-0.6b-q4</td><td>pcdServer</td><td data-sort="0.48" class="num">0.48</td><td data-sort="26.386567" class="num">26.4</td><td data-sort="35" class="num score">35/67</td><td data-sort="33" class="num score">33/67</td></tr>
-<tr><td>fine-tuned</td><td>qwen2.5-0.5b-pcb</td><td class="method">pcdserver@qwen2.5-0.5b-pcb-q2</td><td>pcdServer</td><td data-sort="0.34" class="num">0.34</td><td data-sort="18.073134" class="num">18.1</td><td data-sort="27" class="num score">27/67</td><td data-sort="23" class="num score">23/67</td></tr>
-<tr><td>fine-tuned</td><td>euaiact-0.5b</td><td class="method">pcdserver@euaiact-0.5b-q4</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="23.765672" class="num">23.8</td><td data-sort="20" class="num score">20/67</td><td data-sort="20" class="num score">20/67</td></tr>
-<tr><td>fine-tuned</td><td>lq-decide-0.6b</td><td class="method">pcdserver@lq-decide-0.6b-q8</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="23.080597" class="num">23.1</td><td data-sort="11" class="num score">11/67</td><td data-sort="11" class="num score">11/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-4b-unsloth</td><td class="method">pcdserver@qwen3.5-4b-unsloth-q8</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="84.956716" class="num">85.0</td><td data-sort="63" class="num score">63/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>vanilla</td><td>qwen2.5-3b</td><td class="method">pcdserver@qwen2.5-3b-q8</td><td>pcdServer</td><td data-sort="3.29" class="num">3.29</td><td data-sort="53.273134" class="num">53.3</td><td data-sort="62" class="num score">62/67</td><td data-sort="57" class="num score">57/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-4b</td><td class="method">pcdserver@qwen3.5-4b-q4</td><td>pcdServer</td><td data-sort="3.01" class="num">3.01</td><td data-sort="89.750746" class="num">89.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
-<tr><td>vanilla</td><td>bonsai-27b</td><td class="method">pcdserver@bonsai-27b-q1</td><td>pcdServer</td><td data-sort="3.8" class="num">3.80</td><td data-sort="513.526866" class="num">513.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-2b</td><td class="method">pcdserver@qwen3.5-2b-q3</td><td>pcdServer</td><td data-sort="1.22" class="num">1.22</td><td data-sort="42.701493" class="num">42.7</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-4b-unsloth</td><td class="method">pcdserver@qwen3-4b-unsloth-bf16</td><td>pcdServer</td><td data-sort="8.05" class="num">8.05</td><td data-sort="71.520896" class="num">71.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-4b</td><td class="method">pcdserver@qwen3-4b-q4</td><td>pcdServer</td><td data-sort="2.5" class="num">2.50</td><td data-sort="75.459701" class="num">75.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-8b</td><td class="method">pcdserver@qwen3-8b-q4</td><td>pcdServer</td><td data-sort="5.03" class="num">5.03</td><td data-sort="115.99403" class="num">116.0</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-9b-unsloth</td><td class="method">pcdserver@qwen3.5-9b-unsloth-q4</td><td>pcdServer</td><td data-sort="5.68" class="num">5.68</td><td data-sort="136.938806" class="num">136.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="63" class="num score">63/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-0.8b</td><td class="method">pcdserver@qwen3.5-0.8b-q5</td><td>pcdServer</td><td data-sort="0.65" class="num">0.65</td><td data-sort="32.09403" class="num">32.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="57" class="num score">57/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-1.7b-unsloth</td><td class="method">pcdserver@qwen3-1.7b-unsloth-q8</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.08209" class="num">35.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-1.7b</td><td class="method">pcdserver@qwen3-1.7b-q8</td><td>pcdServer</td><td data-sort="2.17" class="num">2.17</td><td data-sort="35.240299" class="num">35.2</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-2b-unsloth</td><td class="method">pcdserver@qwen3.5-2b-unsloth-q8</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="39.532836" class="num">39.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-0.8b-unsloth</td><td class="method">pcdserver@qwen3.5-0.8b-unsloth-q5</td><td>pcdServer</td><td data-sort="0.59" class="num">0.59</td><td data-sort="29.571642" class="num">29.6</td><td data-sort="56" class="num score">56/67</td><td data-sort="57" class="num score">57/67</td></tr>
-<tr><td>vanilla</td><td>qwen3.5-0.8b-ggml</td><td class="method">pcdserver@qwen3.5-0.8b-ggml-bf16</td><td>pcdServer</td><td data-sort="1.56" class="num">1.56</td><td data-sort="30.316418" class="num">30.3</td><td data-sort="55" class="num score">55/67</td><td data-sort="57" class="num score">57/67</td></tr>
-<tr><td>vanilla</td><td>bonsai-1.7b</td><td class="method">pcdserver@bonsai-1.7b-q2</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="34.910448" class="num">34.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="55" class="num score">55/67</td></tr>
-<tr><td>vanilla</td><td>qwen3-0.6b</td><td class="method">pcdserver@qwen3-0.6b-q8</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="25.495522" class="num">25.5</td><td data-sort="53" class="num score">53/67</td><td data-sort="54" class="num score">54/67</td></tr>
-<tr><td>vanilla</td><td>qwen1.5-4b</td><td class="method">pcdserver@qwen1.5-4b-q8</td><td>pcdServer</td><td data-sort="4.2" class="num">4.20</td><td data-sort="247.792537" class="num">247.8</td><td data-sort="42" class="num score">42/67</td><td data-sort="43" class="num score">43/67</td></tr>
-<tr><td>vanilla</td><td>qwen1.5-0.5b</td><td class="method">pcdserver@qwen1.5-0.5b-q3</td><td>pcdServer</td><td data-sort="0.35" class="num">0.35</td><td data-sort="21.204478" class="num">21.2</td><td data-sort="35" class="num score">35/67</td><td data-sort="32" class="num score">32/67</td></tr>
-<tr><td>vanilla</td><td>qwen1.5-1.8b</td><td class="method">pcdserver@qwen1.5-1.8b-q3</td><td>pcdServer</td><td data-sort="1.02" class="num">1.02</td><td data-sort="41.825373" class="num">41.8</td><td data-sort="34" class="num score">34/67</td><td data-sort="35" class="num score">35/67</td></tr>
-<tr><td>vanilla</td><td>qwen2.5-0.5b</td><td class="method">pcdserver@qwen2.5-0.5b-q4</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="20.179104" class="num">20.2</td><td data-sort="28" class="num score">28/67</td><td data-sort="26" class="num score">26/67</td></tr>
+<tr><td>dedicated</td><td>jev</td><td>jev (hosted)</td><td class="num"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td class="method">jev</td></tr>
+<tr><td>dedicated</td><td>decider-35b-a3b</td><td>dohnuts (Metal)</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td class="method">dohnuts-metal@decider-35b-a3b-q4</td></tr>
+<tr><td>dedicated</td><td>decider-4b</td><td>PyTorch</td><td class="num"></td><td data-sort="348.210448" class="num">348.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="65" class="num score">65/67</td><td class="method">torch@decider-4b-bf16</td></tr>
+<tr><td>dedicated</td><td>decider-0.8b</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="51.379104" class="num">51.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-q8</td></tr>
+<tr><td>dedicated</td><td>decider-0.8b-dreamblooms</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="52.238806" class="num">52.2</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-dreamblooms-q8</td></tr>
+<tr><td>dedicated</td><td>kev-4b</td><td>laya.cpp</td><td class="num"></td><td data-sort="1103.074627" class="num">1,103.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="55" class="num score">55/67</td><td class="method">kev-4b-gguf</td></tr>
+<tr><td>dedicated</td><td>decider-2b</td><td>pcdServer</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-f16</td></tr>
+<tr><td>dedicated</td><td>decider-2b-dreamblooms</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-dreamblooms-q8</td></tr>
+<tr><td>dedicated</td><td>kev-0.8b</td><td>laya.cpp</td><td class="num"></td><td data-sort="231.504478" class="num">231.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="45" class="num score">45/67</td><td class="method">kev-0.8b-gguf</td></tr>
+<tr><td>dedicated</td><td>laya-multilingual</td><td>MLX</td><td class="num"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td class="method">laya-mlx</td></tr>
+<tr><td>dedicated</td><td>laya-typed-decisions</td><td>PyTorch</td><td class="num"></td><td data-sort="17.659701" class="num">17.7</td><td data-sort="48" class="num score">48/67</td><td data-sort="43" class="num score">43/67</td><td class="method">laya-typed-decisions</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.5-4b-hmm</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="87.559701" class="num">87.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td><td class="method">pcdserver@qwen3.5-4b-hmm-q8</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-4b-distill</td><td>pcdServer</td><td data-sort="2.78" class="num">2.78</td><td data-sort="93.58209" class="num">93.6</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td class="method">pcdserver@qwen3.8-4b-distill-q4</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-9b-distill</td><td>pcdServer</td><td data-sort="5.78" class="num">5.78</td><td data-sort="137.80597" class="num">137.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td><td class="method">pcdserver@qwen3.8-9b-distill-q4</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.5-4b-supercoder</td><td>pcdServer</td><td data-sort="2.61" class="num">2.61</td><td data-sort="84.198507" class="num">84.2</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen3.5-4b-supercoder-q4</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-coder-7b</td><td>pcdServer</td><td data-sort="4.68" class="num">4.68</td><td data-sort="108.885075" class="num">108.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen2.5-coder-7b-q4</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-coder-3b</td><td>pcdServer</td><td data-sort="2.1" class="num">2.10</td><td data-sort="60.222388" class="num">60.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td><td class="method">pcdserver@qwen2.5-coder-3b-q4</td></tr>
+<tr><td>fine-tuned</td><td>pulse-0.6b</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="27.864179" class="num">27.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="52" class="num score">52/67</td><td class="method">pcdserver@pulse-0.6b-q4</td></tr>
+<tr><td>fine-tuned</td><td>lq-decide-1.7b</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.149254" class="num">35.1</td><td data-sort="50" class="num score">50/67</td><td data-sort="46" class="num score">46/67</td><td class="method">pcdserver@lq-decide-1.7b-q8</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-2b-distill</td><td>pcdServer</td><td data-sort="1.31" class="num">1.31</td><td data-sort="42.910448" class="num">42.9</td><td data-sort="49" class="num score">49/67</td><td data-sort="51" class="num score">51/67</td><td class="method">pcdserver@qwen3.8-2b-distill-q4</td></tr>
+<tr><td>fine-tuned</td><td>zerocoder-0.8b</td><td>pcdServer</td><td data-sort="0.38" class="num">0.38</td><td data-sort="34.71791" class="num">34.7</td><td data-sort="42" class="num score">42/67</td><td data-sort="36" class="num score">36/67</td><td class="method">pcdserver@zerocoder-0.8b-q2</td></tr>
+<tr><td>fine-tuned</td><td>qwen3-reranker-0.6b</td><td>pcdServer</td><td data-sort="0.44" class="num">0.44</td><td data-sort="24.728358" class="num">24.7</td><td data-sort="40" class="num score">40/67</td><td data-sort="44" class="num score">44/67</td><td class="method">pcdserver@qwen3-reranker-0.6b-q5</td></tr>
+<tr><td>fine-tuned</td><td>lyco-router-0.6b</td><td>pcdServer</td><td data-sort="0.48" class="num">0.48</td><td data-sort="26.386567" class="num">26.4</td><td data-sort="35" class="num score">35/67</td><td data-sort="33" class="num score">33/67</td><td class="method">pcdserver@lyco-router-0.6b-q4</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-0.5b-pcb</td><td>pcdServer</td><td data-sort="0.34" class="num">0.34</td><td data-sort="18.073134" class="num">18.1</td><td data-sort="27" class="num score">27/67</td><td data-sort="23" class="num score">23/67</td><td class="method">pcdserver@qwen2.5-0.5b-pcb-q2</td></tr>
+<tr><td>fine-tuned</td><td>euaiact-0.5b</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="23.765672" class="num">23.8</td><td data-sort="20" class="num score">20/67</td><td data-sort="20" class="num score">20/67</td><td class="method">pcdserver@euaiact-0.5b-q4</td></tr>
+<tr><td>fine-tuned</td><td>lq-decide-0.6b</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="23.080597" class="num">23.1</td><td data-sort="11" class="num score">11/67</td><td data-sort="11" class="num score">11/67</td><td class="method">pcdserver@lq-decide-0.6b-q8</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-4b-unsloth</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="84.956716" class="num">85.0</td><td data-sort="63" class="num score">63/67</td><td data-sort="64" class="num score">64/67</td><td class="method">pcdserver@qwen3.5-4b-unsloth-q8</td></tr>
+<tr><td>vanilla</td><td>qwen2.5-3b</td><td>pcdServer</td><td data-sort="3.29" class="num">3.29</td><td data-sort="53.273134" class="num">53.3</td><td data-sort="62" class="num score">62/67</td><td data-sort="57" class="num score">57/67</td><td class="method">pcdserver@qwen2.5-3b-q8</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-4b</td><td>pcdServer</td><td data-sort="3.01" class="num">3.01</td><td data-sort="89.750746" class="num">89.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td class="method">pcdserver@qwen3.5-4b-q4</td></tr>
+<tr><td>vanilla</td><td>bonsai-27b</td><td>pcdServer</td><td data-sort="3.8" class="num">3.80</td><td data-sort="513.526866" class="num">513.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td class="method">pcdserver@bonsai-27b-q1</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-2b</td><td>pcdServer</td><td data-sort="1.22" class="num">1.22</td><td data-sort="42.701493" class="num">42.7</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen3.5-2b-q3</td></tr>
+<tr><td>vanilla</td><td>qwen3-4b-unsloth</td><td>pcdServer</td><td data-sort="8.05" class="num">8.05</td><td data-sort="71.520896" class="num">71.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen3-4b-unsloth-bf16</td></tr>
+<tr><td>vanilla</td><td>qwen3-4b</td><td>pcdServer</td><td data-sort="2.5" class="num">2.50</td><td data-sort="75.459701" class="num">75.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen3-4b-q4</td></tr>
+<tr><td>vanilla</td><td>qwen3-8b</td><td>pcdServer</td><td data-sort="5.03" class="num">5.03</td><td data-sort="115.99403" class="num">116.0</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td><td class="method">pcdserver@qwen3-8b-q4</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-9b-unsloth</td><td>pcdServer</td><td data-sort="5.68" class="num">5.68</td><td data-sort="136.938806" class="num">136.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="63" class="num score">63/67</td><td class="method">pcdserver@qwen3.5-9b-unsloth-q4</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b</td><td>pcdServer</td><td data-sort="0.65" class="num">0.65</td><td data-sort="32.09403" class="num">32.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="57" class="num score">57/67</td><td class="method">pcdserver@qwen3.5-0.8b-q5</td></tr>
+<tr><td>vanilla</td><td>qwen3-1.7b-unsloth</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.08209" class="num">35.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td><td class="method">pcdserver@qwen3-1.7b-unsloth-q8</td></tr>
+<tr><td>vanilla</td><td>qwen3-1.7b</td><td>pcdServer</td><td data-sort="2.17" class="num">2.17</td><td data-sort="35.240299" class="num">35.2</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td><td class="method">pcdserver@qwen3-1.7b-q8</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-2b-unsloth</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="39.532836" class="num">39.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td><td class="method">pcdserver@qwen3.5-2b-unsloth-q8</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b-unsloth</td><td>pcdServer</td><td data-sort="0.59" class="num">0.59</td><td data-sort="29.571642" class="num">29.6</td><td data-sort="56" class="num score">56/67</td><td data-sort="57" class="num score">57/67</td><td class="method">pcdserver@qwen3.5-0.8b-unsloth-q5</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b-ggml</td><td>pcdServer</td><td data-sort="1.56" class="num">1.56</td><td data-sort="30.316418" class="num">30.3</td><td data-sort="55" class="num score">55/67</td><td data-sort="57" class="num score">57/67</td><td class="method">pcdserver@qwen3.5-0.8b-ggml-bf16</td></tr>
+<tr><td>vanilla</td><td>bonsai-1.7b</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="34.910448" class="num">34.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="55" class="num score">55/67</td><td class="method">pcdserver@bonsai-1.7b-q2</td></tr>
+<tr><td>vanilla</td><td>qwen3-0.6b</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="25.495522" class="num">25.5</td><td data-sort="53" class="num score">53/67</td><td data-sort="54" class="num score">54/67</td><td class="method">pcdserver@qwen3-0.6b-q8</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-4b</td><td>pcdServer</td><td data-sort="4.2" class="num">4.20</td><td data-sort="247.792537" class="num">247.8</td><td data-sort="42" class="num score">42/67</td><td data-sort="43" class="num score">43/67</td><td class="method">pcdserver@qwen1.5-4b-q8</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-0.5b</td><td>pcdServer</td><td data-sort="0.35" class="num">0.35</td><td data-sort="21.204478" class="num">21.2</td><td data-sort="35" class="num score">35/67</td><td data-sort="32" class="num score">32/67</td><td class="method">pcdserver@qwen1.5-0.5b-q3</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-1.8b</td><td>pcdServer</td><td data-sort="1.02" class="num">1.02</td><td data-sort="41.825373" class="num">41.8</td><td data-sort="34" class="num score">34/67</td><td data-sort="35" class="num score">35/67</td><td class="method">pcdserver@qwen1.5-1.8b-q3</td></tr>
+<tr><td>vanilla</td><td>qwen2.5-0.5b</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="20.179104" class="num">20.2</td><td data-sort="28" class="num score">28/67</td><td data-sort="26" class="num score">26/67</td><td class="method">pcdserver@qwen2.5-0.5b-q4</td></tr>
 </tbody></table>
 </div>
 
@@ -1258,7 +1260,7 @@
 <td>decider-0.8b</td>
 <td><a href="https://huggingface.co/DreamBlooms/decider-0.8b-GGUF">DreamBlooms/decider-0.8b-GGUF</a>, <a href="https://huggingface.co/mradermacher/decider-0.8b-GGUF">mradermacher/decider-0.8b-GGUF</a></td>
 <td>Apache-2.0</td>
-<td>62/67 and 61/67 on dohnuts (Metal), 51 ms</td>
+<td>62/67 and 62/67 on dohnuts (Metal), mradermacher <code>Q6_K</code>, 54 ms; the DreamBlooms <code>Q8_0</code> file <code>ornotto</code> registers: 62/67 and 61/67, 52 ms</td>
 </tr>
 <tr>
 <td>decider-2b</td>
@@ -1298,10 +1300,10 @@
 <p>The Dohnuts weights are licensed CC-BY-NC-SA-4.0. The engine is Apache-2.0, the weights are not. Dohnuts was not benchmarked here and is not the <code>ornotto</code> default.</p>
 </div>
 <h3 id="laya-multilingual">laya-multilingual<a class="headerlink" href="#laya-multilingual" title="Permanent link">&para;</a></h3>
-<p><a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya-multilingual</a> (Apache-2.0) is an encoder, not a chat model: mmBERT-base with a decision head that reads a marker per option, plus an act head that says whether to answer directly or escalate. It shares a 1,024-token budget between the question, the options and the state, so the benchmark gave it short task descriptions. The Neural Engine exports hold 96 tokens and got a compact prompt of their own.</p>
-<p>The same checkpoint ran on six runtimes (MLX, Core AI, Core ML on the Neural Engine, ONNX Runtime, laya.cpp, and llama.cpp serving embeddings with the head in Python). Every run at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt cost four to five points. Of the two 4-bit conversions, one lost a point and the other lost 16. <code>ornotto</code> does not run laya.</p>
+<p><a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya-multilingual</a> (Apache-2.0) is an encoder with a decision head, not a chat model; <a href="../03-engines/#laya">chapter 3</a> describes its readout and its token budget.</p>
+<p>The same checkpoint ran on six runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. <code>ornotto</code> does not run laya.</p>
 <h3 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h3>
-<p>jev is TypeSafe's hosted System One model, reached through OpenRouter's System One API as <code>jev-latest</code>. It scored 65/67 in both modes, the best result in the benchmark, at 466 ms per query over the network. Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine (<a href="../11-typed/">chapter 11</a>).</p>
+<p>jev is TypeSafe's hosted System One model and the best result in the benchmark (<a href="../03-engines/#jev">chapter 3</a>). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="fine-tuned-models">Fine-tuned models<a class="headerlink" href="#fine-tuned-models" title="Permanent link">&para;</a></h2>
 <p>These are chat models tuned by third parties. None of them has a trained answer slot, so every one ran on pcdServer, which scores the first token of each allowed value under the model's chat template.</p>
 <p><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a> (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result in the benchmark, at 88 to 95 ms per query. Read through its own letter readout on llama-server (the <code>slot</code> rows), the same weights scored 62/67 and 63/67 and took three times as long.</p>
@@ -1310,7 +1312,8 @@
 <li>The empero-ai Qwen3.8 distills reached 62/67 at 4B and 9B, and 49/67 at 2B.</li>
 <li>The coding models (<a href="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF">Qwen2.5-Coder</a> 3B and 7B, jica98's Qwen3.5-4B super-coder) scored 60 to 61.</li>
 <li>Small models tuned for routing, deciding or retrieval scored worse than a vanilla model of the same size: pulse-0.6b 54, lq-decide-1.7b 50, lq-decide-0.6b 11, lyco-router-0.6b 35, Qwen3-Reranker-0.6B 40.</li>
-<li>Qwen2.5-0.5B-PCb and EUAIAct-Qwen2.5-0.5B reached 27 and 20.</li>
+<li>DavidAU's Qwen3 Zero-Coder 0.8B scored 18 to 42 across seven quantizations, with no order by bit count, well below vanilla Qwen3.5-0.8B's best of 57.</li>
+<li>Qwen2.5-0.5B-PCb reached 27 at best, one answer below vanilla Qwen2.5-0.5B's 28, and EUAIAct-Qwen2.5-0.5B reached 20.</li>
 </ul>
 <p>A tune for a nearby task does not carry over to this one. If you pick a fine-tuned model, check it on your own questions first.</p>
 <p><code>ornotto</code> registers <code>qwen3.5-4b-hmm</code> (the Q4_K_M file, 2.7 GB) on pcdServer:</p>
@@ -1319,7 +1322,7 @@
 <h2 id="vanilla-models">Vanilla models<a class="headerlink" href="#vanilla-models" title="Permanent link">&para;</a></h2>
 <p>Vanilla chat models need nothing but a chat template that llama.cpp understands, so any GGUF works on pcdServer. The benchmark ran Qwen3.5 (0.8B, 2B, 4B, 9B), Qwen3 (0.6B, 1.7B, 4B, 8B), Qwen2.5 (0.5B, 3B), Qwen1.5 (0.5B, 1.8B, 4B) and PrismML's Bonsai (1.7B, 27B), most of them at several quantizations.</p>
 <ul>
-<li>Qwen3.5-4B reached 62/67 and 63/67 at Q4; unsloth's Q8 build reached 63/67 and 64/67, one point below the Hmm tune.</li>
+<li>Qwen3.5-4B reached 62/67 and 63/67 at Q4; unsloth's Q8 build reached 63/67 and 64/67, one answer below the Hmm tune.</li>
 <li>Qwen3.5-2B at Q3_K_M reached 61/67 translated and 62/67 direct at 43 ms per query from a 1.2 GB file.</li>
 <li>Qwen3.5-0.8B reached 57/67 at Q5 and 55/67 at Q8, at about 30 ms.</li>
 <li>Qwen2.5-3B reached 62/67 on translated text but only 57 to 60 on direct text: it handles English well and other languages less well.</li>
@@ -1336,7 +1339,7 @@
 <ul>
 <li>If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.</li>
 <li>If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.</li>
-<li>If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one point of the dedicated 0.8B model.</li>
+<li>If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.</li>
 </ul>
 <p><a href="../07-quantization/">Chapter 7</a> shows how far each family can be quantized, and <a href="../12-choosing/">chapter 12</a> turns these results into a choice.</p>
 
@@ -1352,6 +1355,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1474,10 +1479,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

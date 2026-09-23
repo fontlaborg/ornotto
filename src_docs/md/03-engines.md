@@ -4,9 +4,16 @@ this_file: src_docs/md/03-engines.md
 
 # 3. Five ways to read an answer
 
-A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The engines in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models an engine can run, how fast it answers, and whether its probabilities mean what they say.
+A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The readouts in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models a readout can use, how fast it answers, and whether its probabilities mean what they say.
 
-Five engines ran in our benchmark. Two of them, dohnuts and pcdServer, are the engines the `ornotto` package bundles. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model altogether.
+Four words recur in the rest of this book, each with one meaning:
+
+- A **readout** is how the answer is read out of the model: jev's (not public), dohnuts' answer slot, pcdServer's first-token scoring, slot's top-100 log-probabilities, and laya's decision head. This chapter has one section per readout.
+- A **runtime** is what executes the network: llama.cpp on Metal or on the CPU, MLX, Core ML, ONNX Runtime, PyTorch or ExecuTorch.
+- An **engine** is a server you run: dohnuts, pcdServer, llama-server or laya.cpp. jev is a hosted service, not something you run.
+- A **method** is one row of the benchmark: one model file, read by one readout, on one engine or runtime, such as `pcdserver@qwen3.5-4b-hmm-q8`.
+
+Two of the readouts belong to the engines the `ornotto` package bundles, dohnuts and pcdServer. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model with a readout of its own.
 
 ## jev
 
@@ -87,7 +94,7 @@ Only the winning group is expanded. A losing group's probability is split **equa
 
 `values` holds the assembled object and `fields[]` holds `value`, `probability`, `probabilities` and `levels` for each field. `metrics` reports `elapsedMs`, `forwardPasses`, `schemaCacheStatus` (`miss`, `hit` or `fallback`), `checkpointBytes` and the milliseconds of each phase. The probabilities are a raw softmax, not temperature-scaled ([chapter 2](02-decisions.md#calibration)).
 
-With the same decider-0.8b Q8_0 file that dohnuts reads at its answer slot, pcdServer answers a router query in 28 ms, the fastest accurate path in this book. It scores 55 of 67 translated, against 62 for the answer-slot readout: the decider model was trained to answer at `Answer: (`, not inside a JSON object. With a model trained for chat, Qwen3.5-4B-Hmm at Q8_0, pcdServer scores 64 of 67 at 88 ms.
+With the same decider-0.8b Q8_0 file that dohnuts reads at its answer slot, pcdServer answers a router query in 28 ms, the fastest way to run this GGUF. It scores 55 of 67 translated, against 62 for the answer-slot readout: the decider model was trained to answer at `Answer: (`, not inside a JSON object. With a model trained for chat, pcdServer does much better: [chapter 6](06-results.md) has the numbers.
 
 ## slot
 
@@ -104,7 +111,7 @@ and then does the readout on the client, in one of two ways:
 
 A letter that falls outside the top 100 tokens gets probability 0, and the harness counts it as a miss.
 
-slot is the control for dohnuts. On every decider GGUF we ran, dohnuts's Metal build picked the same task as the decider readout on slot for 106 of 106 texts, with probabilities at most 0.0004 apart: dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with decider-0.8b Q8_0, against 52 ms for dohnuts.
+slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text ([chapter 6](06-results.md#one-set-of-weights-three-scores)), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.
 
 ## laya
 
@@ -114,7 +121,7 @@ laya ([convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya-mul
 [CLS] choice question: <instructions> [SEP] [MASK] <option 1> [MASK] <option 2> … [SEP] <state> [SEP]
 ```
 
-The head reads the encoder's hidden states at the `[MASK]` in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the *act head*, returns `action.act_probability`: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the engines here, and our benchmark does not use it yet.
+The head reads the encoder's hidden states at the `[MASK]` in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the *act head*, returns `action.act_probability`: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet.
 
 An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.
 
@@ -124,14 +131,14 @@ The same checkpoint ran on six runtimes in our benchmark: MLX, Core ML on the Ne
 
 | | jev | dohnuts | pcdServer | slot | laya |
 |---|---|---|---|---|---|
-| Runs | hosted | local, llama.cpp | local, llama.cpp | local, stock llama-server | local, MLX, Core ML, ONNX, llama.cpp |
+| Runtime | hosted | llama.cpp, Metal or CPU | llama.cpp, Metal or CPU | llama.cpp, in a stock llama-server | MLX, Core ML, Core AI, ONNX Runtime, llama.cpp |
 | Models | jev | decider, kev, Dohnuts | any chat GGUF | decider, Hmm | laya checkpoints |
 | Prompt | not public | the model's trained layout | chat template and JSON schema | the model's trained layout | encoder sequence with `[MASK]` markers |
 | Scored | not public | option letters at `Answer: (` | first tokens of allowed values | option letters in the top 100 | hidden state at each `[MASK]` |
-| Calibrated | yes | yes, temperature from metadata | no | yes, temperature applied by the client | yes, by bucket |
+| Calibrated | yes | yes, temperature from metadata | no | decider readout: yes, temperature applied by the client; Hmm readout: no | yes, by bucket |
 | Extra questions cost | not public | a full row each | a short suffix each | a full request each | a full pass each |
 | Reuse across requests | not public | the state prefix of multi-row requests (our fork) | schema prefix checkpoints (LRU) | none (`cache_prompt: false`) | none |
 | Router accuracy, best row | 65/67 | 64/67 (decider-35b-a3b) | 64/67 (Qwen3.5-4B-Hmm) | 64/67 (decider-35b-a3b) | 52/67 |
-| ms per query, 0.8B decider | | 52 (Metal), 275 (CPU) | 28 | 65 | 7 (laya on MLX) |
+| ms per query, decider-0.8b (DreamBlooms Q8_0) | | 52 (Metal), 275 (CPU) | 28 | 65 | |
 
-The best dohnuts row, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms.
+laya does not run decider; its own encoder answers in 6.9 ms on MLX. The best dohnuts method, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms.

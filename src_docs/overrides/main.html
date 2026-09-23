@@ -15,3 +15,10 @@
 {{ super() }}
 <fontlab-footer mode="dark"></fontlab-footer>
 {% endblock %}
+{# Cloudflare rewrites anything shaped like name@host.tld as an obfuscated e-mail link; method ids such as
+   pcdserver@qwen3.5-4b-hmm-q8 match that shape. email_off keeps the article text as written. #}
+{% block content %}
+<!--email_off-->
+{{ super() }}
+<!--/email_off-->
+{% endblock %}

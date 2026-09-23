@@ -25,7 +25,7 @@ Start from what your decision needs, not from the model list. The numbers in the
 | Many different question sets in rotation | dohnuts, or pcdServer with a larger cache | pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache. |
 | The best accuracy, cost no object | jev (hosted) | 65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's `TypeSafeModel` does. |
 
-Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest stack in the benchmark, laya-multilingual on MLX at 7 ms and 52/67, is not in ornotto at all: it runs a different kind of model on runtimes the package does not bundle ([chapter 3](03-engines.md)).
+Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on MLX at 7 ms and 52/67, is not in ornotto at all: it runs a different kind of model on runtimes the package does not bundle ([chapter 3](03-engines.md)).
 
 ## Building from source
 
@@ -62,9 +62,10 @@ So a build compiles llama.cpp twice, once per engine, each at the version its en
 | `-DHTTPLIB_USE_NON_BLOCKING_GETADDRINFO=OFF` | pcdServer | cpp-httplib's non-blocking name lookup calls `getaddrinfo_a`, which needs libanl on the glibc 2.28 of manylinux_2_28. The server only binds a loopback port and never resolves a name. |
 | `-DDOHNUTS_METAL=ON` | dohnuts, macOS | The Metal backend. pcdServer turns Metal on by itself. |
 | `-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0` | both, macOS | The wheel tag says `macosx_14_0`, so the binary must load on macOS 14. |
+| `-DCMAKE_OSX_ARCHITECTURES=<machine>` | both, macOS | Builds for the machine's own architecture (`arm64` on Apple silicon), so the executable is not a universal binary. |
 | `-DCMAKE_CXX_FLAGS=-fexperimental-library` | dohnuts, macOS | dohnuts uses `std::jthread`, which Apple's libc++ before LLVM 20 keeps behind this flag. Without it, the macOS 14 CI runner fails with `no member named 'jthread' in namespace 'std'`. |
-| `-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded` | both, Windows | Static MSVC runtime, no redistributable DLLs to ship. |
-| `-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc` | dohnuts, Windows | dohnuts builds llama.cpp as C++20, where `u8""` literals are `char8_t`, which llama.cpp's sources reject under MSVC. pcdServer gets `/utf-8 /EHsc` only: its nlohmann/json needs `char8_t` in C++20. |
+| `-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded` | dohnuts, Windows | Static MSVC runtime, no redistributable DLLs to ship. |
+| `-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc` | dohnuts, Windows | dohnuts builds llama.cpp as C++20, where `u8""` literals are `char8_t`, which llama.cpp's sources reject under MSVC. |
 
 Four environment variables steer the hook:
 
@@ -98,10 +99,10 @@ The workflow in `.github/workflows/wheels.yml` builds one wheel per platform, pl
 | Linux x86_64 | `ubuntu-24.04` in the `manylinux_2_28_x86_64` container | `manylinux_2_28_x86_64` wheel |
 | Linux aarch64 | `ubuntu-24.04-arm` in the `manylinux_2_28_aarch64` container | `manylinux_2_28_aarch64` wheel |
 | macOS | `macos-15` | `macosx_14_0_arm64` wheel |
-| Windows | `windows-2022`, allowed to fail | `win_amd64` wheel |
+| Windows | `windows-2022`, allowed to fail | `win_amd64` wheel with dohnuts only |
 | sdist | `ubuntu-24.04` | source distribution without engines |
 
-Each wheel job installs its wheel into a fresh virtual environment and checks that both engines are found before it uploads the artifact. Building in the manylinux 2.28 containers makes the Linux wheels load on glibc 2.28 and later. Windows is best effort, because pcdServer does not document Windows support; when that job fails, a release ships without a Windows wheel.
+Each wheel job installs its wheel into a fresh virtual environment and checks that its engines are found before it uploads the artifact. Building in the manylinux 2.28 containers makes the Linux wheels load on glibc 2.28 and later. On Windows the hook builds dohnuts only: pcdServer's sources do not compile with MSVC yet (`model_catalog.cpp` calls `std::wstring::rfind` with a `char`), so `Decider(..., engine="pcd")` there needs a `pcd_server` you build yourself. The Windows job is allowed to fail, so a release can ship without a Windows wheel.
 
 A release runs from `./publish.sh`, which needs `UV_PUBLISH_TOKEN` (a PyPI token) and an authenticated `gh`:
 

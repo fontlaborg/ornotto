@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-pydantic-ai = ["pydantic-ai-slim[typesafe]>=2.48"]
+pydantic-ai = ["pydantic-ai-slim[typesafe]>=2.48", "httpx2"]
 
 [project.scripts]
 ornotto = "ornotto.__main__:main"

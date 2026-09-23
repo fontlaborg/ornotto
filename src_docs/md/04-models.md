@@ -8,7 +8,7 @@ A model's size tells you less about how it will decide than the place its answer
 
 The family decides which engines can run the model. It also decides how much prompt work you have to do before its answers are worth reading.
 
-| family | where the answer comes from | engines in `ornotto` | engines in the benchmark |
+| family | where the answer comes from | engines in `ornotto` | engines and runtimes in the benchmark |
 |---|---|---|---|
 | dedicated | the model's own trained readout | dohnuts (decider, kev, Dohnuts), pcdServer (decider only, as a chat model) | jev, dohnuts, slot, pcdServer, laya runtimes, PyTorch, ExecuTorch |
 | fine-tuned | the first token of each allowed value, under a chat template | pcdServer | pcdServer, slot (Hmm readout) |
@@ -28,7 +28,7 @@ The benchmark ran four sizes, from several converters:
 
 | model | GGUF source | licence | best result (translated / direct) |
 |---|---|---|---|
-| decider-0.8b | [DreamBlooms/decider-0.8b-GGUF](https://huggingface.co/DreamBlooms/decider-0.8b-GGUF), [mradermacher/decider-0.8b-GGUF](https://huggingface.co/mradermacher/decider-0.8b-GGUF) | Apache-2.0 | 62/67 and 61/67 on dohnuts (Metal), 51 ms |
+| decider-0.8b | [DreamBlooms/decider-0.8b-GGUF](https://huggingface.co/DreamBlooms/decider-0.8b-GGUF), [mradermacher/decider-0.8b-GGUF](https://huggingface.co/mradermacher/decider-0.8b-GGUF) | Apache-2.0 | 62/67 and 62/67 on dohnuts (Metal), mradermacher `Q6_K`, 54 ms; the DreamBlooms `Q8_0` file `ornotto` registers: 62/67 and 61/67, 52 ms |
 | decider-2b | [DreamBlooms/decider-2b-GGUF](https://huggingface.co/DreamBlooms/decider-2b-GGUF), [cosetoenor/decider-2b-GGUF](https://huggingface.co/cosetoenor/decider-2b-GGUF) | Apache-2.0 | 59/67 and 62/67 on dohnuts (Metal); 60/60 on pcdServer |
 | decider-4b | [Mapika/decider-4b](https://huggingface.co/Mapika/decider-4b), in Mapika's PyTorch package | Apache-2.0 | 63/67 and 65/67, 348 ms |
 | decider-35b-a3b | [mradermacher/decider-35b-a3b-GGUF](https://huggingface.co/mradermacher/decider-35b-a3b-GGUF) | Apache-2.0 | 64/67 and 64/67 on dohnuts (Metal), 266 ms, 21 GB |
@@ -61,13 +61,13 @@ same_weights = ornotto.Decider("decider-0.8b", engine="pcd")  # pcdServer, as a 
 
 ### laya-multilingual
 
-[convaiinnovations/laya-multilingual](https://huggingface.co/convaiinnovations/laya-multilingual) (Apache-2.0) is an encoder, not a chat model: mmBERT-base with a decision head that reads a marker per option, plus an act head that says whether to answer directly or escalate. It shares a 1,024-token budget between the question, the options and the state, so the benchmark gave it short task descriptions. The Neural Engine exports hold 96 tokens and got a compact prompt of their own.
+[convaiinnovations/laya-multilingual](https://huggingface.co/convaiinnovations/laya-multilingual) (Apache-2.0) is an encoder with a decision head, not a chat model; [chapter 3](03-engines.md#laya) describes its readout and its token budget.
 
-The same checkpoint ran on six runtimes (MLX, Core AI, Core ML on the Neural Engine, ONNX Runtime, laya.cpp, and llama.cpp serving embeddings with the head in Python). Every run at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt cost four to five points. Of the two 4-bit conversions, one lost a point and the other lost 16. `ornotto` does not run laya.
+The same checkpoint ran on six runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. `ornotto` does not run laya.
 
 ### jev
 
-jev is TypeSafe's hosted System One model, reached through OpenRouter's System One API as `jev-latest`. It scored 65/67 in both modes, the best result in the benchmark, at 466 ms per query over the network. Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine ([chapter 11](11-typed.md)).
+jev is TypeSafe's hosted System One model and the best result in the benchmark ([chapter 3](03-engines.md#jev)). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine ([chapter 11](11-typed.md)).
 
 ## Fine-tuned models
 
@@ -80,7 +80,8 @@ The rest spread from close to the top to the bottom of the table:
 - The empero-ai Qwen3.8 distills reached 62/67 at 4B and 9B, and 49/67 at 2B.
 - The coding models ([Qwen2.5-Coder](https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF) 3B and 7B, jica98's Qwen3.5-4B super-coder) scored 60 to 61.
 - Small models tuned for routing, deciding or retrieval scored worse than a vanilla model of the same size: pulse-0.6b 54, lq-decide-1.7b 50, lq-decide-0.6b 11, lyco-router-0.6b 35, Qwen3-Reranker-0.6B 40.
-- Qwen2.5-0.5B-PCb and EUAIAct-Qwen2.5-0.5B reached 27 and 20.
+- DavidAU's Qwen3 Zero-Coder 0.8B scored 18 to 42 across seven quantizations, with no order by bit count, well below vanilla Qwen3.5-0.8B's best of 57.
+- Qwen2.5-0.5B-PCb reached 27 at best, one answer below vanilla Qwen2.5-0.5B's 28, and EUAIAct-Qwen2.5-0.5B reached 20.
 
 A tune for a nearby task does not carry over to this one. If you pick a fine-tuned model, check it on your own questions first.
 
@@ -94,7 +95,7 @@ careful = ornotto.Decider("qwen3.5-4b-hmm")
 
 Vanilla chat models need nothing but a chat template that llama.cpp understands, so any GGUF works on pcdServer. The benchmark ran Qwen3.5 (0.8B, 2B, 4B, 9B), Qwen3 (0.6B, 1.7B, 4B, 8B), Qwen2.5 (0.5B, 3B), Qwen1.5 (0.5B, 1.8B, 4B) and PrismML's Bonsai (1.7B, 27B), most of them at several quantizations.
 
-- Qwen3.5-4B reached 62/67 and 63/67 at Q4; unsloth's Q8 build reached 63/67 and 64/67, one point below the Hmm tune.
+- Qwen3.5-4B reached 62/67 and 63/67 at Q4; unsloth's Q8 build reached 63/67 and 64/67, one answer below the Hmm tune.
 - Qwen3.5-2B at Q3_K_M reached 61/67 translated and 62/67 direct at 43 ms per query from a 1.2 GB file.
 - Qwen3.5-0.8B reached 57/67 at Q5 and 55/67 at Q8, at about 30 ms.
 - Qwen2.5-3B reached 62/67 on translated text but only 57 to 60 on direct text: it handles English well and other languages less well.
@@ -116,6 +117,6 @@ An unregistered GGUF runs on pcdServer only. To run one on dohnuts, pass the pro
 
 - If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.
 - If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.
-- If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one point of the dedicated 0.8B model.
+- If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.
 
 [Chapter 7](07-quantization.md) shows how far each family can be quantized, and [chapter 12](12-choosing.md) turns these results into a choice.

@@ -69,15 +69,15 @@ def engine_targets() -> dict[str, tuple[Path, list[str], str]]:
         for lib in ("OPENSSL", "ZLIB", "BROTLI", "ZSTD", "MBEDTLS", "WOLFSSL")
     ]
     pcd += ["-DHTTPLIB_USE_NON_BLOCKING_GETADDRINFO=OFF"]
-    if sys.platform == "win32":
-        # The same char8_t problem in pcdServer's llama.cpp; nlohmann/json is then told it is on C++17
-        # so it does not use the char8_t types the flag removes.
-        json17 = "/DJSON_HAS_CPP_17 /DJSON_HAS_CPP_14 /DJSON_HAS_CPP_11"
-        pcd += [f"-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc {json17}"]
-    return {
+    targets = {
         "dohnuts-cli": (ROOT / "engines" / "dohnuts.cpp", dohnuts, "dohnuts-cli"),
         "pcd_server": (ROOT / "engines" / "pcdServer", pcd, "pcd_server"),
     }
+    if sys.platform == "win32":
+        # pcdServer's sources are not Windows-portable yet (e.g. std::wstring::rfind with a char in
+        # model_catalog.cpp), so Windows wheels carry dohnuts only.
+        del targets["pcd_server"]
+    return targets
 
 
 def cmake_build(name: str, source: Path, extra: list[str], target: str, build_root: Path) -> Path:

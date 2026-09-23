@@ -18,9 +18,9 @@ The wheels on PyPI contain both engines, compiled statically from the `engines/`
 | Platform | Wheel tag | Backend |
 |---|---|---|
 | macOS 14 or later, Apple silicon | `macosx_14_0_arm64` | Metal |
-| Linux x86_64, glibc 2.28 or later | `manylinux_2_28_x86_64` | CPU |
-| Linux aarch64, glibc 2.28 or later | `manylinux_2_28_aarch64` | CPU |
-| Windows x64 | `win_amd64` | CPU, when the Windows build succeeds |
+| Linux x86_64, glibc 2.28 or later | `manylinux_2_28_x86_64` | CPU only (no CUDA or Vulkan) |
+| Linux aarch64, glibc 2.28 or later | `manylinux_2_28_aarch64` | CPU only |
+| Windows x64 | `win_amd64` | CPU; dohnuts only, because pcdServer's sources do not build on Windows yet |
 
 You need Python 3.10 or later. The Python code is the same on every platform. Only the executables differ, so each wheel is tagged `py3-none-<platform>`.
 
@@ -113,9 +113,7 @@ You can also pass a System One question as a plain dict, as the jev API and dohn
 
 ### Limits per request
 
-dohnuts takes at most 64 questions per request (ornotto starts it with `--max-questions 64`; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your `Decider` splits them into several requests and merges the answers into one `Decision`.
-
-pcdServer has further limits, which ornotto checks before it sends anything. The state, serialized as JSON if it is not a string, must fit in 64 KiB. Each question's text, with its option descriptions folded in, is clipped to 1,024 bytes, because pcdServer has no place for a description per option ([chapter 3](03-engines.md)).
+dohnuts takes at most 64 questions per request (ornotto starts it with `--max-questions 64`; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your `Decider` splits them into several requests and merges the answers into one `Decision`. For pcdServer, ornotto also checks the 64 KiB state limit before it sends anything and clips each question's text, option descriptions included, to 1,024 bytes. [Chapter 2](02-decisions.md#limits) lists every limit of both engines.
 
 ## Answers
 
@@ -191,7 +189,7 @@ Every `Decider` in the process that names the same engine, model files and GPU s
 
 ## Registered models
 
-`ornotto.MODELS` maps names to `ModelSpec` records. `ornotto models` prints the same list.
+`ornotto.MODELS` maps names to `ModelSpec` records. `ornotto models` prints the same list, with sizes rounded to one decimal and licence ids in lowercase.
 
 | Name | Engines | Family | GB | Licence | Source |
 |---|---|---|---:|---|---|
@@ -214,7 +212,7 @@ The dedicated models are Q8_0; the Qwen chat models are Q4_K_M, except the 0.8B,
 |---|---|
 | `EngineNotFound` | the engine executable is not in the environment variable, the wheel or `PATH` |
 | `DecisionError` | the engine answered with an HTTP status other than 200; the message carries the status and the first 500 characters of the body |
-| `ValueError` | a question has fewer than two options or levels; a model does not run on the requested engine; an unregistered GGUF asks for dohnuts without `metadata`; a pcdServer request exceeds 63 questions or 64 KiB of state |
+| `ValueError` | a question has fewer than two options or levels; a model does not run on the requested engine; an unregistered GGUF asks for dohnuts without `metadata`; the state for pcdServer exceeds 64 KiB |
 | `FileNotFoundError` | the model is neither a registered name nor a file; the message lists the registered names |
 | `RuntimeError`, `TimeoutError` | the engine exited while loading, or did not load within 180 s; the message names the log file |
 | `httpx.HTTPError` | the connection to the engine failed |

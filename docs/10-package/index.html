@@ -1191,6 +1191,8 @@
               
               <article class="md-content__inner md-typeset" data-pagefind-body>
                 
+<!--email_off-->
+
                   
   
   
@@ -1220,17 +1222,17 @@
 <tr>
 <td>Linux x86_64, glibc 2.28 or later</td>
 <td><code>manylinux_2_28_x86_64</code></td>
-<td>CPU</td>
+<td>CPU only (no CUDA or Vulkan)</td>
 </tr>
 <tr>
 <td>Linux aarch64, glibc 2.28 or later</td>
 <td><code>manylinux_2_28_aarch64</code></td>
-<td>CPU</td>
+<td>CPU only</td>
 </tr>
 <tr>
 <td>Windows x64</td>
 <td><code>win_amd64</code></td>
-<td>CPU, when the Windows build succeeds</td>
+<td>CPU; dohnuts only, because pcdServer's sources do not build on Windows yet</td>
 </tr>
 </tbody>
 </table>
@@ -1417,8 +1419,7 @@
 </table>
 <p>You can also pass a System One question as a plain dict, as the jev API and dohnuts accept it: <code>{"type": "choice", "instructions": "...", "criteria": {...}}</code>. <code>question</code> is accepted for <code>instructions</code>, <code>options</code> for <code>criteria</code>, and <code>bool</code> for <code>noul</code>. A <code>score</code> whose criteria are keyed by numbers (<code>{"0": ..., "1": ...}</code>) is sorted numerically. Instructions and criteria may be JSON values; ornotto turns them into text.</p>
 <h3 id="limits-per-request">Limits per request<a class="headerlink" href="#limits-per-request" title="Permanent link">&para;</a></h3>
-<p>dohnuts takes at most 64 questions per request (ornotto starts it with <code>--max-questions 64</code>; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your <code>Decider</code> splits them into several requests and merges the answers into one <code>Decision</code>.</p>
-<p>pcdServer has further limits, which ornotto checks before it sends anything. The state, serialized as JSON if it is not a string, must fit in 64 KiB. Each question's text, with its option descriptions folded in, is clipped to 1,024 bytes, because pcdServer has no place for a description per option (<a href="../03-engines/">chapter 3</a>).</p>
+<p>dohnuts takes at most 64 questions per request (ornotto starts it with <code>--max-questions 64</code>; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your <code>Decider</code> splits them into several requests and merges the answers into one <code>Decision</code>. For pcdServer, ornotto also checks the 64 KiB state limit before it sends anything and clips each question's text, option descriptions included, to 1,024 bytes. <a href="../02-decisions/#limits">Chapter 2</a> lists every limit of both engines.</p>
 <h2 id="answers">Answers<a class="headerlink" href="#answers" title="Permanent link">&para;</a></h2>
 <p>An <code>Answer</code> is one answer. Its fields mean slightly different things for the three kinds of question you can ask.</p>
 <table>
@@ -1547,7 +1548,7 @@
 <p>Each engine holds its model in memory for as long as it runs. Two Deciders on different models are two processes, both resident. <code>ornotto.shutdown()</code> stops them all at once.</p>
 </div>
 <h2 id="registered-models">Registered models<a class="headerlink" href="#registered-models" title="Permanent link">&para;</a></h2>
-<p><code>ornotto.MODELS</code> maps names to <code>ModelSpec</code> records. <code>ornotto models</code> prints the same list.</p>
+<p><code>ornotto.MODELS</code> maps names to <code>ModelSpec</code> records. <code>ornotto models</code> prints the same list, with sizes rounded to one decimal and licence ids in lowercase.</p>
 <table>
 <thead>
 <tr>
@@ -1647,7 +1648,7 @@
 </tr>
 <tr>
 <td><code>ValueError</code></td>
-<td>a question has fewer than two options or levels; a model does not run on the requested engine; an unregistered GGUF asks for dohnuts without <code>metadata</code>; a pcdServer request exceeds 63 questions or 64 KiB of state</td>
+<td>a question has fewer than two options or levels; a model does not run on the requested engine; an unregistered GGUF asks for dohnuts without <code>metadata</code>; the state for pcdServer exceeds 64 KiB</td>
 </tr>
 <tr>
 <td><code>FileNotFoundError</code></td>
@@ -1716,6 +1717,8 @@
 
 
                 
+<!--/email_off-->
+
               </article>
             </div>
           
@@ -1838,10 +1841,6 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
       
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
-      
-        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
       
         <script src="../js/tables.js"></script>
       

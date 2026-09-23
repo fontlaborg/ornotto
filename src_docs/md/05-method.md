@@ -4,7 +4,7 @@ this_file: src_docs/md/05-method.md
 
 # 5. How we measured
 
-The benchmark asks one question 67 times: which of five things does this FontLab user want the built-in assistant to do? It is the router in front of the FontLab assistant, and it is the decision this book was written to get right. Every engine and model got the same 67 queries, and every answer was scored against a label we assigned before the run.
+The benchmark asks one question 67 times: which of five things does this FontLab user want the built-in assistant to do? It is the router in front of the FontLab assistant, and it is the decision this book was written to get right. Every method got the same 67 queries, and every answer was scored against a label we assigned before the run.
 
 ## The router question
 
@@ -20,7 +20,7 @@ The assistant can do five kinds of work, and each query belongs to exactly one:
 
 The labels split 17 `docs`, 14 `fea`, 14 `sample`, 13 `python` and 9 `vfj`.
 
-System One engines received the question as the instruction *"This message was sent to the assistant built into FontLab, the font editor. What is the user asking the assistant to do? Pick the single best match."* and each task as an option with a description of one to three sentences. Other engines needed shorter prompts, which the section on [prompts](#what-each-engine-was-asked) lists.
+System One methods received the question as the instruction *"This message was sent to the assistant built into FontLab, the font editor. What is the user asking the assistant to do? Pick the single best match."* and each task as an option with a description of one to three sentences. Other methods needed shorter prompts, which the section on [prompts](#what-each-method-was-asked) lists.
 
 ## The 67 queries
 
@@ -63,11 +63,11 @@ The 39 translations, with the time each took:
 
 Each query was translated once and the English text was cached, so every classifier in translated mode saw the same English.
 
-## What each engine was asked
+## What each method was asked
 
-Engines take different request shapes, so the same decision was phrased in the shape each engine was built for:
+Engines and runtimes take different request shapes, so the same decision was phrased in the shape each readout was built for:
 
-| engine | prompt |
+| engine or readout | prompt |
 |---|---|
 | jev, dohnuts, laya.cpp (kev), PyTorch, ExecuTorch | a System One request: the query as `state`, one `choice` question with the long instruction and the five long task descriptions as `criteria` |
 | slot, decider readout | decider's trained layout, tokenized as upstream does it: `Context:` and the query, then the question, the options lettered `(A)` to `(E)` with their long descriptions, then `Answer: (` |
@@ -75,13 +75,13 @@ Engines take different request shapes, so the same decision was phrased in the s
 | pcdServer | one enum field `task` with the choices `docs`, `python`, `fea`, `vfj`, `sample`, and a field description made of a short instruction and one short description per task |
 | laya runtimes | a System One request with the short instruction and short descriptions, because the encoder shares a 1,024-token budget; the Neural Engine exports hold 96 tokens and got a compact prompt |
 
-pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. [Chapter 3](03-engines.md) explains what each engine does with its prompt.
+pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. [Chapter 3](03-engines.md) explains what each readout does with its prompt.
 
 ## One model at a time
 
-Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early run loaded several GGUFs in one batch, next to the translator. The machine, an Apple M4 Max with 48 GB of memory, swapped its boot disk full and macOS stopped responding.
+Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early driver loaded several GGUF files per batch (up to 9 GB of weights at once) next to the resident translation model, while other experiments ran beside it. The machine, an Apple M4 Max with 48 GB of memory, swapped until its boot disk was full and macOS stopped responding.
 
-Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat for every model, the 35B mixture-of-experts model included.
+Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat at about 2.7 GB for every model, the 21 GB decider-35b-a3b included. [Chapter 8](08-speed.md#memory-one-model-at-a-time) turns this into rules for your own code.
 
 One model at a time also makes the timings fair: no model competes with another for the GPU or for memory bandwidth.
 
@@ -95,11 +95,18 @@ One model at a time also makes the timings fair: no model competes with another 
 
 In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so compare their milliseconds with a server's only loosely.
 
+## Reproducibility
+
+- **Engines.** dohnuts.cpp at upstream commit `9a894b0`, with llama.cpp pinned by its submodule at `b29c606`. The benchmark predates our prefix cache ([chapter 8](08-speed.md#prefix-caching-in-dohnuts)), which leaves single-question requests unchanged. pcdServer at commit `1ce9e55`, which fetches llama.cpp tag `v0.4.1` when it is configured. slot used a stock llama-server.
+- **Translator.** Hy-MT2-1.8B at Q4_K_M, temperature 0, with the glossary above.
+- **Dates.** The runs, the jev calls included, took place on 2026-09-22 and 2026-09-23.
+- **Data.** The harness itself is private. Every method's scores, timings and file sizes are published in `src_docs/data/` in the [ornotto repository](https://github.com/fontlaborg/ornotto), and the tables in this book are generated from them.
+
 ## Limits
 
-- **67 queries is a small set.** One query is 1.5 points of accuracy. Differences of one or two queries between models are within what a different set of 67 would change.
+- **67 queries is a small set.** One query is 1.5 percentage points of accuracy. Differences of one or two queries between models are within what a different set of 67 would change.
 - **The labels are ours.** For the ten ambiguous queries another person could label a few differently. jev's two errors are both on ambiguous queries.
 - **Thresholds are in-sample.** The confidence gates in [chapter 9](09-confidence.md) were tuned on the same 67 queries they are scored on. Expect them to do somewhat worse on new traffic.
-- **One machine.** All timings come from one Apple M4 Max, on Metal where the engine supports it. CPU-only machines are several times slower: dohnuts on the CPU with eight threads took 275 ms per query against 52 ms on Metal.
+- **One machine.** All timings come from one Apple M4 Max, on Metal where the engine or runtime supports it. CPU-only machines are several times slower: dohnuts on the CPU with eight threads took 275 ms per query against 52 ms on Metal.
 - **One task.** A five-way router is one decision. Yes/no questions, rubrics and long option lists behave differently, and [chapter 2](02-decisions.md) shows examples of each.
 - **Only the winner is scored.** Accuracy looks at the most likely option. It ignores how confident the model was, which matters as soon as you gate on confidence ([chapter 9](09-confidence.md)).
