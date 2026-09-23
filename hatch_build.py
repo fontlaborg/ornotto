@@ -78,9 +78,15 @@ def cmake_build(name: str, source: Path, extra: list[str], target: str, build_ro
         args += [
             f"-DCMAKE_OSX_DEPLOYMENT_TARGET={MACOS_TARGET}",
             f"-DCMAKE_OSX_ARCHITECTURES={platform.machine()}",
+            # dohnuts uses std::jthread, which Apple's libc++ before LLVM 20 keeps behind this flag
+            "-DCMAKE_CXX_FLAGS=-fexperimental-library",
         ]
     if sys.platform == "win32":
-        args += ["-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"]  # no MSVC runtime DLLs to ship
+        args += [
+            "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",  # no MSVC runtime DLLs to ship
+            # dohnuts builds llama.cpp as C++20, where u8"" literals are char8_t, which llama.cpp rejects
+            "-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc",
+        ]
     subprocess.run(["cmake", "-S", str(source), "-B", str(build), *args], check=True)
     jobs = os.environ.get("ORNOTTO_JOBS", str(os.cpu_count() or 2))
     subprocess.run(

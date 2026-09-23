@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-14, windows-2022]
+        runner: [macos-15, windows-2022]
     runs-on: ${{ matrix.runner }}
     # Windows is best effort: pcdServer does not document Windows support yet.
     continue-on-error: ${{ matrix.runner == 'windows-2022' }}
