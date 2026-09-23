@@ -702,10 +702,10 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
-  <a href="#same-weights-four-engines" class="md-nav__link">
+  <a href="#same-weights-four-setups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Same weights, four engines
+        Same weights, four setups
       
     </span>
   </a>
@@ -989,10 +989,10 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
-  <a href="#same-weights-four-engines" class="md-nav__link">
+  <a href="#same-weights-four-setups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Same weights, four engines
+        Same weights, four setups
       
     </span>
   </a>
@@ -1078,8 +1078,8 @@
 
 <h1 id="8-speed-memory-and-caching">8. Speed, memory and caching<a class="headerlink" href="#8-speed-memory-and-caching" title="Permanent link">&para;</a></h1>
 <p>A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.</p>
-<h2 id="same-weights-four-engines">Same weights, four engines<a class="headerlink" href="#same-weights-four-engines" title="Permanent link">&para;</a></h2>
-<p>The DreamBlooms conversion of decider-0.8b (<code>decider-0.8b-q8_0.gguf</code>) ran on four engines. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:</p>
+<h2 id="same-weights-four-setups">Same weights, four setups<a class="headerlink" href="#same-weights-four-setups" title="Permanent link">&para;</a></h2>
+<p>The DreamBlooms conversion of decider-0.8b (<code>decider-0.8b-q8_0.gguf</code>) ran in four setups. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:</p>
 <table>
 <thead>
 <tr>
@@ -1116,10 +1116,10 @@
 </tr>
 </tbody>
 </table>
-<p>A separate run of the same four engines earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.</p>
+<p>A separate run of the same four setups earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.</p>
 <p>The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for (<a href="../03-engines/">chapter 3</a>). dohnuts and slot read the same slot and give the same answers (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>); they differ only in how they get there.</p>
 <h2 id="where-the-time-goes">Where the time goes<a class="headerlink" href="#where-the-time-goes" title="Permanent link">&para;</a></h2>
-<p>The four engines do different amounts of work per question.</p>
+<p>The four setups do different amounts of work per question.</p>
 <p><strong>slot</strong> sends the whole prompt to a stock <code>llama-server</code> with <code>cache_prompt: false</code>, asks for one token with the top 100 log-probabilities, and reads the option letters out of that list on the client. Every query prefills everything, and the response carries 100 candidates it mostly throws away.</p>
 <p><strong>dohnuts</strong> builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with <code>Context:</code> and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 52 ms on its own.</p>
 <p><strong>pcdServer</strong> puts the fixed part of the prompt first. The system prompt lists every field, its description and its allowed values; the user's text comes after it. The fixed part is the same for every request with the same schema, so pcdServer computes it once, saves the model's state after it, and restores that state for later requests. Only the user text and a short suffix per field are decoded per request.</p>

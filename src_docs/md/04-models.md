@@ -63,7 +63,7 @@ same_weights = ornotto.Decider("decider-0.8b", engine="pcd")  # pcdServer, as a 
 
 [convaiinnovations/laya-multilingual](https://huggingface.co/convaiinnovations/laya-multilingual) (Apache-2.0) is an encoder with a decision head, not a chat model; [chapter 3](03-engines.md#laya) describes its readout and its token budget.
 
-The same checkpoint ran on six runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. `ornotto` does not run laya.
+The same checkpoint ran on six engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. `ornotto` does not run laya.
 
 ### jev
 

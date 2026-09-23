@@ -1204,7 +1204,7 @@
 <div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>add<span class="w"> </span>ornotto<span class="w">                      </span><span class="c1"># or: pip install ornotto</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"ornotto[pydantic-ai]"</span><span class="w">       </span><span class="c1"># adds pydantic-ai-slim[typesafe] for chapter 11</span>
 </code></pre></div>
-<p>The wheels on PyPI contain both engines, compiled statically from the <code>engines/</code> submodules: <code>dohnuts-cli</code> from <a href="https://github.com/DreamBlooms/dohnuts.cpp">dohnuts.cpp</a> and <code>pcd_server</code> from <a href="https://github.com/stephanj/pcdServer">pcdServer</a>.</p>
+<p>Every wheel on PyPI contains <code>dohnuts-cli</code>, built from <a href="https://github.com/DreamBlooms/dohnuts.cpp">dohnuts.cpp</a>, and all but the Windows wheel also contain <code>pcd_server</code>, built from <a href="https://github.com/stephanj/pcdServer">pcdServer</a>. Both are compiled statically from the <code>engines/</code> submodules. On Windows, the pcd-only models (<code>qwen3.5-0.8b</code>, <code>qwen3.5-2b</code>, <code>qwen3.5-4b</code>, <code>qwen3.5-4b-hmm</code>) and any <code>engine="pcd"</code> raise <code>EngineNotFound</code> unless <code>ORNOTTO_PCD_BIN</code> points at a <code>pcd_server</code> you built yourself.</p>
 <table>
 <thead>
 <tr>

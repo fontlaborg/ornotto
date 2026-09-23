@@ -70,7 +70,7 @@ jev also defined the vocabulary. The request and answer shapes shown above are i
 
 ## Why run decisions locally
 
-jev answers the router question in 466 ms on average, measured from our client, network included. The local methods that come within three answers of it take 52 to 95 ms on the same machine ([chapter 6](06-results.md)).
+jev answers the router question in 466 ms on average, measured from our client, network included. The fastest local methods within three answers of it take about 52 ms (decider-0.8b on dohnuts), and the most accurate one, Qwen3.5-4B-Hmm on pcdServer, takes 88 ms on the same machine ([chapter 6](06-results.md)).
 
 Latency is the first reason to run locally. A router that sits in front of every message adds its delay to every message, and a gate in front of every tool call adds it to every step of an agent. At 50 ms the decision disappears into the time the interface needs to redraw; at 500 ms the user waits for it.
 

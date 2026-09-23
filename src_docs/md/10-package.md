@@ -13,7 +13,7 @@ uv add ornotto                      # or: pip install ornotto
 uv add "ornotto[pydantic-ai]"       # adds pydantic-ai-slim[typesafe] for chapter 11
 ```
 
-The wheels on PyPI contain both engines, compiled statically from the `engines/` submodules: `dohnuts-cli` from [dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp) and `pcd_server` from [pcdServer](https://github.com/stephanj/pcdServer).
+Every wheel on PyPI contains `dohnuts-cli`, built from [dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp), and all but the Windows wheel also contain `pcd_server`, built from [pcdServer](https://github.com/stephanj/pcdServer). Both are compiled statically from the `engines/` submodules. On Windows, the pcd-only models (`qwen3.5-0.8b`, `qwen3.5-2b`, `qwen3.5-4b`, `qwen3.5-4b-hmm`) and any `engine="pcd"` raise `EngineNotFound` unless `ORNOTTO_PCD_BIN` points at a `pcd_server` you built yourself.
 
 | Platform | Wheel tag | Backend |
 |---|---|---|

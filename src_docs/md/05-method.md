@@ -34,7 +34,7 @@ Ten of the queries were written to be hard. They sit on the border between two t
 - "Text with lots of kerning pairs" and "Something to type in the Glyph window that shows off my ligatures" are `sample`, and so is one Polish variant.
 - "Can FontLab batch rename glyphs?" is `docs`, while "Rename all glyphs in every open font, I don't want to click" is `python`.
 
-These ten carry most of the differences between the stronger models. On "How do I write a liga feature?", 9% of all runs answered `docs`, and jev answered `fea`. [Chapter 9](09-confidence.md) lists every query with the share of runs that got it right.
+These ten carry most of the differences between the stronger models. On "How do I write a liga feature?", 9% of all methods answered `docs`, and jev answered `fea`. [Chapter 9](09-confidence.md) lists every query with the share of methods that got it right.
 
 ## Translated and direct
 

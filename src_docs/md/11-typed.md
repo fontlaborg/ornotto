@@ -129,7 +129,7 @@ agent.run_sync("Build a kern feature for A V W T").output
 # Triage(task='fea', wants_code=True)
 ```
 
-`model(model="decider-0.8b", *, engine=None, **kwargs)` takes a model name with the same options as `Decider`, or a `Decider` you already have. It returns a `TypeSafeModel` whose provider points at that Decider's engine.
+`model(model="decider-0.8b", *, engine=None, **kwargs)` takes a model name with the same options as `Decider`, or a `Decider` you already have. It returns a `TypeSafeModel` whose provider points at that Decider's engine. pydantic-ai 2.48 prints an observability banner on the first run; set `PYDANTIC_AI_NO_BANNER=1` to turn it off.
 
 ### How requests reach the engine
 

@@ -8,7 +8,9 @@ fontlab-menu { display: block; position: sticky; top: 0; z-index: 100; }
 
 /* Benchmark tables: wide, dense, sortable, scroll sideways on narrow screens. */
 /* The wrapper scrolls both ways, so the header row can stick to its top edge. */
-.md-typeset .bench { overflow: auto; max-height: 75vh; margin: 1em 0 1.5em; }
+.md-typeset .bench { overflow: auto; margin: 1em 0 1.5em; }
+/* A bounded box on wider screens only: on phones an inner scroll area traps the page scroll. */
+@media (min-width: 600px) { .md-typeset .bench { max-height: 75vh; } }
 .md-typeset .bench table { display: table; font-size: .68rem; border-collapse: collapse; min-width: 100%; }
 .md-typeset .bench caption { caption-side: top; text-align: left; font-size: .72rem; padding-bottom: .4em;
   color: var(--md-default-fg-color--light); }

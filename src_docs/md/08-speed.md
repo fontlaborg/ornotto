@@ -6,9 +6,9 @@ this_file: src_docs/md/08-speed.md
 
 A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.
 
-## Same weights, four engines
+## Same weights, four setups
 
-The DreamBlooms conversion of decider-0.8b (`decider-0.8b-q8_0.gguf`) ran on four engines. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:
+The DreamBlooms conversion of decider-0.8b (`decider-0.8b-q8_0.gguf`) ran in four setups. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:
 
 | Engine | ms/query | Translated | Load ms |
 |---|---|---|---|
@@ -17,13 +17,13 @@ The DreamBlooms conversion of decider-0.8b (`decider-0.8b-q8_0.gguf`) ran on fou
 | slot (llama-server) | 65.1 | 62/67 | 689 |
 | dohnuts (CPU, 8 threads) | 275.2 | 62/67 | |
 
-A separate run of the same four engines earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.
+A separate run of the same four setups earlier that day measured 28.5, 51.9, 65.4 and 272.9 ms, so the ordering and the gaps are stable. The load column is empty for dohnuts because those servers were started before the timed run; model load is excluded from every ms/query figure.
 
 The accuracy column matters as much as the time: pcdServer is the fastest engine here and also the least accurate, because it reads decider's weights as a chat model rather than at the answer slot decider was trained for ([chapter 3](03-engines.md)). dohnuts and slot read the same slot and give the same answers ([chapter 6](06-results.md#one-set-of-weights-three-scores)); they differ only in how they get there.
 
 ## Where the time goes
 
-The four engines do different amounts of work per question.
+The four setups do different amounts of work per question.
 
 **slot** sends the whole prompt to a stock `llama-server` with `cache_prompt: false`, asks for one token with the top 100 log-probabilities, and reads the option letters out of that list on the client. Every query prefills everything, and the response carries 100 candidates it mostly throws away.
 

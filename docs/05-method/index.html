@@ -1222,7 +1222,7 @@
 <li>"Text with lots of kerning pairs" and "Something to type in the Glyph window that shows off my ligatures" are <code>sample</code>, and so is one Polish variant.</li>
 <li>"Can FontLab batch rename glyphs?" is <code>docs</code>, while "Rename all glyphs in every open font, I don't want to click" is <code>python</code>.</li>
 </ul>
-<p>These ten carry most of the differences between the stronger models. On "How do I write a liga feature?", 9% of all runs answered <code>docs</code>, and jev answered <code>fea</code>. <a href="../09-confidence/">Chapter 9</a> lists every query with the share of runs that got it right.</p>
+<p>These ten carry most of the differences between the stronger models. On "How do I write a liga feature?", 9% of all methods answered <code>docs</code>, and jev answered <code>fea</code>. <a href="../09-confidence/">Chapter 9</a> lists every query with the share of methods that got it right.</p>
 <h2 id="translated-and-direct">Translated and direct<a class="headerlink" href="#translated-and-direct" title="Permanent link">&para;</a></h2>
 <p>Every model was scored twice.</p>
 <ul>
@@ -1233,7 +1233,7 @@
 <h3 id="language-detection">Language detection<a class="headerlink" href="#language-detection" title="Permanent link">&para;</a></h3>
 <p>The pipeline has to know whether a query is English before it can decide to translate it. Two detectors were measured over 100 passes of the 67 queries, single-threaded, after a warm-up:</p>
 <div class="bench" markdown="0">
-<table class="sortable" id="detectors"><caption>Click a column header to sort.</caption><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
+<table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
 <tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="604.316937" class="num">604.3</td><td data-sort="1654.760835" class="num">1,655</td></tr>
 <tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.130034" class="num">12.1</td><td data-sort="82439.998385" class="num">82,440</td></tr>

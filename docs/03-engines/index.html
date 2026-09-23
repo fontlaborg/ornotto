@@ -1215,7 +1215,7 @@
 </code></pre></div>
 <p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet.</p>
 <p>An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.</p>
-<p>The same checkpoint ran on six runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. <a href="../06-results/">Chapter 6</a> lists them all.</p>
+<p>The same checkpoint ran on six engines and runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. <a href="../06-results/">Chapter 6</a> lists them all.</p>
 <h2 id="side-by-side">Side by side<a class="headerlink" href="#side-by-side" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

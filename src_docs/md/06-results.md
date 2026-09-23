@@ -14,7 +14,7 @@ The fifteen best methods, ordered by translated accuracy, then direct accuracy, 
 
 Five findings stand out.
 
-- **A small, dedicated model gets within three queries of jev.** decider-0.8b answers 62 of 67 through its own readout, from a file a fifth the size of the Hmm model's Q8 build. It is the fastest method to score 62 or more (51 ms for mradermacher's `Q8_0` conversion of the same weights), and its probabilities are calibrated.
+- **A small, dedicated model gets within three queries of jev.** decider-0.8b answers 62 of 67 through its own readout, from a file a fifth the size of the Hmm model's Q8 build. decider-0.8b's `Q8_0` conversions are the fastest methods to score 62 or more (51 ms for mradermacher's, 52 ms for DreamBlooms'), and its probabilities are calibrated.
 - **A tuned 4B chat model on pcdServer matches the 35B decider.** Qwen3.5-4B-Hmm ties decider-35b-a3b on dohnuts on translated text (64 each) and beats it by one answer on direct text (65 against 64). Its 2.7 GB Q4 build is an eighth the size of the 35B file and runs three times faster. Its accuracy does not move from Q4 to BF16.
 - **Vanilla chat models are close behind.** unsloth's Qwen3.5-4B at Q8 scored 63/64 at 85 ms, one query behind the Hmm tune, with no task-specific training. Qwen3.5-2B at Q3_K_M scored 61/62 at 43 ms from 1.2 GB.
 - **Size does not rescue an old model.** The best Qwen1.5 method, at 4B, scored 42/67 in 248 ms. Qwen3.5 at 0.8B scored 57.

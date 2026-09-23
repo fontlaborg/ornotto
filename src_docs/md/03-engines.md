@@ -125,7 +125,7 @@ The head reads the encoder's hidden states at the `[MASK]` in front of each opti
 
 An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.
 
-The same checkpoint ran on six runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. [Chapter 6](06-results.md) lists them all.
+The same checkpoint ran on six engines and runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. [Chapter 6](06-results.md) lists them all.
 
 ## Side by side
 
