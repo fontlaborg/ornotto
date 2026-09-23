@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ornotto
+.DS_Store
+.omc/
+.codegraph/
+/src/ornotto/_bin/
+/build-engines/
+dist-release/

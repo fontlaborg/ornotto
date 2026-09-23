@@ -1,0 +1,7 @@
+[submodule "engines/dohnuts.cpp"]
+	path = engines/dohnuts.cpp
+	url = https://github.com/fontlaborg/dohnuts.cpp
+	branch = side-prefix-cache
+[submodule "engines/pcdServer"]
+	path = engines/pcdServer
+	url = https://github.com/stephanj/pcdServer

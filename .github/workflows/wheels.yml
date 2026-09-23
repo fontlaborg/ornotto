@@ -1,0 +1,80 @@
+# this_file: .github/workflows/wheels.yml
+# Build a platform wheel (with both engines compiled in) on each OS, plus the sdist, and attach them to
+# a GitHub release when the run was started by a version tag. publish.sh downloads the artifacts and
+# uploads them to PyPI.
+name: wheels
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: ubuntu-24.04, arch: x86_64 }
+          - { runner: ubuntu-24.04-arm, arch: aarch64 }
+    runs-on: ${{ matrix.runner }}
+    container: quay.io/pypa/manylinux_2_28_${{ matrix.arch }}
+    env:
+      ORNOTTO_PLATFORM_TAG: manylinux_2_28_${{ matrix.arch }}
+    steps:
+      - run: git config --global --add safe.directory '*'
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, submodules: recursive }
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build --wheel --python /opt/python/cp312-cp312/bin/python
+      - run: |
+          uv venv /tmp/check --python /opt/python/cp312-cp312/bin/python
+          uv pip install --python /tmp/check dist/*.whl
+          /tmp/check/bin/python -c "import ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), e.find_binary('pcd'))"
+      - uses: actions/upload-artifact@v4
+        with: { name: dist-linux-${{ matrix.arch }}, path: dist/*.whl }
+
+  macos-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-14, windows-2022]
+    runs-on: ${{ matrix.runner }}
+    # Windows is best effort: pcdServer does not document Windows support yet.
+    continue-on-error: ${{ matrix.runner == 'windows-2022' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0, submodules: recursive }
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build --wheel --python 3.12
+      - run: |
+          uv venv check --python 3.12
+          py=check/bin/python; [[ -f check/Scripts/python.exe ]] && py=check/Scripts/python.exe
+          uv pip install --python "$py" dist/ornotto-*.whl
+          "$py" -c "import ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), e.find_binary('pcd'))"
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with: { name: dist-${{ matrix.runner }}, path: dist/*.whl }
+
+  sdist:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build --sdist
+      - uses: actions/upload-artifact@v4
+        with: { name: dist-sdist, path: dist/*.tar.gz }
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, macos-windows, sdist]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { pattern: dist-*, path: dist, merge-multiple: true }
+      - run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
+        env: { GH_TOKEN: "${{ github.token }}" }
