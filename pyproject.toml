@@ -57,6 +57,7 @@ path = "hatch_build.py"
 
 [dependency-groups]
 dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.6", "pydantic-ai-slim[typesafe]>=2.48"]
+docs = ["properdocs>=1.6.7", "mkdocs-materialx>=10.2"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

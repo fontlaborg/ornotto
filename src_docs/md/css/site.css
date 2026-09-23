@@ -1,0 +1,27 @@
+/* this_file: src_docs/md/css/site.css */
+:root {
+  --md-text-font: "Outfit", system-ui, sans-serif;
+  --md-code-font: "JetBrains Mono", ui-monospace, monospace;
+}
+fontlab-menu { display: block; position: sticky; top: 0; z-index: 100; }
+.md-typeset img { max-width: 100%; height: auto; }
+
+/* Benchmark tables: wide, dense, sortable, scroll sideways on narrow screens. */
+.md-typeset .bench { overflow-x: auto; margin: 1em 0 1.5em; }
+.md-typeset .bench table { display: table; font-size: .68rem; border-collapse: collapse; min-width: 100%; }
+.md-typeset .bench caption { caption-side: top; text-align: left; font-size: .72rem; padding-bottom: .4em;
+  color: var(--md-default-fg-color--light); }
+.md-typeset .bench th, .md-typeset .bench td { padding: .3em .55em; white-space: nowrap;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest); }
+.md-typeset .bench th { position: sticky; top: 0; background: var(--md-default-bg-color); cursor: pointer;
+  user-select: none; font-weight: 600; }
+.md-typeset .bench th[aria-sort="ascending"]::after { content: " ▲"; font-size: .8em; }
+.md-typeset .bench th[aria-sort="descending"]::after { content: " ▼"; font-size: .8em; }
+.md-typeset .bench td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.md-typeset .bench td.method { font-family: var(--md-code-font); font-size: .95em; }
+.md-typeset .bench td.query { white-space: normal; min-width: 18em; max-width: 34em; }
+.md-typeset .bench tbody tr:hover { background: var(--md-accent-fg-color--transparent); }
+.md-typeset .table-filter { width: 100%; max-width: 24rem; padding: .35em .6em; margin-bottom: .5em;
+  font: inherit; font-size: .75rem; border: 1px solid var(--md-default-fg-color--lighter); border-radius: .25rem;
+  background: var(--md-default-bg-color); color: var(--md-default-fg-color); }
+.md-typeset .bench td.score[data-sort] { font-weight: 500; }

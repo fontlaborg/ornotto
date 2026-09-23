@@ -1,0 +1,1486 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/04-models/">
+      
+      
+        <link rel="prev" href="../03-engines/">
+      
+      
+        <link rel="next" href="../05-method/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>4. Dedicated, fine-tuned and vanilla models - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-dedicated-fine-tuned-and-vanilla-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4. Dedicated, fine-tuned and vanilla models
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#dedicated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dedicated models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dedicated models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dohnuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dohnuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laya-multilingual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        laya-multilingual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        jev
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fine-tuned-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fine-tuned models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanilla-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanilla models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-family-for-which-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which family for which job
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#dedicated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dedicated models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dedicated models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dohnuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dohnuts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laya-multilingual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        laya-multilingual
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        jev
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fine-tuned-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fine-tuned models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanilla-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanilla models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-family-for-which-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which family for which job
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="4-dedicated-fine-tuned-and-vanilla-models">4. Dedicated, fine-tuned and vanilla models<a class="headerlink" href="#4-dedicated-fine-tuned-and-vanilla-models" title="Permanent link">&para;</a></h1>
+<p>A model's size tells you less about how it will decide than the place its answer is read from. This book sorts every model into one of three families by that place. A <strong>dedicated</strong> model was trained to answer System One questions and has its own readout: a letter at a trained answer slot, a pointer head, or a decision head on an encoder. A <strong>fine-tuned</strong> model is a chat model that someone tuned for a task, sometimes this task, sometimes a neighbouring one. A <strong>vanilla</strong> model is a stock chat model as its publisher released it.</p>
+<p>The family decides which engines can run the model. It also decides how much prompt work you have to do before its answers are worth reading.</p>
+<table>
+<thead>
+<tr>
+<th>family</th>
+<th>where the answer comes from</th>
+<th>engines in <code>ornotto</code></th>
+<th>engines in the benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dedicated</td>
+<td>the model's own trained readout</td>
+<td>dohnuts (decider, kev, Dohnuts), pcdServer (decider only, as a chat model)</td>
+<td>jev, dohnuts, slot, pcdServer, laya runtimes, PyTorch, ExecuTorch</td>
+</tr>
+<tr>
+<td>fine-tuned</td>
+<td>the first token of each allowed value, under a chat template</td>
+<td>pcdServer</td>
+<td>pcdServer, slot (Hmm readout)</td>
+</tr>
+<tr>
+<td>vanilla</td>
+<td>the first token of each allowed value, under a chat template</td>
+<td>pcdServer</td>
+<td>pcdServer</td>
+</tr>
+</tbody>
+</table>
+<p>The best row of every model in the benchmark, grouped by family:</p>
+<div class="bench" markdown="0">
+<input class="table-filter" type="search" placeholder="Filter 47 rows" aria-label="Filter the table" data-table="families">
+<table class="sortable" id="families"><thead><tr><th>Family</th><th>Model</th><th>Best method</th><th>Engine</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th></tr></thead>
+<tbody>
+<tr><td>dedicated</td><td>jev</td><td class="method">jev</td><td>jev (hosted)</td><td data-sort="-1"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
+<tr><td>dedicated</td><td>decider-35b-a3b</td><td class="method">dohnuts-metal@decider-35b-a3b-q4</td><td>dohnuts (Metal)</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
+<tr><td>dedicated</td><td>decider-4b</td><td class="method">torch@decider-4b-bf16</td><td>PyTorch</td><td data-sort="-1"></td><td data-sort="348.210448" class="num">348.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="65" class="num score">65/67</td></tr>
+<tr><td>dedicated</td><td>decider-0.8b</td><td class="method">dohnuts-metal@decider-0.8b-q8</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="51.379104" class="num">51.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td></tr>
+<tr><td>dedicated</td><td>decider-0.8b-dreamblooms</td><td class="method">dohnuts-metal@decider-0.8b-dreamblooms-q8</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="52.238806" class="num">52.2</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td></tr>
+<tr><td>dedicated</td><td>kev-4b</td><td class="method">kev-4b-gguf</td><td>laya.cpp</td><td data-sort="-1"></td><td data-sort="1103.074627" class="num">1,103.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="55" class="num score">55/67</td></tr>
+<tr><td>dedicated</td><td>decider-2b</td><td class="method">pcdserver@decider-2b-f16</td><td>pcdServer</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td></tr>
+<tr><td>dedicated</td><td>decider-2b-dreamblooms</td><td class="method">pcdserver@decider-2b-dreamblooms-q8</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td></tr>
+<tr><td>dedicated</td><td>kev-0.8b</td><td class="method">kev-0.8b-gguf</td><td>laya.cpp</td><td data-sort="-1"></td><td data-sort="231.504478" class="num">231.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="45" class="num score">45/67</td></tr>
+<tr><td>dedicated</td><td>laya-multilingual</td><td class="method">laya-mlx</td><td>MLX</td><td data-sort="-1"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td></tr>
+<tr><td>dedicated</td><td>laya-typed-decisions</td><td class="method">laya-typed-decisions</td><td>PyTorch</td><td data-sort="-1"></td><td data-sort="17.659701" class="num">17.7</td><td data-sort="48" class="num score">48/67</td><td data-sort="43" class="num score">43/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.5-4b-hmm</td><td class="method">pcdserver@qwen3.5-4b-hmm-q8</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="87.559701" class="num">87.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-4b-distill</td><td class="method">pcdserver@qwen3.8-4b-distill-q4</td><td>pcdServer</td><td data-sort="2.78" class="num">2.78</td><td data-sort="93.58209" class="num">93.6</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-9b-distill</td><td class="method">pcdserver@qwen3.8-9b-distill-q4</td><td>pcdServer</td><td data-sort="5.78" class="num">5.78</td><td data-sort="137.80597" class="num">137.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.5-4b-supercoder</td><td class="method">pcdserver@qwen3.5-4b-supercoder-q4</td><td>pcdServer</td><td data-sort="2.61" class="num">2.61</td><td data-sort="84.198507" class="num">84.2</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-coder-7b</td><td class="method">pcdserver@qwen2.5-coder-7b-q4</td><td>pcdServer</td><td data-sort="4.68" class="num">4.68</td><td data-sort="108.885075" class="num">108.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-coder-3b</td><td class="method">pcdserver@qwen2.5-coder-3b-q4</td><td>pcdServer</td><td data-sort="2.1" class="num">2.10</td><td data-sort="60.222388" class="num">60.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td></tr>
+<tr><td>fine-tuned</td><td>pulse-0.6b</td><td class="method">pcdserver@pulse-0.6b-q4</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="27.864179" class="num">27.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="52" class="num score">52/67</td></tr>
+<tr><td>fine-tuned</td><td>lq-decide-1.7b</td><td class="method">pcdserver@lq-decide-1.7b-q8</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.149254" class="num">35.1</td><td data-sort="50" class="num score">50/67</td><td data-sort="46" class="num score">46/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3.8-2b-distill</td><td class="method">pcdserver@qwen3.8-2b-distill-q4</td><td>pcdServer</td><td data-sort="1.31" class="num">1.31</td><td data-sort="42.910448" class="num">42.9</td><td data-sort="49" class="num score">49/67</td><td data-sort="51" class="num score">51/67</td></tr>
+<tr><td>fine-tuned</td><td>zerocoder-0.8b</td><td class="method">pcdserver@zerocoder-0.8b-q2</td><td>pcdServer</td><td data-sort="0.38" class="num">0.38</td><td data-sort="34.71791" class="num">34.7</td><td data-sort="42" class="num score">42/67</td><td data-sort="36" class="num score">36/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen3-reranker-0.6b</td><td class="method">pcdserver@qwen3-reranker-0.6b-q5</td><td>pcdServer</td><td data-sort="0.44" class="num">0.44</td><td data-sort="24.728358" class="num">24.7</td><td data-sort="40" class="num score">40/67</td><td data-sort="44" class="num score">44/67</td></tr>
+<tr><td>fine-tuned</td><td>lyco-router-0.6b</td><td class="method">pcdserver@lyco-router-0.6b-q4</td><td>pcdServer</td><td data-sort="0.48" class="num">0.48</td><td data-sort="26.386567" class="num">26.4</td><td data-sort="35" class="num score">35/67</td><td data-sort="33" class="num score">33/67</td></tr>
+<tr><td>fine-tuned</td><td>qwen2.5-0.5b-pcb</td><td class="method">pcdserver@qwen2.5-0.5b-pcb-q2</td><td>pcdServer</td><td data-sort="0.34" class="num">0.34</td><td data-sort="18.073134" class="num">18.1</td><td data-sort="27" class="num score">27/67</td><td data-sort="23" class="num score">23/67</td></tr>
+<tr><td>fine-tuned</td><td>euaiact-0.5b</td><td class="method">pcdserver@euaiact-0.5b-q4</td><td>pcdServer</td><td data-sort="0.4" class="num">0.40</td><td data-sort="23.765672" class="num">23.8</td><td data-sort="20" class="num score">20/67</td><td data-sort="20" class="num score">20/67</td></tr>
+<tr><td>fine-tuned</td><td>lq-decide-0.6b</td><td class="method">pcdserver@lq-decide-0.6b-q8</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="23.080597" class="num">23.1</td><td data-sort="11" class="num score">11/67</td><td data-sort="11" class="num score">11/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-4b-unsloth</td><td class="method">pcdserver@qwen3.5-4b-unsloth-q8</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="84.956716" class="num">85.0</td><td data-sort="63" class="num score">63/67</td><td data-sort="64" class="num score">64/67</td></tr>
+<tr><td>vanilla</td><td>qwen2.5-3b</td><td class="method">pcdserver@qwen2.5-3b-q8</td><td>pcdServer</td><td data-sort="3.29" class="num">3.29</td><td data-sort="53.273134" class="num">53.3</td><td data-sort="62" class="num score">62/67</td><td data-sort="57" class="num score">57/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-4b</td><td class="method">pcdserver@qwen3.5-4b-q4</td><td>pcdServer</td><td data-sort="3.01" class="num">3.01</td><td data-sort="89.750746" class="num">89.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
+<tr><td>vanilla</td><td>bonsai-27b</td><td class="method">pcdserver@bonsai-27b-q1</td><td>pcdServer</td><td data-sort="3.8" class="num">3.80</td><td data-sort="513.526866" class="num">513.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-2b</td><td class="method">pcdserver@qwen3.5-2b-q3</td><td>pcdServer</td><td data-sort="1.22" class="num">1.22</td><td data-sort="42.701493" class="num">42.7</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-4b-unsloth</td><td class="method">pcdserver@qwen3-4b-unsloth-bf16</td><td>pcdServer</td><td data-sort="8.05" class="num">8.05</td><td data-sort="71.520896" class="num">71.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-4b</td><td class="method">pcdserver@qwen3-4b-q4</td><td>pcdServer</td><td data-sort="2.5" class="num">2.50</td><td data-sort="75.459701" class="num">75.5</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-8b</td><td class="method">pcdserver@qwen3-8b-q4</td><td>pcdServer</td><td data-sort="5.03" class="num">5.03</td><td data-sort="115.99403" class="num">116.0</td><td data-sort="61" class="num score">61/67</td><td data-sort="62" class="num score">62/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-9b-unsloth</td><td class="method">pcdserver@qwen3.5-9b-unsloth-q4</td><td>pcdServer</td><td data-sort="5.68" class="num">5.68</td><td data-sort="136.938806" class="num">136.9</td><td data-sort="61" class="num score">61/67</td><td data-sort="63" class="num score">63/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b</td><td class="method">pcdserver@qwen3.5-0.8b-q5</td><td>pcdServer</td><td data-sort="0.65" class="num">0.65</td><td data-sort="32.09403" class="num">32.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="57" class="num score">57/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-1.7b-unsloth</td><td class="method">pcdserver@qwen3-1.7b-unsloth-q8</td><td>pcdServer</td><td data-sort="1.83" class="num">1.83</td><td data-sort="35.08209" class="num">35.1</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-1.7b</td><td class="method">pcdserver@qwen3-1.7b-q8</td><td>pcdServer</td><td data-sort="2.17" class="num">2.17</td><td data-sort="35.240299" class="num">35.2</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-2b-unsloth</td><td class="method">pcdserver@qwen3.5-2b-unsloth-q8</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="39.532836" class="num">39.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="59" class="num score">59/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b-unsloth</td><td class="method">pcdserver@qwen3.5-0.8b-unsloth-q5</td><td>pcdServer</td><td data-sort="0.59" class="num">0.59</td><td data-sort="29.571642" class="num">29.6</td><td data-sort="56" class="num score">56/67</td><td data-sort="57" class="num score">57/67</td></tr>
+<tr><td>vanilla</td><td>qwen3.5-0.8b-ggml</td><td class="method">pcdserver@qwen3.5-0.8b-ggml-bf16</td><td>pcdServer</td><td data-sort="1.56" class="num">1.56</td><td data-sort="30.316418" class="num">30.3</td><td data-sort="55" class="num score">55/67</td><td data-sort="57" class="num score">57/67</td></tr>
+<tr><td>vanilla</td><td>bonsai-1.7b</td><td class="method">pcdserver@bonsai-1.7b-q2</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="34.910448" class="num">34.9</td><td data-sort="54" class="num score">54/67</td><td data-sort="55" class="num score">55/67</td></tr>
+<tr><td>vanilla</td><td>qwen3-0.6b</td><td class="method">pcdserver@qwen3-0.6b-q8</td><td>pcdServer</td><td data-sort="0.64" class="num">0.64</td><td data-sort="25.495522" class="num">25.5</td><td data-sort="53" class="num score">53/67</td><td data-sort="54" class="num score">54/67</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-4b</td><td class="method">pcdserver@qwen1.5-4b-q8</td><td>pcdServer</td><td data-sort="4.2" class="num">4.20</td><td data-sort="247.792537" class="num">247.8</td><td data-sort="42" class="num score">42/67</td><td data-sort="43" class="num score">43/67</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-0.5b</td><td class="method">pcdserver@qwen1.5-0.5b-q3</td><td>pcdServer</td><td data-sort="0.35" class="num">0.35</td><td data-sort="21.204478" class="num">21.2</td><td data-sort="35" class="num score">35/67</td><td data-sort="32" class="num score">32/67</td></tr>
+<tr><td>vanilla</td><td>qwen1.5-1.8b</td><td class="method">pcdserver@qwen1.5-1.8b-q3</td><td>pcdServer</td><td data-sort="1.02" class="num">1.02</td><td data-sort="41.825373" class="num">41.8</td><td data-sort="34" class="num score">34/67</td><td data-sort="35" class="num score">35/67</td></tr>
+<tr><td>vanilla</td><td>qwen2.5-0.5b</td><td class="method">pcdserver@qwen2.5-0.5b-q4</td><td>pcdServer</td><td data-sort="0.49" class="num">0.49</td><td data-sort="20.179104" class="num">20.2</td><td data-sort="28" class="num score">28/67</td><td data-sort="26" class="num score">26/67</td></tr>
+</tbody></table>
+</div>
+
+<h2 id="dedicated-models">Dedicated models<a class="headerlink" href="#dedicated-models" title="Permanent link">&para;</a></h2>
+<h3 id="decider">decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/Mapika/decider">Mapika/decider</a> is a family of full fine-tunes of Qwen3.5 trained to answer System One questions. The prompt is fixed by training: <code>Context:</code> and the state, then the question, the options lettered <code>(A)</code>, <code>(B)</code>, …, and <code>Answer: (</code>. The model is read at that last token, and only the logits of the option letters count. They are divided by a temperature from the checkpoint's <code>decider.json</code> (1.03 for the 0.8B model) before the softmax, so the probabilities are calibrated by the recipe.</p>
+<p>The benchmark ran four sizes, from several converters:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>GGUF source</th>
+<th>licence</th>
+<th>best result (translated / direct)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>decider-0.8b</td>
+<td><a href="https://huggingface.co/DreamBlooms/decider-0.8b-GGUF">DreamBlooms/decider-0.8b-GGUF</a>, <a href="https://huggingface.co/mradermacher/decider-0.8b-GGUF">mradermacher/decider-0.8b-GGUF</a></td>
+<td>Apache-2.0</td>
+<td>62/67 and 61/67 on dohnuts (Metal), 51 ms</td>
+</tr>
+<tr>
+<td>decider-2b</td>
+<td><a href="https://huggingface.co/DreamBlooms/decider-2b-GGUF">DreamBlooms/decider-2b-GGUF</a>, <a href="https://huggingface.co/cosetoenor/decider-2b-GGUF">cosetoenor/decider-2b-GGUF</a></td>
+<td>Apache-2.0</td>
+<td>59/67 and 62/67 on dohnuts (Metal); 60/60 on pcdServer</td>
+</tr>
+<tr>
+<td>decider-4b</td>
+<td><a href="https://huggingface.co/Mapika/decider-4b">Mapika/decider-4b</a>, in Mapika's PyTorch package</td>
+<td>Apache-2.0</td>
+<td>63/67 and 65/67, 348 ms</td>
+</tr>
+<tr>
+<td>decider-35b-a3b</td>
+<td><a href="https://huggingface.co/mradermacher/decider-35b-a3b-GGUF">mradermacher/decider-35b-a3b-GGUF</a></td>
+<td>Apache-2.0</td>
+<td>64/67 and 64/67 on dohnuts (Metal), 266 ms, 21 GB</td>
+</tr>
+</tbody>
+</table>
+<p>The DreamBlooms 2B build is a newer checkpoint with calibration-aware reinforcement learning and a temperature of 1.3. On this set it scores the same as the older 2B builds: calibration work shows up in the confidences, which the accuracy column does not see.</p>
+<p>decider runs on dohnuts with its own readout, and on pcdServer as an ordinary chat model. The two are not the same measurement. <a href="../06-results/#one-set-of-weights-three-scores">Chapter 6</a> shows the 0.8B model scoring 62 through its readout and 55 through pcdServer.</p>
+<p>In <code>ornotto</code>, <code>decider-0.8b</code> and <code>decider-2b</code> are registered and default to dohnuts:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the trained readout</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">same_weights</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>  <span class="c1"># pcdServer, as a chat model</span>
+</code></pre></div>
+<h3 id="kev">kev<a class="headerlink" href="#kev" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/jaredpalmer/kev">jaredpalmer/kev</a> is a LoRA over Qwen3.5 plus a bilinear pointer head. The prompt marks the decision point and the end of every option with special tokens, and the head scores each option by the dot product of two projected hidden states. The benchmark ran the <a href="https://huggingface.co/mys/kev-0.8b-GGUF">mys/kev-0.8b-GGUF</a> and kev-4b conversions through laya.cpp's <code>laya serve</code>. kev-4b reached 62/67 translated but 55/67 direct, and took 1,103 ms per query. kev-0.8b dropped to 45/67 on untranslated text.</p>
+<p><code>ornotto</code> registers <code>kev-0.8b</code> from <a href="https://huggingface.co/DreamBlooms/kev-0.8b-GGUF">DreamBlooms/kev-0.8b-GGUF</a> (Apache-2.0) on dohnuts, which reads the same pointer head. That build was not part of the benchmark run.</p>
+<h3 id="dohnuts">Dohnuts<a class="headerlink" href="#dohnuts" title="Permanent link">&para;</a></h3>
+<p><a href="https://huggingface.co/PsiACE/Dohnuts-0.1.0-0.8B">PsiACE/Dohnuts</a> is the model dohnuts.cpp was first written for: Qwen3.5-0.8B with language LoRA adapters and one scalar head read at each candidate marker. It also takes images through an <code>mmproj</code> projector. <code>ornotto</code> registers it as <code>dohnuts-0.8b</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Non-commercial weights</p>
+<p>The Dohnuts weights are licensed CC-BY-NC-SA-4.0. The engine is Apache-2.0, the weights are not. Dohnuts was not benchmarked here and is not the <code>ornotto</code> default.</p>
+</div>
+<h3 id="laya-multilingual">laya-multilingual<a class="headerlink" href="#laya-multilingual" title="Permanent link">&para;</a></h3>
+<p><a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya-multilingual</a> (Apache-2.0) is an encoder, not a chat model: mmBERT-base with a decision head that reads a marker per option, plus an act head that says whether to answer directly or escalate. It shares a 1,024-token budget between the question, the options and the state, so the benchmark gave it short task descriptions. The Neural Engine exports hold 96 tokens and got a compact prompt of their own.</p>
+<p>The same checkpoint ran on six runtimes (MLX, Core AI, Core ML on the Neural Engine, ONNX Runtime, laya.cpp, and llama.cpp serving embeddings with the head in Python). Every run at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt cost four to five points. Of the two 4-bit conversions, one lost a point and the other lost 16. <code>ornotto</code> does not run laya.</p>
+<h3 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h3>
+<p>jev is TypeSafe's hosted System One model, reached through OpenRouter's System One API as <code>jev-latest</code>. It scored 65/67 in both modes, the best result in the benchmark, at 466 ms per query over the network. Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine (<a href="../11-typed/">chapter 11</a>).</p>
+<h2 id="fine-tuned-models">Fine-tuned models<a class="headerlink" href="#fine-tuned-models" title="Permanent link">&para;</a></h2>
+<p>These are chat models tuned by third parties. None of them has a trained answer slot, so every one ran on pcdServer, which scores the first token of each allowed value under the model's chat template.</p>
+<p><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a> (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result in the benchmark, at 88 to 95 ms per query. Read through its own letter readout on llama-server (the <code>slot</code> rows), the same weights scored 62/67 and 63/67 and took three times as long.</p>
+<p>The rest spread from close to the top to the bottom of the table:</p>
+<ul>
+<li>The empero-ai Qwen3.8 distills reached 62/67 at 4B and 9B, and 49/67 at 2B.</li>
+<li>The coding models (<a href="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF">Qwen2.5-Coder</a> 3B and 7B, jica98's Qwen3.5-4B super-coder) scored 60 to 61.</li>
+<li>Small models tuned for routing, deciding or retrieval scored worse than a vanilla model of the same size: pulse-0.6b 54, lq-decide-1.7b 50, lq-decide-0.6b 11, lyco-router-0.6b 35, Qwen3-Reranker-0.6B 40.</li>
+<li>Qwen2.5-0.5B-PCb and EUAIAct-Qwen2.5-0.5B reached 27 and 20.</li>
+</ul>
+<p>A tune for a nearby task does not carry over to this one. If you pick a fine-tuned model, check it on your own questions first.</p>
+<p><code>ornotto</code> registers <code>qwen3.5-4b-hmm</code> (the Q4_K_M file, 2.7 GB) on pcdServer:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">careful</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="vanilla-models">Vanilla models<a class="headerlink" href="#vanilla-models" title="Permanent link">&para;</a></h2>
+<p>Vanilla chat models need nothing but a chat template that llama.cpp understands, so any GGUF works on pcdServer. The benchmark ran Qwen3.5 (0.8B, 2B, 4B, 9B), Qwen3 (0.6B, 1.7B, 4B, 8B), Qwen2.5 (0.5B, 3B), Qwen1.5 (0.5B, 1.8B, 4B) and PrismML's Bonsai (1.7B, 27B), most of them at several quantizations.</p>
+<ul>
+<li>Qwen3.5-4B reached 62/67 and 63/67 at Q4; unsloth's Q8 build reached 63/67 and 64/67, one point below the Hmm tune.</li>
+<li>Qwen3.5-2B at Q3_K_M reached 61/67 translated and 62/67 direct at 43 ms per query from a 1.2 GB file.</li>
+<li>Qwen3.5-0.8B reached 57/67 at Q5 and 55/67 at Q8, at about 30 ms.</li>
+<li>Qwen2.5-3B reached 62/67 on translated text but only 57 to 60 on direct text: it handles English well and other languages less well.</li>
+<li>Qwen1.5 scored 42/67 at best, at 4B. An older generation is no substitute for a smaller new one.</li>
+<li>Bonsai-27B at 1 bit (3.8 GB) reached 62/67 and 63/67, but took 514 ms per query.</li>
+</ul>
+<p>Licences vary within the Qwen family. Qwen3 and Qwen3.5 are Apache-2.0. Qwen2.5-3B and Qwen2.5-Coder-3B use the Qwen Research licence, and Qwen1.5 the Tongyi Qianwen research licence. Read the model card before you ship one.</p>
+<p><code>ornotto</code> registers <code>qwen3.5-0.8b</code>, <code>qwen3.5-2b</code> and <code>qwen3.5-4b</code> on pcdServer. Any other GGUF works by path or by Hugging Face file:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/Qwen_Qwen3.5-2B-Q3_K_M.gguf"</span><span class="p">)</span>                            <span class="c1"># a local file</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">hub</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf"</span><span class="p">)</span>    <span class="c1"># downloaded on first use</span>
+</code></pre></div>
+<p>An unregistered GGUF runs on pcdServer only. To run one on dohnuts, pass the profile JSON as <code>metadata=</code> (and the scorer head as <code>head=</code> for kev or Dohnuts): dohnuts needs to know which readout the weights were trained for.</p>
+<h2 id="which-family-for-which-job">Which family for which job<a class="headerlink" href="#which-family-for-which-job" title="Permanent link">&para;</a></h2>
+<ul>
+<li>If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.</li>
+<li>If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.</li>
+<li>If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one point of the dedicated 0.8B model.</li>
+</ul>
+<p><a href="../07-quantization/">Chapter 7</a> shows how far each family can be quantized, and <a href="../12-choosing/">chapter 12</a> turns these results into a choice.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../03-engines/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 3. Five ways to read an answer">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                3. Five ways to read an answer
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-method/" class="md-footer__link md-footer__link--next" aria-label="Next: 5. How we measured">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                5. How we measured
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

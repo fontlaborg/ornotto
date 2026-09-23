@@ -1,0 +1,106 @@
+# this_file: src_docs/properdocs.yml
+site_name: ornotto
+site_description: "Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev."
+site_url: https://fontlab.org/ornotto/
+site_author: Fontlab Ltd.
+repo_url: https://github.com/fontlaborg/ornotto
+repo_name: fontlaborg/ornotto
+edit_uri: edit/main/src_docs/md/
+copyright: Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+
+docs_dir: md
+site_dir: ../docs
+use_directory_urls: true
+exclude_docs: |
+  tables/
+
+theme:
+  name: materialx
+  custom_dir: overrides
+  font: false
+  features:
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - toc.follow
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Home: index.md
+  - Concepts:
+      - 1. Deciding, not generating: 01-deciding.md
+      - 2. The shape of a decision: 02-decisions.md
+      - 3. Five ways to read an answer: 03-engines.md
+      - 4. Dedicated, fine-tuned and vanilla models: 04-models.md
+  - Benchmarks:
+      - 5. How we measured: 05-method.md
+      - 6. Results: 06-results.md
+      - 7. Quantization and size: 07-quantization.md
+      - 8. Speed, memory and caching: 08-speed.md
+      - 9. Confidence and fallback: 09-confidence.md
+  - The package:
+      - 10. The ornotto package: 10-package.md
+      - 11. Typed decisions and pydantic-ai: 11-typed.md
+      - 12. Choosing, building and contributing: 12-choosing.md
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets:
+      base_path: [md]
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+
+extra_css:
+  - https://i.fontlab.com/fltheme26/1.0.0/components.css
+  - https://i.fontlab.com/fltheme26/1.0.0/theme.css
+  - css/site.css
+extra_javascript:
+  - https://i.fontlab.com/fltheme26/1.0.0/basecoat.js
+  - https://i.fontlab.com/fltheme26/1.0.0/theme.js
+  - https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js
+  - https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js
+  - js/tables.js

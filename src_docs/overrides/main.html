@@ -1,0 +1,17 @@
+{# this_file: src_docs/overrides/main.html #}
+{% extends "base.html" %}
+{% block extrahead %}
+{{ super() }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+{% endblock %}
+{% block header %}
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+{{ super() }}
+{% endblock %}
+{% block footer %}
+{{ super() }}
+<fontlab-footer mode="dark"></fontlab-footer>
+{% endblock %}

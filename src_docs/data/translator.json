@@ -1,0 +1,236 @@
+[
+ {
+  "query": "Jak zmienić kąt pochylenia kursywy w FontLab?",
+  "lang": "pl",
+  "english": "How can I change the italic angle in FontLab?",
+  "ms": 149.26725
+ },
+ {
+  "query": "Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp",
+  "lang": "pl",
+  "english": "Write a Python script that changes the names of all glyphs from .sc to .smcp",
+  "ms": 112.075625
+ },
+ {
+  "query": "Schreib mir ein kern-Feature für die Buchstaben A V W T",
+  "lang": "de",
+  "english": "Write me a kern feature for the letters A V W T",
+  "ms": 90.322416
+ },
+ {
+  "query": "Wo stelle ich die vertikalen Metriken ein?",
+  "lang": "de",
+  "english": "Where do I set the vertical metrics?",
+  "ms": 60.671584
+ },
+ {
+  "query": "Come faccio a esportare il font in OTF?",
+  "lang": "it",
+  "english": "How can I export the font to OTF?",
+  "ms": 76.613166
+ },
+ {
+  "query": "Scrivimi la definizione VFJ di un glifo quadrato largo 500",
+  "lang": "it",
+  "english": "Write me the VFJ definition for a square glyph with a width of 500",
+  "ms": 98.890875
+ },
+ {
+  "query": "Écris une fonctionnalité liga pour fi et fl",
+  "lang": "fr",
+  "english": "Write a liga functionality for fi and fl",
+  "ms": 69.804709
+ },
+ {
+  "query": "Donne-moi un pangramme français pour tester mes accents",
+  "lang": "fr",
+  "english": "Give me a French pangram to test my accents",
+  "ms": 70.529083
+ },
+ {
+  "query": "Dame un texto de muestra con muchas letras redondas",
+  "lang": "es",
+  "english": "Give me a sample text with many round letters",
+  "ms": 73.551125
+ },
+ {
+  "query": "Escribe un script en Python que elimine los glifos sin unicode",
+  "lang": "es",
+  "english": "Write a Python script that removes glifos without Unicode.",
+  "ms": 85.01225
+ },
+ {
+  "query": "Jak vyexportovat font jako OTF?",
+  "lang": "cs",
+  "english": "How to export a font as OTF?",
+  "ms": 66.172084
+ },
+ {
+  "query": "Escreva o código da feature smcp para versaletes",
+  "lang": "pt",
+  "english": "Write the code for the smcp feature for Versaletes",
+  "ms": 85.297334
+ },
+ {
+  "query": "Hoe voeg ik een nieuwe as toe aan een variabel font?",
+  "lang": "nl",
+  "english": "How do I add a new font style to a variable font?",
+  "ms": 91.198166
+ },
+ {
+  "query": "Tüm glifleri 50 birim sağa kaydıran bir Python betiği yaz",
+  "lang": "tr",
+  "english": "A Python script that shifts all glyphs 50 units to the right",
+  "ms": 94.907084
+ },
+ {
+  "query": "Írj egy kern feature-t az A és V betűk közé",
+  "lang": "hu",
+  "english": "Write a kern feature between the letters A and V",
+  "ms": 80.925209
+ },
+ {
+  "query": "Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia",
+  "lang": "fi",
+  "english": "An example text with many A and O letters",
+  "ms": 72.167417
+ },
+ {
+  "query": "Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300",
+  "lang": "vi",
+  "english": "Write the VFJ definition for the wide 300-width horizontal glyph",
+  "ms": 90.351167
+ },
+ {
+  "query": "Ge mig ett pangram på svenska för att testa typsnittet",
+  "lang": "sv",
+  "english": "Give me a pangram in Swedish to test the font",
+  "ms": 81.415792
+ },
+ {
+  "query": "Дай мне текст-образец с кириллицей для окна Glyph",
+  "lang": "ru",
+  "english": "Give me a text sample with Cyrillic characters for the Glyph window",
+  "ms": 97.677958
+ },
+ {
+  "query": "Напиши скрипт на Python, который удалит все направляющие",
+  "lang": "ru",
+  "english": "Write a Python script that removes all leading spaces",
+  "ms": 65.7095
+ },
+ {
+  "query": "Як змінити сімейну назву шрифту?",
+  "lang": "uk",
+  "english": "How do I change the family name of a font?",
+  "ms": 82.868375
+ },
+ {
+  "query": "Напиши VFJ-описание глифа «точка» с юникодом 002E",
+  "lang": "bg",
+  "english": "Write the VFJ description for the glyph “dot” with Unicode 002E",
+  "ms": 104.413417
+ },
+ {
+  "query": "Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;",
+  "lang": "el",
+  "english": "How do I change the angle of the horizontal lines in FontLab?",
+  "ms": 94.813583
+ },
+ {
+  "query": "Գրիր kern feature Ա և Վ տառերի համար",
+  "lang": "hy",
+  "english": "Griir kern feature A and V for spacing",
+  "ms": 81.47325
+ },
+ {
+  "query": "დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს",
+  "lang": "ka",
+  "english": "Write the Python script, which contains many glyphs",
+  "ms": 76.233041
+ },
+ {
+  "query": "اكتب كود feature للربط بين الحرفين f و i",
+  "lang": "ar",
+  "english": "Write a feature code to connect the letters f and i",
+  "ms": 80.617
+ },
+ {
+  "query": "چطور فونت را به صورت OTF خروجی بگیرم؟",
+  "lang": "fa",
+  "english": "How can I export the font as an OTF file?",
+  "ms": 85.086875
+ },
+ {
+  "query": "תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח",
+  "lang": "he",
+  "english": "Give me a Hebrew text example so I can check the kerning",
+  "ms": 89.255
+ },
+ {
+  "query": "پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے",
+  "lang": "ur",
+  "english": "Write the font script so that all glyphs have a width of 600.",
+  "ms": 103.993875
+ },
+ {
+  "query": "FontLab में kerning पैनल कहाँ है?",
+  "lang": "hi",
+  "english": "Where is the kerning panel in FontLab?",
+  "ms": 77.209875
+ },
+ {
+  "query": "একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250",
+  "lang": "bn",
+  "english": "Write a VFJ glyph definition named period with a width of 250.",
+  "ms": 99.009166
+ },
+ {
+  "query": "เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก",
+  "lang": "th",
+  "english": "Write a Python script that changes the name of all glyphs to lowercase.",
+  "ms": 99.158417
+ },
+ {
+  "query": "FontLabでイタリック角度を変更するには？",
+  "lang": "ja",
+  "english": "How to change the italic angle in FontLab?",
+  "ms": 77.004417
+ },
+ {
+  "query": "fi と fl の liga フィーチャーを書いてください",
+  "lang": "ja",
+  "english": "Please write the features of fi and fl liga.",
+  "ms": 77.487792
+ },
+ {
+  "query": "给我一段包含所有拼音字母的示例文本，用来检查字体",
+  "lang": "zh",
+  "english": "Give me an example text containing all phonetic letters to check the font.",
+  "ms": 87.867917
+ },
+ {
+  "query": "写一个 Python 脚本，把所有字形的宽度设为 600",
+  "lang": "zh",
+  "english": "Write a Python script to set the width of all glyphs to 600.",
+  "ms": 97.186125
+ },
+ {
+  "query": "A와 V 사이의 커닝 feature 코드를 작성해 줘",
+  "lang": "ko",
+  "english": "Write the kerning feature code between A and V",
+  "ms": 80.917958
+ },
+ {
+  "query": "VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘",
+  "lang": "ko",
+  "english": "The FontLab file has a hyphen name and a glyph definition with a width of 300.",
+  "ms": 113.206083
+ },
+ {
+  "query": "Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl",
+  "lang": "pl",
+  "english": "Write something in the Glyph window to check the ligatures fi fl",
+  "ms": 94.391125
+ }
+]

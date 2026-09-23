@@ -1,0 +1,1547 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/12-choosing/">
+      
+      
+        <link rel="prev" href="../11-typed/">
+      
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>12. Choosing, building and contributing - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#12-choosing-building-and-contributing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              12. Choosing, building and contributing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#which-engine-and-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which engine and model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building from source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building from source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-build-hook-passes-to-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the build hook passes to CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wheels-and-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wheels and releases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-book" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The book
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-upstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing upstream
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#which-engine-and-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which engine and model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-from-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building from source
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building from source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-build-hook-passes-to-cmake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the build hook passes to CMake
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wheels-and-releases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wheels and releases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-book" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The book
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing-upstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contributing upstream
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="12-choosing-building-and-contributing">12. Choosing, building and contributing<a class="headerlink" href="#12-choosing-building-and-contributing" title="Permanent link">&para;</a></h1>
+<p>The first eleven chapters describe how the engines read an answer, how the models compare, and what the package does. This one turns them into choices you make on day one: which engine and model for which job, how to build the engines if no wheel fits, how a release is made, and how to send a change upstream.</p>
+<h2 id="which-engine-and-model">Which engine and model<a class="headerlink" href="#which-engine-and-model" title="Permanent link">&para;</a></h2>
+<p>Start from what your decision needs, not from the model list. The numbers in the right-hand column are from the FontLab router benchmark (<a href="../06-results/">chapter 6</a>), translated set, on an Apple M4 Max; your task will score differently, but the order tends to hold.</p>
+<table>
+<thead>
+<tr>
+<th>If you need</th>
+<th>Use</th>
+<th>Why, and what it costs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A good default</td>
+<td><code>decider-0.8b</code> on dohnuts</td>
+<td>62/67 at 52 ms per query on Metal, 0.81 GB, calibrated probabilities. On CPU the same model takes 275 ms.</td>
+</tr>
+<tr>
+<td>The most accurate local answer</td>
+<td><code>qwen3.5-4b-hmm</code> on pcdServer</td>
+<td>64/67 translated and 65/67 direct, at 88 to 93 ms, 2.7 GB at Q4_K_M.</td>
+</tr>
+<tr>
+<td>The lowest latency for one model</td>
+<td>pcdServer</td>
+<td>Same decider-0.8b GGUF: 28 ms on pcdServer against 52 ms on dohnuts (Metal). pcdServer reads it as a chat model, though, and scores 55/67 instead of 62.</td>
+</tr>
+<tr>
+<td>Non-English text without a translator</td>
+<td><code>qwen3.5-4b-hmm</code> on pcdServer</td>
+<td>65/67 on the original text. decider-0.8b drops from 62 to 61 without translation (<a href="../05-method/">chapter 5</a>).</td>
+</tr>
+<tr>
+<td>Several questions about one message</td>
+<td>either</td>
+<td>pcdServer decodes the message once and adds a short suffix per field. dohnuts reuses the state across the questions of one request since our <a href="../08-speed/#prefix-caching-in-dohnuts">prefix cache</a> (1.9× on Metal, 3.2× on CPU for three questions).</td>
+</tr>
+<tr>
+<td>Options that need explaining</td>
+<td>dohnuts</td>
+<td>Each option carries a description (<code>choice(..., {"name": "description"})</code>). pcdServer only has the field description, so ornotto folds option descriptions into it, clipped to 1,024 bytes.</td>
+</tr>
+<tr>
+<td>A graded answer, and whether any level fits</td>
+<td>dohnuts with a decider model</td>
+<td><code>score</code> returns the expected level; <code>raw["native"]</code> has <code>level_fit</code> and <code>fit_mass</code> per level. pcdServer has no graded type; ornotto emulates one with the choices "0", "1", … and returns their expected value.</td>
+</tr>
+<tr>
+<td>Application state as JSON</td>
+<td>dohnuts</td>
+<td>It prints the JSON into the prompt and indexes long arrays (<code>_index</code>), so the model can refer to items by position. pcdServer gets the JSON serialized as text.</td>
+</tr>
+<tr>
+<td>Any chat GGUF</td>
+<td>pcdServer</td>
+<td>dohnuts runs only the decider, kev and Dohnuts profiles. pcdServer scores the allowed tokens of any model with a chat template.</td>
+</tr>
+<tr>
+<td>A confidence to gate on</td>
+<td>dohnuts</td>
+<td>Temperature-scaled probabilities. <a href="../09-confidence/">Chapter 9</a> shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 60/67 to 63/67 on untranslated text.</td>
+</tr>
+<tr>
+<td>Many different question sets in rotation</td>
+<td>dohnuts, or pcdServer with a larger cache</td>
+<td>pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache.</td>
+</tr>
+<tr>
+<td>The best accuracy, cost no object</td>
+<td>jev (hosted)</td>
+<td>65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's <code>TypeSafeModel</code> does.</td>
+</tr>
+</tbody>
+</table>
+<p>Two catches in the registry. <code>qwen3.5-2b</code> in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms (<a href="../07-quantization/">chapter 7</a>). If a small vanilla model is what you want, pass that file as <code>hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf</code>. And the fastest stack in the benchmark, laya-multilingual on MLX at 7 ms and 52/67, is not in ornotto at all: it runs a different kind of model on runtimes the package does not bundle (<a href="../03-engines/">chapter 3</a>).</p>
+<h2 id="building-from-source">Building from source<a class="headerlink" href="#building-from-source" title="Permanent link">&para;</a></h2>
+<p>You build from source to change an engine, to get a platform the wheels do not cover, or to work on ornotto itself. You need Git, CMake 3.25 or later (pcdServer's minimum), a C++20 compiler, <code>uv</code>, and network access for the first configure, when pcdServer fetches its pinned dependencies.</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/fontlaborg/ornotto
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>ornotto
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>./build.sh
+</code></pre></div>
+<p><code>build.sh</code> initializes the submodules, runs <code>ruff</code> and the unit tests, and builds an sdist and a wheel for your platform into <code>dist/</code>. It builds the wheel from the source tree, not from the sdist, because the sdist does not carry the engine sources. It then copies the two executables into <code>src/ornotto/_bin/</code>, where an editable install (<code>uv sync</code>) finds them.</p>
+<p>The engines come from two git submodules:</p>
+<table>
+<thead>
+<tr>
+<th>Submodule</th>
+<th>Repository</th>
+<th>Brings its own llama.cpp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engines/dohnuts.cpp</code></td>
+<td><a href="https://github.com/fontlaborg/dohnuts.cpp">fontlaborg/dohnuts.cpp</a>, branch <code>side-prefix-cache</code></td>
+<td>as a nested submodule</td>
+</tr>
+<tr>
+<td><code>engines/pcdServer</code></td>
+<td><a href="https://github.com/stephanj/pcdServer">stephanj/pcdServer</a></td>
+<td>fetched by CMake at configure time</td>
+</tr>
+</tbody>
+</table>
+<p>So a build compiles llama.cpp twice, once per engine, each at the version its engine pins. The CMake build directories live in <code>build-engines/</code> and are reused, so a second build recompiles only what changed.</p>
+<h3 id="what-the-build-hook-passes-to-cmake">What the build hook passes to CMake<a class="headerlink" href="#what-the-build-hook-passes-to-cmake" title="Permanent link">&para;</a></h3>
+<p><code>hatch_build.py</code> is a hatchling build hook. It builds both engines, adds them to the wheel as <code>ornotto/_bin/dohnuts-cli</code> and <code>ornotto/_bin/pcd_server</code>, and tags the wheel <code>py3-none-&lt;platform&gt;</code>. Every flag it adds answers one portability problem:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Engine</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-DBUILD_SHARED_LIBS=OFF</code>, <code>-DDOHNUTS_STATIC=ON</code></td>
+<td>both</td>
+<td>One self-contained executable, no llama.cpp shared libraries to ship or find at run time.</td>
+</tr>
+<tr>
+<td><code>-DGGML_NATIVE=OFF</code></td>
+<td>both</td>
+<td>No <code>-march=native</code>, so the binary runs on CPUs other than the one that built it.</td>
+</tr>
+<tr>
+<td><code>-DGGML_OPENMP=OFF</code></td>
+<td>both</td>
+<td>No OpenMP runtime to bundle; ggml uses its own thread pool.</td>
+</tr>
+<tr>
+<td><code>-DLLAMA_CURL=OFF</code></td>
+<td>both</td>
+<td>No libcurl; ornotto downloads models itself.</td>
+</tr>
+<tr>
+<td><code>-DHTTPLIB_USE_&lt;LIB&gt;_IF_AVAILABLE=OFF</code> for OpenSSL, zlib, Brotli, zstd, mbedTLS and wolfSSL</td>
+<td>pcdServer</td>
+<td>cpp-httplib links any of these it finds on the build machine. A macOS build linked Homebrew's OpenSSL, Brotli and zstd, and would not start on a Mac without them.</td>
+</tr>
+<tr>
+<td><code>-DHTTPLIB_USE_NON_BLOCKING_GETADDRINFO=OFF</code></td>
+<td>pcdServer</td>
+<td>cpp-httplib's non-blocking name lookup calls <code>getaddrinfo_a</code>, which needs libanl on the glibc 2.28 of manylinux_2_28. The server only binds a loopback port and never resolves a name.</td>
+</tr>
+<tr>
+<td><code>-DDOHNUTS_METAL=ON</code></td>
+<td>dohnuts, macOS</td>
+<td>The Metal backend. pcdServer turns Metal on by itself.</td>
+</tr>
+<tr>
+<td><code>-DCMAKE_OSX_DEPLOYMENT_TARGET=14.0</code></td>
+<td>both, macOS</td>
+<td>The wheel tag says <code>macosx_14_0</code>, so the binary must load on macOS 14.</td>
+</tr>
+<tr>
+<td><code>-DCMAKE_CXX_FLAGS=-fexperimental-library</code></td>
+<td>dohnuts, macOS</td>
+<td>dohnuts uses <code>std::jthread</code>, which Apple's libc++ before LLVM 20 keeps behind this flag. Without it, the macOS 14 CI runner fails with <code>no member named 'jthread' in namespace 'std'</code>.</td>
+</tr>
+<tr>
+<td><code>-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded</code></td>
+<td>both, Windows</td>
+<td>Static MSVC runtime, no redistributable DLLs to ship.</td>
+</tr>
+<tr>
+<td><code>-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc</code></td>
+<td>dohnuts, Windows</td>
+<td>dohnuts builds llama.cpp as C++20, where <code>u8""</code> literals are <code>char8_t</code>, which llama.cpp's sources reject under MSVC. pcdServer gets <code>/utf-8 /EHsc</code> only: its nlohmann/json needs <code>char8_t</code> in C++20.</td>
+</tr>
+</tbody>
+</table>
+<p>Four environment variables steer the hook:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ORNOTTO_ENGINES=skip</code></td>
+<td>build a pure wheel without engines</td>
+</tr>
+<tr>
+<td><code>ORNOTTO_PLATFORM_TAG</code></td>
+<td>wheel platform tag; CI sets <code>manylinux_2_28_x86_64</code> and <code>manylinux_2_28_aarch64</code></td>
+</tr>
+<tr>
+<td><code>ORNOTTO_BUILD_DIR</code></td>
+<td>the CMake build directory, default <code>build-engines/</code></td>
+</tr>
+<tr>
+<td><code>ORNOTTO_JOBS</code></td>
+<td>parallel compile jobs, default the CPU count</td>
+</tr>
+</tbody>
+</table>
+<p>If you build the engines some other way, skip the hook and point ornotto at them with <code>ORNOTTO_DOHNUTS_BIN</code> and <code>ORNOTTO_PCD_BIN</code> (<a href="../10-package/#install">chapter 10</a>).</p>
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./test.sh<span class="w">                 </span><span class="c1"># ruff check and format check, then the unit tests</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">ENGINES</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>./test.sh<span class="w">       </span><span class="c1"># also the real-engine tests, then every script in examples/</span>
+</code></pre></div>
+<p>The unit tests need no engine and no model: they cover the System One and pcdServer translation, the typed helpers against a fake <code>Decider</code>, and the engine command lines. The engine tests carry the pytest marker <code>engine</code>, which the default run deselects. They load decider-0.8b on dohnuts, then on pcdServer, one engine at a time, and check that no engine is left running afterwards. They download 0.81 GB on the first run; <code>examples/fallback.py</code> adds 2.7 GB for Qwen3.5-4B-Hmm.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The engine tests assert the answers, not just their shape, so a model that behaves differently fails them. Two checks are looser on pcdServer: <code>extract</code> and the pydantic-ai agent assert only the type there, because decider-0.8b read as a chat model gets the short Python request in those tests wrong (<a href="../11-typed/#which-model-to-put-behind-an-agent">chapter 11</a>).</p>
+</div>
+<h2 id="wheels-and-releases">Wheels and releases<a class="headerlink" href="#wheels-and-releases" title="Permanent link">&para;</a></h2>
+<p>The workflow in <code>.github/workflows/wheels.yml</code> builds one wheel per platform, plus the sdist:</p>
+<table>
+<thead>
+<tr>
+<th>Job</th>
+<th>Runner</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux x86_64</td>
+<td><code>ubuntu-24.04</code> in the <code>manylinux_2_28_x86_64</code> container</td>
+<td><code>manylinux_2_28_x86_64</code> wheel</td>
+</tr>
+<tr>
+<td>Linux aarch64</td>
+<td><code>ubuntu-24.04-arm</code> in the <code>manylinux_2_28_aarch64</code> container</td>
+<td><code>manylinux_2_28_aarch64</code> wheel</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td><code>macos-15</code></td>
+<td><code>macosx_14_0_arm64</code> wheel</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>windows-2022</code>, allowed to fail</td>
+<td><code>win_amd64</code> wheel</td>
+</tr>
+<tr>
+<td>sdist</td>
+<td><code>ubuntu-24.04</code></td>
+<td>source distribution without engines</td>
+</tr>
+</tbody>
+</table>
+<p>Each wheel job installs its wheel into a fresh virtual environment and checks that both engines are found before it uploads the artifact. Building in the manylinux 2.28 containers makes the Linux wheels load on glibc 2.28 and later. Windows is best effort, because pcdServer does not document Windows support; when that job fails, a release ships without a Windows wheel.</p>
+<p>A release runs from <code>./publish.sh</code>, which needs <code>UV_PUBLISH_TOKEN</code> (a PyPI token) and an authenticated <code>gh</code>:</p>
+<ol>
+<li><code>./build.sh</code> checks and builds locally.</li>
+<li><code>uvx gitnextver</code> commits any changes, tags the next version <code>vX.Y.Z</code>, and pushes the commit and the tag.</li>
+<li>The tag starts the wheels workflow, whose last job attaches every wheel and the sdist to a GitHub release.</li>
+<li><code>publish.sh</code> waits for that run, downloads its artifacts and uploads them with <code>uv publish</code>.</li>
+</ol>
+<p>The version comes from the tag, through hatch-vcs, so nothing in the source holds a version number. Every file in the working tree that git does not ignore goes into the release commit, because gitnextver adds them all.</p>
+<h2 id="the-book">The book<a class="headerlink" href="#the-book" title="Permanent link">&para;</a></h2>
+<p>This book is built from <code>src_docs/</code> with ProperDocs and the MaterialX theme, into <code>docs/</code>, which GitHub Pages serves at <a href="https://fontlab.org/ornotto/">https://fontlab.org/ornotto/</a>.</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./docs.sh<span class="w">           </span><span class="c1"># regenerate tables, build into docs/</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./docs.sh<span class="w"> </span>serve<span class="w">     </span><span class="c1"># live preview</span>
+</code></pre></div>
+<p>The benchmark tables are not written by hand. The results live as JSON in <code>src_docs/data/</code>, exported from our benchmark harness: <code>classifiers.json</code> (one row per model and engine), <code>queries.json</code>, <code>translator.json</code>, <code>detectors.json</code> and <code>cascade.json</code>. <code>src_docs/gen_tables.py</code> renders them into the sortable HTML snippets in <code>src_docs/md/tables/</code>, and the chapters include those snippets. To correct a number, change the JSON and run <code>./docs.sh</code>; the build runs in strict mode and fails on a broken link or a missing snippet.</p>
+<h2 id="contributing-upstream">Contributing upstream<a class="headerlink" href="#contributing-upstream" title="Permanent link">&para;</a></h2>
+<p>The engines are other people's projects, and changes to them belong upstream. The dohnuts prefix cache is the worked example (<a href="../08-speed/#prefix-caching-in-dohnuts">chapter 8</a>):</p>
+<ol>
+<li>Read how the project takes changes. dohnuts.cpp had no contribution guide, template or CI when we started; its history was short imperative commit subjects, and it keeps its English and Chinese READMEs in sync.</li>
+<li>Make the change in a fork, on a topic branch: <a href="https://github.com/fontlaborg/dohnuts.cpp">fontlaborg/dohnuts.cpp</a>, branch <code>side-prefix-cache</code>. Keep it to the code the change needs: six files, and no README edit, which would have needed a matching Chinese one.</li>
+<li>Measure before and after, on both backends, and check accuracy against the project's own reference: here the upstream <code>scripts/compare/compare.sh</code> (8/8) and the f32 PyTorch decider on longer states.</li>
+<li>Open the pull request with the numbers: <a href="https://github.com/DreamBlooms/dohnuts.cpp/pull/1">DreamBlooms/dohnuts.cpp#1</a>.</li>
+</ol>
+<p>ornotto's <code>engines/dohnuts.cpp</code> submodule follows the fork's branch until the change is merged, then goes back to upstream. pcdServer is used unmodified.</p>
+<p>The licences travel with the wheel, in its <code>dist-info/licenses/</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Licence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ornotto</td>
+<td>Apache-2.0</td>
+</tr>
+<tr>
+<td>dohnuts.cpp</td>
+<td>Apache-2.0, with a NOTICE file</td>
+</tr>
+<tr>
+<td>laya.cpp HTTP transport, inside dohnuts.cpp</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>pcdServer</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>llama.cpp and ggml</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>cpp-httplib, nlohmann/json</td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table>
+<p>Model weights are not in the wheel and keep their own licences: Apache-2.0 for every registered model except Dohnuts, which is CC-BY-NC-SA-4.0.</p>
+<p>Changes to ornotto itself go to <a href="https://github.com/fontlaborg/ornotto">fontlaborg/ornotto</a> as issues or pull requests. <code>./test.sh</code> must pass; the code style is <code>ruff</code> with a line length of 110, and every source file names its own path in a <code>this_file</code> comment.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../11-typed/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 11. Typed decisions and pydantic-ai">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                11. Typed decisions and pydantic-ai
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

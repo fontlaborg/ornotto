@@ -1,0 +1,1558 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/11-typed/">
+      
+      
+        <link rel="prev" href="../10-package/">
+      
+      
+        <link rel="next" href="../12-choosing/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>11. Typed decisions and pydantic-ai - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#11-typed-decisions-and-pydantic-ai" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              11. Typed decisions and pydantic-ai
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#fill-a-pydantic-model-extract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fill a pydantic model: extract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turn-a-function-into-a-decision-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn a function into a decision: @decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Turn a function into a decision: @decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-decorator-borrows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the decorator borrows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pick-a-label-classify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pick a label: classify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pydantic-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pydantic-ai
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="pydantic-ai">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-requests-reach-the-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How requests reach the engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-an-output-type-may-contain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What an output type may contain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-and-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools and fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-model-to-put-behind-an-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which model to put behind an agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#fill-a-pydantic-model-extract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fill a pydantic model: extract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turn-a-function-into-a-decision-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn a function into a decision: @decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Turn a function into a decision: @decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-decorator-borrows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the decorator borrows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pick-a-label-classify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pick a label: classify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pydantic-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pydantic-ai
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="pydantic-ai">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-requests-reach-the-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How requests reach the engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-an-output-type-may-contain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What an output type may contain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-and-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools and fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-model-to-put-behind-an-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which model to put behind an agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="11-typed-decisions-and-pydantic-ai">11. Typed decisions and pydantic-ai<a class="headerlink" href="#11-typed-decisions-and-pydantic-ai" title="Permanent link">&para;</a></h1>
+<p>A decision already has a type. A choice is a <code>Literal</code>, a yes/no is a <code>bool</code>, a set of decisions about one message is a pydantic model. ornotto lets you write that type and nothing else: the fields become the questions and the model's answers fill them in. You can do it three ways: with <code>extract</code> and a pydantic model, with a typed function under <code>@decision</code>, or through a pydantic-ai <code>Agent</code> whose <code>output_type</code> is the model.</p>
+<h2 id="fill-a-pydantic-model-extract">Fill a pydantic model: extract<a class="headerlink" href="#fill-a-pydantic-model-extract" title="Permanent link">&para;</a></h2>
+<p><code>ornotto.extract(schema, state)</code> asks one question per field of <code>schema</code>, all in one request, and returns a validated instance.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">Triage</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">task</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"What does the user want?"</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">wants_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Does the user want code they can run?"</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">spam</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Is this message spam?"</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">Triage</span><span class="p">,</span> <span class="s2">"Write a Python script that renames every .sc glyph"</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Triage(task='python', wants_code=True, spam=0.0056)</span>
+</code></pre></div>
+<p>Each field type maps to one question kind:</p>
+<table>
+<thead>
+<tr>
+<th>Field type</th>
+<th>Question</th>
+<th>Value in the instance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Literal["a", "b", ...]</code> of strings</td>
+<td>choice</td>
+<td>the chosen option</td>
+</tr>
+<tr>
+<td><code>Enum</code> whose values are strings</td>
+<td>choice over the values</td>
+<td>the Enum member</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>yes/no</td>
+<td><code>True</code> when p(yes) ≥ 0.5</td>
+</tr>
+<tr>
+<td><code>float</code> with <code>ge=0</code> and <code>le=1</code></td>
+<td>yes/no</td>
+<td>p(yes) itself</td>
+</tr>
+</tbody>
+</table>
+<p>The field's <code>description</code> is the question. A field without one is asked by its name, with underscores turned into spaces and a question mark added: <code>wants_code</code> becomes "Wants code?". A short name makes a weak question, so describe every field.</p>
+<p>Any other field type raises <code>TypeError</code> before a request is sent, and the message names the field. That includes <code>int</code>, <code>str</code>, optional fields and nested models. For rubrics, use <code>rate</code> (<a href="../10-package/#decider">chapter 10</a>) or the pydantic-ai route below, which accepts both.</p>
+<p><code>extract</code> takes <code>decider=</code> to pick the model and engine; without it, the shared default from <code>ornotto.use()</code> answers. <code>ornotto.aextract</code> is the same for asyncio. If you want the probabilities as well as the instance, ask the same questions yourself: <code>ornotto.questions_for(Triage)</code> returns the question dict that <code>extract</code> sends, and <code>decide</code> returns the full <code>Decision</code> for it.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">questions_for</span><span class="p">(</span><span class="n">Triage</span><span class="p">))</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">wants_code</span><span class="o">.</span><span class="n">probability</span>
+</code></pre></div>
+<h2 id="turn-a-function-into-a-decision-decision">Turn a function into a decision: @decision<a class="headerlink" href="#turn-a-function-into-a-decision-decision" title="Permanent link">&para;</a></h2>
+<p><code>@ornotto.decision</code> turns a typed function with a docstring and no body into a decision.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nd">@ornotto</span><span class="o">.</span><span class="n">decision</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">route</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="sd">"""Which kind of help does this FontLab user want?"""</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">route</span><span class="p">(</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">)</span>   <span class="c1"># 'docs'</span>
+</code></pre></div>
+<p>The docstring is the question, as written. It is not a template: the arguments do not get formatted into it. They become the state instead. One argument is the state as it is. Several arguments become a JSON state keyed by argument name, with defaults filled in, and dohnuts reads a JSON state natively (<a href="../02-decisions/">chapter 2</a>).</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@ornotto</span><span class="o">.</span><span class="n">decision</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">wants_code</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"FontLab 8"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="sd">"""Does the user want code they can run?"""</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">wants_code</span><span class="p">(</span><span class="s2">"Write a Python script that renames every .sc glyph to .smcp"</span><span class="p">)</span>   <span class="c1"># True</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">wants_code</span><span class="p">(</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">)</span>                               <span class="c1"># False</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># state sent: {"request": "...", "app": "FontLab 8"}</span>
+</code></pre></div>
+<p>The return annotation picks the question:</p>
+<table>
+<thead>
+<tr>
+<th>Return type</th>
+<th>Question</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Literal[...]</code> or <code>Enum</code> of strings</td>
+<td>choice</td>
+<td>the option, or the Enum member</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>yes/no</td>
+<td><code>True</code> or <code>False</code></td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>yes/no</td>
+<td>p(yes)</td>
+</tr>
+<tr>
+<td>a pydantic model</td>
+<td>one question per field, as <code>extract</code></td>
+<td>the instance</td>
+</tr>
+</tbody>
+</table>
+<p>Without a docstring, the function name stands in for the question. An unsupported return type raises <code>TypeError</code> when you call the function, not when you decorate it. <code>@ornotto.decision(decider=...)</code> binds the function to one <code>Decider</code>; without it, each call uses the shared default.</p>
+<h3 id="what-the-decorator-borrows">What the decorator borrows<a class="headerlink" href="#what-the-decorator-borrows" title="Permanent link">&para;</a></h3>
+<p>The shape comes from libraries that turn a typed stub into an LLM call. <a href="https://github.com/knowsuchagency/promptic">promptic</a> uses the docstring as the prompt. <a href="https://github.com/jackmpcollins/magentic">magentic</a>'s <code>@prompt</code> reads the return annotation to decide what the call must produce, and <a href="https://github.com/Mirascope/Mirascope">Mirascope</a> builds calls from decorated functions too. ornotto takes the idea, not the code: it has no integration with any of them, and the function never reaches a language model that writes text. Where those libraries ask a model to generate output and then parse it into the return type, ornotto asks the engine to score the allowed values of the return type, so the result is always one of them.</p>
+<h2 id="pick-a-label-classify">Pick a label: classify<a class="headerlink" href="#pick-a-label-classify" title="Permanent link">&para;</a></h2>
+<p><code>ornotto.classify(data, labels, instructions=None)</code> follows <a href="https://github.com/PrefectHQ/marvin">marvin</a>'s <code>classify</code>: pick the label that fits <code>data</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">Tone</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">CALM</span> <span class="o">=</span> <span class="s2">"calm"</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">ANGRY</span> <span class="o">=</span> <span class="s2">"angry"</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="s2">"I was charged twice and nobody answers my emails!"</span><span class="p">,</span> <span class="n">Tone</span><span class="p">)</span>   <span class="c1"># Tone.ANGRY</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>            <span class="c1"># 'fea'</span>
+</code></pre></div>
+<p><code>labels</code> is a list of strings or an Enum class; an Enum class returns a member. <code>instructions</code> is the question. Without it, the model sees only the labels, which is enough for a dedicated model on dohnuts and too little for a chat model on pcdServer (see <a href="../03-engines/">chapter 3</a>).</p>
+<p>marvin 3 is built on pydantic-ai, so in principle a pydantic-ai model from ornotto could run its functions directly. It cannot today: as of September 2026, marvin 3 fails to import against pydantic-ai 2 (<code>ImportError: cannot import name 'Usage' from 'pydantic_ai.usage'</code>). <code>classify</code> and <code>@decision</code> are idioms that look like marvin's and promptic's, not integrations with them.</p>
+<h2 id="pydantic-ai">pydantic-ai<a class="headerlink" href="#pydantic-ai" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/pydantic/pydantic-ai">pydantic-ai</a> has a model class for System One: <code>TypeSafeModel</code>, written for TypeSafe's hosted jev. It turns an agent's <code>output_type</code> into System One questions, sends the latest user prompt as the state, and builds the output from the answers. No text is generated. dohnuts speaks the same <code>/v1/systemone</code> protocol, so the same model class can run an agent on a local engine. <code>ornotto.pydantic_ai.model()</code> sets that up.</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"ornotto[pydantic-ai]"</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ornotto.pydantic_ai</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">Triage</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="sd">"""A FontLab user's request."""</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">task</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"What does the user want?"</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="n">wants_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Does the user want code they can run?"</span><span class="p">)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">),</span> <span class="n">output_type</span><span class="o">=</span><span class="n">Triage</span><span class="p">,</span> <span class="n">instructions</span><span class="o">=</span><span class="s2">"Classify a FontLab user's request."</span><span class="p">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">agent</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="s2">"Build a kern feature for A V W T"</span><span class="p">)</span><span class="o">.</span><span class="n">output</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Triage(task='fea', wants_code=True)</span>
+</code></pre></div>
+<p><code>model(model="decider-0.8b", *, engine=None, **kwargs)</code> takes a model name with the same options as <code>Decider</code>, or a <code>Decider</code> you already have. It returns a <code>TypeSafeModel</code> whose provider points at that Decider's engine.</p>
+<h3 id="how-requests-reach-the-engine">How requests reach the engine<a class="headerlink" href="#how-requests-reach-the-engine" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+  A[Agent] --&gt; T[TypeSafeModel]
+  T -- "POST /v1/systemone" --&gt; D[dohnuts]
+  T -- "in-process transport" --&gt; X[ornotto translator] -- "POST /v1/pcd/decode" --&gt; P[pcdServer]</code></pre>
+<ul>
+<li><strong>dohnuts</strong>: the provider is a <code>TypeSafeProvider</code> with the engine's loopback URL as <code>base_url</code>. The TypeSafe client sends its request straight to dohnuts, which answers it natively. The API key is a fixed placeholder, because the client requires one and the local engine checks none.</li>
+<li><strong>pcdServer</strong>: pcdServer does not speak System One. The provider's HTTP client has an in-process transport that catches each <code>/v1/systemone</code> request, translates the questions into pcdServer fields (<a href="../03-engines/">chapter 3</a>), calls the engine through the <code>Decider</code>, and returns a System One response. The transport also answers <code>GET /v1/models</code> with the one local model. Nothing leaves the process except the call to the loopback engine.</li>
+</ul>
+<h3 id="what-an-output-type-may-contain">What an output type may contain<a class="headerlink" href="#what-an-output-type-may-contain" title="Permanent link">&para;</a></h3>
+<p>pydantic-ai's <code>TypeSafeModel</code> decides which field types it can express, and refuses the rest with a <code>UserError</code> before any request. Its documentation lists:</p>
+<table>
+<thead>
+<tr>
+<th>Field type</th>
+<th>Question</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>yes/no</td>
+<td><code>True</code> when p(yes) reaches the threshold, 0.5 by default</td>
+</tr>
+<tr>
+<td><code>Literal[...]</code> or <code>Enum</code> of two or more strings</td>
+<td>choice</td>
+<td>the chosen option</td>
+</tr>
+<tr>
+<td><code>float</code> with <code>ge=0</code> and <code>le=1</code></td>
+<td>yes/no</td>
+<td>p(yes)</td>
+</tr>
+<tr>
+<td>whole numbers 0, 1, 2, … (up to 10 levels) with a description per level in the schema</td>
+<td>score</td>
+<td>the nearest level</td>
+</tr>
+<tr>
+<td><code>list</code> of a <code>Literal</code> or <code>Enum</code></td>
+<td>one yes/no per option</td>
+<td>the options answered yes</td>
+</tr>
+<tr>
+<td>a nested model of these</td>
+<td>its fields, named <code>outer.inner</code></td>
+<td>the model</td>
+</tr>
+<tr>
+<td><code>Literal[...]</code> or <code>Enum</code>, or <code>None</code></td>
+<td>choice, or none of these</td>
+<td>the option, or <code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>This is wider than <code>extract</code>: rubrics, multi-select lists and nested models all work. A rubric needs its level descriptions in the JSON schema, as <code>anyOf</code> entries with a <code>const</code> and a <code>description</code> each:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">urgency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">"anyOf"</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"can wait"</span><span class="p">},</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"this week"</span><span class="p">},</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"today"</span><span class="p">}]})</span>
+</code></pre></div>
+<p>On dohnuts with a decider model, a rubric field runs as an isolated score: one row per level, each asking whether that level fits (<a href="../03-engines/">chapter 3</a>).</p>
+<p>The model's docstring and the agent's <code>instructions</code> go along as context. With an earlier conversation in <code>message_history</code>, the state becomes a JSON object with the latest text and a <code>history</code> list, which dohnuts takes as it is and pcdServer receives serialized as JSON text.</p>
+<h3 id="reading-the-confidence">Reading the confidence<a class="headerlink" href="#reading-the-confidence" title="Permanent link">&para;</a></h3>
+<p>The run returns the output. The numbers behind it are on the last <code>ModelResponse</code>, in <code>provider_details</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_ai.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelResponse</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="s2">"Write a Python script that renames every .sc glyph"</span><span class="p">)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">details</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">all_messages</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">ModelResponse</span><span class="p">)][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">provider_details</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">details</span><span class="p">[</span><span class="s2">"confidence"</span><span class="p">][</span><span class="s2">"task"</span><span class="p">],</span> <span class="n">details</span><span class="p">[</span><span class="s2">"probabilities"</span><span class="p">][</span><span class="s2">"task"</span><span class="p">]</span>
+</code></pre></div>
+<p><code>confidence</code> is per field, from 0 for undecided to 1; <code>probabilities</code> holds the full distribution of each choice and rubric field; <code>scores</code> holds each rubric field's expected level before rounding. On dohnuts these numbers are temperature-scaled. On pcdServer they are the raw softmax over allowed tokens (<a href="../09-confidence/">chapter 9</a>).</p>
+<p>Two model settings from pydantic-ai tune the thresholds: <code>typesafe_boolean_threshold</code> (default 0.5) sets how likely a yes must be before a <code>bool</code> field is <code>True</code>, and <code>typesafe_tool_call_threshold</code> (default 0.6) sets how likely a tool call must be before the model proposes it.</p>
+<h3 id="tools-and-fallback">Tools and fallback<a class="headerlink" href="#tools-and-fallback" title="Permanent link">&para;</a></h3>
+<p>With tools on the agent, <code>TypeSafeModel</code> asks one more question: which tool, or the output, the text calls for. A tool without arguments, or one whose arguments use the types above, is called. If a picked tool has arguments it cannot fill, it raises <code>ToolCallProposed</code>, which is a <code>ModelAPIError</code>. pydantic-ai documents that a <code>FallbackModel</code> with a language model behind the TypeSafe model hands such a step to the language model, tools and all. That is the pattern for an agent that decides locally and calls a larger model only when a tool needs free-form arguments:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_ai.models.fallback</span><span class="w"> </span><span class="kn">import</span> <span class="n">FallbackModel</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">FallbackModel</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">),</span> <span class="s2">"anthropic:claude-sonnet-5"</span><span class="p">),</span> <span class="n">output_type</span><span class="o">=</span><span class="n">Triage</span><span class="p">)</span>
+</code></pre></div>
+<p><code>TypeSafeModel</code> refuses plain text output, native tools, and files in the prompt or history. A local engine cannot produce any of them either.</p>
+<h3 id="which-model-to-put-behind-an-agent">Which model to put behind an agent<a class="headerlink" href="#which-model-to-put-behind-an-agent" title="Permanent link">&para;</a></h3>
+<p>On the FontLab router question, decider-0.8b on dohnuts is right 62 times in 67 at 52 ms per query, and Qwen3.5-4B-Hmm (Q8_0) on pcdServer 64 times at 88 ms (<a href="../06-results/">chapter 6</a>). Through pydantic-ai the prompt differs from the benchmark's, so treat those as a ranking, not a promise. In our own integration tests, decider-0.8b on pcdServer, which reads it without its trained answer slot, got the task of a short Python request wrong where the same model on dohnuts got it right. If you run a dedicated model, run it on dohnuts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../10-package/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 10. The ornotto package">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                10. The ornotto package
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../12-choosing/" class="md-footer__link md-footer__link--next" aria-label="Next: 12. Choosing, building and contributing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                12. Choosing, building and contributing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

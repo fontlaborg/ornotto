@@ -1,0 +1,672 @@
+[
+ {
+  "query": "How do I change the italic angle of my font in FontLab?",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.769,
+  "jev_translated": "docs",
+  "direct_share": 0.769,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "What does the Match Masters command actually do?",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.827,
+  "jev_translated": "docs",
+  "direct_share": 0.827,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Which menu has the option to flip the selection?",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.755,
+  "jev_translated": "docs",
+  "direct_share": 0.755,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "The font exports fine but the OTF name shows wrong in Word, why?",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.745,
+  "jev_translated": "docs",
+  "direct_share": 0.745,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Write a Python script that renames all glyphs ending in .sc to .smcp",
+  "lang": "en",
+  "task": "python",
+  "english": null,
+  "translated_share": 0.918,
+  "jev_translated": "python",
+  "direct_share": 0.918,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Give me a script to export every open font as OTF into ~/Desktop/out",
+  "lang": "en",
+  "task": "python",
+  "english": null,
+  "translated_share": 0.87,
+  "jev_translated": "python",
+  "direct_share": 0.87,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Can you automate adding sidebearings of 40 to every glyph in the selection?",
+  "lang": "en",
+  "task": "python",
+  "english": null,
+  "translated_share": 0.534,
+  "jev_translated": "python",
+  "direct_share": 0.534,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Loop through masters and print their names",
+  "lang": "en",
+  "task": "python",
+  "english": null,
+  "translated_share": 0.361,
+  "jev_translated": "python",
+  "direct_share": 0.361,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Write a liga feature that substitutes f i with fi and f l with fl",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.784,
+  "jev_translated": "fea",
+  "direct_share": 0.784,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "I need kern feature code with classes for round letters versus flat letters",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.808,
+  "jev_translated": "fea",
+  "direct_share": 0.808,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "I need substitutions so that 1/2 becomes onehalf",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.562,
+  "jev_translated": "fea",
+  "direct_share": 0.562,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Positioning rule that lifts the acute over capital letters",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.5,
+  "jev_translated": "fea",
+  "direct_share": 0.5,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Write the VFJ definition of a glyph named A with a triangular outline, unicode 0041, width 600",
+  "lang": "en",
+  "task": "vfj",
+  "english": null,
+  "translated_share": 0.933,
+  "jev_translated": "vfj",
+  "direct_share": 0.933,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Give me a JSON glyph entry in VFJ format for a composite eacute made of e and acutecomb",
+  "lang": "en",
+  "task": "vfj",
+  "english": null,
+  "translated_share": 0.875,
+  "jev_translated": "vfj",
+  "direct_share": 0.875,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Describe the letter O as JSON with nodes for the FontLab format",
+  "lang": "en",
+  "task": "vfj",
+  "english": null,
+  "translated_share": 0.697,
+  "jev_translated": "vfj",
+  "direct_share": 0.697,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Give me a sample text with lots of round letters so I can check my o and c",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.942,
+  "jev_translated": "sample",
+  "direct_share": 0.942,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "I want a pangram that uses all Cyrillic letters to test in the Glyph window",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.635,
+  "jev_translated": "sample",
+  "direct_share": 0.635,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Something to type in the preview so I can see all my ligatures",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.793,
+  "jev_translated": "sample",
+  "direct_share": 0.793,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Which words should I look at to judge the spacing of round letters?",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.221,
+  "jev_translated": "sample",
+  "direct_share": 0.221,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Jak zmienić kąt pochylenia kursywy w FontLab?",
+  "lang": "pl",
+  "task": "docs",
+  "english": "How can I change the italic angle in FontLab?",
+  "translated_share": 0.76,
+  "jev_translated": "docs",
+  "direct_share": 0.659,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp",
+  "lang": "pl",
+  "task": "python",
+  "english": "Write a Python script that changes the names of all glyphs from .sc to .smcp",
+  "translated_share": 0.894,
+  "jev_translated": "python",
+  "direct_share": 0.851,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Schreib mir ein kern-Feature für die Buchstaben A V W T",
+  "lang": "de",
+  "task": "fea",
+  "english": "Write me a kern feature for the letters A V W T",
+  "translated_share": 0.788,
+  "jev_translated": "fea",
+  "direct_share": 0.692,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Wo stelle ich die vertikalen Metriken ein?",
+  "lang": "de",
+  "task": "docs",
+  "english": "Where do I set the vertical metrics?",
+  "translated_share": 0.788,
+  "jev_translated": "docs",
+  "direct_share": 0.736,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Come faccio a esportare il font in OTF?",
+  "lang": "it",
+  "task": "docs",
+  "english": "How can I export the font to OTF?",
+  "translated_share": 0.611,
+  "jev_translated": "docs",
+  "direct_share": 0.663,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Scrivimi la definizione VFJ di un glifo quadrato largo 500",
+  "lang": "it",
+  "task": "vfj",
+  "english": "Write me the VFJ definition for a square glyph with a width of 500",
+  "translated_share": 0.947,
+  "jev_translated": "vfj",
+  "direct_share": 0.923,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Écris une fonctionnalité liga pour fi et fl",
+  "lang": "fr",
+  "task": "fea",
+  "english": "Write a liga functionality for fi and fl",
+  "translated_share": 0.75,
+  "jev_translated": "fea",
+  "direct_share": 0.74,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Donne-moi un pangramme français pour tester mes accents",
+  "lang": "fr",
+  "task": "sample",
+  "english": "Give me a French pangram to test my accents",
+  "translated_share": 0.606,
+  "jev_translated": "sample",
+  "direct_share": 0.615,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Dame un texto de muestra con muchas letras redondas",
+  "lang": "es",
+  "task": "sample",
+  "english": "Give me a sample text with many round letters",
+  "translated_share": 0.942,
+  "jev_translated": "sample",
+  "direct_share": 0.909,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Escribe un script en Python que elimine los glifos sin unicode",
+  "lang": "es",
+  "task": "python",
+  "english": "Write a Python script that removes glifos without Unicode.",
+  "translated_share": 0.904,
+  "jev_translated": "python",
+  "direct_share": 0.928,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Jak vyexportovat font jako OTF?",
+  "lang": "cs",
+  "task": "docs",
+  "english": "How to export a font as OTF?",
+  "translated_share": 0.716,
+  "jev_translated": "docs",
+  "direct_share": 0.606,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Escreva o código da feature smcp para versaletes",
+  "lang": "pt",
+  "task": "fea",
+  "english": "Write the code for the smcp feature for Versaletes",
+  "translated_share": 0.712,
+  "jev_translated": "fea",
+  "direct_share": 0.75,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Hoe voeg ik een nieuwe as toe aan een variabel font?",
+  "lang": "nl",
+  "task": "docs",
+  "english": "How do I add a new font style to a variable font?",
+  "translated_share": 0.702,
+  "jev_translated": "docs",
+  "direct_share": 0.635,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Tüm glifleri 50 birim sağa kaydıran bir Python betiği yaz",
+  "lang": "tr",
+  "task": "python",
+  "english": "A Python script that shifts all glyphs 50 units to the right",
+  "translated_share": 0.913,
+  "jev_translated": "python",
+  "direct_share": 0.913,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Írj egy kern feature-t az A és V betűk közé",
+  "lang": "hu",
+  "task": "fea",
+  "english": "Write a kern feature between the letters A and V",
+  "translated_share": 0.784,
+  "jev_translated": "fea",
+  "direct_share": 0.764,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia",
+  "lang": "fi",
+  "task": "sample",
+  "english": "An example text with many A and O letters",
+  "translated_share": 0.755,
+  "jev_translated": "sample",
+  "direct_share": 0.683,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300",
+  "lang": "vi",
+  "task": "vfj",
+  "english": "Write the VFJ definition for the wide 300-width horizontal glyph",
+  "translated_share": 0.861,
+  "jev_translated": "vfj",
+  "direct_share": 0.889,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Ge mig ett pangram på svenska för att testa typsnittet",
+  "lang": "sv",
+  "task": "sample",
+  "english": "Give me a pangram in Swedish to test the font",
+  "translated_share": 0.644,
+  "jev_translated": "sample",
+  "direct_share": 0.697,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Дай мне текст-образец с кириллицей для окна Glyph",
+  "lang": "ru",
+  "task": "sample",
+  "english": "Give me a text sample with Cyrillic characters for the Glyph window",
+  "translated_share": 0.904,
+  "jev_translated": "sample",
+  "direct_share": 0.851,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Напиши скрипт на Python, который удалит все направляющие",
+  "lang": "ru",
+  "task": "python",
+  "english": "Write a Python script that removes all leading spaces",
+  "translated_share": 0.923,
+  "jev_translated": "python",
+  "direct_share": 0.885,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Як змінити сімейну назву шрифту?",
+  "lang": "uk",
+  "task": "docs",
+  "english": "How do I change the family name of a font?",
+  "translated_share": 0.716,
+  "jev_translated": "docs",
+  "direct_share": 0.683,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Напиши VFJ-описание глифа «точка» с юникодом 002E",
+  "lang": "bg",
+  "task": "vfj",
+  "english": "Write the VFJ description for the glyph “dot” with Unicode 002E",
+  "translated_share": 0.918,
+  "jev_translated": "vfj",
+  "direct_share": 0.913,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;",
+  "lang": "el",
+  "task": "docs",
+  "english": "How do I change the angle of the horizontal lines in FontLab?",
+  "translated_share": 0.76,
+  "jev_translated": "docs",
+  "direct_share": 0.668,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Գրիր kern feature Ա և Վ տառերի համար",
+  "lang": "hy",
+  "task": "fea",
+  "english": "Griir kern feature A and V for spacing",
+  "translated_share": 0.726,
+  "jev_translated": "fea",
+  "direct_share": 0.769,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს",
+  "lang": "ka",
+  "task": "python",
+  "english": "Write the Python script, which contains many glyphs",
+  "translated_share": 0.875,
+  "jev_translated": "python",
+  "direct_share": 0.899,
+  "jev_direct": "python"
+ },
+ {
+  "query": "اكتب كود feature للربط بين الحرفين f و i",
+  "lang": "ar",
+  "task": "fea",
+  "english": "Write a feature code to connect the letters f and i",
+  "translated_share": 0.827,
+  "jev_translated": "fea",
+  "direct_share": 0.837,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "چطور فونت را به صورت OTF خروجی بگیرم؟",
+  "lang": "fa",
+  "task": "docs",
+  "english": "How can I export the font as an OTF file?",
+  "translated_share": 0.668,
+  "jev_translated": "docs",
+  "direct_share": 0.567,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח",
+  "lang": "he",
+  "task": "sample",
+  "english": "Give me a Hebrew text example so I can check the kerning",
+  "translated_share": 0.635,
+  "jev_translated": "sample",
+  "direct_share": 0.745,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے",
+  "lang": "ur",
+  "task": "python",
+  "english": "Write the font script so that all glyphs have a width of 600.",
+  "translated_share": 0.587,
+  "jev_translated": "python",
+  "direct_share": 0.639,
+  "jev_direct": "python"
+ },
+ {
+  "query": "FontLab में kerning पैनल कहाँ है?",
+  "lang": "hi",
+  "task": "docs",
+  "english": "Where is the kerning panel in FontLab?",
+  "translated_share": 0.808,
+  "jev_translated": "docs",
+  "direct_share": 0.793,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250",
+  "lang": "bn",
+  "task": "vfj",
+  "english": "Write a VFJ glyph definition named period with a width of 250.",
+  "translated_share": 0.923,
+  "jev_translated": "vfj",
+  "direct_share": 0.894,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก",
+  "lang": "th",
+  "task": "python",
+  "english": "Write a Python script that changes the name of all glyphs to lowercase.",
+  "translated_share": 0.918,
+  "jev_translated": "python",
+  "direct_share": 0.861,
+  "jev_direct": "python"
+ },
+ {
+  "query": "FontLabでイタリック角度を変更するには？",
+  "lang": "ja",
+  "task": "docs",
+  "english": "How to change the italic angle in FontLab?",
+  "translated_share": 0.769,
+  "jev_translated": "docs",
+  "direct_share": 0.707,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "fi と fl の liga フィーチャーを書いてください",
+  "lang": "ja",
+  "task": "fea",
+  "english": "Please write the features of fi and fl liga.",
+  "translated_share": 0.654,
+  "jev_translated": "fea",
+  "direct_share": 0.774,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "给我一段包含所有拼音字母的示例文本，用来检查字体",
+  "lang": "zh",
+  "task": "sample",
+  "english": "Give me an example text containing all phonetic letters to check the font.",
+  "translated_share": 0.861,
+  "jev_translated": "sample",
+  "direct_share": 0.846,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "写一个 Python 脚本，把所有字形的宽度设为 600",
+  "lang": "zh",
+  "task": "python",
+  "english": "Write a Python script to set the width of all glyphs to 600.",
+  "translated_share": 0.875,
+  "jev_translated": "python",
+  "direct_share": 0.904,
+  "jev_direct": "python"
+ },
+ {
+  "query": "A와 V 사이의 커닝 feature 코드를 작성해 줘",
+  "lang": "ko",
+  "task": "fea",
+  "english": "Write the kerning feature code between A and V",
+  "translated_share": 0.808,
+  "jev_translated": "fea",
+  "direct_share": 0.788,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘",
+  "lang": "ko",
+  "task": "vfj",
+  "english": "The FontLab file has a hyphen name and a glyph definition with a width of 300.",
+  "translated_share": 0.317,
+  "jev_translated": "vfj",
+  "direct_share": 0.904,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "How do I write a liga feature?",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.087,
+  "jev_translated": "fea",
+  "direct_share": 0.087,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Give me the code that makes ff become a ligature",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.74,
+  "jev_translated": "fea",
+  "direct_share": 0.74,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "Script the kerning for A V",
+  "lang": "en",
+  "task": "fea",
+  "english": null,
+  "translated_share": 0.562,
+  "jev_translated": "fea",
+  "direct_share": 0.562,
+  "jev_direct": "fea"
+ },
+ {
+  "query": "What would the JSON for a glyph look like?",
+  "lang": "en",
+  "task": "vfj",
+  "english": null,
+  "translated_share": 0.755,
+  "jev_translated": "vfj",
+  "direct_share": 0.755,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Text with lots of kerning pairs",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.288,
+  "jev_translated": "sample",
+  "direct_share": 0.288,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Can FontLab batch rename glyphs?",
+  "lang": "en",
+  "task": "docs",
+  "english": "Can FontLab batch rename glyphs?",
+  "translated_share": 0.601,
+  "jev_translated": "docs",
+  "direct_share": 0.601,
+  "jev_direct": "docs"
+ },
+ {
+  "query": "Rename all glyphs in every open font, I don't want to click",
+  "lang": "en",
+  "task": "python",
+  "english": null,
+  "translated_share": 0.423,
+  "jev_translated": "python",
+  "direct_share": 0.423,
+  "jev_direct": "python"
+ },
+ {
+  "query": "Show me how a glyph is stored in a VFJ file",
+  "lang": "en",
+  "task": "docs",
+  "english": null,
+  "translated_share": 0.264,
+  "jev_translated": "vfj",
+  "direct_share": 0.264,
+  "jev_direct": "vfj"
+ },
+ {
+  "query": "Something to type in the Glyph window that shows off my ligatures",
+  "lang": "en",
+  "task": "sample",
+  "english": null,
+  "translated_share": 0.832,
+  "jev_translated": "sample",
+  "direct_share": 0.832,
+  "jev_direct": "sample"
+ },
+ {
+  "query": "Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl",
+  "lang": "pl",
+  "task": "sample",
+  "english": "Write something in the Glyph window to check the ligatures fi fl",
+  "translated_share": 0.659,
+  "jev_translated": "sample",
+  "direct_share": 0.625,
+  "jev_direct": "sample"
+ }
+]

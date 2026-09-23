@@ -1,0 +1,1850 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/10-package/">
+      
+      
+        <link rel="prev" href="../09-confidence/">
+      
+      
+        <link rel="next" href="../11-typed/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>10. The ornotto package - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#10-the-ornotto-package" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              10. The ornotto package
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limits-per-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits per request
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registered-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registered models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#limits-per-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits per request
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engine-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engine lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registered-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registered models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command line
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="10-the-ornotto-package">10. The ornotto package<a class="headerlink" href="#10-the-ornotto-package" title="Permanent link">&para;</a></h1>
+<p><code>ornotto</code> is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to both local engines, starts and stops them for you, and downloads the models they need. This chapter is the reference: what each object takes, what it returns, and what happens underneath.</p>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>add<span class="w"> </span>ornotto<span class="w">                      </span><span class="c1"># or: pip install ornotto</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"ornotto[pydantic-ai]"</span><span class="w">       </span><span class="c1"># adds pydantic-ai-slim[typesafe] for chapter 11</span>
+</code></pre></div>
+<p>The wheels on PyPI contain both engines, compiled statically from the <code>engines/</code> submodules: <code>dohnuts-cli</code> from <a href="https://github.com/DreamBlooms/dohnuts.cpp">dohnuts.cpp</a> and <code>pcd_server</code> from <a href="https://github.com/stephanj/pcdServer">pcdServer</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Wheel tag</th>
+<th>Backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS 14 or later, Apple silicon</td>
+<td><code>macosx_14_0_arm64</code></td>
+<td>Metal</td>
+</tr>
+<tr>
+<td>Linux x86_64, glibc 2.28 or later</td>
+<td><code>manylinux_2_28_x86_64</code></td>
+<td>CPU</td>
+</tr>
+<tr>
+<td>Linux aarch64, glibc 2.28 or later</td>
+<td><code>manylinux_2_28_aarch64</code></td>
+<td>CPU</td>
+</tr>
+<tr>
+<td>Windows x64</td>
+<td><code>win_amd64</code></td>
+<td>CPU, when the Windows build succeeds</td>
+</tr>
+</tbody>
+</table>
+<p>You need Python 3.10 or later. The Python code is the same on every platform. Only the executables differ, so each wheel is tagged <code>py3-none-&lt;platform&gt;</code>.</p>
+<p>If no wheel fits your platform, pip falls back to the source distribution, which carries no engine sources and installs the Python code alone. ornotto then looks for each engine in three places, in this order:</p>
+<ol>
+<li>The path in <code>ORNOTTO_DOHNUTS_BIN</code> or <code>ORNOTTO_PCD_BIN</code>.</li>
+<li>The copy bundled in the wheel, under <code>ornotto/_bin/</code>.</li>
+<li><code>dohnuts-cli</code> or <code>pcd_server</code> on your <code>PATH</code>.</li>
+</ol>
+<p>If none of them exists, the first question raises <code>EngineNotFound</code> with the name of the variable to set. <a href="../12-choosing/#building-from-source">Chapter 12</a> shows how to build both engines yourself.</p>
+<p>Models download from Hugging Face on first use, through <code>huggingface_hub</code>, into the ordinary Hugging Face cache. Set <code>HF_HUB_CACHE</code> (or <code>HF_HOME</code>) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.</p>
+<h2 id="decider">Decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h2>
+<p>A <code>Decider</code> is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td><code>"decider-0.8b"</code></td>
+<td>A registered name, a local <code>.gguf</code> path (<code>~</code> expands), or <code>hf:owner/repo/file.gguf</code>.</td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td>first engine the model supports</td>
+<td><code>"dohnuts"</code> or <code>"pcd"</code>. Asking a model for an engine it cannot run raises <code>ValueError</code>.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>None</code></td>
+<td>Talk to a running engine at this base URL instead of starting one. <code>engine</code> then defaults to <code>"dohnuts"</code>, and <code>model</code> is only a label.</td>
+</tr>
+<tr>
+<td><code>gpu</code></td>
+<td><code>True</code> on macOS, <code>False</code> elsewhere</td>
+<td>Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects dohnuts; pcdServer offloads to Metal by itself.</td>
+</tr>
+<tr>
+<td><code>metadata</code></td>
+<td><code>None</code></td>
+<td>The dohnuts profile JSON (<code>decider.json</code>, <code>kev.json</code>, <code>dohnuts.json</code>) for a model that is not registered. Without it, an unregistered GGUF runs on pcdServer only.</td>
+</tr>
+<tr>
+<td><code>head</code></td>
+<td><code>None</code></td>
+<td>The scorer head for kev or Dohnuts, when the model is not registered.</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>60.0</code></td>
+<td>Seconds to wait for one answer.</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>Decider</code> has four methods, plus an async one. Each takes the <code>state</code> you ask about: a string, or any JSON value (a dict, a list, numbers).</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Asks</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>decide(state, questions)</code></td>
+<td>named questions, in one call</td>
+<td><code>Decision</code></td>
+</tr>
+<tr>
+<td><code>choose(state, options, question=None)</code></td>
+<td>pick one of <code>options</code></td>
+<td><code>Answer</code></td>
+</tr>
+<tr>
+<td><code>check(state, question, *, yes=None, no=None)</code></td>
+<td>yes or no</td>
+<td><code>Answer</code></td>
+</tr>
+<tr>
+<td><code>rate(state, question, levels)</code></td>
+<td>a level on a rubric</td>
+<td><code>Answer</code></td>
+</tr>
+<tr>
+<td><code>adecide(state, questions)</code></td>
+<td><code>decide</code>, for asyncio</td>
+<td><code>Decision</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>options</code> is a list of names or a mapping of name to description. <code>levels[i]</code> describes level <code>i</code>. <code>yes</code> and <code>no</code> optionally say what counts as each answer.</p>
+<p>The <code>url</code> property returns the engine's base URL, starting the engine if needed. Use it when you want to call the engine's HTTP API directly.</p>
+<h2 id="module-functions">Module functions<a class="headerlink" href="#module-functions" title="Permanent link">&para;</a></h2>
+<p>The module functions use one shared <code>Decider</code>, created on first use from the arguments of the last <code>ornotto.use()</code> call.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Same as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ornotto.decide(state, questions)</code></td>
+<td><code>Decider.decide</code></td>
+</tr>
+<tr>
+<td><code>ornotto.choose(state, options, question=None)</code></td>
+<td><code>Decider.choose</code></td>
+</tr>
+<tr>
+<td><code>ornotto.check(state, question, *, yes=None, no=None)</code></td>
+<td><code>Decider.check</code></td>
+</tr>
+<tr>
+<td><code>ornotto.rate(state, question, levels)</code></td>
+<td><code>Decider.rate</code></td>
+</tr>
+<tr>
+<td><code>ornotto.use(model="decider-0.8b", *, engine=None, **kwargs)</code></td>
+<td>sets the shared Decider's arguments; the next call creates it again</td>
+</tr>
+<tr>
+<td><code>ornotto.default()</code></td>
+<td>returns the shared Decider</td>
+</tr>
+<tr>
+<td><code>ornotto.shutdown()</code></td>
+<td>stops every engine this process started</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
+<p><code>decide</code> takes a mapping from question name to question. The name you choose comes back as the key of the answer. Build questions with three functions:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Builder</th>
+<th>System One type</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>choice(instructions, options)</code></td>
+<td><code>choice</code></td>
+<td>at least two options; <code>options</code> is a list of names or a name → description mapping</td>
+</tr>
+<tr>
+<td><code>yes_no(instructions, *, yes=None, no=None)</code></td>
+<td><code>noul</code></td>
+<td><code>yes</code> and <code>no</code> are optional descriptions</td>
+</tr>
+<tr>
+<td><code>score(instructions, levels)</code></td>
+<td><code>score</code></td>
+<td>at least two levels, in order from level 0</td>
+</tr>
+</tbody>
+</table>
+<p>You can also pass a System One question as a plain dict, as the jev API and dohnuts accept it: <code>{"type": "choice", "instructions": "...", "criteria": {...}}</code>. <code>question</code> is accepted for <code>instructions</code>, <code>options</code> for <code>criteria</code>, and <code>bool</code> for <code>noul</code>. A <code>score</code> whose criteria are keyed by numbers (<code>{"0": ..., "1": ...}</code>) is sorted numerically. Instructions and criteria may be JSON values; ornotto turns them into text.</p>
+<h3 id="limits-per-request">Limits per request<a class="headerlink" href="#limits-per-request" title="Permanent link">&para;</a></h3>
+<p>dohnuts takes at most 64 questions per request (ornotto starts it with <code>--max-questions 64</code>; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your <code>Decider</code> splits them into several requests and merges the answers into one <code>Decision</code>.</p>
+<p>pcdServer has further limits, which ornotto checks before it sends anything. The state, serialized as JSON if it is not a string, must fit in 64 KiB. Each question's text, with its option descriptions folded in, is clipped to 1,024 bytes, because pcdServer has no place for a description per option (<a href="../03-engines/">chapter 3</a>).</p>
+<h2 id="answers">Answers<a class="headerlink" href="#answers" title="Permanent link">&para;</a></h2>
+<p>An <code>Answer</code> is one answer. Its fields mean slightly different things for the three kinds of question you can ask.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>choice</th>
+<th>yes/no</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kind</code></td>
+<td><code>"choice"</code></td>
+<td><code>"noul"</code></td>
+<td><code>"score"</code></td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>the option name</td>
+<td><code>True</code> when p(yes) ≥ 0.5</td>
+<td>the expected level, a float</td>
+</tr>
+<tr>
+<td><code>probabilities</code></td>
+<td>per option</td>
+<td><code>{"false": p, "true": p}</code></td>
+<td>per level, keyed <code>"0"</code>, <code>"1"</code>, …</td>
+</tr>
+<tr>
+<td><code>probability</code></td>
+<td>of the chosen option</td>
+<td>of yes</td>
+<td>of the most likely level</td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td>of the chosen option</td>
+<td>max(p(yes), p(no))</td>
+<td>of the most likely level</td>
+</tr>
+<tr>
+<td><code>level</code></td>
+<td>raises <code>AttributeError</code></td>
+<td>raises <code>AttributeError</code></td>
+<td>the most likely level, an int</td>
+</tr>
+<tr>
+<td><code>raw</code></td>
+<td>the engine's answer as a dict</td>
+<td>same</td>
+<td>same</td>
+</tr>
+</tbody>
+</table>
+<p><code>bool(answer)</code> is <code>bool(answer.value)</code>, so <code>if ornotto.check(text, "Is it spam?"):</code> reads as it should.</p>
+<p><code>calibrated</code> says what kind of number the probabilities are. It is <code>True</code> for dohnuts, whose models divide their logits by a temperature fitted during training before the softmax, so a 0.8 should be right about 80 percent of the time. It is <code>False</code> for pcdServer, whose probabilities are a plain softmax over the first tokens of the allowed answers. Both are fine for picking the winner. They are not interchangeable as confidences: compare a dohnuts 0.8 only with another dohnuts 0.8. <a href="../09-confidence/">Chapter 9</a> shows how well the calibration held up on our benchmark.</p>
+<p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
+<p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">})</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>answers</code></td>
+<td>the dict of answers</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>the model name</td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td><code>"dohnuts"</code> or <code>"pcd"</code></td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td>numeric usage fields summed over the requests, for example <code>input_tokens</code> from dohnuts or <code>elapsed_ms</code> from pcdServer</td>
+</tr>
+<tr>
+<td><code>ms</code></td>
+<td>client wall-clock time for the whole call, engine start excluded</td>
+</tr>
+<tr>
+<td><code>to_dict()</code></td>
+<td>just the values, by question name</td>
+</tr>
+</tbody>
+</table>
+<h2 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h2>
+<p><code>adecide</code> is <code>decide</code> for asyncio. It uses <code>httpx.AsyncClient</code>, so many decisions can be in flight at once. The first call may block briefly while the engine starts: starting a process and waiting for it to load a model is not asynchronous.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p><code>ornotto.aextract</code> is the async form of <code>extract</code> (<a href="../11-typed/">chapter 11</a>).</p>
+<h2 id="engine-lifecycle">Engine lifecycle<a class="headerlink" href="#engine-lifecycle" title="Permanent link">&para;</a></h2>
+<p>The engine is a local HTTP server that ornotto runs as a child process. You never start it by hand unless you want to.</p>
+<ol>
+<li>The first question asks <code>Decider.url</code>, which calls <code>Server.shared(engine, model, gpu)</code>.</li>
+<li>ornotto binds a socket to <code>127.0.0.1</code> on port 0 to get a free port, and starts the engine on that port, loopback only.</li>
+<li>The engine's stdout and stderr go to a log file in the temp directory, named <code>ornotto-&lt;engine&gt;-&lt;port&gt;.log</code>. A file never fills up and blocks the engine the way a full pipe would.</li>
+<li>ornotto polls <code>/health</code> every 0.2 s until the model is loaded, for up to 180 s. If the process exits first, the error includes the last 2,000 characters of its log.</li>
+<li>At interpreter exit, an <code>atexit</code> handler stops every engine: terminate, wait 10 s, then kill.</li>
+</ol>
+<p>Every <code>Decider</code> in the process that names the same engine, model files and GPU setting shares one engine process. Opening <code>Decider("decider-0.8b")</code> twice costs one load. If the process died, the next question starts a new one.</p>
+<div class="admonition warning">
+<p class="admonition-title">Memory</p>
+<p>Each engine holds its model in memory for as long as it runs. Two Deciders on different models are two processes, both resident. <code>ornotto.shutdown()</code> stops them all at once.</p>
+</div>
+<h2 id="registered-models">Registered models<a class="headerlink" href="#registered-models" title="Permanent link">&para;</a></h2>
+<p><code>ornotto.MODELS</code> maps names to <code>ModelSpec</code> records. <code>ornotto models</code> prints the same list.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Engines</th>
+<th>Family</th>
+<th style="text-align: right;">GB</th>
+<th>Licence</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>decider-0.8b</code></td>
+<td>dohnuts, pcd</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.81</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/DreamBlooms/decider-0.8b-GGUF">DreamBlooms/decider-0.8b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>decider-2b</code></td>
+<td>dohnuts, pcd</td>
+<td>dedicated</td>
+<td style="text-align: right;">2.0</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/DreamBlooms/decider-2b-GGUF">DreamBlooms/decider-2b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>kev-0.8b</code></td>
+<td>dohnuts</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.81</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/DreamBlooms/kev-0.8b-GGUF">DreamBlooms/kev-0.8b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>dohnuts-0.8b</code></td>
+<td>dohnuts</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.81</td>
+<td>CC-BY-NC-SA-4.0</td>
+<td><a href="https://huggingface.co/DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF">DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF</a></td>
+</tr>
+<tr>
+<td><code>qwen3.5-0.8b</code></td>
+<td>pcd</td>
+<td>vanilla</td>
+<td style="text-align: right;">0.83</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF">ggml-org/Qwen3.5-0.8B-GGUF</a></td>
+</tr>
+<tr>
+<td><code>qwen3.5-2b</code></td>
+<td>pcd</td>
+<td>vanilla</td>
+<td style="text-align: right;">1.4</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF">bartowski/Qwen_Qwen3.5-2B-GGUF</a></td>
+</tr>
+<tr>
+<td><code>qwen3.5-4b</code></td>
+<td>pcd</td>
+<td>vanilla</td>
+<td style="text-align: right;">3.0</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF">bartowski/Qwen_Qwen3.5-4B-GGUF</a></td>
+</tr>
+<tr>
+<td><code>qwen3.5-4b-hmm</code></td>
+<td>pcd</td>
+<td>fine-tuned</td>
+<td style="text-align: right;">2.7</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a></td>
+</tr>
+</tbody>
+</table>
+<p>The dedicated models are Q8_0; the Qwen chat models are Q4_K_M, except the 0.8B, which is Q8_0. For dohnuts, a dedicated model also downloads its profile JSON, and kev and Dohnuts download a scorer head. The Dohnuts weights are for non-commercial use only. <a href="../04-models/">Chapter 4</a> explains the three families, and <a href="../12-choosing/">chapter 12</a> which to pick.</p>
+<p><code>ornotto.DEFAULT_MODEL</code> is <code>"decider-0.8b"</code>.</p>
+<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Raised when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EngineNotFound</code></td>
+<td>the engine executable is not in the environment variable, the wheel or <code>PATH</code></td>
+</tr>
+<tr>
+<td><code>DecisionError</code></td>
+<td>the engine answered with an HTTP status other than 200; the message carries the status and the first 500 characters of the body</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>a question has fewer than two options or levels; a model does not run on the requested engine; an unregistered GGUF asks for dohnuts without <code>metadata</code>; a pcdServer request exceeds 63 questions or 64 KiB of state</td>
+</tr>
+<tr>
+<td><code>FileNotFoundError</code></td>
+<td>the model is neither a registered name nor a file; the message lists the registered names</td>
+</tr>
+<tr>
+<td><code>RuntimeError</code>, <code>TimeoutError</code></td>
+<td>the engine exited while loading, or did not load within 180 s; the message names the log file</td>
+</tr>
+<tr>
+<td><code>httpx.HTTPError</code></td>
+<td>the connection to the engine failed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="command-line">Command line<a class="headerlink" href="#command-line" title="Permanent link">&para;</a></h2>
+<p>The <code>ornotto</code> command wraps the same API. Each command prints its result, as JSON where it returns an answer.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ornotto models</code></td>
+<td>list the registered models</td>
+</tr>
+<tr>
+<td><code>ornotto pull NAME</code></td>
+<td>download a model and its metadata; prints the GGUF path</td>
+</tr>
+<tr>
+<td><code>ornotto choose STATE OPTION... [--model=] [--engine=] [--question=]</code></td>
+<td>pick one option</td>
+</tr>
+<tr>
+<td><code>ornotto check STATE QUESTION [--model=] [--engine=]</code></td>
+<td>answer yes or no</td>
+</tr>
+<tr>
+<td><code>ornotto serve [NAME] [--engine=]</code></td>
+<td>start an engine, print its URL, run until <span class="keys"><kbd class="key-control">Ctrl</kbd><span>+</span><kbd class="key-c">C</kbd></span></td>
+</tr>
+<tr>
+<td><code>ornotto version</code></td>
+<td>print the package version</td>
+</tr>
+</tbody>
+</table>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+</code></pre></div>
+<p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../09-confidence/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 9. Confidence and fallback">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                9. Confidence and fallback
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../11-typed/" class="md-footer__link md-footer__link--next" aria-label="Next: 11. Typed decisions and pydantic-ai">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                11. Typed decisions and pydantic-ai
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

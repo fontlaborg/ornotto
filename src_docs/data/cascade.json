@@ -1,0 +1,140 @@
+{
+ "translated": {
+  "a_correct": 62,
+  "b_correct": 64,
+  "a_ms": 55.2,
+  "b_ms": 87.6,
+  "n": 67,
+  "sweep": [
+   {
+    "threshold": 0.5,
+    "fallbacks": 3,
+    "correct": 62,
+    "ms": 59.1
+   },
+   {
+    "threshold": 0.6,
+    "fallbacks": 8,
+    "correct": 62,
+    "ms": 65.4
+   },
+   {
+    "threshold": 0.7,
+    "fallbacks": 13,
+    "correct": 62,
+    "ms": 71.8
+   },
+   {
+    "threshold": 0.8,
+    "fallbacks": 21,
+    "correct": 62,
+    "ms": 81.9
+   },
+   {
+    "threshold": 0.85,
+    "fallbacks": 24,
+    "correct": 63,
+    "ms": 85.8
+   },
+   {
+    "threshold": 0.9,
+    "fallbacks": 26,
+    "correct": 63,
+    "ms": 88.3
+   },
+   {
+    "threshold": 0.95,
+    "fallbacks": 34,
+    "correct": 63,
+    "ms": 98.5
+   }
+  ],
+  "calibration": {
+   ">=0.95": [
+    33,
+    31
+   ],
+   "0.8-0.95": [
+    13,
+    11
+   ],
+   "0.6-0.8": [
+    13,
+    13
+   ],
+   "<0.6": [
+    8,
+    7
+   ]
+  }
+ },
+ "direct": {
+  "a_correct": 60,
+  "b_correct": 65,
+  "a_ms": 55.4,
+  "b_ms": 88.0,
+  "n": 67,
+  "sweep": [
+   {
+    "threshold": 0.5,
+    "fallbacks": 4,
+    "correct": 62,
+    "ms": 60.5
+   },
+   {
+    "threshold": 0.6,
+    "fallbacks": 8,
+    "correct": 62,
+    "ms": 65.5
+   },
+   {
+    "threshold": 0.7,
+    "fallbacks": 14,
+    "correct": 63,
+    "ms": 73.2
+   },
+   {
+    "threshold": 0.8,
+    "fallbacks": 21,
+    "correct": 63,
+    "ms": 82.3
+   },
+   {
+    "threshold": 0.85,
+    "fallbacks": 22,
+    "correct": 63,
+    "ms": 83.6
+   },
+   {
+    "threshold": 0.9,
+    "fallbacks": 26,
+    "correct": 63,
+    "ms": 88.7
+   },
+   {
+    "threshold": 0.95,
+    "fallbacks": 31,
+    "correct": 63,
+    "ms": 95.0
+   }
+  ],
+  "calibration": {
+   ">=0.95": [
+    36,
+    34
+   ],
+   "0.8-0.95": [
+    10,
+    9
+   ],
+   "0.6-0.8": [
+    13,
+    12
+   ],
+   "<0.6": [
+    8,
+    5
+   ]
+  }
+ }
+}

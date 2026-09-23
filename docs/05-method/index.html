@@ -1,0 +1,1470 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/05-method/">
+      
+      
+        <link rel="prev" href="../04-models/">
+      
+      
+        <link rel="next" href="../06-results/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>5. How we measured - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#5-how-we-measured" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5. How we measured
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#the-router-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The router question
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-67-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 67 queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#translated-and-direct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Translated and direct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Translated and direct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#language-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-each-engine-was-asked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each engine was asked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-model-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One model at a time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-numbers-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the numbers mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#the-router-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The router question
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-67-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The 67 queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#translated-and-direct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Translated and direct
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Translated and direct">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#language-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Language detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-each-engine-was-asked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What each engine was asked
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-model-at-a-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One model at a time
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-numbers-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the numbers mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="5-how-we-measured">5. How we measured<a class="headerlink" href="#5-how-we-measured" title="Permanent link">&para;</a></h1>
+<p>The benchmark asks one question 67 times: which of five things does this FontLab user want the built-in assistant to do? It is the router in front of the FontLab assistant, and it is the decision this book was written to get right. Every engine and model got the same 67 queries, and every answer was scored against a label we assigned before the run.</p>
+<h2 id="the-router-question">The router question<a class="headerlink" href="#the-router-question" title="Permanent link">&para;</a></h2>
+<p>The assistant can do five kinds of work, and each query belongs to exactly one:</p>
+<table>
+<thead>
+<tr>
+<th>task</th>
+<th>what the user wants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs</code></td>
+<td>an explanation of how a FontLab feature, tool, panel or setting works, from the documentation, not code</td>
+</tr>
+<tr>
+<td><code>python</code></td>
+<td>a Python script that automates FontLab: batch operations, renaming glyphs, generating files</td>
+</tr>
+<tr>
+<td><code>fea</code></td>
+<td>OpenType feature code in FEA syntax: <code>liga</code>, <code>kern</code>, <code>calt</code>, <code>ss01</code>, lookups, classes</td>
+</tr>
+<tr>
+<td><code>vfj</code></td>
+<td>a glyph definition in VFJ, FontLab's JSON glyph format: contours, nodes, components, anchors</td>
+</tr>
+<tr>
+<td><code>sample</code></td>
+<td>a sample text to type in the Glyph window: a pangram, test strings, glyph sequences</td>
+</tr>
+</tbody>
+</table>
+<p>The labels split 17 <code>docs</code>, 14 <code>fea</code>, 14 <code>sample</code>, 13 <code>python</code> and 9 <code>vfj</code>.</p>
+<p>System One engines received the question as the instruction <em>"This message was sent to the assistant built into FontLab, the font editor. What is the user asking the assistant to do? Pick the single best match."</em> and each task as an option with a description of one to three sentences. Other engines needed shorter prompts, which the section on <a href="#what-each-engine-was-asked">prompts</a> lists.</p>
+<h2 id="the-67-queries">The 67 queries<a class="headerlink" href="#the-67-queries" title="Permanent link">&para;</a></h2>
+<p>28 queries are in English and 39 are in 29 other languages, 30 languages in all: Polish (3); German, French, Spanish, Italian, Russian, Japanese, Chinese and Korean (2 each); and Czech, Portuguese, Dutch, Turkish, Hungarian, Finnish, Swedish, Ukrainian, Bulgarian, Greek, Armenian, Georgian, Arabic, Persian, Hebrew, Urdu, Hindi, Bengali, Thai and Vietnamese (1 each). They cover Latin with diacritics, Cyrillic, Greek, Arabic, Hebrew, Devanagari, Bengali, Thai, Georgian, Armenian, Han, Hangul and Kana.</p>
+<p>Ten of the queries were written to be hard. They sit on the border between two tasks, and a reasonable person could hesitate over each:</p>
+<ul>
+<li>"How do I write a liga feature?" asks for an explanation (<code>docs</code>) but names FEA.</li>
+<li>"Give me the code that makes ff become a ligature" is <code>fea</code>, and "Script the kerning for A V" is <code>fea</code> phrased like <code>python</code>.</li>
+<li>"What would the JSON for a glyph look like?" is <code>vfj</code>, while "Show me how a glyph is stored in a VFJ file" is <code>docs</code>.</li>
+<li>"Text with lots of kerning pairs" and "Something to type in the Glyph window that shows off my ligatures" are <code>sample</code>, and so is one Polish variant.</li>
+<li>"Can FontLab batch rename glyphs?" is <code>docs</code>, while "Rename all glyphs in every open font, I don't want to click" is <code>python</code>.</li>
+</ul>
+<p>These ten carry most of the differences between the stronger models. On "How do I write a liga feature?", 9% of all runs answered <code>docs</code>, and jev answered <code>fea</code>. <a href="../09-confidence/">Chapter 9</a> lists every query with the share of runs that got it right.</p>
+<h2 id="translated-and-direct">Translated and direct<a class="headerlink" href="#translated-and-direct" title="Permanent link">&para;</a></h2>
+<p>Every model was scored twice.</p>
+<ul>
+<li><strong>Direct</strong>: the original query goes to the classifier, in whatever language it was written.</li>
+<li><strong>Translated</strong>: the 39 non-English queries are first translated into English, and the 28 English ones pass through unchanged.</li>
+</ul>
+<p>The translated mode models a pipeline in which a small translator runs before the decision. It costs one more model and about 88 ms per non-English query. It helps weaker multilingual models most and helps the strongest ones not at all: jev scored 65/67 either way.</p>
+<h3 id="language-detection">Language detection<a class="headerlink" href="#language-detection" title="Permanent link">&para;</a></h3>
+<p>The pipeline has to know whether a query is English before it can decide to translate it. Two detectors were measured over 100 passes of the 67 queries, single-threaded, after a warm-up:</p>
+<div class="bench" markdown="0">
+<table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
+<tbody>
+<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="604.316937" class="num">604.3</td><td data-sort="1654.760835" class="num">1,655</td></tr>
+<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.130034" class="num">12.1</td><td data-sort="82439.998385" class="num">82,440</td></tr>
+<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="616.446972" class="num">616.4</td><td data-sort="1622.19955" class="num">1,622</td></tr>
+</tbody></table>
+</div>
+
+<p><a href="https://github.com/pemistahl/lingua-rs">lingua</a> was right on 63 of 67 queries and handles 1,650 calls per second. papagan is 50 times faster and was right on 43. The majority vote, which breaks ties in lingua's favour, adds nothing to lingua alone. Its four misses: a Spanish and an English query read as Latin, a Bulgarian one as Russian, and a Hindi query full of English terms as Sotho.</p>
+<h3 id="translation">Translation<a class="headerlink" href="#translation" title="Permanent link">&para;</a></h3>
+<p>The translator is Hy-MT2-1.8B at Q4_K_M on llama-server, at temperature 0, with a prompt that names the source language and carries a short glossary. The glossary pins font-editing terms that the model otherwise paraphrased in early tests: without it, the Polish <em>kursywy</em> came back as "curve", and the German <em>kern-Feature</em> as "core feature". Terms such as <code>glyph</code>, <code>kerning</code>, <code>feature</code>, <code>italic</code>, <code>VFJ</code>, <code>FEA</code> and <code>Glyph window</code> map to themselves.</p>
+<p>The 39 translations, with the time each took:</p>
+<div class="bench" markdown="0">
+<input class="table-filter" type="search" placeholder="Filter 39 rows" aria-label="Filter the table" data-table="translator">
+<table class="sortable" id="translator"><thead><tr><th>Query</th><th>Lang</th><th>English</th><th>ms</th></tr></thead>
+<tbody>
+<tr><td class="query">Jak zmienić kąt pochylenia kursywy w FontLab?</td><td>pl</td><td class="query">How can I change the italic angle in FontLab?</td><td data-sort="149.26725" class="num">149</td></tr>
+<tr><td class="query">Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp</td><td>pl</td><td class="query">Write a Python script that changes the names of all glyphs from .sc to .smcp</td><td data-sort="112.075625" class="num">112</td></tr>
+<tr><td class="query">Schreib mir ein kern-Feature für die Buchstaben A V W T</td><td>de</td><td class="query">Write me a kern feature for the letters A V W T</td><td data-sort="90.322416" class="num">90</td></tr>
+<tr><td class="query">Wo stelle ich die vertikalen Metriken ein?</td><td>de</td><td class="query">Where do I set the vertical metrics?</td><td data-sort="60.671584" class="num">61</td></tr>
+<tr><td class="query">Come faccio a esportare il font in OTF?</td><td>it</td><td class="query">How can I export the font to OTF?</td><td data-sort="76.613166" class="num">77</td></tr>
+<tr><td class="query">Scrivimi la definizione VFJ di un glifo quadrato largo 500</td><td>it</td><td class="query">Write me the VFJ definition for a square glyph with a width of 500</td><td data-sort="98.890875" class="num">99</td></tr>
+<tr><td class="query">Écris une fonctionnalité liga pour fi et fl</td><td>fr</td><td class="query">Write a liga functionality for fi and fl</td><td data-sort="69.804709" class="num">70</td></tr>
+<tr><td class="query">Donne-moi un pangramme français pour tester mes accents</td><td>fr</td><td class="query">Give me a French pangram to test my accents</td><td data-sort="70.529083" class="num">71</td></tr>
+<tr><td class="query">Dame un texto de muestra con muchas letras redondas</td><td>es</td><td class="query">Give me a sample text with many round letters</td><td data-sort="73.551125" class="num">74</td></tr>
+<tr><td class="query">Escribe un script en Python que elimine los glifos sin unicode</td><td>es</td><td class="query">Write a Python script that removes glifos without Unicode.</td><td data-sort="85.01225" class="num">85</td></tr>
+<tr><td class="query">Jak vyexportovat font jako OTF?</td><td>cs</td><td class="query">How to export a font as OTF?</td><td data-sort="66.172084" class="num">66</td></tr>
+<tr><td class="query">Escreva o código da feature smcp para versaletes</td><td>pt</td><td class="query">Write the code for the smcp feature for Versaletes</td><td data-sort="85.297334" class="num">85</td></tr>
+<tr><td class="query">Hoe voeg ik een nieuwe as toe aan een variabel font?</td><td>nl</td><td class="query">How do I add a new font style to a variable font?</td><td data-sort="91.198166" class="num">91</td></tr>
+<tr><td class="query">Tüm glifleri 50 birim sağa kaydıran bir Python betiği yaz</td><td>tr</td><td class="query">A Python script that shifts all glyphs 50 units to the right</td><td data-sort="94.907084" class="num">95</td></tr>
+<tr><td class="query">Írj egy kern feature-t az A és V betűk közé</td><td>hu</td><td class="query">Write a kern feature between the letters A and V</td><td data-sort="80.925209" class="num">81</td></tr>
+<tr><td class="query">Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia</td><td>fi</td><td class="query">An example text with many A and O letters</td><td data-sort="72.167417" class="num">72</td></tr>
+<tr><td class="query">Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300</td><td>vi</td><td class="query">Write the VFJ definition for the wide 300-width horizontal glyph</td><td data-sort="90.351167" class="num">90</td></tr>
+<tr><td class="query">Ge mig ett pangram på svenska för att testa typsnittet</td><td>sv</td><td class="query">Give me a pangram in Swedish to test the font</td><td data-sort="81.415792" class="num">81</td></tr>
+<tr><td class="query">Дай мне текст-образец с кириллицей для окна Glyph</td><td>ru</td><td class="query">Give me a text sample with Cyrillic characters for the Glyph window</td><td data-sort="97.677958" class="num">98</td></tr>
+<tr><td class="query">Напиши скрипт на Python, который удалит все направляющие</td><td>ru</td><td class="query">Write a Python script that removes all leading spaces</td><td data-sort="65.7095" class="num">66</td></tr>
+<tr><td class="query">Як змінити сімейну назву шрифту?</td><td>uk</td><td class="query">How do I change the family name of a font?</td><td data-sort="82.868375" class="num">83</td></tr>
+<tr><td class="query">Напиши VFJ-описание глифа «точка» с юникодом 002E</td><td>bg</td><td class="query">Write the VFJ description for the glyph “dot” with Unicode 002E</td><td data-sort="104.413417" class="num">104</td></tr>
+<tr><td class="query">Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;</td><td>el</td><td class="query">How do I change the angle of the horizontal lines in FontLab?</td><td data-sort="94.813583" class="num">95</td></tr>
+<tr><td class="query">Գրիր kern feature Ա և Վ տառերի համար</td><td>hy</td><td class="query">Griir kern feature A and V for spacing</td><td data-sort="81.47325" class="num">81</td></tr>
+<tr><td class="query">დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს</td><td>ka</td><td class="query">Write the Python script, which contains many glyphs</td><td data-sort="76.233041" class="num">76</td></tr>
+<tr><td class="query">اكتب كود feature للربط بين الحرفين f و i</td><td>ar</td><td class="query">Write a feature code to connect the letters f and i</td><td data-sort="80.617" class="num">81</td></tr>
+<tr><td class="query">چطور فونت را به صورت OTF خروجی بگیرم؟</td><td>fa</td><td class="query">How can I export the font as an OTF file?</td><td data-sort="85.086875" class="num">85</td></tr>
+<tr><td class="query">תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח</td><td>he</td><td class="query">Give me a Hebrew text example so I can check the kerning</td><td data-sort="89.255" class="num">89</td></tr>
+<tr><td class="query">پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے</td><td>ur</td><td class="query">Write the font script so that all glyphs have a width of 600.</td><td data-sort="103.993875" class="num">104</td></tr>
+<tr><td class="query">FontLab में kerning पैनल कहाँ है?</td><td>hi</td><td class="query">Where is the kerning panel in FontLab?</td><td data-sort="77.209875" class="num">77</td></tr>
+<tr><td class="query">একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250</td><td>bn</td><td class="query">Write a VFJ glyph definition named period with a width of 250.</td><td data-sort="99.009166" class="num">99</td></tr>
+<tr><td class="query">เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก</td><td>th</td><td class="query">Write a Python script that changes the name of all glyphs to lowercase.</td><td data-sort="99.158417" class="num">99</td></tr>
+<tr><td class="query">FontLabでイタリック角度を変更するには？</td><td>ja</td><td class="query">How to change the italic angle in FontLab?</td><td data-sort="77.004417" class="num">77</td></tr>
+<tr><td class="query">fi と fl の liga フィーチャーを書いてください</td><td>ja</td><td class="query">Please write the features of fi and fl liga.</td><td data-sort="77.487792" class="num">77</td></tr>
+<tr><td class="query">给我一段包含所有拼音字母的示例文本，用来检查字体</td><td>zh</td><td class="query">Give me an example text containing all phonetic letters to check the font.</td><td data-sort="87.867917" class="num">88</td></tr>
+<tr><td class="query">写一个 Python 脚本，把所有字形的宽度设为 600</td><td>zh</td><td class="query">Write a Python script to set the width of all glyphs to 600.</td><td data-sort="97.186125" class="num">97</td></tr>
+<tr><td class="query">A와 V 사이의 커닝 feature 코드를 작성해 줘</td><td>ko</td><td class="query">Write the kerning feature code between A and V</td><td data-sort="80.917958" class="num">81</td></tr>
+<tr><td class="query">VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘</td><td>ko</td><td class="query">The FontLab file has a hyphen name and a glyph definition with a width of 300.</td><td data-sort="113.206083" class="num">113</td></tr>
+<tr><td class="query">Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl</td><td>pl</td><td class="query">Write something in the Glyph window to check the ligatures fi fl</td><td data-sort="94.391125" class="num">94</td></tr>
+</tbody></table>
+</div>
+
+<p>Each query was translated once and the English text was cached, so every classifier in translated mode saw the same English.</p>
+<h2 id="what-each-engine-was-asked">What each engine was asked<a class="headerlink" href="#what-each-engine-was-asked" title="Permanent link">&para;</a></h2>
+<p>Engines take different request shapes, so the same decision was phrased in the shape each engine was built for:</p>
+<table>
+<thead>
+<tr>
+<th>engine</th>
+<th>prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jev, dohnuts, laya.cpp (kev), PyTorch, ExecuTorch</td>
+<td>a System One request: the query as <code>state</code>, one <code>choice</code> question with the long instruction and the five long task descriptions as <code>criteria</code></td>
+</tr>
+<tr>
+<td>slot, decider readout</td>
+<td>decider's trained layout, tokenized as upstream does it: <code>Context:</code> and the query, then the question, the options lettered <code>(A)</code> to <code>(E)</code> with their long descriptions, then <code>Answer: (</code></td>
+</tr>
+<tr>
+<td>slot, Hmm readout</td>
+<td>the Qwen chat template with thinking off, options as <code>A: name — description</code> lines, and "Return only the option letter."</td>
+</tr>
+<tr>
+<td>pcdServer</td>
+<td>one enum field <code>task</code> with the choices <code>docs</code>, <code>python</code>, <code>fea</code>, <code>vfj</code>, <code>sample</code>, and a field description made of a short instruction and one short description per task</td>
+</tr>
+<tr>
+<td>laya runtimes</td>
+<td>a System One request with the short instruction and short descriptions, because the encoder shares a 1,024-token budget; the Neural Engine exports hold 96 tokens and got a compact prompt</td>
+</tr>
+</tbody>
+</table>
+<p>pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. <a href="../03-engines/">Chapter 3</a> explains what each engine does with its prompt.</p>
+<h2 id="one-model-at-a-time">One model at a time<a class="headerlink" href="#one-model-at-a-time" title="Permanent link">&para;</a></h2>
+<p>Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early run loaded several GGUFs in one batch, next to the translator. The machine, an Apple M4 Max with 48 GB of memory, swapped its boot disk full and macOS stopped responding.</p>
+<p>Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat for every model, the 35B mixture-of-experts model included.</p>
+<p>One model at a time also makes the timings fair: no model competes with another for the GPU or for memory bandwidth.</p>
+<h2 id="what-the-numbers-mean">What the numbers mean<a class="headerlink" href="#what-the-numbers-mean" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Translated</strong> and <strong>direct</strong> count correct answers out of 67. A correct answer is one whose most likely option is the labelled task.</li>
+<li>The <strong>English</strong> column counts the 28 English queries in translated mode. <strong>Other, translated</strong> and <strong>other, direct</strong> count the 39 non-English queries in each mode.</li>
+<li><strong>ms/query</strong> is the mean wall-clock time from the moment the harness sends a query to the moment it has the probabilities. For server engines it includes the HTTP round trip and JSON parsing on loopback. For jev it includes the network trip to OpenRouter. It excludes model loading and a warm-up call made before timing starts.</li>
+<li><strong>Load ms</strong> is the time to load the model and answer the warm-up call, for runtimes that load in-process or that the harness started itself. It is blank where a server was started outside the timed step.</li>
+<li><strong>GB</strong> is the size of the GGUF file as published on Hugging Face.</li>
+</ul>
+<p>In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so compare their milliseconds with a server's only loosely.</p>
+<h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>67 queries is a small set.</strong> One query is 1.5 points of accuracy. Differences of one or two queries between models are within what a different set of 67 would change.</li>
+<li><strong>The labels are ours.</strong> For the ten ambiguous queries another person could label a few differently. jev's two errors are both on ambiguous queries.</li>
+<li><strong>Thresholds are in-sample.</strong> The confidence gates in <a href="../09-confidence/">chapter 9</a> were tuned on the same 67 queries they are scored on. Expect them to do somewhat worse on new traffic.</li>
+<li><strong>One machine.</strong> All timings come from one Apple M4 Max, on Metal where the engine supports it. CPU-only machines are several times slower: dohnuts on the CPU with eight threads took 275 ms per query against 52 ms on Metal.</li>
+<li><strong>One task.</strong> A five-way router is one decision. Yes/no questions, rubrics and long option lists behave differently, and <a href="../02-decisions/">chapter 2</a> shows examples of each.</li>
+<li><strong>Only the winner is scored.</strong> Accuracy looks at the most likely option. It ignores how confident the model was, which matters as soon as you gate on confidence (<a href="../09-confidence/">chapter 9</a>).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../04-models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 4. Dedicated, fine-tuned and vanilla models">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                4. Dedicated, fine-tuned and vanilla models
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-results/" class="md-footer__link md-footer__link--next" aria-label="Next: 6. Results">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                6. Results
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1404 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/09-confidence/">
+      
+      
+        <link rel="prev" href="../08-speed/">
+      
+      
+        <link rel="next" href="../10-package/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>9. Confidence and fallback - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#9-confidence-and-fallback" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9. Confidence and fallback
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#what-calibration-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What calibration means
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decider-08b-on-the-router-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decider-0.8b on the router set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-fallback-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A fallback gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-gate-in-ornotto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A gate in ornotto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-hardest-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hardest queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-abstain-signal-nobody-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The abstain signal nobody used
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#what-calibration-means" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What calibration means
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decider-08b-on-the-router-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        decider-0.8b on the router set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-fallback-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A fallback gate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-gate-in-ornotto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A gate in ornotto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-hardest-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The hardest queries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-abstain-signal-nobody-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The abstain signal nobody used
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="9-confidence-and-fallback">9. Confidence and fallback<a class="headerlink" href="#9-confidence-and-fallback" title="Permanent link">&para;</a></h1>
+<p>Every engine in this book returns a probability for each option, not just a winner. If those probabilities mean what they say, you can act on the confident answers and send the doubtful ones somewhere slower and better. This chapter measures whether they do, on the router benchmark, and what a fallback buys.</p>
+<h2 id="what-calibration-means">What calibration means<a class="headerlink" href="#what-calibration-means" title="Permanent link">&para;</a></h2>
+<p>A model is calibrated when its stated probability matches its hit rate: of all the answers it gives with a top probability near 0.8, about 80 percent are right. Calibration is a property of the probabilities, separate from accuracy. A model can be accurate and badly calibrated (always 0.99, sometimes wrong), or calibrated and mediocre.</p>
+<p>The dedicated models get calibrated during training. decider divides the letter logits by a fitted temperature before the softmax (T 1.03 for decider-0.8b, 1.3 for DreamBlooms' decider-2b), and laya picks a temperature per bucket of option count and question type. pcdServer applies no temperature: its probabilities are the model's raw softmax over the first tokens of the allowed values, which says how strongly the model prefers one value, not how often it is right. The <code>ornotto</code> package marks the difference on every answer with <code>Answer.calibrated</code>, <code>True</code> on dohnuts and <code>False</code> on pcdServer, so that you do not compare the two as if they were one scale.</p>
+<p>To check calibration you need labelled examples: group the answers by their top probability, and count how many in each group were right.</p>
+<h2 id="decider-08b-on-the-router-set">decider-0.8b on the router set<a class="headerlink" href="#decider-08b-on-the-router-set" title="Permanent link">&para;</a></h2>
+<p>These are the 67 router queries answered by decider-0.8b (<code>q5</code>) on dohnuts (Metal), grouped by top probability. First with translation:</p>
+<div class="bench" markdown="0">
+<table class="sortable" id="calibration-translated"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
+<tbody>
+<tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="7" class="num">7</td><td data-sort="87.5" class="num">88 %</td></tr>
+<tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="13" class="num">13</td><td data-sort="100.0" class="num">100 %</td></tr>
+<tr><td>0.8 to 0.95</td><td data-sort="13" class="num">13</td><td data-sort="11" class="num">11</td><td data-sort="84.61538461538461" class="num">85 %</td></tr>
+<tr><td>0.95 and up</td><td data-sort="33" class="num">33</td><td data-sort="31" class="num">31</td><td data-sort="93.93939393939394" class="num">94 %</td></tr>
+</tbody></table>
+</div>
+
+<p>And on the original text:</p>
+<div class="bench" markdown="0">
+<table class="sortable" id="calibration-direct"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
+<tbody>
+<tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="5" class="num">5</td><td data-sort="62.5" class="num">62 %</td></tr>
+<tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="12" class="num">12</td><td data-sort="92.3076923076923" class="num">92 %</td></tr>
+<tr><td>0.8 to 0.95</td><td data-sort="10" class="num">10</td><td data-sort="9" class="num">9</td><td data-sort="90.0" class="num">90 %</td></tr>
+<tr><td>0.95 and up</td><td data-sort="36" class="num">36</td><td data-sort="34" class="num">34</td><td data-sort="94.44444444444444" class="num">94 %</td></tr>
+</tbody></table>
+</div>
+
+<p>Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several points. The signal is usable for separating very unsure answers from the rest, and weak above that.</p>
+<div class="admonition note">
+<p class="admonition-title">Two numbers called confidence</p>
+<p>dohnuts returns <code>answers.&lt;name&gt;.confidence</code> as the entropy certainty, 1 − H/ln K, which is near 0 whenever the distribution is spread out, even if the top option is at 0.7. Its top probability is under <code>native.confidence</code>. The two are easy to swap. In <code>ornotto</code>, <code>Answer.confidence</code> is always the top probability, and the entropy figure stays in <code>Answer.raw</code>.</p>
+</div>
+<h2 id="a-fallback-gate">A fallback gate<a class="headerlink" href="#a-fallback-gate" title="Permanent link">&para;</a></h2>
+<p>The fastest accurate local model and the most accurate local model are different models:</p>
+<ul>
+<li>decider-0.8b (<code>q5</code>) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.</li>
+<li>Qwen3.5-4B-Hmm (<code>q8</code>) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query.</li>
+</ul>
+<p>A gate asks the fast model first and sends the query to the slow one only when the fast model's top probability is below a threshold. The tables replay the benchmark's cached answers through such a gate at several thresholds. "Mean ms" is the cost per query averaged over all 67, where a query that falls back pays for both calls.</p>
+<p>With translation:</p>
+<div class="bench" markdown="0">
+<table class="sortable" id="cascade-translated"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
+<tbody>
+<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="3" class="num">3/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="59.1" class="num">59.1</td></tr>
+<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.4" class="num">65.4</td></tr>
+<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="13" class="num">13/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="71.8" class="num">71.8</td></tr>
+<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="21" class="num">21/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="81.9" class="num">81.9</td></tr>
+<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="24" class="num">24/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="85.8" class="num">85.8</td></tr>
+<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="26" class="num">26/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="88.3" class="num">88.3</td></tr>
+<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="34" class="num">34/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="98.5" class="num">98.5</td></tr>
+</tbody></table>
+</div>
+
+<p>On the original text:</p>
+<div class="bench" markdown="0">
+<table class="sortable" id="cascade-direct"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
+<tbody>
+<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="4" class="num">4/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="60.5" class="num">60.5</td></tr>
+<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.5" class="num">65.5</td></tr>
+<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="14" class="num">14/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="73.2" class="num">73.2</td></tr>
+<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="21" class="num">21/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="82.3" class="num">82.3</td></tr>
+<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="22" class="num">22/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="83.6" class="num">83.6</td></tr>
+<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="26" class="num">26/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="88.7" class="num">88.7</td></tr>
+<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="31" class="num">31/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="95.0" class="num">95.0</td></tr>
+</tbody></table>
+</div>
+
+<p>The two runs lead to different decisions.</p>
+<p><strong>With translation, the gate does not pay.</strong> The best gate, below 0.85, scores 63 of 67 at 85.8 ms with 24 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms. The one answer the gate gains over decider alone comes from a single query, the Urdu request for a Python script, where decider's top probability was 0.84. Thresholds of 0.5 to 0.8 score 62, the same as decider alone.</p>
+<p><strong>Without translation, the gate helps.</strong> Below 0.7, it scores 63 of 67 at 73.2 ms with 14 fallbacks, three answers better than decider alone and 15 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, Czech and German queries, which had top probabilities from 0.38 to 0.63. Qwen3.5-4B-Hmm alone still scores higher, 65 of 67, at 88 ms.</p>
+<p>Some of decider's errors no threshold catches, because decider is sure of them. "Can FontLab batch rename glyphs?" (a docs question) got python at 0.97, and "Show me how a glyph is stored in a VFJ file" (also docs) got vfj at 0.99. Both are questions about FontLab, worded with the vocabulary of the task they are not. Qwen3.5-4B-Hmm answers both correctly.</p>
+<div class="admonition warning">
+<p class="admonition-title">Read these gains with care</p>
+<p>The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.</p>
+</div>
+<h2 id="a-gate-in-ornotto">A gate in ornotto<a class="headerlink" href="#a-gate-in-ornotto" title="Permanent link">&para;</a></h2>
+<p>The <code>ornotto</code> repository ships the gate as <code>examples/fallback.py</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">THRESHOLD</span> <span class="o">=</span> <span class="mf">0.7</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">,</span> <span class="s2">"vfj"</span><span class="p">,</span> <span class="s2">"sample"</span><span class="p">]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">QUESTION</span> <span class="o">=</span> <span class="s2">"Which kind of help does this FontLab user want?"</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">careful</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"Build a kern feature for A V"</span><span class="p">,</span> <span class="s2">"Jak zmienić kąt pochylenia kursywy w FontLab?"</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>             <span class="s2">"Show me how a glyph is stored in a VFJ file"</span><span class="p">):</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">answer</span> <span class="o">=</span> <span class="n">fast</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">TASKS</span><span class="p">,</span> <span class="n">QUESTION</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">source</span> <span class="o">=</span> <span class="s2">"decider"</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="k">if</span> <span class="n">answer</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&lt;</span> <span class="n">THRESHOLD</span><span class="p">:</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="n">answer</span><span class="p">,</span> <span class="n">source</span> <span class="o">=</span> <span class="n">careful</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">TASKS</span><span class="p">,</span> <span class="n">QUESTION</span><span class="p">),</span> <span class="s2">"qwen3.5-4b-hmm"</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">answer</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">answer</span><span class="o">.</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">source</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p><code>ornotto</code> registers the <code>q8</code> file of decider-0.8b, not the <code>q5</code> file of the benchmark, and it sends a shorter question than the benchmark's router prompt, so the confidences differ from the tables above. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.</p>
+<p>If you run the two models as a pydantic-ai chain instead, <a href="../11-typed/">chapter 11</a> shows the same pattern with an <code>Agent</code>.</p>
+<h2 id="the-hardest-queries">The hardest queries<a class="headerlink" href="#the-hardest-queries" title="Permanent link">&para;</a></h2>
+<p>Some queries defeat most of the 208 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.</p>
+<div class="bench" markdown="0">
+<input class="table-filter" type="search" placeholder="Filter 67 rows" aria-label="Filter the table" data-table="queries">
+<table class="sortable" id="queries"><thead><tr><th>Query</th><th>Lang</th><th>Task</th><th>Right, translated</th><th>Right, direct</th><th>jev</th></tr></thead>
+<tbody>
+<tr><td class="query">How do I write a liga feature?</td><td>en</td><td>docs</td><td data-sort="8.7" class="num">9 %</td><td data-sort="8.7" class="num">9 %</td><td>fea</td></tr>
+<tr><td class="query">Which words should I look at to judge the spacing of round letters?</td><td>en</td><td>sample</td><td data-sort="22.1" class="num">22 %</td><td data-sort="22.1" class="num">22 %</td><td>sample</td></tr>
+<tr><td class="query">Show me how a glyph is stored in a VFJ file</td><td>en</td><td>docs</td><td data-sort="26.400000000000002" class="num">26 %</td><td data-sort="26.400000000000002" class="num">26 %</td><td>vfj</td></tr>
+<tr><td class="query">Text with lots of kerning pairs</td><td>en</td><td>sample</td><td data-sort="28.799999999999997" class="num">29 %</td><td data-sort="28.799999999999997" class="num">29 %</td><td>sample</td></tr>
+<tr><td class="query">VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘</td><td>ko</td><td>vfj</td><td data-sort="31.7" class="num">32 %</td><td data-sort="90.4" class="num">90 %</td><td>vfj</td></tr>
+<tr><td class="query">Loop through masters and print their names</td><td>en</td><td>python</td><td data-sort="36.1" class="num">36 %</td><td data-sort="36.1" class="num">36 %</td><td>python</td></tr>
+<tr><td class="query">Rename all glyphs in every open font, I don&#x27;t want to click</td><td>en</td><td>python</td><td data-sort="42.3" class="num">42 %</td><td data-sort="42.3" class="num">42 %</td><td>python</td></tr>
+<tr><td class="query">Positioning rule that lifts the acute over capital letters</td><td>en</td><td>fea</td><td data-sort="50.0" class="num">50 %</td><td data-sort="50.0" class="num">50 %</td><td>fea</td></tr>
+<tr><td class="query">Can you automate adding sidebearings of 40 to every glyph in the selection?</td><td>en</td><td>python</td><td data-sort="53.400000000000006" class="num">53 %</td><td data-sort="53.400000000000006" class="num">53 %</td><td>python</td></tr>
+<tr><td class="query">I need substitutions so that 1/2 becomes onehalf</td><td>en</td><td>fea</td><td data-sort="56.2" class="num">56 %</td><td data-sort="56.2" class="num">56 %</td><td>fea</td></tr>
+<tr><td class="query">Script the kerning for A V</td><td>en</td><td>fea</td><td data-sort="56.2" class="num">56 %</td><td data-sort="56.2" class="num">56 %</td><td>fea</td></tr>
+<tr><td class="query">پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے</td><td>ur</td><td>python</td><td data-sort="58.699999999999996" class="num">59 %</td><td data-sort="63.9" class="num">64 %</td><td>python</td></tr>
+<tr><td class="query">Can FontLab batch rename glyphs?</td><td>en</td><td>docs</td><td data-sort="60.099999999999994" class="num">60 %</td><td data-sort="60.099999999999994" class="num">60 %</td><td>docs</td></tr>
+<tr><td class="query">Donne-moi un pangramme français pour tester mes accents</td><td>fr</td><td>sample</td><td data-sort="60.6" class="num">61 %</td><td data-sort="61.5" class="num">62 %</td><td>sample</td></tr>
+<tr><td class="query">Come faccio a esportare il font in OTF?</td><td>it</td><td>docs</td><td data-sort="61.1" class="num">61 %</td><td data-sort="66.3" class="num">66 %</td><td>docs</td></tr>
+<tr><td class="query">I want a pangram that uses all Cyrillic letters to test in the Glyph window</td><td>en</td><td>sample</td><td data-sort="63.5" class="num">64 %</td><td data-sort="63.5" class="num">64 %</td><td>sample</td></tr>
+<tr><td class="query">תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח</td><td>he</td><td>sample</td><td data-sort="63.5" class="num">64 %</td><td data-sort="74.5" class="num">74 %</td><td>sample</td></tr>
+<tr><td class="query">Ge mig ett pangram på svenska för att testa typsnittet</td><td>sv</td><td>sample</td><td data-sort="64.4" class="num">64 %</td><td data-sort="69.69999999999999" class="num">70 %</td><td>sample</td></tr>
+<tr><td class="query">fi と fl の liga フィーチャーを書いてください</td><td>ja</td><td>fea</td><td data-sort="65.4" class="num">65 %</td><td data-sort="77.4" class="num">77 %</td><td>fea</td></tr>
+<tr><td class="query">Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl</td><td>pl</td><td>sample</td><td data-sort="65.9" class="num">66 %</td><td data-sort="62.5" class="num">62 %</td><td>sample</td></tr>
+<tr><td class="query">چطور فونت را به صورت OTF خروجی بگیرم؟</td><td>fa</td><td>docs</td><td data-sort="66.8" class="num">67 %</td><td data-sort="56.699999999999996" class="num">57 %</td><td>docs</td></tr>
+<tr><td class="query">Describe the letter O as JSON with nodes for the FontLab format</td><td>en</td><td>vfj</td><td data-sort="69.69999999999999" class="num">70 %</td><td data-sort="69.69999999999999" class="num">70 %</td><td>vfj</td></tr>
+<tr><td class="query">Hoe voeg ik een nieuwe as toe aan een variabel font?</td><td>nl</td><td>docs</td><td data-sort="70.19999999999999" class="num">70 %</td><td data-sort="63.5" class="num">64 %</td><td>docs</td></tr>
+<tr><td class="query">Escreva o código da feature smcp para versaletes</td><td>pt</td><td>fea</td><td data-sort="71.2" class="num">71 %</td><td data-sort="75.0" class="num">75 %</td><td>fea</td></tr>
+<tr><td class="query">Jak vyexportovat font jako OTF?</td><td>cs</td><td>docs</td><td data-sort="71.6" class="num">72 %</td><td data-sort="60.6" class="num">61 %</td><td>docs</td></tr>
+<tr><td class="query">Як змінити сімейну назву шрифту?</td><td>uk</td><td>docs</td><td data-sort="71.6" class="num">72 %</td><td data-sort="68.30000000000001" class="num">68 %</td><td>docs</td></tr>
+<tr><td class="query">Գրիր kern feature Ա և Վ տառերի համար</td><td>hy</td><td>fea</td><td data-sort="72.6" class="num">73 %</td><td data-sort="76.9" class="num">77 %</td><td>fea</td></tr>
+<tr><td class="query">Give me the code that makes ff become a ligature</td><td>en</td><td>fea</td><td data-sort="74.0" class="num">74 %</td><td data-sort="74.0" class="num">74 %</td><td>fea</td></tr>
+<tr><td class="query">The font exports fine but the OTF name shows wrong in Word, why?</td><td>en</td><td>docs</td><td data-sort="74.5" class="num">74 %</td><td data-sort="74.5" class="num">74 %</td><td>docs</td></tr>
+<tr><td class="query">Écris une fonctionnalité liga pour fi et fl</td><td>fr</td><td>fea</td><td data-sort="75.0" class="num">75 %</td><td data-sort="74.0" class="num">74 %</td><td>fea</td></tr>
+<tr><td class="query">Which menu has the option to flip the selection?</td><td>en</td><td>docs</td><td data-sort="75.5" class="num">76 %</td><td data-sort="75.5" class="num">76 %</td><td>docs</td></tr>
+<tr><td class="query">Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia</td><td>fi</td><td>sample</td><td data-sort="75.5" class="num">76 %</td><td data-sort="68.30000000000001" class="num">68 %</td><td>sample</td></tr>
+<tr><td class="query">What would the JSON for a glyph look like?</td><td>en</td><td>vfj</td><td data-sort="75.5" class="num">76 %</td><td data-sort="75.5" class="num">76 %</td><td>vfj</td></tr>
+<tr><td class="query">Jak zmienić kąt pochylenia kursywy w FontLab?</td><td>pl</td><td>docs</td><td data-sort="76.0" class="num">76 %</td><td data-sort="65.9" class="num">66 %</td><td>docs</td></tr>
+<tr><td class="query">Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;</td><td>el</td><td>docs</td><td data-sort="76.0" class="num">76 %</td><td data-sort="66.8" class="num">67 %</td><td>docs</td></tr>
+<tr><td class="query">How do I change the italic angle of my font in FontLab?</td><td>en</td><td>docs</td><td data-sort="76.9" class="num">77 %</td><td data-sort="76.9" class="num">77 %</td><td>docs</td></tr>
+<tr><td class="query">FontLabでイタリック角度を変更するには？</td><td>ja</td><td>docs</td><td data-sort="76.9" class="num">77 %</td><td data-sort="70.7" class="num">71 %</td><td>docs</td></tr>
+<tr><td class="query">Write a liga feature that substitutes f i with fi and f l with fl</td><td>en</td><td>fea</td><td data-sort="78.4" class="num">78 %</td><td data-sort="78.4" class="num">78 %</td><td>fea</td></tr>
+<tr><td class="query">Írj egy kern feature-t az A és V betűk közé</td><td>hu</td><td>fea</td><td data-sort="78.4" class="num">78 %</td><td data-sort="76.4" class="num">76 %</td><td>fea</td></tr>
+<tr><td class="query">Schreib mir ein kern-Feature für die Buchstaben A V W T</td><td>de</td><td>fea</td><td data-sort="78.8" class="num">79 %</td><td data-sort="69.19999999999999" class="num">69 %</td><td>fea</td></tr>
+<tr><td class="query">Wo stelle ich die vertikalen Metriken ein?</td><td>de</td><td>docs</td><td data-sort="78.8" class="num">79 %</td><td data-sort="73.6" class="num">74 %</td><td>docs</td></tr>
+<tr><td class="query">Something to type in the preview so I can see all my ligatures</td><td>en</td><td>sample</td><td data-sort="79.3" class="num">79 %</td><td data-sort="79.3" class="num">79 %</td><td>sample</td></tr>
+<tr><td class="query">I need kern feature code with classes for round letters versus flat letters</td><td>en</td><td>fea</td><td data-sort="80.80000000000001" class="num">81 %</td><td data-sort="80.80000000000001" class="num">81 %</td><td>fea</td></tr>
+<tr><td class="query">FontLab में kerning पैनल कहाँ है?</td><td>hi</td><td>docs</td><td data-sort="80.80000000000001" class="num">81 %</td><td data-sort="79.3" class="num">79 %</td><td>docs</td></tr>
+<tr><td class="query">A와 V 사이의 커닝 feature 코드를 작성해 줘</td><td>ko</td><td>fea</td><td data-sort="80.80000000000001" class="num">81 %</td><td data-sort="78.8" class="num">79 %</td><td>fea</td></tr>
+<tr><td class="query">What does the Match Masters command actually do?</td><td>en</td><td>docs</td><td data-sort="82.69999999999999" class="num">83 %</td><td data-sort="82.69999999999999" class="num">83 %</td><td>docs</td></tr>
+<tr><td class="query">اكتب كود feature للربط بين الحرفين f و i</td><td>ar</td><td>fea</td><td data-sort="82.69999999999999" class="num">83 %</td><td data-sort="83.7" class="num">84 %</td><td>fea</td></tr>
+<tr><td class="query">Something to type in the Glyph window that shows off my ligatures</td><td>en</td><td>sample</td><td data-sort="83.2" class="num">83 %</td><td data-sort="83.2" class="num">83 %</td><td>sample</td></tr>
+<tr><td class="query">Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300</td><td>vi</td><td>vfj</td><td data-sort="86.1" class="num">86 %</td><td data-sort="88.9" class="num">89 %</td><td>vfj</td></tr>
+<tr><td class="query">给我一段包含所有拼音字母的示例文本，用来检查字体</td><td>zh</td><td>sample</td><td data-sort="86.1" class="num">86 %</td><td data-sort="84.6" class="num">85 %</td><td>sample</td></tr>
+<tr><td class="query">Give me a script to export every open font as OTF into ~/Desktop/out</td><td>en</td><td>python</td><td data-sort="87.0" class="num">87 %</td><td data-sort="87.0" class="num">87 %</td><td>python</td></tr>
+<tr><td class="query">Give me a JSON glyph entry in VFJ format for a composite eacute made of e and acutecomb</td><td>en</td><td>vfj</td><td data-sort="87.5" class="num">88 %</td><td data-sort="87.5" class="num">88 %</td><td>vfj</td></tr>
+<tr><td class="query">დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს</td><td>ka</td><td>python</td><td data-sort="87.5" class="num">88 %</td><td data-sort="89.9" class="num">90 %</td><td>python</td></tr>
+<tr><td class="query">写一个 Python 脚本，把所有字形的宽度设为 600</td><td>zh</td><td>python</td><td data-sort="87.5" class="num">88 %</td><td data-sort="90.4" class="num">90 %</td><td>python</td></tr>
+<tr><td class="query">Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp</td><td>pl</td><td>python</td><td data-sort="89.4" class="num">89 %</td><td data-sort="85.1" class="num">85 %</td><td>python</td></tr>
+<tr><td class="query">Escribe un script en Python que elimine los glifos sin unicode</td><td>es</td><td>python</td><td data-sort="90.4" class="num">90 %</td><td data-sort="92.80000000000001" class="num">93 %</td><td>python</td></tr>
+<tr><td class="query">Дай мне текст-образец с кириллицей для окна Glyph</td><td>ru</td><td>sample</td><td data-sort="90.4" class="num">90 %</td><td data-sort="85.1" class="num">85 %</td><td>sample</td></tr>
+<tr><td class="query">Tüm glifleri 50 birim sağa kaydıran bir Python betiği yaz</td><td>tr</td><td>python</td><td data-sort="91.3" class="num">91 %</td><td data-sort="91.3" class="num">91 %</td><td>python</td></tr>
+<tr><td class="query">Write a Python script that renames all glyphs ending in .sc to .smcp</td><td>en</td><td>python</td><td data-sort="91.8" class="num">92 %</td><td data-sort="91.8" class="num">92 %</td><td>python</td></tr>
+<tr><td class="query">Напиши VFJ-описание глифа «точка» с юникодом 002E</td><td>bg</td><td>vfj</td><td data-sort="91.8" class="num">92 %</td><td data-sort="91.3" class="num">91 %</td><td>vfj</td></tr>
+<tr><td class="query">เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก</td><td>th</td><td>python</td><td data-sort="91.8" class="num">92 %</td><td data-sort="86.1" class="num">86 %</td><td>python</td></tr>
+<tr><td class="query">Напиши скрипт на Python, который удалит все направляющие</td><td>ru</td><td>python</td><td data-sort="92.30000000000001" class="num">92 %</td><td data-sort="88.5" class="num">88 %</td><td>python</td></tr>
+<tr><td class="query">একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250</td><td>bn</td><td>vfj</td><td data-sort="92.30000000000001" class="num">92 %</td><td data-sort="89.4" class="num">89 %</td><td>vfj</td></tr>
+<tr><td class="query">Write the VFJ definition of a glyph named A with a triangular outline, unicode 0041, width 600</td><td>en</td><td>vfj</td><td data-sort="93.30000000000001" class="num">93 %</td><td data-sort="93.30000000000001" class="num">93 %</td><td>vfj</td></tr>
+<tr><td class="query">Give me a sample text with lots of round letters so I can check my o and c</td><td>en</td><td>sample</td><td data-sort="94.19999999999999" class="num">94 %</td><td data-sort="94.19999999999999" class="num">94 %</td><td>sample</td></tr>
+<tr><td class="query">Dame un texto de muestra con muchas letras redondas</td><td>es</td><td>sample</td><td data-sort="94.19999999999999" class="num">94 %</td><td data-sort="90.9" class="num">91 %</td><td>sample</td></tr>
+<tr><td class="query">Scrivimi la definizione VFJ di un glifo quadrato largo 500</td><td>it</td><td>vfj</td><td data-sort="94.69999999999999" class="num">95 %</td><td data-sort="92.30000000000001" class="num">92 %</td><td>vfj</td></tr>
+</tbody></table>
+</div>
+
+<p>The three hardest:</p>
+<ul>
+<li><strong>"How do I write a liga feature?"</strong> is labelled docs: the user asks how, not for code. 9 percent of the classifiers agree, and jev answers fea. The words "write" and "feature" pull every model towards the feature-code task. Whether the label or the models are right is a question about what the assistant should do, which a router cannot settle.</li>
+<li><strong>"Which words should I look at to judge the spacing of round letters?"</strong> is labelled sample: the user wants test text. 22 percent get it right, jev among them. The question is about spacing, and the request for text to look at is implied rather than stated.</li>
+<li><strong>"Show me how a glyph is stored in a VFJ file"</strong> is labelled docs, and 26 percent agree. It is the same trap as the liga query: the format's name pulls the answer to vfj, the task of writing VFJ, and jev answers vfj too.</li>
+</ul>
+<p>One query shows what translation costs. The Korean request for a VFJ glyph named hyphen with a width of 300 is right for 90 percent of the classifiers on the original text and for 32 percent after translation, because the translator turned it into "The FontLab file has a hyphen name and a glyph definition with a width of 300." Most classifiers read the Korean better than the English they were given.</p>
+<h2 id="the-abstain-signal-nobody-used">The abstain signal nobody used<a class="headerlink" href="#the-abstain-signal-nobody-used" title="Permanent link">&para;</a></h2>
+<p>laya returns one more number that the other engines do not: <code>action.act_probability</code>, the output of a separate act head that estimates whether the model should answer directly or escalate. It is the only built-in abstain signal among the engines benchmarked here. Our benchmark harness never read it; it compared only the probability maps. A gate on <code>act_probability</code> instead of on top probability is the obvious next experiment for laya, whose 4 to 7 ms answers (<a href="../08-speed/#load-time-and-the-latency-floor">chapter 8</a>) would make a cheap first stage if it knew when to step aside.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../08-speed/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 8. Speed, memory and caching">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                8. Speed, memory and caching
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../10-package/" class="md-footer__link md-footer__link--next" aria-label="Next: 10. The ornotto package">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                10. The ornotto package
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

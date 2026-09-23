@@ -1,0 +1,1485 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/07-quantization/">
+      
+      
+        <link rel="prev" href="../06-results/">
+      
+      
+        <link rel="next" href="../08-speed/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>7. Quantization and size - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../css/site.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#7-quantization-and-size" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ornotto" class="md-header__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ornotto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              7. Quantization and size
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Five ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Benchmarks
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#what-the-labels-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the labels mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q4-to-q8-is-a-plateau" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4 to Q8 is a plateau
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#below-q3-it-collapses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Below Q3 it collapses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q5-for-the-small-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5 for the small models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-file-on-different-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same file on different engines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#size-against-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size against accuracy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-quant-to-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which quant to download
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The package
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    The package
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#what-the-labels-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the labels mean
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q4-to-q8-is-a-plateau" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q4 to Q8 is a plateau
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#below-q3-it-collapses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Below Q3 it collapses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q5-for-the-small-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q5 for the small models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-file-on-different-engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The same file on different engines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#size-against-accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size against accuracy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-quant-to-download" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which quant to download
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+                  
+  
+  
+
+
+<h1 id="7-quantization-and-size">7. Quantization and size<a class="headerlink" href="#7-quantization-and-size" title="Permanent link">&para;</a></h1>
+<p>A GGUF file stores a model's weights at reduced precision, and the precision you pick decides the file size, the memory the engine needs, and how many answers survive. On the router set, precision matters much less than you might expect, until it suddenly matters a lot.</p>
+<h2 id="what-the-labels-mean">What the labels mean<a class="headerlink" href="#what-the-labels-mean" title="Permanent link">&para;</a></h2>
+<p>The suffix of a GGUF file names its quantization: how many bits each weight keeps, and how llama.cpp groups them.</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>llama.cpp's reference: Llama-3-8B size, perplexity cost</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>F16</code>, <code>BF16</code></td>
+<td>about 16 GB, none</td>
+<td>Half precision. <code>BF16</code> keeps the float32 exponent range; for inference both are the unquantized model.</td>
+</tr>
+<tr>
+<td><code>Q8_0</code></td>
+<td>7.96 GB, +0.0026</td>
+<td>Eight bits per weight in small blocks, each with its own scale. The usual reference quant.</td>
+</tr>
+<tr>
+<td><code>Q6_K</code>, <code>Q5_K_M</code>, <code>Q4_K_M</code></td>
+<td>6.14, 5.33, 4.58 GB; +0.022, +0.057, +0.175</td>
+<td>K-quants: nested blocks with their own scales, mixing precisions across tensors (<code>_M</code> is the medium mix).</td>
+</tr>
+<tr>
+<td><code>Q3_K_M</code>, <code>Q2_K</code></td>
+<td>3.74, 2.96 GB; +0.66, +3.52</td>
+<td>The same scheme with fewer bits.</td>
+</tr>
+<tr>
+<td><code>IQ3_XXS</code>, <code>IQ2_XXS</code>, <code>IQ1_S</code></td>
+<td>3.06, 2.06, 1.56 bits per weight</td>
+<td>"i-quants": codebooks fitted with an importance matrix, built to hold up at very low bit rates.</td>
+</tr>
+<tr>
+<td><code>UD-…</code></td>
+<td>mixed</td>
+<td>Unsloth's "dynamic" quants, which pick a precision per layer.</td>
+</tr>
+</tbody>
+</table>
+<p>The perplexity cost is the increase llama.cpp's <code>llama-quantize</code> lists for Llama-3-8B; it grows slowly to <code>Q4_K_M</code> and fast below it, which is the shape the router benchmark shows too.</p>
+<p>In the tables below and in <a href="../06-results/">chapter 6</a>, the quant is shortened to its number: <code>q4</code> is <code>Q4_K_M</code> (or <code>Q4_0</code> for the ggml-org file), <code>iq2</code> is an <code>IQ2</code> variant, <code>f16</code> and <code>bf16</code> are the unquantized files.</p>
+<h2 id="q4-to-q8-is-a-plateau">Q4 to Q8 is a plateau<a class="headerlink" href="#q4-to-q8-is-a-plateau" title="Permanent link">&para;</a></h2>
+<p>Across every model that was measured at four or more quantizations, the score between <code>q4</code> and <code>q8</code> barely moves. Each cell below is the translated score out of 67, then the mean time per query.</p>
+<div class="bench" markdown="0">
+<input class="table-filter" type="search" placeholder="Filter 21 rows" aria-label="Filter the table" data-table="quant-sweeps">
+<table class="sortable" id="quant-sweeps"><caption>Translated score out of 67 and mean ms per query, per quantization</caption><thead><tr><th>Model</th><th>Engine</th><th>iq1</th><th>q2</th><th>iq2</th><th>q3</th><th>iq3</th><th>q4</th><th>q5</th><th>q6</th><th>q8</th><th>f16</th><th>bf16</th></tr></thead>
+<tbody>
+<tr><td>decider-0.8b</td><td>dohnuts (Metal)</td><td data-sort="-1"></td><td data-sort="18" class="num">18 · 55 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 54 ms</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 53 ms</td><td data-sort="62" class="num">62 · 55 ms</td><td data-sort="62" class="num">62 · 54 ms</td><td data-sort="62" class="num">62 · 51 ms</td><td data-sort="61" class="num">61 · 52 ms</td><td data-sort="-1"></td></tr>
+<tr><td>decider-0.8b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="17" class="num">17 · 29 ms</td><td data-sort="-1"></td><td data-sort="52" class="num">52 · 29 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="57" class="num">57 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td data-sort="55" class="num">55 · 31 ms</td><td data-sort="-1"></td></tr>
+<tr><td>decider-0.8b</td><td>slot (llama-server)</td><td data-sort="-1"></td><td data-sort="18" class="num">18 · 65 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 70 ms</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 67 ms</td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 64 ms</td><td data-sort="61" class="num">61 · 64 ms</td><td data-sort="-1"></td></tr>
+<tr><td>laya-multilingual</td><td>llama.cpp embeddings</td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="49" class="num">49 · 45 ms</td><td data-sort="-1"></td><td data-sort="36" class="num">36 · 43 ms</td><td data-sort="47" class="num">47 · 45 ms</td><td data-sort="51" class="num">51 · 45 ms</td><td data-sort="52" class="num">52 · 44 ms</td><td data-sort="52" class="num">52 · 44 ms</td><td data-sort="-1"></td></tr>
+<tr><td>qwen1.5-0.5b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="21" class="num">21 · 21 ms</td><td data-sort="-1"></td><td data-sort="35" class="num">35 · 21 ms</td><td data-sort="-1"></td><td data-sort="26" class="num">26 · 22 ms</td><td data-sort="28" class="num">28 · 22 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td data-sort="28" class="num">28 · 21 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen1.5-1.8b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="26" class="num">26 · 40 ms</td><td data-sort="-1"></td><td data-sort="34" class="num">34 · 42 ms</td><td data-sort="-1"></td><td data-sort="33" class="num">33 · 40 ms</td><td data-sort="32" class="num">32 · 41 ms</td><td data-sort="31" class="num">31 · 40 ms</td><td data-sort="32" class="num">32 · 36 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen1.5-4b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="41" class="num">41 · 233 ms</td><td data-sort="-1"></td><td data-sort="39" class="num">39 · 237 ms</td><td data-sort="-1"></td><td data-sort="41" class="num">41 · 232 ms</td><td data-sort="39" class="num">39 · 284 ms</td><td data-sort="40" class="num">40 · 276 ms</td><td data-sort="42" class="num">42 · 248 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen2.5-0.5b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="15" class="num">15 · 18 ms</td><td data-sort="-1"></td><td data-sort="18" class="num">18 · 18 ms</td><td data-sort="-1"></td><td data-sort="28" class="num">28 · 20 ms</td><td data-sort="22" class="num">22 · 19 ms</td><td data-sort="23" class="num">23 · 22 ms</td><td data-sort="25" class="num">25 · 18 ms</td><td data-sort="26" class="num">26 · 18 ms</td><td data-sort="-1"></td></tr>
+<tr><td>qwen2.5-0.5b-pcb</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="27" class="num">27 · 18 ms</td><td data-sort="-1"></td><td data-sort="20" class="num">20 · 18 ms</td><td data-sort="-1"></td><td data-sort="17" class="num">17 · 23 ms</td><td data-sort="19" class="num">19 · 18 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="-1"></td></tr>
+<tr><td>qwen2.5-3b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="53" class="num">53 · 58 ms</td><td data-sort="49" class="num">49 · 56 ms</td><td data-sort="57" class="num">57 · 61 ms</td><td data-sort="-1"></td><td data-sort="62" class="num">62 · 59 ms</td><td data-sort="61" class="num">61 · 62 ms</td><td data-sort="62" class="num">62 · 62 ms</td><td data-sort="62" class="num">62 · 53 ms</td><td data-sort="62" class="num">62 · 54 ms</td><td data-sort="-1"></td></tr>
+<tr><td>qwen3-1.7b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="54" class="num">54 · 38 ms</td><td data-sort="-1"></td><td data-sort="50" class="num">50 · 38 ms</td><td data-sort="-1"></td><td data-sort="54" class="num">54 · 41 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 36 ms</td></tr>
+<tr><td>qwen3-1.7b-unsloth</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="44" class="num">44 · 37 ms</td><td data-sort="-1"></td><td data-sort="53" class="num">53 · 38 ms</td><td data-sort="-1"></td><td data-sort="56" class="num">56 · 40 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen3-4b-unsloth</td><td>pcdServer</td><td data-sort="13" class="num">13 · 72 ms</td><td data-sort="-1"></td><td data-sort="59" class="num">59 · 73 ms</td><td data-sort="60" class="num">60 · 78 ms</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 76 ms</td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 70 ms</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 72 ms</td></tr>
+<tr><td>qwen3-reranker-0.6b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="10" class="num">10 · 24 ms</td><td data-sort="-1"></td><td data-sort="21" class="num">21 · 24 ms</td><td data-sort="-1"></td><td data-sort="28" class="num">28 · 29 ms</td><td data-sort="40" class="num">40 · 25 ms</td><td data-sort="33" class="num">33 · 25 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td data-sort="30" class="num">30 · 24 ms</td><td data-sort="-1"></td></tr>
+<tr><td>qwen3.5-0.8b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="40" class="num">40 · 32 ms</td><td data-sort="-1"></td><td data-sort="46" class="num">46 · 31 ms</td><td data-sort="-1"></td><td data-sort="52" class="num">52 · 30 ms</td><td data-sort="57" class="num">57 · 32 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 31 ms</td><td data-sort="-1"></td><td data-sort="55" class="num">55 · 30 ms</td></tr>
+<tr><td>qwen3.5-0.8b-unsloth</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="43" class="num">43 · 28 ms</td><td data-sort="26" class="num">26 · 28 ms</td><td data-sort="48" class="num">48 · 30 ms</td><td data-sort="34" class="num">34 · 28 ms</td><td data-sort="55" class="num">55 · 50 ms</td><td data-sort="56" class="num">56 · 30 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="-1"></td><td data-sort="55" class="num">55 · 31 ms</td></tr>
+<tr><td>qwen3.5-2b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="49" class="num">49 · 41 ms</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 43 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 47 ms</td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen3.5-2b-unsloth</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="53" class="num">53 · 41 ms</td><td data-sort="44" class="num">44 · 41 ms</td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="57" class="num">57 · 45 ms</td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="56" class="num">56 · 44 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="-1"></td><td data-sort="57" class="num">57 · 42 ms</td></tr>
+<tr><td>qwen3.5-4b-unsloth</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="61" class="num">61 · 94 ms</td><td data-sort="52" class="num">52 · 87 ms</td><td data-sort="60" class="num">60 · 93 ms</td><td data-sort="61" class="num">61 · 90 ms</td><td data-sort="61" class="num">61 · 94 ms</td><td data-sort="63" class="num">63 · 94 ms</td><td data-sort="62" class="num">62 · 94 ms</td><td data-sort="63" class="num">63 · 85 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>qwen3.8-2b-distill</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="-1"></td><td data-sort="49" class="num">49 · 43 ms</td><td data-sort="45" class="num">45 · 46 ms</td><td data-sort="43" class="num">43 · 43 ms</td><td data-sort="44" class="num">44 · 39 ms</td><td data-sort="-1"></td><td data-sort="-1"></td></tr>
+<tr><td>zerocoder-0.8b</td><td>pcdServer</td><td data-sort="-1"></td><td data-sort="42" class="num">42 · 35 ms</td><td data-sort="-1"></td><td data-sort="32" class="num">32 · 35 ms</td><td data-sort="-1"></td><td data-sort="27" class="num">27 · 46 ms</td><td data-sort="18" class="num">18 · 36 ms</td><td data-sort="24" class="num">24 · 35 ms</td><td data-sort="25" class="num">25 · 34 ms</td><td data-sort="27" class="num">27 · 33 ms</td><td data-sort="-1"></td></tr>
+</tbody></table>
+</div>
+
+<p>Some rows that make the point:</p>
+<ul>
+<li><strong>decider-0.8b on dohnuts (Metal)</strong>: 61 at <code>q4</code>, 62 at <code>q5</code>, <code>q6</code> and <code>q8</code>, 61 at <code>f16</code>. The 1.52 GB <code>f16</code> file scores no better than the 0.53 GB <code>q4</code>.</li>
+<li><strong>Qwen2.5-3B on pcdServer</strong>: 62 at <code>q4</code>, <code>q6</code>, <code>q8</code> and <code>f16</code>, 61 at <code>q5</code>.</li>
+<li><strong>Qwen3-4B (Unsloth) on pcdServer</strong>: 60 or 61 at every quant from <code>q3</code> to <code>bf16</code>.</li>
+<li><strong>Qwen3.5-4B (Unsloth) on pcdServer</strong>: 60 to 63 from <code>q2</code> to <code>q8</code>.</li>
+</ul>
+<p>One query is 1.5 points of accuracy on a 67-query set, so a difference of one or two answers between neighbouring quants is noise. If you read the grid expecting a smooth curve, you will find bumps that do not repeat: Qwen3.5-2B scores 61 at <code>q3</code> and 57 at <code>q8</code>, which says more about three borderline queries than about 3-bit weights.</p>
+<p>The time column is flat too. On a GPU the engines are limited by memory bandwidth and by the per-request overhead, not by the size of the weights, so a smaller file does not make a single short decision faster: decider-0.8b takes 51 to 55 ms per query on dohnuts (Metal) at every quant.</p>
+<h2 id="below-q3-it-collapses">Below Q3 it collapses<a class="headerlink" href="#below-q3-it-collapses" title="Permanent link">&para;</a></h2>
+<p>The plateau ends at three bits, and the drop below it is steep and uneven:</p>
+<table>
+<thead>
+<tr>
+<th>Model and engine</th>
+<th><code>q4</code> or best</th>
+<th><code>q3</code></th>
+<th><code>q2</code></th>
+<th>lowest i-quant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>decider-0.8b, dohnuts (Metal)</td>
+<td>61</td>
+<td>57</td>
+<td><strong>18</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>decider-0.8b, pcdServer</td>
+<td>57</td>
+<td>52</td>
+<td><strong>17</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Qwen3.5-0.8B, pcdServer</td>
+<td>57 (<code>q5</code>)</td>
+<td>46</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr>
+<td>Qwen3.5-0.8B (Unsloth), pcdServer</td>
+<td>56 (<code>q5</code>)</td>
+<td>48</td>
+<td>43</td>
+<td>26 (<code>iq2</code>)</td>
+</tr>
+<tr>
+<td>Qwen3.5-2B (Unsloth), pcdServer</td>
+<td>57</td>
+<td>57</td>
+<td>53</td>
+<td>44 (<code>iq2</code>)</td>
+</tr>
+<tr>
+<td>Qwen2.5-3B, pcdServer</td>
+<td>62</td>
+<td>57</td>
+<td>53</td>
+<td>49 (<code>iq2</code>)</td>
+</tr>
+<tr>
+<td>Qwen3-4B (Unsloth), pcdServer</td>
+<td>61</td>
+<td>60</td>
+<td></td>
+<td><strong>13</strong> (<code>iq1</code>)</td>
+</tr>
+<tr>
+<td>Qwen3.5-4B (Unsloth), pcdServer</td>
+<td>63 (<code>q8</code>)</td>
+<td>60</td>
+<td>61</td>
+<td>52 (<code>iq2</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Two patterns stand out. The smaller the model, the earlier it breaks: at 0.8B parameters <code>q3</code> already costs 4 to 11 answers, while the Qwen3.5-4B files hold their score down to <code>q2</code>. And the break is abrupt rather than gradual: decider-0.8b at <code>q2</code> falls from 62 to 18 correct, one more than you would get by always answering the most common task (the benchmark has 17 docs queries). The <code>IQ1_S</code> file of Qwen3-4B, at 1.08 GB, scores 13.</p>
+<p>The 1-bit Bonsai models are the exception that shows why: Bonsai-27B at <code>q1</code> (3.8 GB) scores 62, because it is built as a 1-bit model (<a href="https://huggingface.co/prism-ml/Bonsai-27B-gguf">prism-ml/Bonsai-27B-gguf</a>) rather than squeezed into 1-bit weights after training. A post-training quant of an ordinary model has no such margin.</p>
+<h2 id="q5-for-the-small-models">Q5 for the small models<a class="headerlink" href="#q5-for-the-small-models" title="Permanent link">&para;</a></h2>
+<p>For the 0.8B and 1.7B models, <code>q5</code> is the lowest quant that keeps the full score, and on pcdServer it is often the best row of its model:</p>
+<ul>
+<li>decider-0.8b on pcdServer scores 57 at <code>q5</code> against 55 at <code>q8</code> and <code>f16</code>.</li>
+<li>Qwen3.5-0.8B on pcdServer scores 57 at <code>q5</code> against 55 at <code>q8</code> and <code>bf16</code>.</li>
+<li>Qwen3-1.7B scores 57 at <code>q5</code>, <code>q6</code>, <code>q8</code> and <code>bf16</code>, and drops to 54 at <code>q4</code>.</li>
+</ul>
+<p>The gain of <code>q5</code> over <code>q8</code> is two answers, inside the noise, so the practical reading is that <code>q5</code> loses nothing. The <code>q4</code> files of the same models lose one to three answers, and <code>q3</code> loses more.</p>
+<h2 id="the-same-file-on-different-engines">The same file on different engines<a class="headerlink" href="#the-same-file-on-different-engines" title="Permanent link">&para;</a></h2>
+<p>A quant is not a property of the model alone: the engine that reads the answer out decides how much of the model's accuracy you keep. The three rows for decider-0.8b show this most clearly, because they use the same GGUF files:</p>
+<ul>
+<li>dohnuts (Metal) and slot read decider's trained answer slot, the letter logits after <code>Answer: (</code>, and score identically at every quant: 62 at <code>q8</code>, <code>q6</code> and <code>q5</code>, 61 at <code>f16</code> and <code>q4</code>, 57 at <code>q3</code>, 18 at <code>q2</code>.</li>
+<li>pcdServer runs the same weights as a chat model and scores the first tokens of the task names, a readout decider was never trained for. It loses five to seven answers at every quant: 55 at <code>q8</code>, 57 at <code>q5</code>, 17 at <code>q2</code>.</li>
+</ul>
+<p>The quant curve has the same shape on every engine; the engine shifts it up or down. <a href="../03-engines/">Chapter 3</a> explains the readouts, and <a href="../06-results/">chapter 6</a> has the full cross-engine comparison.</p>
+<p>Laya shows a different failure: the laya-multilingual encoder run as a llama.cpp embedding model scores 52 at <code>q8</code> and <code>f16</code>, 51 at <code>q6</code>, 47 at <code>q5</code>, 36 at <code>q4</code> and 49 at <code>q3</code>. An encoder's hidden states feed a decision head that expects float precision, and the loss does not follow bit count in order. If you run laya through llama.cpp, keep <code>q8</code> or <code>f16</code>.</p>
+<h2 id="size-against-accuracy">Size against accuracy<a class="headerlink" href="#size-against-accuracy" title="Permanent link">&para;</a></h2>
+<p>Across families, parameters buy more than bits do. The best translated score of each size class on the router set:</p>
+<table>
+<thead>
+<tr>
+<th>Size class</th>
+<th>Best row</th>
+<th>GB</th>
+<th>Translated</th>
+<th>ms/query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5–0.6B</td>
+<td>Qwen3-0.6B <code>q8</code>, pcdServer</td>
+<td>0.64</td>
+<td>53/67</td>
+<td>25.5</td>
+</tr>
+<tr>
+<td>0.8B</td>
+<td>decider-0.8b <code>q8</code>, dohnuts (Metal)</td>
+<td>0.81</td>
+<td>62/67</td>
+<td>51.4</td>
+</tr>
+<tr>
+<td>1.7–2B</td>
+<td>Qwen3.5-2B <code>q3</code>, pcdServer</td>
+<td>1.22</td>
+<td>61/67</td>
+<td>42.7</td>
+</tr>
+<tr>
+<td>3B</td>
+<td>Qwen2.5-3B <code>q8</code>, pcdServer</td>
+<td>3.29</td>
+<td>62/67</td>
+<td>53.3</td>
+</tr>
+<tr>
+<td>4B</td>
+<td>Qwen3.5-4B-Hmm <code>q8</code>, pcdServer</td>
+<td>4.48</td>
+<td>64/67</td>
+<td>87.6</td>
+</tr>
+<tr>
+<td>35B (3B active)</td>
+<td>decider-35b-a3b <code>q4</code>, dohnuts (Metal)</td>
+<td>21.17</td>
+<td>64/67</td>
+<td>266.3</td>
+</tr>
+</tbody>
+</table>
+<p>The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.</p>
+<h2 id="which-quant-to-download">Which quant to download<a class="headerlink" href="#which-quant-to-download" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>0.5B to 1B models</strong>: <code>q5</code>, or <code>q8</code> if the file size does not matter. Never below <code>q4</code>; at <code>q2</code> they fail.</li>
+<li><strong>1.7B to 2B models</strong>: <code>q5</code> or <code>q4</code>. <code>q3</code> is usable on the Qwen3.5-2B files, <code>q2</code> and the i-quants are not.</li>
+<li><strong>3B to 4B models</strong>: <code>q4</code>. It costs at most one answer against <code>q8</code> and cuts the download from 4.48 GB to 2.71 GB for Qwen3.5-4B-Hmm. The Qwen3.5-4B files keep their score even at <code>q2</code>; Qwen3-4B at <code>IQ1_S</code> does not.</li>
+<li><strong>Encoders run as embedding models</strong> (laya through llama.cpp): <code>q8</code> or <code>f16</code>.</li>
+<li><strong>Anything larger</strong>: <code>q4</code>, and check the memory arithmetic in <a href="../08-speed/#memory-one-model-at-a-time">chapter 8</a> before you load it.</li>
+</ul>
+<p>The registered models in the <code>ornotto</code> package follow this: <code>decider-0.8b</code>, <code>decider-2b</code>, <code>kev-0.8b</code> and <code>qwen3.5-0.8b</code> are <code>q8</code>, the 2B and 4B chat models are <code>q4</code> (<a href="../10-package/">chapter 10</a>).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../06-results/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 6. Results">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                6. Results
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../08-speed/" class="md-footer__link md-footer__link--next" aria-label="Next: 8. Speed, memory and caching">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                8. Speed, memory and caching
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.
+    </div>
+  
+  
+    Made with
+    <a href="https://jaywhj.github.io/mkdocs-materialx/" target="_blank" rel="noopener">
+      MaterialX
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+<fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.top", "navigation.footer", "navigation.indexes", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/tablesort@5.3.0/dist/sorts/tablesort.number.min.js"></script>
+      
+        <script src="../js/tables.js"></script>
+      
+    
+  </body>
+</html>

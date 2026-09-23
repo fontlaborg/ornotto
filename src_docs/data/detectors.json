@@ -1,0 +1,20 @@
+[
+ {
+  "detector": "lingua",
+  "correct": 63,
+  "mean_us": 604.316937,
+  "calls_per_s": 1654.760835
+ },
+ {
+  "detector": "papagan",
+  "correct": 43,
+  "mean_us": 12.130034,
+  "calls_per_s": 82439.998385
+ },
+ {
+  "detector": "majority",
+  "correct": 63,
+  "mean_us": 616.446972,
+  "calls_per_s": 1622.19955
+ }
+]
