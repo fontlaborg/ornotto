@@ -12,3 +12,5 @@
   from the fontlaborg fork, which reuses the state prefix across the rows of a request
   ([DreamBlooms/dohnuts.cpp#1](https://github.com/DreamBlooms/dohnuts.cpp/pull/1)).
 - `build.sh`, `test.sh` and `publish.sh` (gitnextver tag, CI wheels, `uv publish`).
+- Wheels: macOS 14+ arm64 (Metal), manylinux_2_28 x86_64 and aarch64 (CPU). Windows x64 wheels carry
+  dohnuts only, because pcdServer does not build with MSVC yet.
