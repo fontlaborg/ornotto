@@ -224,3 +224,4 @@ __marimo__/
 /src/ornotto/_bin/
 /build-engines/
 dist-release/
+/src/ornotto/_version.py

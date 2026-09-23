@@ -35,7 +35,9 @@ jobs:
           uv pip install --python /tmp/check dist/*.whl
           /tmp/check/bin/python -c "import ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), e.find_binary('pcd'))"
       - uses: actions/upload-artifact@v4
-        with: { name: dist-linux-${{ matrix.arch }}, path: dist/*.whl }
+        with:
+          name: dist-linux-${{ matrix.arch }}
+          path: dist/*.whl
 
   macos-windows:
     strategy:
@@ -57,7 +59,9 @@ jobs:
           "$py" -c "import ornotto, ornotto._engines as e; print(ornotto.__version__, e.find_binary('dohnuts'), e.find_binary('pcd'))"
         shell: bash
       - uses: actions/upload-artifact@v4
-        with: { name: dist-${{ matrix.runner }}, path: dist/*.whl }
+        with:
+          name: dist-${{ matrix.runner }}
+          path: dist/*.whl
 
   sdist:
     runs-on: ubuntu-24.04
@@ -77,4 +81,5 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { pattern: dist-*, path: dist, merge-multiple: true }
       - run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
-        env: { GH_TOKEN: "${{ github.token }}" }
+        env:
+          GH_TOKEN: ${{ github.token }}
