@@ -55,18 +55,25 @@ def platform_tag() -> str:
 
 def engine_targets() -> dict[str, tuple[Path, list[str], str]]:
     """Engine name -> (source dir, extra CMake args, target)."""
-    metal = ["-DDOHNUTS_METAL=ON"] if sys.platform == "darwin" else []
+    dohnuts = ["-DDOHNUTS_STATIC=ON"]
+    if sys.platform == "darwin":
+        # dohnuts uses std::jthread, which Apple's libc++ before LLVM 20 keeps behind this flag
+        dohnuts += ["-DDOHNUTS_METAL=ON", "-DCMAKE_CXX_FLAGS=-fexperimental-library"]
+    if sys.platform == "win32":
+        # dohnuts builds llama.cpp as C++20, where u8"" literals are char8_t, which llama.cpp rejects
+        dohnuts += ["-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc"]
+    # cpp-httplib links any TLS or compression library it finds, and resolves names with getaddrinfo_a
+    # (libanl on older glibc). The server only binds a loopback port, so it needs none of them.
+    pcd = [
+        f"-DHTTPLIB_USE_{lib}_IF_AVAILABLE=OFF"
+        for lib in ("OPENSSL", "ZLIB", "BROTLI", "ZSTD", "MBEDTLS", "WOLFSSL")
+    ]
+    pcd += ["-DHTTPLIB_USE_NON_BLOCKING_GETADDRINFO=OFF"]
+    if sys.platform == "win32":
+        pcd += ["-DCMAKE_CXX_FLAGS=/utf-8 /EHsc"]
     return {
-        "dohnuts-cli": (ROOT / "engines" / "dohnuts.cpp", ["-DDOHNUTS_STATIC=ON", *metal], "dohnuts-cli"),
-        # cpp-httplib links any TLS or compression library it finds; the server needs none of them.
-        "pcd_server": (
-            ROOT / "engines" / "pcdServer",
-            [
-                f"-DHTTPLIB_USE_{lib}_IF_AVAILABLE=OFF"
-                for lib in ("OPENSSL", "ZLIB", "BROTLI", "ZSTD", "MBEDTLS", "WOLFSSL")
-            ],
-            "pcd_server",
-        ),
+        "dohnuts-cli": (ROOT / "engines" / "dohnuts.cpp", dohnuts, "dohnuts-cli"),
+        "pcd_server": (ROOT / "engines" / "pcdServer", pcd, "pcd_server"),
     }
 
 
@@ -78,15 +85,9 @@ def cmake_build(name: str, source: Path, extra: list[str], target: str, build_ro
         args += [
             f"-DCMAKE_OSX_DEPLOYMENT_TARGET={MACOS_TARGET}",
             f"-DCMAKE_OSX_ARCHITECTURES={platform.machine()}",
-            # dohnuts uses std::jthread, which Apple's libc++ before LLVM 20 keeps behind this flag
-            "-DCMAKE_CXX_FLAGS=-fexperimental-library",
         ]
     if sys.platform == "win32":
-        args += [
-            "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",  # no MSVC runtime DLLs to ship
-            # dohnuts builds llama.cpp as C++20, where u8"" literals are char8_t, which llama.cpp rejects
-            "-DCMAKE_CXX_FLAGS=/Zc:char8_t- /utf-8 /EHsc",
-        ]
+        args += ["-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"]  # no MSVC runtime DLLs to ship
     subprocess.run(["cmake", "-S", str(source), "-B", str(build), *args], check=True)
     jobs = os.environ.get("ORNOTTO_JOBS", str(os.cpu_count() or 2))
     subprocess.run(
