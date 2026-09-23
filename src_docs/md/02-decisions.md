@@ -109,7 +109,7 @@ pcdServer's probabilities are not calibrated. It computes a softmax over the fir
 !!! warning "Compare confidences only within one kind"
     A 0.9 from dohnuts and a 0.9 from pcdServer are different measurements. Thresholds tuned on one engine do not transfer to the other. Accuracy comparisons are safe, because they use only the winning option. `ornotto` marks every answer with `calibrated`: true for dohnuts, false for pcdServer.
 
-Calibration is a property of the recipe, not a guarantee. On the 67 router queries, decider-0.8b's top probabilities between 0.6 and 0.8 were right 13 times out of 13, while those of 0.95 and above were right 31 times out of 33 ([chapter 9](09-confidence.md)).
+Calibration is a property of the recipe, not a guarantee. On the 67 router queries, translated and direct runs pooled, decider-0.8b's top probabilities between 0.6 and 0.8 were right 19 times out of 20, while those of 0.95 and above were right 61 times out of 63 ([chapter 9](09-confidence.md)).
 
 ## Limits
 

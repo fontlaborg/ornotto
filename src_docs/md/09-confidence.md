@@ -47,14 +47,14 @@ On the original text:
 
 The two runs lead to different decisions.
 
-**With translation, the gate does not pay.** Thresholds from 0.5 to 0.85 score 62 of 67, the same as decider alone: at 0.5 the gate fixes one error (the sidebearings script, top probability 0.49) and makes one (the round-letters sample query, 0.49, where Qwen3.5-4B-Hmm says docs). The gate first gains an answer at 0.9, when the Urdu request for a Python script (0.86) falls back, and then scores 63 at 89.2 ms with 29 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms.
+**With translation, the gate does not pay.** Thresholds from 0.5 to 0.85 score 62 of 67, the same as decider alone: at 0.5 the gate fixes one error (the sidebearings script, top probability 0.49) and makes one ("Which words should I look at to judge the spacing of round letters?", 0.49, where Qwen3.5-4B-Hmm says docs). The gate first gains an answer at 0.9, when the Urdu request for a Python script (0.86) falls back, and then scores 63 at 89.2 ms with 29 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms.
 
 **Without translation, the gate helps.** Below 0.7, it scores 63 of 67 at 71.5 ms with 15 fallbacks: two answers better than decider alone and 16 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, German and sidebearings queries, which had top probabilities from 0.37 to 0.68, and loses the round-letters query. Below 0.95 it reaches 64 of 67 at 97.2 ms with 35 fallbacks, which is slower than Qwen3.5-4B-Hmm alone, and Qwen3.5-4B-Hmm alone still scores higher, 65 of 67.
 
 Some of decider's errors sit where a useful threshold cannot reach them, because decider is sure of them. "Show me how a glyph is stored in a VFJ file" (a docs question) got vfj at 0.99, above every threshold in the tables. "Can FontLab batch rename glyphs?" (also docs) got python at 0.94, and falls back only below 0.95, where the gate is already slower than Qwen3.5-4B-Hmm alone. Both are questions about FontLab, worded with the vocabulary of the task they are not, and Qwen3.5-4B-Hmm answers both correctly. "How do I write a liga feature?" (docs) got fea at 0.86, and falling back does not help: Qwen3.5-4B-Hmm answers fea too.
 
 !!! warning "Read these gains with care"
-    The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.
+    The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.8 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.
 
 ## A gate in ornotto
 
