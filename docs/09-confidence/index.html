@@ -1083,14 +1083,14 @@
 <p>The dedicated models get calibrated during training. decider divides the letter logits by a fitted temperature before the softmax (T 1.03 for decider-0.8b, 1.3 for DreamBlooms' decider-2b), and laya picks a temperature per bucket of option count and question type. pcdServer applies no temperature: its probabilities are the model's raw softmax over the first tokens of the allowed values, which says how strongly the model prefers one value, not how often it is right. The <code>ornotto</code> package marks the difference on every answer with <code>Answer.calibrated</code>, <code>True</code> on dohnuts and <code>False</code> on pcdServer, so that you do not compare the two as if they were one scale.</p>
 <p>To check calibration you need labelled examples: group the answers by their top probability, and count how many in each group were right.</p>
 <h2 id="decider-08b-on-the-router-set">decider-0.8b on the router set<a class="headerlink" href="#decider-08b-on-the-router-set" title="Permanent link">&para;</a></h2>
-<p>These are the 67 router queries answered by decider-0.8b (mradermacher <code>q5</code>) on dohnuts (Metal), grouped by top probability. First with translation:</p>
+<p>These are the 67 router queries answered by decider-0.8b on dohnuts (Metal), grouped by top probability. The file is DreamBlooms' <code>Q8_0</code> conversion, the one <code>ornotto</code> registers. First with translation:</p>
 <div class="bench" markdown="0">
 <table class="sortable" id="calibration-translated"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
 <tbody>
 <tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="7" class="num">7</td><td data-sort="87.5" class="num">88 %</td></tr>
-<tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="13" class="num">13</td><td data-sort="100.0" class="num">100 %</td></tr>
-<tr><td>0.8 to 0.95</td><td data-sort="13" class="num">13</td><td data-sort="11" class="num">11</td><td data-sort="84.61538461538461" class="num">85 %</td></tr>
-<tr><td>0.95 and up</td><td data-sort="33" class="num">33</td><td data-sort="31" class="num">31</td><td data-sort="93.93939393939394" class="num">94 %</td></tr>
+<tr><td>0.6 to 0.8</td><td data-sort="11" class="num">11</td><td data-sort="11" class="num">11</td><td data-sort="100.0" class="num">100 %</td></tr>
+<tr><td>0.8 to 0.95</td><td data-sort="17" class="num">17</td><td data-sort="14" class="num">14</td><td data-sort="82.3529411764706" class="num">82 %</td></tr>
+<tr><td>0.95 and up</td><td data-sort="31" class="num">31</td><td data-sort="30" class="num">30</td><td data-sort="96.7741935483871" class="num">97 %</td></tr>
 </tbody></table>
 </div>
 
@@ -1098,33 +1098,33 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="calibration-direct"><thead><tr><th>Top probability</th><th>Answers</th><th>Right</th><th>Share right</th></tr></thead>
 <tbody>
-<tr><td>below 0.6</td><td data-sort="8" class="num">8</td><td data-sort="5" class="num">5</td><td data-sort="62.5" class="num">62 %</td></tr>
-<tr><td>0.6 to 0.8</td><td data-sort="13" class="num">13</td><td data-sort="12" class="num">12</td><td data-sort="92.3076923076923" class="num">92 %</td></tr>
-<tr><td>0.8 to 0.95</td><td data-sort="10" class="num">10</td><td data-sort="9" class="num">9</td><td data-sort="90.0" class="num">90 %</td></tr>
-<tr><td>0.95 and up</td><td data-sort="36" class="num">36</td><td data-sort="34" class="num">34</td><td data-sort="94.44444444444444" class="num">94 %</td></tr>
+<tr><td>below 0.6</td><td data-sort="10" class="num">10</td><td data-sort="8" class="num">8</td><td data-sort="80.0" class="num">80 %</td></tr>
+<tr><td>0.6 to 0.8</td><td data-sort="9" class="num">9</td><td data-sort="8" class="num">8</td><td data-sort="88.88888888888889" class="num">89 %</td></tr>
+<tr><td>0.8 to 0.95</td><td data-sort="16" class="num">16</td><td data-sort="14" class="num">14</td><td data-sort="87.5" class="num">88 %</td></tr>
+<tr><td>0.95 and up</td><td data-sort="32" class="num">32</td><td data-sort="31" class="num">31</td><td data-sort="96.875" class="num">97 %</td></tr>
 </tbody></table>
 </div>
 
-<p>Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several percentage points. The signal is usable for separating very unsure answers from the rest, and weak above that.</p>
+<p>Pooled over both runs, answers at 0.95 and above were right 97 percent of the time (61 of 63), answers from 0.8 to 0.95 were right 85 percent of the time (28 of 33), answers from 0.6 to 0.8 were right 95 percent of the time (19 of 20), and answers below 0.6 were right 83 percent of the time (15 of 18). The top band keeps its promise, but the order below it is loose: the 0.6 to 0.8 band is more reliable than its probability says, and more reliable than the band above it. With 67 queries per run the bands hold 8 to 32 answers each, so one answer moves a band by several percentage points. The signal separates the very confident answers from the rest, and says little about which of the others are wrong.</p>
 <p>The bands use the top probability, which dohnuts reports as <code>native.confidence</code>; its plain <code>confidence</code> field is an entropy measure (<a href="../02-decisions/#the-confidence-trap">chapter 2</a>).</p>
 <h2 id="a-fallback-gate">A fallback gate<a class="headerlink" href="#a-fallback-gate" title="Permanent link">&para;</a></h2>
 <p>The fastest accurate local model and the most accurate local model are different models:</p>
 <ul>
-<li>decider-0.8b (mradermacher <code>q5</code>) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.</li>
-<li>Qwen3.5-4B-Hmm (<code>q8</code>, 4.48 GB) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query. The <code>q4</code> file that <code>ornotto</code> registers scores the same at 93 ms from 2.7 GB.</li>
+<li>decider-0.8b (DreamBlooms <code>Q8_0</code>, the file <code>ornotto</code> registers) on dohnuts (Metal): 62 of 67 translated at 52.2 ms per query, 61 of 67 direct at 52.4 ms.</li>
+<li>Qwen3.5-4B-Hmm (<code>Q8_0</code>, 4.48 GB) on pcdServer: 64 of 67 translated at 87.6 ms, 65 of 67 direct at 88.0 ms. The <code>Q4_K_M</code> file that <code>ornotto</code> registers scores the same at 93 ms from 2.7 GB (<a href="../06-results/">chapter 6</a>).</li>
 </ul>
 <p>A gate asks the fast model first and sends the query to the slow one only when the fast model's top probability is below a threshold. The tables replay the benchmark's cached answers through such a gate at several thresholds. "Mean ms" is the cost per query averaged over all 67, where a query that falls back pays for both calls.</p>
 <p>With translation:</p>
 <div class="bench" markdown="0">
 <table class="sortable" id="cascade-translated"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
 <tbody>
-<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="3" class="num">3/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="59.1" class="num">59.1</td></tr>
-<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.4" class="num">65.4</td></tr>
-<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="13" class="num">13/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="71.8" class="num">71.8</td></tr>
-<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="21" class="num">21/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="81.9" class="num">81.9</td></tr>
-<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="24" class="num">24/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="85.8" class="num">85.8</td></tr>
-<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="26" class="num">26/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="88.3" class="num">88.3</td></tr>
-<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="34" class="num">34/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="98.5" class="num">98.5</td></tr>
+<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="7" class="num">7/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="61.2" class="num">61.2</td></tr>
+<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="62.5" class="num">62.5</td></tr>
+<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="17" class="num">17/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="73.9" class="num">73.9</td></tr>
+<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="19" class="num">19/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="76.4" class="num">76.4</td></tr>
+<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="23" class="num">23/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="81.6" class="num">81.6</td></tr>
+<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="29" class="num">29/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="89.2" class="num">89.2</td></tr>
+<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="36" class="num">36/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="98.1" class="num">98.1</td></tr>
 </tbody></table>
 </div>
 
@@ -1132,23 +1132,22 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="cascade-direct"><thead><tr><th>Gate: top probability below</th><th>Fallbacks</th><th>Correct</th><th>Mean ms</th></tr></thead>
 <tbody>
-<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="4" class="num">4/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="60.5" class="num">60.5</td></tr>
-<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.5" class="num">65.5</td></tr>
-<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="14" class="num">14/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="73.2" class="num">73.2</td></tr>
-<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="21" class="num">21/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="82.3" class="num">82.3</td></tr>
-<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="22" class="num">22/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="83.6" class="num">83.6</td></tr>
-<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="26" class="num">26/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="88.7" class="num">88.7</td></tr>
-<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="31" class="num">31/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="95.0" class="num">95.0</td></tr>
+<tr><td data-sort="0.5" class="num">0.50</td><td data-sort="8" class="num">8/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="62.7" class="num">62.7</td></tr>
+<tr><td data-sort="0.6" class="num">0.60</td><td data-sort="10" class="num">10/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="65.2" class="num">65.2</td></tr>
+<tr><td data-sort="0.7" class="num">0.70</td><td data-sort="15" class="num">15/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="71.5" class="num">71.5</td></tr>
+<tr><td data-sort="0.8" class="num">0.80</td><td data-sort="19" class="num">19/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="76.6" class="num">76.6</td></tr>
+<tr><td data-sort="0.85" class="num">0.85</td><td data-sort="22" class="num">22/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="80.6" class="num">80.6</td></tr>
+<tr><td data-sort="0.9" class="num">0.90</td><td data-sort="28" class="num">28/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="88.3" class="num">88.3</td></tr>
+<tr><td data-sort="0.95" class="num">0.95</td><td data-sort="35" class="num">35/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="97.2" class="num">97.2</td></tr>
 </tbody></table>
 </div>
 
 <p>The two runs lead to different decisions.</p>
-<p><strong>With translation, the gate does not pay.</strong> The best gate, below 0.85, scores 63 of 67 at 85.8 ms with 24 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms. The one answer the gate gains over decider alone comes from a single query, the Urdu request for a Python script, where decider's top probability was 0.84. Thresholds of 0.5 to 0.8 score 62, the same as decider alone.</p>
-<p><strong>Without translation, the gate helps.</strong> Below 0.7, it scores 63 of 67 at 73.2 ms with 14 fallbacks, three answers better than decider alone and 15 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, Czech and German queries, which had top probabilities from 0.38 to 0.63. Qwen3.5-4B-Hmm alone still scores higher, 65 of 67, at 88 ms.</p>
-<p>Some of decider's errors no threshold catches, because decider is sure of them. "Can FontLab batch rename glyphs?" (a docs question) got python at 0.97, and "Show me how a glyph is stored in a VFJ file" (also docs) got vfj at 0.99. Both are questions about FontLab, worded with the vocabulary of the task they are not. Qwen3.5-4B-Hmm answers both correctly.</p>
+<p><strong>With translation, the gate does not pay.</strong> Thresholds from 0.5 to 0.85 score 62 of 67, the same as decider alone: at 0.5 the gate fixes one error (the sidebearings script, top probability 0.49) and makes one (the round-letters sample query, 0.49, where Qwen3.5-4B-Hmm says docs). The gate first gains an answer at 0.9, when the Urdu request for a Python script (0.86) falls back, and then scores 63 at 89.2 ms with 29 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms.</p>
+<p><strong>Without translation, the gate helps.</strong> Below 0.7, it scores 63 of 67 at 71.5 ms with 15 fallbacks: two answers better than decider alone and 16 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, German and sidebearings queries, which had top probabilities from 0.37 to 0.68, and loses the round-letters query. Below 0.95 it reaches 64 of 67 at 97.2 ms with 35 fallbacks, which is slower than Qwen3.5-4B-Hmm alone, and Qwen3.5-4B-Hmm alone still scores higher, 65 of 67.</p>
+<p>Some of decider's errors sit where a useful threshold cannot reach them, because decider is sure of them. "Show me how a glyph is stored in a VFJ file" (a docs question) got vfj at 0.99, above every threshold in the tables. "Can FontLab batch rename glyphs?" (also docs) got python at 0.94, and falls back only below 0.95, where the gate is already slower than Qwen3.5-4B-Hmm alone. Both are questions about FontLab, worded with the vocabulary of the task they are not, and Qwen3.5-4B-Hmm answers both correctly. "How do I write a liga feature?" (docs) got fea at 0.86, and falling back does not help: Qwen3.5-4B-Hmm answers fea too.</p>
 <div class="admonition warning">
 <p class="admonition-title">Read these gains with care</p>
-<p>The gate and the calibration bands were replayed with decider-0.8b's <code>q5</code> file. The <code>ornotto</code> package registers the DreamBlooms <code>q8</code> file, which scores the same 62/67 translated but was not replayed through the gate, so its thresholds may sit elsewhere.</p>
 <p>The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.</p>
 </div>
 <h2 id="a-gate-in-ornotto">A gate in ornotto<a class="headerlink" href="#a-gate-in-ornotto" title="Permanent link">&para;</a></h2>
@@ -1170,7 +1169,7 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="n">answer</span><span class="p">,</span> <span class="n">source</span> <span class="o">=</span> <span class="n">careful</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">TASKS</span><span class="p">,</span> <span class="n">QUESTION</span><span class="p">),</span> <span class="s2">"qwen3.5-4b-hmm"</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">answer</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">7</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">answer</span><span class="o">.</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">source</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<p><code>ornotto</code> registers the <code>q8</code> file of decider-0.8b, not the <code>q5</code> file of the benchmark, and it sends a shorter question than the benchmark's router prompt, so the confidences differ from the tables above. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.</p>
+<p>The script sends a shorter question than the benchmark's router prompt, so its confidences differ from the tables above even though the model file is the same. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.</p>
 <p>If you run the two models as a pydantic-ai chain instead, <a href="../11-typed/">chapter 11</a> shows the same pattern with an <code>Agent</code>.</p>
 <h2 id="the-hardest-queries">The hardest queries<a class="headerlink" href="#the-hardest-queries" title="Permanent link">&para;</a></h2>
 <p>Some queries defeat most of the 208 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.</p>

@@ -1169,7 +1169,7 @@
 <tr>
 <td>A confidence to gate on</td>
 <td>dohnuts</td>
-<td>Temperature-scaled probabilities. <a href="../09-confidence/">Chapter 9</a> shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 60/67 to 63/67 on untranslated text.</td>
+<td>Temperature-scaled probabilities. <a href="../09-confidence/">Chapter 9</a> shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 61/67 to 63/67 on untranslated text.</td>
 </tr>
 <tr>
 <td>Many different question sets in rotation</td>
@@ -1183,7 +1183,7 @@
 </tr>
 </tbody>
 </table>
-<p>Two catches in the registry. <code>qwen3.5-2b</code> in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms (<a href="../07-quantization/">chapter 7</a>). If a small vanilla model is what you want, pass that file as <code>hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf</code>. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in ornotto at all: it runs a different kind of model on runtimes the package does not bundle (<a href="../03-engines/">chapter 3</a>).</p>
+<p>Two catches in the registry. <code>qwen3.5-2b</code> in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms (<a href="../07-quantization/">chapter 7</a>). If a small vanilla model is what you want, pass that file as <code>hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf</code>. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in ornotto at all: laya is a different kind of model, on runtimes the package does not bundle (<a href="../03-engines/">chapter 3</a>).</p>
 <h2 id="building-from-source">Building from source<a class="headerlink" href="#building-from-source" title="Permanent link">&para;</a></h2>
 <p>You build from source to change an engine, to get a platform the wheels do not cover, or to work on ornotto itself. You need Git, CMake 3.25 or later (pcdServer's minimum), a C++20 compiler, <code>uv</code>, and network access for the first configure, when pcdServer fetches its pinned dependencies.</p>
 <div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/fontlaborg/ornotto

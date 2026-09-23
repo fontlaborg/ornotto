@@ -16,7 +16,7 @@ To check calibration you need labelled examples: group the answers by their top 
 
 ## decider-0.8b on the router set
 
-These are the 67 router queries answered by decider-0.8b (mradermacher `q5`) on dohnuts (Metal), grouped by top probability. First with translation:
+These are the 67 router queries answered by decider-0.8b on dohnuts (Metal), grouped by top probability. The file is DreamBlooms' `Q8_0` conversion, the one `ornotto` registers. First with translation:
 
 --8<-- "tables/calibration-translated.html"
 
@@ -24,7 +24,7 @@ And on the original text:
 
 --8<-- "tables/calibration-direct.html"
 
-Pooled over both runs, answers with a top probability from 0.6 to 0.8 were right 96 percent of the time (26 answers), answers at 0.95 and above were right 94 percent of the time (69 answers), and answers below 0.6 were right 75 percent of the time (16 answers). The ordering is loose: the middle band is more reliable than its probability says, and the most confident band is less reliable than its 0.95 promises. With 67 queries per run the bands hold 8 to 36 answers each, so one answer moves a band by several percentage points. The signal is usable for separating very unsure answers from the rest, and weak above that.
+Pooled over both runs, answers at 0.95 and above were right 97 percent of the time (61 of 63), answers from 0.8 to 0.95 were right 85 percent of the time (28 of 33), answers from 0.6 to 0.8 were right 95 percent of the time (19 of 20), and answers below 0.6 were right 83 percent of the time (15 of 18). The top band keeps its promise, but the order below it is loose: the 0.6 to 0.8 band is more reliable than its probability says, and more reliable than the band above it. With 67 queries per run the bands hold 8 to 32 answers each, so one answer moves a band by several percentage points. The signal separates the very confident answers from the rest, and says little about which of the others are wrong.
 
 The bands use the top probability, which dohnuts reports as `native.confidence`; its plain `confidence` field is an entropy measure ([chapter 2](02-decisions.md#the-confidence-trap)).
 
@@ -32,8 +32,8 @@ The bands use the top probability, which dohnuts reports as `native.confidence`;
 
 The fastest accurate local model and the most accurate local model are different models:
 
-- decider-0.8b (mradermacher `q5`) on dohnuts (Metal): 62 of 67 translated, 60 of 67 direct, 55 ms per query.
-- Qwen3.5-4B-Hmm (`q8`, 4.48 GB) on pcdServer: 64 of 67 translated, 65 of 67 direct, 88 ms per query. The `q4` file that `ornotto` registers scores the same at 93 ms from 2.7 GB.
+- decider-0.8b (DreamBlooms `Q8_0`, the file `ornotto` registers) on dohnuts (Metal): 62 of 67 translated at 52.2 ms per query, 61 of 67 direct at 52.4 ms.
+- Qwen3.5-4B-Hmm (`Q8_0`, 4.48 GB) on pcdServer: 64 of 67 translated at 87.6 ms, 65 of 67 direct at 88.0 ms. The `Q4_K_M` file that `ornotto` registers scores the same at 93 ms from 2.7 GB ([chapter 6](06-results.md)).
 
 A gate asks the fast model first and sends the query to the slow one only when the fast model's top probability is below a threshold. The tables replay the benchmark's cached answers through such a gate at several thresholds. "Mean ms" is the cost per query averaged over all 67, where a query that falls back pays for both calls.
 
@@ -47,15 +47,13 @@ On the original text:
 
 The two runs lead to different decisions.
 
-**With translation, the gate does not pay.** The best gate, below 0.85, scores 63 of 67 at 85.8 ms with 24 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms. The one answer the gate gains over decider alone comes from a single query, the Urdu request for a Python script, where decider's top probability was 0.84. Thresholds of 0.5 to 0.8 score 62, the same as decider alone.
+**With translation, the gate does not pay.** Thresholds from 0.5 to 0.85 score 62 of 67, the same as decider alone: at 0.5 the gate fixes one error (the sidebearings script, top probability 0.49) and makes one (the round-letters sample query, 0.49, where Qwen3.5-4B-Hmm says docs). The gate first gains an answer at 0.9, when the Urdu request for a Python script (0.86) falls back, and then scores 63 at 89.2 ms with 29 fallbacks. Qwen3.5-4B-Hmm alone scores 64 at 87.6 ms.
 
-**Without translation, the gate helps.** Below 0.7, it scores 63 of 67 at 73.2 ms with 14 fallbacks, three answers better than decider alone and 15 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, Czech and German queries, which had top probabilities from 0.38 to 0.63. Qwen3.5-4B-Hmm alone still scores higher, 65 of 67, at 88 ms.
+**Without translation, the gate helps.** Below 0.7, it scores 63 of 67 at 71.5 ms with 15 fallbacks: two answers better than decider alone and 16 ms faster than Qwen3.5-4B-Hmm alone. It catches decider's errors on the Persian, German and sidebearings queries, which had top probabilities from 0.37 to 0.68, and loses the round-letters query. Below 0.95 it reaches 64 of 67 at 97.2 ms with 35 fallbacks, which is slower than Qwen3.5-4B-Hmm alone, and Qwen3.5-4B-Hmm alone still scores higher, 65 of 67.
 
-Some of decider's errors no threshold catches, because decider is sure of them. "Can FontLab batch rename glyphs?" (a docs question) got python at 0.97, and "Show me how a glyph is stored in a VFJ file" (also docs) got vfj at 0.99. Both are questions about FontLab, worded with the vocabulary of the task they are not. Qwen3.5-4B-Hmm answers both correctly.
+Some of decider's errors sit where a useful threshold cannot reach them, because decider is sure of them. "Show me how a glyph is stored in a VFJ file" (a docs question) got vfj at 0.99, above every threshold in the tables. "Can FontLab batch rename glyphs?" (also docs) got python at 0.94, and falls back only below 0.95, where the gate is already slower than Qwen3.5-4B-Hmm alone. Both are questions about FontLab, worded with the vocabulary of the task they are not, and Qwen3.5-4B-Hmm answers both correctly. "How do I write a liga feature?" (docs) got fea at 0.86, and falling back does not help: Qwen3.5-4B-Hmm answers fea too.
 
 !!! warning "Read these gains with care"
-    The gate and the calibration bands were replayed with decider-0.8b's `q5` file. The `ornotto` package registers the DreamBlooms `q8` file, which scores the same 62/67 translated but was not replayed through the gate, so its thresholds may sit elsewhere.
-
     The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.6 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.
 
 ## A gate in ornotto
@@ -81,7 +79,7 @@ for text in ("Build a kern feature for A V", "Jak zmienić kąt pochylenia kursy
     print(f"{answer.value:7} {answer.confidence:.2f} {source:15} {text}")
 ```
 
-`ornotto` registers the `q8` file of decider-0.8b, not the `q5` file of the benchmark, and it sends a shorter question than the benchmark's router prompt, so the confidences differ from the tables above. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.
+The script sends a shorter question than the benchmark's router prompt, so its confidences differ from the tables above even though the model file is the same. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.
 
 If you run the two models as a pydantic-ai chain instead, [chapter 11](11-typed.md) shows the same pattern with an `Agent`.
 

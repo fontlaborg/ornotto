@@ -21,11 +21,11 @@ Start from what your decision needs, not from the model list. The numbers in the
 | A graded answer, and whether any level fits | dohnuts with a decider model | `score` returns the expected level; `raw["native"]` has `level_fit` and `fit_mass` per level. pcdServer has no graded type; ornotto emulates one with the choices "0", "1", … and returns their expected value. |
 | Application state as JSON | dohnuts | It prints the JSON into the prompt and indexes long arrays (`_index`), so the model can refer to items by position. pcdServer gets the JSON serialized as text. |
 | Any chat GGUF | pcdServer | dohnuts runs only the decider, kev and Dohnuts profiles. pcdServer scores the allowed tokens of any model with a chat template. |
-| A confidence to gate on | dohnuts | Temperature-scaled probabilities. [Chapter 9](09-confidence.md) shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 60/67 to 63/67 on untranslated text. |
+| A confidence to gate on | dohnuts | Temperature-scaled probabilities. [Chapter 9](09-confidence.md) shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 61/67 to 63/67 on untranslated text. |
 | Many different question sets in rotation | dohnuts, or pcdServer with a larger cache | pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache. |
 | The best accuracy, cost no object | jev (hosted) | 65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's `TypeSafeModel` does. |
 
-Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in ornotto at all: it runs a different kind of model on runtimes the package does not bundle ([chapter 3](03-engines.md)).
+Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in ornotto at all: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)).
 
 ## Building from source
 
