@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 0.1.1 (2026-09-24)
+
 - First release of the `ornotto` package: one System One API (choice, yes/no, score) over the dohnuts and
   pcdServer engines, a registry of dedicated, fine-tuned and vanilla models downloaded from Hugging Face,
   `extract`, `classify` and `@decision` for typed decisions, and `ornotto.pydantic_ai.model()` for
