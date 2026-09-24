@@ -149,3 +149,13 @@ Typography, themes, navigation, search and keyboard shortcuts come from the shar
 ## Licence
 
 ornotto is Apache-2.0. The wheels contain dohnuts.cpp (Apache-2.0), pcdServer, llama.cpp, cpp-httplib and nlohmann/json (MIT). Their notices are in `licenses/`. Model weights keep their own licences, listed above.
+
+<!-- shared-theme-integration:start -->
+## Shared FontLab theme integration
+
+This repository is part of the FontLab theme 2026 rollout: ornotto documentation with fontlab editorial chrome.
+[THEME.md](THEME.md) documents its source/output boundaries, configuration,
+publication route, control ownership, shared visual changes and verification.
+Use the [public setup guide](https://i.fontlab.com/fltheme26/) and
+[MaterialX starter](https://i.fontlab.com/fltheme26/starter.zip) for new sites.
+<!-- shared-theme-integration:end -->
