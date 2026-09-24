@@ -19,9 +19,8 @@ theme:
   custom_dir: overrides
   font: false
   features:
+    - navigation.tabs
     - navigation.top
-    - navigation.footer
-    - navigation.indexes
     - navigation.sections
     - toc.follow
     - search.highlight
@@ -29,24 +28,13 @@ theme:
     - content.tabs.link
     - content.tooltips
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+    - scheme: default
       primary: black
       accent: red
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: black
-      accent: red
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
 
 nav:
-  - Home: index.md
   - Concepts:
+      - Home: index.md
       - 1. Deciding, not generating: 01-deciding.md
       - 2. The shape of a decision: 02-decisions.md
       - 3. Five ways to read an answer: 03-engines.md

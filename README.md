@@ -135,11 +135,16 @@ ornotto serve qwen3.5-4b-hmm --engine=pcd
 git clone --recursive https://github.com/fontlaborg/ornotto
 cd ornotto
 ./build.sh                # lint, unit tests, sdist and a wheel with both engines compiled in
+./docs.sh                 # build the book with the shared FontLab documentation theme
 ENGINES=1 ./test.sh       # also the real-engine tests and examples/, one engine at a time
 ./publish.sh              # tag the next version, let CI build every wheel, upload with uv publish
 ```
 
 The engines are git submodules in `engines/`. The version comes from git tags via hatch-vcs.
+
+The book sources live in `src_docs/`; GitHub Pages publishes the generated `docs/`.
+Typography, themes, navigation, search and keyboard shortcuts come from the shared
+`i.fontlab.com/fltheme26/` assets. Local CSS and JavaScript handle benchmark tables.
 
 ## Licence
 

@@ -1,20 +1,91 @@
 {# this_file: src_docs/overrides/main.html #}
 {% extends "base.html" %}
+
 {% block extrahead %}
 {{ super() }}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+  <link rel="stylesheet" href="https://use.typekit.net/gav0zux.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=REM:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/marketing-vendor.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vexy-hrefc@1.0.7/dist/hrefc.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-materialx.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-layout.css">
+
+  <!-- Restore persisted subtheme + collapsed TOC before paint (avoids flash). -->
+  <script>
+  (function () {
+    var map = { "material-light":"light","material-dark":"dark","miller":"light","retro":"retro","lines":"light" };
+    var d = document.documentElement;
+    try {
+      var t = localStorage.getItem("fontlab-docs-subtheme");
+      if (t && map[t]) { d.dataset.theme = map[t]; d.dataset.flSubtheme = t; }
+      else { d.dataset.theme = "light"; d.dataset.flSubtheme = "material-light"; t = "material-light"; }
+      var menuMap = { "material-light":"dark","material-dark":"flat-dark","miller":"light","retro":"light","lines":"light" };
+      d.dataset.flMenu = menuMap[t] || "dark";
+      if (localStorage.getItem("fontlab-docs-toc") !== "open") d.classList.add("fl-toc-collapsed");
+    } catch (e) { d.dataset.theme = "light"; d.dataset.flSubtheme = "material-light"; d.classList.add("fl-toc-collapsed"); }
+  })();
+  </script>
+
+  <script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vexy-hrefc@1.0.7/dist/hrefc.global.min.js" defer></script>
+  <script src="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.js" defer></script>
 {% endblock %}
+
 {% block header %}
-<fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
-{{ super() }}
+  {# MaterialX initializes its native search here; the shared adapter moves it
+     into the local search dialog opened by the global menu's loupe. #}
+  <header class="md-header" data-md-component="header" aria-hidden="true">
+    {% include "partials/search.html" %}
+  </header>
+  <fontlab-menu mode="dark" site-label="ornotto" site-url="{{ config.site_url }}"></fontlab-menu>
 {% endblock %}
+
+{% block site_nav %}
+  {{ super() }}
+  <!-- Subtheme switcher: injected into the tabs nav (div[4]/nav) by fontlab-theme.js -->
+  <template id="fl-theme-menu-template">
+    <div class="fl-theme" data-fl-theme>
+      <button class="fl-theme__btn" type="button" aria-expanded="false" aria-controls="fl-theme-options" aria-label="Change subtheme" title="Subtheme">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.66 0 1.5-2 2.5-2.5s2.5.5 2.5-1.5c0-2-2-2-2-3.5s2-1.5 2-3S16 3 12 3z"/>
+        </svg>
+      </button>
+      <div class="fl-theme__pop" id="fl-theme-options" aria-label="Subtheme choices" hidden>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="material-light">Light</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="material-dark">Dark</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="miller">Miller · newspaper</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="retro">Retro · warm</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="lines">Vexy Lines · vivid</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Right TOC expand/collapse handle: injected into the secondary sidebar by fontlab-theme.js -->
+  <template id="fl-toc-toggle-template">
+    <button class="fl-toc-toggle" type="button" aria-expanded="false" aria-label="Toggle on-page contents" data-fl-toc-toggle>
+      <span class="fl-toc-toggle__icon" aria-hidden="true"></span>
+    </button>
+  </template>
+{% endblock %}
+
 {% block footer %}
-{{ super() }}
-<fontlab-footer mode="dark"></fontlab-footer>
+  <div class="ornotto-book-footer">
+    <nav aria-label="Chapters">
+      {% if page.previous_page %}
+      <a href="{{ page.previous_page.url | url }}" rel="prev">← {{ page.previous_page.title }}</a>
+      {% endif %}
+      {% if page.next_page %}
+      <a href="{{ page.next_page.url | url }}" rel="next">{{ page.next_page.title }} →</a>
+      {% endif %}
+    </nav>
+    <p>{{ config.copyright }}</p>
+  </div>
+  <fontlab-footer mode="dark"></fontlab-footer>
 {% endblock %}
+
 {# Cloudflare rewrites anything shaped like name@host.tld as an obfuscated e-mail link; method ids such as
    pcdserver@qwen3.5-4b-hmm-q8 match that shape. email_off keeps the article text as written. #}
 {% block content %}

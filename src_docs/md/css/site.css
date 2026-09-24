@@ -1,10 +1,11 @@
 /* this_file: src_docs/md/css/site.css */
-:root {
-  --md-text-font: "Outfit", system-ui, sans-serif;
-  --md-code-font: "JetBrains Mono", ui-monospace, monospace;
-}
-fontlab-menu { display: block; position: sticky; top: 0; z-index: 100; }
 .md-typeset img { max-width: 100%; height: auto; }
+
+/* Preserve book navigation and licence text above the shared FontLab footer. */
+.ornotto-book-footer { padding: var(--fl-space-6) var(--fl-edge); font-family: var(--fl-font-navi); }
+.ornotto-book-footer nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--fl-space-4); }
+.ornotto-book-footer a { color: var(--md-typeset-a-color); overflow-wrap: anywhere; }
+.ornotto-book-footer p { margin-top: var(--fl-space-6); color: var(--md-default-fg-color--light); font-size: .7rem; }
 
 /* Benchmark tables: wide, dense, sortable, scroll sideways on narrow screens. */
 /* The wrapper scrolls both ways, so the header row can stick to its top edge. */

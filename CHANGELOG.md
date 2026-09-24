@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Match the shared FontLab documentation design: global menu/footer, section
+  tabs, five visual themes, collapsible contents and local search at every width.
+- Preserve chapter links and book licence text above the global footer.
+
 ## 0.1.1 (2026-09-24)
 
 - First release of the `ornotto` package: one System One API (choice, yes/no, score) over the dohnuts and
