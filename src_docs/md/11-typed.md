@@ -131,6 +131,12 @@ agent.run_sync("Build a kern feature for A V W T").output
 
 `model(model="decider-0.8b", *, engine=None, **kwargs)` takes a model name with the same options as `Decider`, or a `Decider` you already have. It returns a `TypeSafeModel` whose provider points at that Decider's engine. pydantic-ai 2.48 prints an observability banner on the first run; set `PYDANTIC_AI_NO_BANNER=1` to turn it off.
 
+### Which versions this chapter describes
+
+The `pydantic-ai` extra asks for `pydantic-ai-slim[typesafe]` 2.48 or later. The lock file that the tests run against pins pydantic-ai-slim 2.48.0 and typesafe-sdk 0.7.1, and everything in this chapter was checked with those two versions. pydantic-ai moved on during September 2026 ([below](#what-changed-in-september-2026)), and a fresh install without the lock may pull a later release. We have not run ornotto against pydantic-ai 2.50 or 2.51. If an import from `pydantic_ai.models.typesafe` or `pydantic_ai.providers.typesafe` fails after an upgrade, pin `pydantic-ai-slim==2.48.0` until ornotto catches up.
+
+The adapter is small on purpose. `ornotto.pydantic_ai` imports three names from outside the package: `TypeSafeModel`, `TypeSafeProvider` and `AsyncTypeSafeClient`. It adds no model class of its own. Everything the agent does with the answers, from thresholds to tool calls, is pydantic-ai's code, and ornotto only decides where the request goes.
+
 ### How requests reach the engine
 
 ```mermaid
@@ -142,6 +148,26 @@ flowchart LR
 
 - **dohnuts**: the provider is a `TypeSafeProvider` with the engine's loopback URL as `base_url`. The TypeSafe client sends its request straight to dohnuts, which answers it natively. The API key is a fixed placeholder, because the client requires one and the local engine checks none.
 - **pcdServer**: pcdServer does not speak System One. The provider's HTTP client has an in-process transport that catches each `/v1/systemone` request, translates the questions into pcdServer fields ([chapter 3](03-engines.md)), calls the engine through the `Decider`, and returns a System One response. The transport also answers `GET /v1/models` with the one local model. Nothing leaves the process except the call to the loopback engine.
+- **ollaya**: ollaya answers `/v1/systemone` itself, as dohnuts does, so an ollaya model gets the same direct provider with the engine's loopback URL. ollaya's own site says that "The official TypeSafe Python SDK 0.7.1 works unchanged against a local server."[^ollaya-site] The integration tests exercise the dohnuts and pcdServer paths; the ollaya path uses the same provider code as dohnuts but has no agent test of its own.
+
+For pcdServer, one agent step makes three hops, all inside your machine:
+
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant T as TypeSafeModel
+    participant X as ornotto transport
+    participant P as pcdServer
+    A->>T: run: prompt and output_type
+    T->>X: POST /v1/systemone<br>state and questions
+    X->>X: questions to pcdServer fields
+    X->>P: POST /v1/pcd/decode
+    P-->>X: values and probabilities per field
+    X-->>T: System One answers
+    T-->>A: validated output
+```
+
+The translation step is the same code that `Decider.decide` uses, so an agent on pcdServer and a plain `decide` call on pcdServer send the engine the same fields. The response the transport builds reports zero input and output tokens: a local engine has no bill, and the usage counters in pydantic-ai's run summary stay at zero.
 
 ### What an output type may contain
 
@@ -198,6 +224,53 @@ agent = Agent(FallbackModel(model("decider-0.8b"), "anthropic:claude-sonnet-5"),
 
 `TypeSafeModel` refuses plain text output, native tools, and files in the prompt or history. A local engine cannot produce any of them either.
 
+!!! quote "How it looked from the outside"
+    On the Latent Space episode with TypeSafe's chief executive, Diogo Almeida, on 2026-09-21, the host swyx summed up the argument as one that "makes the case that you should always make one or 10 or 100 Jev calls for every one reasoning call that you make."[^latent-space] A `FallbackModel` with a local engine in front is that ratio run on your own machine: the decisions stay local, and the language model is called only for the steps a decision cannot finish.
+
 ### Which model to put behind an agent
 
 On the FontLab router question, decider-0.8b on dohnuts is the faster of the two and Qwen3.5-4B-Hmm on pcdServer the more accurate ([chapter 6](06-results.md) has the figures). Through pydantic-ai the prompt differs from the benchmark's, so treat that as a ranking, not a promise. In our own integration tests, decider-0.8b on pcdServer, which reads it without its trained answer slot, got the task of a short Python request wrong where the same model on dohnuts got it right. If you run a dedicated model, run it on dohnuts.
+
+## What changed in September 2026
+
+`TypeSafeModel` is young. TypeSafe launched jev on 2026-09-15, `TypeSafeModel` arrived in pydantic-ai 2.45.0 on 2026-09-18, and pydantic-ai kept releasing through the rest of the month. The typesafe-sdk package that it depends on had two breaking releases in the same weeks. None of the changes below alters how ornotto's adapter works with the locked versions, but each one changes what a newer install looks like.
+
+| Date | Release | What changed |
+|---|---|---|
+| 2026-09-15 | typesafe-sdk 0.6.0 | `Score.criteria` becomes an ordered sequence, not a dict keyed by integers (breaking) |
+| 2026-09-18 | pydantic-ai 2.45.0 | `TypeSafeModel` for jev |
+| 2026-09-18 | typesafe-sdk 0.7.0 | serialisation moves from msgspec to pydantic; `response_model` argument (breaking) |
+| 2026-09-19 | pydantic-ai 2.46.0 | tool-argument filling, `typesafe_boolean_threshold`, union outputs, a refusal when a question has too many options |
+| 2026-09-21 | typesafe-sdk 0.7.1 | early API-key validation; the version ornotto locks |
+| 2026-09-24 | pydantic-ai 2.49.0 | "None of these" handling for optional fields |
+| 2026-09-25 | pydantic-ai 2.50.0 | `DecisionModel` becomes the base class, `TypeSafeModel` one subclass |
+| 2026-09-25 | pydantic-ai 2.51.0 | latest release on 2026-09-30 |
+| 2026-09-26 | typesafe-sdk 0.7.2 | an `http2` extra |
+
+The dates come from the pydantic-ai releases page and the typesafe-sdk changelog.[^pai-releases][^sdk-changelog]
+
+### TypeSafeModel under DecisionModel
+
+Pull request #8696, "Add `DecisionModel`, a base for Decisions-protocol models, and make `TypeSafeModel` one", was merged on 2026-09-24 and shipped in pydantic-ai 2.50.0 the next day.[^pai-8696] The release also added routing by name, a `decision_route_threshold` setting and `decide` spans for tracing. The change separates the protocol from the vendor: the part of the code that turns an `output_type` into questions and answers into an output now lives in the base class, and `TypeSafeModel` is the variant that talks to TypeSafe's client.
+
+For ornotto this is good news in principle and untested in practice. `ornotto.pydantic_ai.model()` returns a `TypeSafeModel`, and under 2.50 a `TypeSafeModel` is still a `TypeSafeModel`, now with a parent class. Whether the provider and client classes the adapter imports kept their names and arguments is what an upgrade has to show. Until the tests run against 2.50 or later, treat the lock file as the supported combination.
+
+### SystemOneModel, not yet merged
+
+Pull request #8942, opened on 2026-09-28, proposes a `SystemOneModel` "to run decision models such as CLM and Laya over the `/v1/systemone` API".[^pai-8942] On 2026-09-30 it was still open. If it lands, it names in pydantic-ai what ornotto does by indirection today: a decision model on a server that speaks System One, with no TypeSafe account behind it. ornotto's adapter would then no longer need the placeholder API key it passes to the TypeSafe client for dohnuts and ollaya. The pcdServer transport would stay, because pcdServer does not speak System One at all ([chapter 3](03-engines.md#pcdserver)).
+
+### typesafe-sdk 0.7 and ordered criteria
+
+Before typesafe-sdk 0.6.0, a score question could carry its levels as a dict keyed by integers. Since 0.6.0 the levels are an ordered list: the first entry is level 0, the second level 1, and so on. ornotto sends score levels as a list, in that order, to dohnuts, ollaya and the pydantic-ai adapter alike. When it receives a question dict through the pcdServer transport or through `decide`, it still accepts the older mapping and sorts its keys by number, so code written against an earlier SDK keeps working with ornotto. It will not keep working against TypeSafe's own client, which since 0.7.0 validates requests with pydantic models.
+
+### Two paths to jev
+
+The book's jev rows went through OpenRouter's System One path ([chapter 1](01-deciding.md#jev-the-hosted-reference)). pydantic-ai issue #8552, opened on 2026-09-19, states that OpenRouter also serves the protocol at `POST https://openrouter.ai/api/alpha/decisions`.[^pai-8552] We have not called that path, and we do not know whether the two return the same answers or whether one of them will be retired. If you move a hosted agent between them, compare a few answers first.
+
+[^ollaya-site]: ollaya, "ollaya", read 2026-09-30. <https://ollaya.dev>
+[^latent-space]: Latent Space, "Jev: System One models for Prod, not God, with Diogo Almeida, CEO, TypeSafe AI", 2026-09-21, at 01:37:25. <https://www.latent.space/p/jev>
+[^pai-releases]: pydantic, "pydantic-ai releases", read 2026-09-30. <https://github.com/pydantic/pydantic-ai/releases>
+[^sdk-changelog]: TypeSafe, "Python SDK changelog", read 2026-09-30. <https://docs.typesafe.ai/sdk/python/changelog.md>
+[^pai-8696]: pydantic, "pydantic-ai v2.50.0", 2026-09-25. <https://github.com/pydantic/pydantic-ai/releases/tag/v2.50.0>
+[^pai-8942]: pydantic, "Add `SystemOneModel` to run decision models such as CLM and Laya over the `/v1/systemone` API", pull request #8942, 2026-09-28. <https://github.com/pydantic/pydantic-ai/pull/8942>
+[^pai-8552]: pydantic, "Route Jev (TypeSafeModel) through OpenRouter's Decisions API", issue #8552, 2026-09-19. <https://github.com/pydantic/pydantic-ai/issues/8552>

@@ -6,6 +6,9 @@ this_file: src_docs/md/08-speed.md
 
 A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.
 
+![A laptop with a stopwatch and stacked memory bars](img/ch08-speed-memory.png)
+*On a Mac, speed and memory share one budget.*
+
 ## Same weights, four setups
 
 The DreamBlooms conversion of decider-0.8b (`decider-0.8b-q8_0.gguf`) ran in four setups. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:
@@ -102,6 +105,37 @@ An earlier draft also cached single-question requests the second time their stat
 
 The `ornotto` wheels build dohnuts from the branch of that pull request, so you get the faster multi-question path without waiting for the upstream merge.
 
+The path a request takes through the patched runner:
+
+```mermaid
+flowchart TD
+    R["Request: one state, several questions"] --> N{"More than one row?"}
+    N -- "no" --> S["Old path: prefill the whole row"]
+    N -- "yes" --> L{"Prefix of 16 tokens or more?"}
+    L -- "no" --> S
+    L -- "yes" --> C{"Checkpoint for these exact<br>prefix tokens in the LRU?"}
+    C -- "hit" --> H["Restore the checkpoint"]
+    C -- "miss" --> P["Decode the state prefix alone,<br>save a full checkpoint"]
+    H --> X["Decode only each row's suffix"]
+    P --> X
+    X --> O["Letter logits or pointer scores,<br>divided by the profile temperature"]
+    S --> O
+```
+
+### Upstream after the merge
+
+The maintainer, mili-tan, merged the pull request on 2026-09-24, about six hours after it was opened, with the only comment on it: "lgtm, thank you very much."[^pr1] Eight minutes later the upstream repository gained a commit of its own, "Cache decoded state prefixes across calls" (`60d247e5`).[^upstream-cache] It does two things:
+
+- It moves the checkpoint LRU out of the decider and kev runner into a shared cache, still bounded at 256 MiB and still keyed by the exact prefix tokens.
+- It uses that cache in the Dohnuts model's own decode path as well. That path already decoded the shared `State:` prefix once per call and copied it to every candidate sequence; it now also keeps the decoded prefix across calls, so a state the server has seen before skips its prefill there too. The upstream README says the side models share the same cache.
+
+So there are now two layers of reuse in upstream dohnuts. Within one request, rows that share a state decode it once. Across requests, a state seen before is restored from the LRU, on every model family dohnuts runs. pcdServer's schema cache sits on the other side of the prompt: it keeps the fixed schema prefix warm, not the user's state, because pcdServer puts the schema first and the user text after it.
+
+Two further upstream changes affect speed. On 2026-09-29 dohnuts gained a `--flash-attn` switch that takes `true`, `false` or `auto`, with `auto` as the default; `auto` leaves the choice to llama.cpp, which enables flash attention when the active device supports it.[^flash] The same day it added a new Dohnuts-family model, Linnaeus-0.1.0-2B ([chapter 4](04-models.md#dohnuts)).
+
+!!! note "Measured before the upstream changes"
+    Every dohnuts number in this book was measured on the pull request branch, before the cross-call cache and the flash-attention switch existed upstream. The `ornotto` submodule still follows that branch. After the submodule moves to upstream, the dohnuts rows need to be measured again: the new cache overlaps the one in the pull request, and the `auto` default lets the backend turn flash attention on when the device supports it.
+
 ## Load time and the latency floor
 
 Load time is paid once per process, but it decides whether an engine suits a command-line tool that starts cold. From the benchmark's load column:
@@ -151,6 +185,29 @@ Three things stand out.
 - **ollaya's CPU path is slow for decoders.** ollaya runs most of its models as float32 ONNX graphs on the CPU. decider-0.8b takes 285 ms there, against 52 ms on dohnuts (Metal) with the same weights and the same score within one answer. CLM takes 1.7 seconds in ollaya and 108 ms when its encoder runs in llama.cpp. The encoders that ollaya runs on MLX are fast: laya in 12.3 ms.
 - **Load time is a real cost for the large and the fixed-shape models.** The benchmark preloaded every ollaya model through `/api/decide` and kept it resident, so the preload stays out of ms/query. It took 36 seconds for winnow and 49 seconds for clm. The MLX build of APUS-OpenJev loaded in 27 seconds; the same model as a GGUF on pcdServer in a third of a second. The authors' System One servers were started before the timed run, so their load is not measured.
 
+## Speed claims by others
+
+Decision models were sold on speed from the first day, and September 2026 produced many latency figures. None of them was measured the way the tables above were. They come from other machines, other prompts, other numbers of options, and different ideas of where the clock starts and stops. They are collected here, apart from our measurements, so that each keeps its context.
+
+| Source | Model or service | Claimed latency | Context as stated | Date |
+|---|---|---|---|---|
+| TypeSafe blog[^ts-launch] | jev, hosted | 70 to 500 ms | end to end, vendor claim | 2026-09-15 |
+| typed-decisions dataset card[^typed] | jev 1.13.0, hosted | 710 ms p50 | the card's client, measured 2026-09-18 | read 2026-09-30 |
+| typed-decisions dataset card[^typed] | meraGPT Decider 1, hosted | 526 ms p50 | the card's client | read 2026-09-30 |
+| typed-decisions dataset card[^typed] | Liquid AI d1, hosted | 525 ms p50 | the card's client, measured 2026-09-30 | read 2026-09-30 |
+| The New Stack on OpenAI DevDay[^openai] | OpenAI Decision API on Luna | 150 ms | vendor claim, "compared to GPT-6 Luna, which would take 1.6 seconds" | 2026-09-29 |
+| laya-mlx README[^laya-ports] | laya on MLX | 7 to 14 ms | "short decisions on M3 Max" | 2026-09-19 onwards |
+| laya-coreml README[^laya-ports] | laya on Core ML | about 5 ms | "short decisions on M3 Max", Neural Engine | 2026-09-19 onwards |
+| Jeff README[^jeff] | Jeff 0.8B | 28 ms | Apple M4 Max, MLX | 2026-09-28 |
+| Red Hat Developer[^redhat] | djev on vLLM | 35 to 60 ms | single step on vLLM, Red Hat's measurement | 2026-09-28 |
+
+Read the table as a list of what each author saw, not as a ranking. The hosted rows include a network round trip of unknown length, and our own figure for jev, 466 ms per query ([chapter 6](06-results.md)), includes ours. The local rows differ in hardware (M3 Max, M4 Max, a server GPU), in the prompt, and in what "a decision" contains: the laya ports speak of short decisions, and the router question here carries five options with a description each. The closest comparison the tables above allow is our own laya run on the same kind of hardware: 6.9 ms on MLX and 4.2 ms on the Neural Engine with a compact prompt ([load time and the latency floor](#load-time-and-the-latency-floor)).
+
+Hosted speed also depends on how busy the service is. On 2026-09-18, three days after launch, TechCrunch reported that jev's API briefly failed under demand.[^techcrunch] TypeSafe's documentation lists rate limits of 100K tokens per second and 40 requests per second.[^ts-models] A local engine has no queue but its own, and no limit but the machine.
+
+!!! quote "How it looked from the outside"
+    Our contribution to dohnuts, the prefix reuse described above, was a pull request opened late on 2026-09-23. It was merged the next morning with a one-line review, "lgtm, thank you very much." Eight minutes after the merge the maintainer pushed a commit that took the same checkpoint cache and applied it across calls to every model family the server runs. Most projects in this field were days old that month, and the code moved while it was being measured: the dohnuts rows in this chapter were measured before either commit.[^pr1][^upstream-cache]
+
 ## Memory: one model at a time
 
 Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. Loading several models at once on the 48 GB benchmark machine filled its boot disk with swap and hung macOS ([chapter 5](05-method.md#one-model-at-a-time)).
@@ -161,4 +218,55 @@ The fix was procedural, and it is worth copying if you benchmark models yourself
 - Stop a server by its process and then confirm that its port is free; a server that ignores the stop signal still holds its memory.
 - Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit. That limit stopped one measurement in the second round: the Q5_K_M file of jeb-35b-a3b took available memory below 4 GB while it loaded, and it has no row.
 
+### What went wrong, and what the guard does
+
+The incident happened on 2026-09-23, during the first benchmark round. Three things were running at once. The quantization sweep loaded several GGUF files per batch to save time, and the translation model stayed loaded beside them. A set of exploratory Core AI probes of decider ran, without any guard, while an encoder step was still running. And the driver kept loading the next model after the previous one had failed. macOS reported "No space left on device" while the 16-bit GGUF of laya was running: swap had filled the boot disk, and the machine stopped responding. The root cause was never isolated to one process; all three contributed.
+
+A second defect made it worse. The helper that stopped a server found it by its port on the command line, and matched the port followed by a space. A server whose port was the last argument never matched, so it was never stopped, and it kept its model in memory while the next one loaded.
+
+The rerun used a guard that sampled the machine every two seconds and stopped the unit under test when any of these held:
+
+- swap had grown by more than 4 GB since the unit started;
+- the boot disk had less than 30 GB free;
+- available RAM had dropped below 4 GB;
+- the unit had run for 30 minutes.
+
+When the guard tripped it logged the largest memory users, stopped every server, aborted the run and marked the method so that it would be skipped next time. Before each unit the driver asserted that no model process was resident, and after each unit it stopped the server and checked that the port was free. With that in place, swap stayed flat at about 2.7 GB for every unit of the rerun, the 35B models included.
+
+The guard tripped twice in the rounds that followed, and both times it did what it was for:
+
+- The jeb-35b-a3b Q5_K_M file is 23.6 GB. While it loaded, available memory fell below 4 GB, the guard stopped it, and the model was not benchmarked at that quantization. Its Q3_K_M row, 63/67 on both texts, stands ([chapter 4](04-models.md#later-dedicated-models)).
+- A Core AI export of decider-0.8b built for GPU pipelining grew swap by more than 2 GB within seconds of loading, under a tighter probe-only limit, and logged a connection error from the Neural Engine compiler service. The probe was stopped, and that export has no row either.
+
+Neither result says the model is broken. Each says the file needed more free memory at load time than the benchmark machine had left, which is better learned from a log line than from a frozen screen.
+
+### Budgeting memory on a Mac
+
+On Apple silicon the GPU has no memory of its own. A model loaded with Metal takes its weights from the same pool as the applications you have open, and macOS starts swapping when that pool runs out. The numbers to add up before you load are the ones this book already gives:
+
+- the model file itself, which is roughly what the engine keeps resident ([chapter 7](07-quantization.md#size-against-accuracy) lists the file sizes);
+- the checkpoint cache: pcdServer's LRU is bounded by `--cache-bytes`, 512 MiB as `ornotto` starts it, and dohnuts' prefix LRU by 256 MiB;
+- for a fallback gate, both models at once ([chapter 9](09-confidence.md#a-fallback-gate));
+- everything else on the machine, which on a working Mac is rarely small.
+
+A model that fits with room to spare runs at the speeds in this chapter. A model that does not fit may still load and run from swap, at speeds this chapter does not report, or it may stop the machine as it did here. [Chapter 12](12-choosing.md#which-engine-and-model) turns these sizes into a choice by the memory you have.
+
 The `ornotto` package applies the same discipline to itself. Each `Decider` shares one engine process per model, engine and device; the processes stop when Python exits, and `ornotto.shutdown()` stops them earlier ([chapter 10](10-package.md)). If your code opens several models at once, add up their GGUF sizes plus the pcdServer checkpoint budget before you do.
+
+## What changed in September 2026
+
+- **Upstream dohnuts** merged our prefix reuse on 2026-09-24, generalised it into a cross-call prefix cache the same morning, and added a `--flash-attn` switch defaulting to `auto` on 2026-09-29. The dohnuts rows here predate both; re-measurement on upstream is pending ([upstream after the merge](#upstream-after-the-merge)).
+- **Hosted decision services** multiplied. OpenAI announced a Decision API with a 150 ms claim on 2026-09-29, and Liquid AI's d1 and meraGPT's Decider 1 joined jev on the typed-decisions board with p50 latencies near 525 ms ([speed claims by others](#speed-claims-by-others)).
+- **The engines' base** did not move. dohnuts and pcdServer both pin llama.cpp v0.4.1 of 2026-09-14, so none of the llama.cpp changes later in the month is in these timings ([chapter 3](03-engines.md)).
+
+[^pr1]: DreamBlooms/dohnuts.cpp, pull request #1, "Reuse the state prefix across side-model rows", opened 2026-09-23, merged 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/pull/1>
+[^upstream-cache]: DreamBlooms/dohnuts.cpp, commit `60d247e5`, "Cache decoded state prefixes across calls", 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/commit/60d247e5362e233fac94bdf19b74c9f7bf395704>
+[^flash]: DreamBlooms/dohnuts.cpp, commit `4ba1cf5`, "Make Flash Attention a --flash-attn[=true|false|auto] switch", 2026-09-29. <https://github.com/DreamBlooms/dohnuts.cpp/commits/main>
+[^ts-launch]: Diogo Almeida, TypeSafe, "Introducing System One Models & Jev", 2026-09-15. <https://typesafe.ai/blog/introducing-system-one-models-and-jev>
+[^ts-models]: TypeSafe, "Models", documentation, read 2026-09-30. <https://docs.typesafe.ai/models>
+[^typed]: LocalLLaMA, "typed-decisions" dataset card, Hugging Face, read 2026-09-30. <https://huggingface.co/datasets/LocalLLaMA/typed-decisions>
+[^openai]: Frederic Lardinois, The New Stack, "OpenAI Decision API on Luna", 2026-09-29. <https://thenewstack.io/openai-decision-api-luna/>
+[^laya-ports]: mizorewww, laya-mlx and laya-coreml READMEs, read 2026-09-30. <https://github.com/mizorewww/laya-mlx>, <https://github.com/mizorewww/laya-coreml>
+[^jeff]: firelex, "jeff" README, read 2026-09-30. <https://github.com/firelex/jeff>
+[^redhat]: Lucas Wilkinson and Rob Greenberg, Red Hat Developer, "Run decision models on vLLM and Red Hat AI using DiffusionGemma", 2026-09-28. <https://developers.redhat.com/articles/2026/09/28/run-decision-model-vllm-and-red-hat-ai>
+[^techcrunch]: TechCrunch, "A new kind of AI model from a ChatGPT inventor is thrilling developers", 2026-09-18. <https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/>

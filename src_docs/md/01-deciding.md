@@ -6,6 +6,9 @@ this_file: src_docs/md/01-deciding.md
 
 A System One decision asks a language model to pick, not to write. You hand it a *state* (a message, a ticket, a slice of application data) and a set of named *questions*, each with a closed set of answers. The model returns one probability for every allowed answer. It never produces free text, so there is nothing to parse, repair or retry: the answer is always one of the values you listed.
 
+![A figure pointing at one of five cards](img/ch01-choosing-options.png)
+*A decision model points at one of the answers it was given. It does not write a new one.*
+
 This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 258 benchmark methods, and the Python package, `ornotto`, that puts the local engines behind one API.
 
 ## What a decision looks like
@@ -68,6 +71,44 @@ TypeSafe's **jev** is a hosted System One model. You send a state and questions 
 
 jev also defined the vocabulary. The request and answer shapes shown above are its API, and pydantic-ai's `TypeSafeModel` speaks it. dohnuts, one of the two local engines, answers the same requests at the same `/v1/systemone` path, which is why an agent written for jev can run locally with a changed base URL ([chapter 11](11-typed.md)).
 
+### How jev arrived
+
+TypeSafe announced jev on 15 September 2026, in a post by its founder Diogo Almeida titled "Introducing System One Models & Jev".[^launch] The name System One comes from Daniel Kahneman's *Thinking, Fast and Slow*: the fast, automatic kind of judgement, as opposed to deliberate reasoning. The post described a new architecture, a "parallel sampler", and a training method it called "Reinforcement Learning for Calibrated Decisions (RLCD)". The claim that set the tone was that jev "achieves similar levels of intelligence on System One tasks compared to existing LLMs, while being two orders of magnitude faster and more efficient."
+
+The price follows from the design. A language model is billed for the tokens it reads and, at a higher rate, for the tokens it writes. jev writes nothing, so TypeSafe charges only for input: $0.042 per million input tokens, with output listed as "FREE (too cheap to meter)".[^launch] The model page adds the working limits:[^models]
+
+| | jev 1.13.0, as documented on 30 September 2026 |
+|---|---|
+| Price | $0.042 per million input tokens; output not charged |
+| Rate limits | 100K tokens per second, 40 requests per second |
+| Context | 64k tokens per request, of which 32k cover the state plus the longest question |
+| Input | text only |
+| Languages | English first; "Other languages, including CJK scripts, are handled but not equally well" |
+| Options per choice | up to 255, per the launch post; above that TypeSafe scores the options separately and then chooses |
+
+The launch also came with a $40M seed round led by DCVC, as reported by BusinessWire on the same day.[^funding] The Hacker News thread on the launch post collected 1,989 points and 520 comments.[^hn-launch] Three days later TechCrunch reported that "the company briefly lost the ability to serve users from its API because demand was so high."[^techcrunch]
+
+The training data matters for the rest of this book. TypeSafe says jev was trained "exclusively on synthetic data", in TechCrunch's words, and Almeida put the bet in his own: "We made an early bet that we will be making all of our data, and that has been one of the best bets I've ever made in my life".[^techcrunch] The open models in [chapter 4](04-models.md) are trained differently, and several of their authors say explicitly that no jev outputs went into them.
+
+### Which jev we measured
+
+A hosted alias is a pointer, not a model. Our harness called `jev-latest`, and the benchmark rows record the alias, not the build behind it. On 30 September 2026, TypeSafe's model page listed one model, `jev-1.13.0`, with both `jev-latest` and `jev-preview` pointing to it and the note "There is no preview build available right now".[^models] Every public board that ranked jev between 18 and 29 September also names 1.13.0. We therefore read our jev rows as jev 1.13.0. That is an inference for the days between those checks: our own results cache does not record the build.
+
+Almeida addressed this on the Latent Space podcast on 21 September: "We will not change our models when we deploy them. That is insane." In the same conversation he left the door open to keeping the current build around: "there is a world that we might temporarily LTS what is right now Jev 1.13.0."[^latent] A new build would arrive under a new version name, and the alias would move to it. [Why run decisions locally](#why-run-decisions-locally) explains why that still matters for a threshold you have tuned.
+
+!!! quote "How it looked from the outside"
+    Simon Willison wrote about jev on 21 September: "I'm with Maggie Appleton, I think "decision models" is a better name for these." He also noted that its input price was "cheaper even than OpenAI's GPT-5 Nano".[^willison] On Latent Space, swyx summed up the pitch as a framing that "makes the case that you should always make one or 10 or 100 Jev calls for every one reasoning call that you make."[^latent] Not everyone was convinced. A Hacker News commenter, hbrn, wrote on 22 September: "$40m in funding, 2 years in stealth. Performs on-par with SemIf which was built in a couple days".
+
+### Other hosted decision services
+
+jev did not stay alone for long. By the end of September three other hosted services answered the same kind of request:
+
+- **OpenAI's Decision API**, announced at DevDay on 29 September 2026, runs on GPT-6 Luna. OpenAI's own figure, as The New Stack reported it: "OpenAI says its model returns results in 150 milliseconds, compared to GPT-6 Luna, which would take 1.6 seconds." It is in limited preview, with no public price.[^openai]
+- **Liquid AI's d1**, announced the same day, uses the same three question kinds at its own `/v1/systemone` path, as the model `d1:free`. Liquid's documentation does not state whether the weights will be published or under what licence.[^liquid]
+- **meraGPT Decider 1** and Featherless's **Simple Jev** appear as hosted rows on the public typed-decisions board, which [chapter 6](06-results.md) quotes beside our own results.
+
+None of these was part of our benchmark. They are here because they change the question a reader asks. When jev was the only service, "hosted or local" meant "jev or not". By the end of the month it meant choosing among several hosted providers with different prices, limits and latencies, or running a model that does not depend on any of them.
+
 ## Why run decisions locally
 
 jev answers the router question in 466 ms on average, measured from our client, network included. The fastest local methods within three answers of it take about 52 ms (decider-0.8b on dohnuts), and the most accurate one, Qwen3.5-4B-Hmm (`Q8_0`) on pcdServer, takes 88 ms on the same machine ([chapter 6](06-results.md)).
@@ -82,6 +123,41 @@ The fourth is that a local engine keeps working offline and does not change unde
 
 The price is accuracy on the hardest queries and the work of choosing, downloading and running a model. This book is about paying that price well.
 
+### A desktop application is a special case
+
+Most of the writing about jev in September assumed a server: a web backend, an agent loop, a queue of tickets. FontLab is a desktop application, and its assistant router runs where the user types. That changes the weight of each reason above.
+
+- **The state is the user's work.** A message to the assistant often comes with the open font, the selected glyphs and the active window ([chapter 2](02-decisions.md#the-state) shows such a state). Sending that to a hosted API means sending unpublished type design to a third party with every message the router sees.
+- **The network is not guaranteed.** Designers work on trains and in studios with strict outbound rules. A router that fails without a connection turns the assistant off, including the parts, such as the documentation handler, that could have answered locally.
+- **The call count follows the user, not the product.** A desktop router runs on each message of each user. Paying per call scales with how much people use the assistant, which is the one thing a product team wants to grow.
+- **The machine is already there.** A current Mac has a GPU that sits idle while the user reads the assistant's reply. The decider-0.8b file that `ornotto` registers is 0.81 GB ([chapter 8](08-speed.md#memory-one-model-at-a-time)).
+
+The same reasoning holds for other desktop tools that route between a few handlers: a code editor deciding whether a request needs the language server, a mail client sorting incoming messages, a photo tool choosing between a filter and a generative fill. The local engine does not need to be as accurate as jev on every query. It needs to be accurate enough on the queries the product sees, with a known fallback for the rest. [Chapter 9](09-confidence.md#a-fallback-gate) shows how to build that fallback from the model's own probabilities.
+
+```mermaid
+flowchart LR
+    U["User message<br>plus app state"] --> R{"Local router<br>decision"}
+    R -- "docs" --> D["Documentation answer"]
+    R -- "python" --> P["Script generator"]
+    R -- "fea" --> F["Feature code generator"]
+    R -- "vfj" --> V["Glyph writer"]
+    R -- "sample" --> S["Sample text writer"]
+    R -- "low confidence" --> H["Larger model<br>or ask the user"]
+```
+
+The router is a decision; the handlers behind it are generators. Only the router needs to run on every message, which is why it is the part worth running locally first.
+
+## What changed in September 2026
+
+Most of the field this book describes is younger than a month. The dates, checked at the primary sources:
+
+- jev launched on 15 September 2026, and every dedicated open decision model in our benchmark first appeared on Hugging Face between 16 and 29 September. The two engines `ornotto` bundles were created on 18 September (pcdServer) and 21 September (dohnuts.cpp).
+- TypeSafe kept one model, `jev-1.13.0`, throughout the month. No alias moved.[^models]
+- OpenAI and Liquid AI announced hosted decision services on 29 September.[^openai] [^liquid]
+- An arXiv paper counted 2,170 public jev projects on GitHub by 22 September, a week after launch.[^wild]
+
+The field is young enough that "latest" is a date. The chapters that follow give the date with every outside number.
+
 ## How this book is organised
 
 The **concepts** part (chapters 1 to 4) defines a decision, explains how each engine reads one out of a model, and sorts the models into dedicated, fine-tuned and vanilla families.
@@ -89,3 +165,14 @@ The **concepts** part (chapters 1 to 4) defines a decision, explains how each en
 The **benchmarks** part (chapters 5 to 9) describes how the router set was measured and reports accuracy, quantization, speed, caching and confidence for every model and engine we ran.
 
 The **package** part (chapters 10 to 12) documents `ornotto`, shows how to use it from plain Python and from pydantic-ai, and ends with a guide to choosing an engine and model, and to building and contributing.
+
+[^launch]: Diogo Almeida, TypeSafe, "Introducing System One Models & Jev", 2026-09-15. <https://typesafe.ai/blog/introducing-system-one-models-and-jev>
+[^models]: TypeSafe, "Models", documentation, read 2026-09-30. <https://docs.typesafe.ai/models>
+[^funding]: BusinessWire, "TypeSafe AI Emerges From Stealth With $40M in Funding", 2026-09-15. <https://www.businesswire.com/news/home/20260915525333/en/>
+[^hn-launch]: Hacker News, discussion of the jev launch post, 2026-09-15. <https://news.ycombinator.com/item?id=49717558>
+[^techcrunch]: TechCrunch, "A new kind of AI model from a ChatGPT inventor is thrilling developers", 2026-09-18. <https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/>
+[^latent]: Latent Space, "Jev: System One models for Prod, not God", podcast with Diogo Almeida, 2026-09-21. <https://www.latent.space/p/jev>
+[^willison]: Simon Willison, "Jev introduces a new shape of LLM", 2026-09-21. <https://simonwillison.net/2026/Sep/21/jev/>
+[^openai]: Frederic Lardinois, The New Stack, report on OpenAI's Decision API, 2026-09-29. <https://thenewstack.io/openai-decision-api-luna/>
+[^liquid]: Liquid AI, "Decision models", documentation, read 2026-09-30. <https://docs.liquid.ai/lfm/models/decision-models>
+[^wild]: arXiv 2609.30216, "Jev in the Wild", 2026-09-24. <https://arxiv.org/abs/2609.30216>

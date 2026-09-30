@@ -6,6 +6,9 @@ this_file: src_docs/md/12-choosing.md
 
 The first eleven chapters describe how the engines read an answer, how the models compare, and what the package does. This one turns them into choices you make on day one: which engine and model for which job, how to build the engines if no wheel fits, how a release is made, and how to send a change upstream.
 
+![A maze with one route marked in red](img/ch12-choosing-path.png)
+*Choosing an engine and a model is a path through a few constraints: memory, languages, speed and licence.*
+
 ## Which engine and model
 
 Start from what your decision needs, not from the model list. The numbers in the right-hand column are from the FontLab router benchmark ([chapter 6](06-results.md)), translated set, on an Apple M4 Max; your task will score differently, but the order tends to hold.
@@ -30,6 +33,39 @@ Start from what your decision needs, not from the model list. The numbers in the
 | The best accuracy, cost no object | jev (hosted) | 65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's `TypeSafeModel` does. |
 
 Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in the wheel: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)). Through ollaya, `ollaya-laya-multilingual` answers in 12.3 ms with the same 52/67.
+
+## Choosing by memory on a Mac
+
+On Apple silicon the GPU shares the machine's memory with everything else, so the first practical limit is not speed but whether the model fits. The tree below sorts the models this book measured by how much memory they need. The tiers are guidance, not measurements: every number in it comes from one 48 GB M4 Max ([chapter 5](05-method.md#one-model-at-a-time)). The rule behind the tiers is the file size plus headroom for macOS, your other applications and the engine's own cache. pcdServer, as ornotto starts it, may add up to 512 MiB of schema checkpoints ([chapter 8](08-speed.md#the-schema-cache-in-pcdserver)).
+
+```mermaid
+flowchart TD
+    S["A decision to run"] --> H{"May the text leave<br>the machine?"}
+    H -->|"yes"| J["jev, hosted<br>65/67 at 466 ms, per call"]
+    H -->|"no"| M{"Memory you can give<br>one model"}
+    M -->|"8 GB Mac"| A1["decider-0.8b on dohnuts<br>0.81 GB, 62/67, 52 ms"]
+    M -->|"8 GB Mac"| A2["Qwen3.5-2B Q3_K_M on pcdServer<br>1.2 GB, 61/67, 43 ms"]
+    M -->|"16 GB"| B1["qwen3.5-4b-hmm on pcdServer<br>2.7 GB, 64/67 and 65/67"]
+    M -->|"16 GB"| B2["NeoHorse-Jev-4B Q8_0<br>5.2 GB, 64/67, not in ornotto"]
+    M -->|"24 to 32 GB"| C1["ollaya-winnow-12b<br>12.7 GB, 64/67 and 65/67"]
+    M -->|"24 to 32 GB"| C2["rune-26b-a4b Q3_K_M<br>13.5 GB, 65/67 translated, not in ornotto"]
+    M -->|"48 GB or more"| D1["decider-35b-a3b on dohnuts<br>21 GB, 64/67"]
+    M -->|"48 GB or more"| D2["openjev-35b-a3b on pcdServer<br>21.2 GB, 63/67 and 64/67"]
+    A1 --> G{"Need a confidence<br>to gate on?"}
+    B1 --> G
+    G -->|"yes"| F["dedicated model on dohnuts,<br>fallback to a larger model"]
+```
+
+Read the tree from the bottom of your tier upwards. A 32 GB Mac can run everything in the 8 GB and 16 GB tiers, and on the router question the larger models are not always better: qwen3.5-4b-hmm at 2.7 GB scored 64/67 translated and 65/67 on the original text, rune at 13.5 GB 65/67 and 57/67 ([chapter 6](06-results.md#the-top-of-the-table)). The large models earn their memory only if your own questions show it.
+
+The last branch is the pattern from [chapter 9](09-confidence.md#a-fallback-gate): run a small dedicated model on dohnuts, whose probabilities are temperature-scaled, and send only the low-confidence answers to a larger model. The two models must then fit side by side, because ornotto keeps each engine loaded ([chapter 10](10-package.md#engine-lifecycle)). decider-0.8b and qwen3.5-4b-hmm together come to the two file sizes in the tree plus both engines' headroom.
+
+!!! warning "One large model at a time"
+    `openjev-35b-a3b` needs about 23 GB of memory when loaded, and on the 48 GB benchmark machine the Q5_K_M file of jeb-35b-a3b took available memory below 4 GB while it loaded, so it has no row ([chapter 8](08-speed.md#memory-one-model-at-a-time)). On a machine of that size, run a 35B model with nothing else loaded.
+
+### A file does not change under you
+
+A GGUF on disk gives the same answers until you replace it. A hosted alias is a promise instead. TypeSafe's chief executive, Diogo Almeida, made that promise plainly on the Latent Space podcast on 2026-09-21: "We will not change our models when we deploy them. That is insane."[^latent-space] In the same conversation he said TypeSafe is "not promising long-term support for the models". Through September 2026, `jev-latest` pointed at jev 1.13.0 whenever the public boards or TypeSafe's documentation named a version ([chapter 1](01-deciding.md#jev-the-hosted-reference)). If you tune a threshold against jev, record the version behind the alias along with the threshold.
 
 ## Building from source
 
@@ -94,6 +130,27 @@ The unit tests need no engine and no model: they cover the System One and pcdSer
 !!! note
     The engine tests assert the answers, not just their shape, so a model that behaves differently fails them. Two checks are looser on pcdServer: `extract` and the pydantic-ai agent assert only the type there, because decider-0.8b read as a chat model gets the short Python request in those tests wrong ([chapter 11](11-typed.md#which-model-to-put-behind-an-agent)).
 
+## Parity checks against the reference
+
+A local engine is only as trustworthy as its agreement with the model's reference implementation. For decider the reference is Mapika's PyTorch package, `decider-ai`. Until late September that package read the original checkpoints and dohnuts read GGUF conversions, so a parity check compared two different files: when the answers differed, the cause could be the engine or the conversion.
+
+`decider-ai` 1.6.0, released on 2026-09-27, added GGUF checkpoints to its `Decider`, together with GGUF files for decider-4b v2.1 and decider-2b v11.[^decider] The reference and dohnuts can now read the same file. A difference between them is then the engine's, not the conversion's.
+
+```mermaid
+flowchart LR
+    G["one GGUF file"] --> R["decider-ai reference"]
+    G --> D["dohnuts"]
+    R --> C{"Compare answers<br>and probabilities"}
+    D --> C
+    C -->|"answers differ"| E["an engine difference:<br>report it upstream"]
+    C -->|"only confidences differ"| T["check the temperature<br>in the profile JSON"]
+    C -->|"same"| OK["parity holds"]
+```
+
+We have not rerun our own checks this way yet. The prefix cache in [chapter 8](08-speed.md#prefix-caching-in-dohnuts) was checked against dohnuts' own comparison script and the f32 PyTorch model, as described under [contributing upstream](#contributing-upstream).
+
+Two later `decider-ai` releases change what a comparison has to account for. 1.7.0 added decider-12b, built on Gemma-4-12B-it; pcdServer rejects Gemma 4 files, and we have not tried the new model on dohnuts. 1.8.0 added `temperature_by_options`, a temperature that depends on the number of options, T(n) = max(min, a + b ln n). A reference that scales by option count and an engine that reads one fixed temperature from the profile will agree on the answer and disagree on its confidence. Read the profile JSON of a new checkpoint before you blame the engine.
+
 ## Wheels and releases
 
 The workflow in `.github/workflows/wheels.yml` builds one wheel per platform, plus the sdist:
@@ -139,6 +196,15 @@ The engines are other people's projects, and changes to them belong upstream. Th
 
 ornotto's `engines/dohnuts.cpp` submodule follows the fork's branch until the change is merged, then goes back to upstream. pcdServer is used unmodified.
 
+The pull request was opened on 2026-09-23 at 22:34 UTC and merged by mili-tan on 2026-09-24 at 04:44 UTC, with one comment, "lgtm, thank you very much.", and a heart.[^pr1] Eight minutes after the merge the maintainer pushed a commit of their own, "Cache decoded state prefixes across calls", which extends the idea from the rows of one request to later requests: a bounded cache of 256 MiB, keyed by the exact prefix tokens and shared with the side models.[^dohnuts-commits]
+
+So the merge happened, but the switch back has not. On 2026-09-30 ornotto's `.gitmodules` still names `fontlaborg/dohnuts.cpp`, branch `side-prefix-cache`, and the wheels still build dohnuts from it. Pointing the submodule at upstream is the next step. It brings in the upstream work that followed the merge: the cross-call cache, the Linnaeus-0.1.0-2B profile, and a `--flash-attn` option that defaults to `auto`. Two of those touch speed, so the dohnuts figures in [chapter 8](08-speed.md) need measuring again after the switch.
+
+pcdServer is a different case. Its only release, v0.1.0, and all its commits date from 2026-09-18, and it had no issues or pull requests by 2026-09-30.[^pcdserver] It rejects Gemma 4 GGUFs, which is one reason rune is not in ornotto. If ornotto needs a fix there, it will have to be offered upstream to a quiet repository, or carried as a patch in ornotto's own build.
+
+!!! quote "How it looked from the outside"
+    The two engines ornotto bundles are younger than jev's public launch on 2026-09-15: pcdServer's repository was created on 2026-09-18 and dohnuts.cpp's on 2026-09-21. A pull request to a project that young is a conversation with one or two people, not a process. Ours got a one-line approval, and the maintainer answered it by building the next step themselves the same morning.
+
 The licences travel with the wheel, in its `dist-info/licenses/`:
 
 | Component | Licence |
@@ -153,3 +219,21 @@ The licences travel with the wheel, in its `dist-info/licenses/`:
 Model weights are not in the wheel and keep their own licences: Apache-2.0 for every registered model except Dohnuts, which is CC-BY-NC-SA-4.0.
 
 Changes to ornotto itself go to [fontlaborg/ornotto](https://github.com/fontlaborg/ornotto) as issues or pull requests. `./test.sh` must pass; the code style is `ruff` with a line length of 110, and every source file names its own path in a `this_file` comment.
+
+## What changed in September 2026
+
+The advice in this chapter rests on measurements from the second benchmark round. Around it, the month moved these pieces:
+
+- **dohnuts** merged our pull request and added a cross-call prefix cache, Linnaeus-0.1.0-2B and `--flash-attn`. ornotto still builds from the fork ([above](#contributing-upstream)).
+- **decider-ai** can read GGUF, which makes [parity checks](#parity-checks-against-the-reference) cheaper, and fits temperatures per option count.
+- **pcdServer** has not changed since its first day.
+- **ollaya** reached v0.7.5 with a GPU path on Apple silicon ([chapter 10](10-package.md#ornotto-and-ollaya)).
+- **pydantic-ai** put `TypeSafeModel` under a new `DecisionModel` base; ornotto's lock stays on 2.48.0 ([chapter 11](11-typed.md#what-changed-in-september-2026)).
+
+Each of these can change a row in the table at the top of this chapter. The book's numbers are dated to the runs that produced them; when you choose, check the release you are about to install against the one the book measured.
+
+[^latent-space]: Latent Space, "Jev: System One models for Prod, not God, with Diogo Almeida, CEO, TypeSafe AI", 2026-09-21, at 00:48:11. <https://www.latent.space/p/jev>
+[^decider]: Mapika, "decider" README, read 2026-09-30. <https://github.com/Mapika/decider>
+[^pr1]: DreamBlooms/dohnuts.cpp, "Reuse the state prefix across side-model rows", pull request #1, 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/pull/1>
+[^dohnuts-commits]: DreamBlooms, "dohnuts.cpp" commit history, read 2026-09-30. <https://github.com/DreamBlooms/dohnuts.cpp/commits/main>
+[^pcdserver]: stephanj, "pcdServer", read 2026-09-30. <https://github.com/stephanj/pcdServer>

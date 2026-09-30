@@ -14,6 +14,43 @@ The dedicated models get calibrated during training. decider divides the letter 
 
 To check calibration you need labelled examples: group the answers by their top probability, and count how many in each group were right.
 
+### Too sure and not sure enough
+
+A badly calibrated model can err in two directions. An **over-confident** model states probabilities higher than its hit rate: it says 0.99 and is right 80 percent of the time. An **under-confident** model does the opposite: it says 0.6 and is right 90 percent of the time. Both break a threshold. The first lets wrong answers through as sure ones, and the second sends right answers to a fallback they did not need.
+
+The two best-documented cases of September 2026 sit at opposite ends.
+
+**jev is sure.** The typed-decisions board on Hugging Face scores hosted models on 2,000 decisions from four workflows and reports, beside accuracy, the KL divergence of each model's distribution from the gold labels.[^typed] On that board jev 1.13.0, measured on 2026-09-18, has a KL from gold of 1.442. meraGPT's Decider 1, the board's top entry, has 0.096. The card explains the gap in one sentence: "Its accuracy is near the 0.735 ceiling, but it puts nearly all its probability on one answer, which is where the KL gap comes from." jev is usually right, and when it is not, its probabilities give little warning.
+
+**laya is not sure enough.** An independent reproduction of laya on the same board (arXiv 2609.33843, 2026-09-27) matched its headline accuracy and found it under-confident, with an expected calibration error of 0.214.[^laya-repro] A single temperature, T = 0.469, fitted on part of the data, brought the held-out error from 0.204 to 0.037. A temperature below one sharpens a distribution, so laya's probabilities were too flat, not wrong in order.
+
+Other people's figures, as reported on the board and in the paper. They are not comparable with the router-set numbers in this chapter.
+
+| Source | Model | Accuracy | KL from gold | Brier | ECE |
+|---|---|---|---|---|---|
+| typed-decisions card, read 2026-09-30 | meraGPT Decider 1 (`sd-1`) | 0.768 | 0.096 | 0.052 | 0.180 |
+| typed-decisions card, read 2026-09-30 | Liquid AI d1, measured 2026-09-30 | 0.742 | 0.475 | 0.155 | 0.124 |
+| typed-decisions card, read 2026-09-30 | jev 1.13.0, measured 2026-09-18 | 0.727 | 1.442 | 0.148 | 0.144 |
+| typed-decisions card, read 2026-09-30 | prior (label frequencies only) | 0.470 | 0.347 | 0.189 | 0.088 |
+| arXiv 2609.33843, 2026-09-27 | laya | 0.767 | | | 0.214 |
+
+The board's own ranking uses accuracy, and the calibration columns tell a different story. In this table Decider 1 has the lowest KL and Brier score but not the lowest ECE, and the prior, which knows nothing about any input, has the lowest ECE of all. One calibration number is not enough to choose a model by, and a low ECE on its own can mean the model has learned to hedge.
+
+!!! quote "How it looked from the outside"
+    On the Hacker News thread for ollaya on 2026-09-25, one commenter, george_max, compared the two: "Laya performs significantly worse. It's less confident and often makes wrong decisions with more complex queries."[^hn-ollaya] The paper two days later measured the first half of that sentence. On the router set here, laya-multilingual scores 52/67, ten answers below decider-0.8b ([chapter 6](06-results.md)).
+
+### Temperature is one number
+
+Temperature scaling is the usual repair, and it is what the dedicated models ship with. The model's logits are divided by a single fitted number T before the softmax. T above one flattens the distribution, T below one sharpens it, and the order of the options never changes, so accuracy is untouched. The number is fitted on labelled data the model was not trained on.
+
+The dedicated models in this book carry their temperatures with them ([chapter 4](04-models.md#dedicated-models)):
+
+- decider stores T in the checkpoint's `decider.json`: 1.03 for decider-0.8b, 1.3 for DreamBlooms' decider-2b. From version 1.8.0 on 2026-09-29, Mapika's reference package can also make T depend on the number of options, T(n) = max(min, a + b ln n).[^decider]
+- kev publishes a fitted temperature per size: 1.38 for 27B, 2.30 for 9B, 2.41 for 4B and 2.35 for 0.8B.[^kev] All four are above one: each size's raw scores needed flattening.
+- laya picks a temperature per bucket of option count and question type, and the reproduction above suggests that on typed-decisions the buckets were set too high.
+
+dohnuts reads the temperature from the model's profile JSON and applies it before it returns anything ([chapter 3](03-engines.md#dohnuts)). pcdServer applies none. That is why `Answer.calibrated` is `True` for one and `False` for the other, and why a threshold tuned on one engine does not transfer to the other even for the same weights ([chapter 6](06-results.md#one-set-of-weights-three-scores)).
+
 ## decider-0.8b on the router set
 
 These are the 67 router queries answered by decider-0.8b on dohnuts (Metal), grouped by top probability. The file is DreamBlooms' `Q8_0` conversion, the one `ornotto` registers. First with translation:
@@ -56,6 +93,16 @@ Some of decider's errors sit where a useful threshold cannot reach them, because
 !!! warning "Read these gains with care"
     The thresholds were chosen on the same 67 queries they are scored on, and the direct run uses the same queries as the translated run, so neither is a held-out test. A gate also needs both models loaded at once (about 0.8 GB plus 4.5 GB here), and no benchmark run has measured the two servers running side by side.
 
+### Confident errors do not fall back
+
+A gate works on the answers a model doubts. It does nothing for the answers a model is sure of and gets wrong, and the September 2026 papers suggest these are not rare and not easy to catch another way.
+
+- **Wording moves confident answers.** JevAdvBench (arXiv 2609.31142, 2026-09-25) appended one unverified opinion to the input and flipped 12.1 percent of jev-1.13.0's decisions. The same appended opinion pushed 38 percent of confident answers below 0.8, the confidence threshold that routes an answer to human review in the paper's setup.[^jevadv] A confidence gate moves with the input, not only with the question.
+- **Option names and order move answers too.** Renaming the options `0` and `1` to `no` and `yes` moved AUC from .94 to .23 on open jev-like models in one September paper, while every answer stayed a valid option ([chapter 2](02-decisions.md#names-and-order-are-part-of-the-question)). The type check cannot notice, and neither can a gate that looks only at the top probability.
+- **A bigger model may make the same mistake.** Rao and Callison-Burch compared jev with LLM judges on rubric grading (arXiv 2609.29769, 2026-09-24). The LLM judges cost 16 to 325 times as much, and "On Jev's most confident errors, about 96% of LLM verdicts repeat its wrong answer". In their study, no cascade from jev to an LLM judge beat the best single judge by more than 2.7 points, even with oracle thresholds.[^rao]
+
+On the router set the picture is less bleak, and also smaller. Qwen3.5-4B-Hmm answers two of decider's confident errors correctly, but the gate barely reaches them: the batch-rename question at 0.94 falls back only at a threshold of 0.95, where the gate is already slower than Qwen3.5-4B-Hmm alone, and the VFJ storage question at 0.99 sits above every threshold in the tables. The third, the liga question at 0.86, is wrong in both models. Sixty-seven queries cannot say how general any of this is. They do say where the gate stops: it trades latency for accuracy on the doubtful answers, and the confident errors need better questions, not a second opinion.
+
 ## A gate in ornotto
 
 The `ornotto` repository ships the gate as `examples/fallback.py`:
@@ -79,6 +126,17 @@ for text in ("Build a kern feature for A V", "Jak zmienić kąt pochylenia kursy
     print(f"{answer.value:7} {answer.confidence:.2f} {source:15} {text}")
 ```
 
+The gate is ordinary code around two `Decider` objects; `ornotto` has no built-in fallback. It relies on two properties of every `Answer`. `confidence` is the probability of the answer given: the top option for a choice, the top level for a score, and the larger of p(yes) and p(no) for a yes/no question. `calibrated` says whether that probability was temperature-scaled by the model's recipe. Here the first stage runs on dohnuts, where `calibrated` is `True`, and only its confidence is compared with the threshold; the second stage's confidence is printed but never tested. Keep it that way if you build your own: a threshold belongs to one model on one engine.
+
+```mermaid
+flowchart LR
+    Q["Query"] --> F["decider-0.8b on dohnuts<br>calibrated"]
+    F --> T{"confidence at or above<br>the threshold?"}
+    T -- "yes" --> A["Use the fast answer"]
+    T -- "no" --> C["qwen3.5-4b-hmm on pcdServer<br>not calibrated"]
+    C --> B["Use the careful answer"]
+```
+
 The script sends a shorter question than the benchmark's router prompt, so its confidences differ from the tables above even though the model file is the same. In our test run of this script the kern request stayed on decider (fea, 0.79), the Polish question stayed on decider (docs, 0.99), and the VFJ question fell below 0.7 and went to Qwen3.5-4B-Hmm, which answered vfj. The thresholds you pick belong to your own prompts and your own labelled examples, not to this benchmark.
 
 If you run the two models as a pydantic-ai chain instead, [chapter 11](11-typed.md) shows the same pattern with an `Agent`.
@@ -100,3 +158,22 @@ One query shows what translation costs. The Korean request for a VFJ glyph named
 ## The abstain signal nobody used
 
 laya returns one more number that the other engines do not: `action.act_probability`, the output of a separate act head that estimates whether the model should answer directly or escalate. It is the only built-in abstain signal among the engines benchmarked here. Our benchmark harness never read it; it compared only the probability maps. A gate on `act_probability` instead of on top probability is the obvious next experiment for laya, whose 4 to 7 ms answers ([chapter 8](08-speed.md#load-time-and-the-latency-floor)) would make a cheap first stage if it knew when to step aside.
+
+Two things happened after our run that bear on this. On 2026-09-29 laya's release v0.3.22 added confidence-based abstention gating to laya itself, so the engine can now decline to answer instead of leaving the decision to the caller.[^laya-rel] We have not measured it. And the Sys1Cal-v1 paper posted the day before (arXiv 2609.35342) argues that jev appears to suppress an "I don't know" mass in its distributions; recovering it raised the median soft accuracy of choice answers from 0.771 to 0.978 in that paper's evaluation.[^sys1cal] Both point the same way: a decision engine that can say "none of these" or "ask someone else" gives a gate something better to read than a top probability.
+
+## What changed in September 2026
+
+- **Calibration became a published column.** The typed-decisions board reports KL from gold, Brier score and ECE beside accuracy, and JevBench folds a calibration axis into its score. Both boards appeared in September ([chapter 5](05-method.md)).
+- **The two best-known models turned out to miss in opposite directions.** jev puts nearly all its probability on one answer; laya spreads it too thinly, and one temperature fixes most of that ([too sure and not sure enough](#too-sure-and-not-sure-enough)).
+- **Temperatures got richer.** decider-ai 1.8.0 lets the temperature depend on the number of options, and kev published fitted temperatures for each size. dohnuts reads whatever the checkpoint's profile holds, so a newer checkpoint may shift a threshold you tuned on an older one ([chapter 4](04-models.md#decider)).
+- **laya added abstention** in v0.3.22, after the benchmark run.
+
+[^typed]: LocalLLaMA, "typed-decisions" dataset card, Hugging Face, read 2026-09-30. <https://huggingface.co/datasets/LocalLLaMA/typed-decisions>
+[^laya-repro]: Gowthamkumar Nandakishore, "Laya as a Typed Probabilistic Assessor: An Independent Reproduction and a Preregistered Study of Calibration and Selective Escalation", arXiv 2609.33843, 2026-09-27. <https://arxiv.org/abs/2609.33843>
+[^hn-ollaya]: Hacker News, "Ollaya – Ollama for open-source, Jev-style decision models", comment by george_max, 2026-09-25. <https://news.ycombinator.com/item?id=49848269>
+[^decider]: Mapika, "decider" README, read 2026-09-30. <https://github.com/Mapika/decider>
+[^kev]: Jared Palmer, "kev" README, read 2026-09-30. <https://github.com/jaredpalmer/kev>
+[^jevadv]: Jianyi Hu et al., "JevAdvBench: A Benchmark and Black-Box Attacks for Reinforcement Learning for Calibrated Decisions Models", arXiv 2609.31142, 2026-09-25. <https://arxiv.org/abs/2609.31142>
+[^rao]: Delip Rao and Chris Callison-Burch, "JEV vs. LLMs as Rubric Judges: Cheaper, Faster, and Wrong in the Same Places", arXiv 2609.29769, 2026-09-24. <https://arxiv.org/abs/2609.29769>
+[^laya-rel]: NandhaKishorM/laya, release v0.3.22, 2026-09-29. <https://github.com/NandhaKishorM/laya/releases>
+[^sys1cal]: Riccardo Porcedda, "Jev thinks \"I don't know'', but doesn't say it: Introducing Sys1Cal-v1 Dataset for Probability Calibration", arXiv 2609.35342, 2026-09-28. <https://arxiv.org/abs/2609.35342>

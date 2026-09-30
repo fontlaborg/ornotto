@@ -42,6 +42,8 @@ curl -fsSL https://ollaya.dev/install.sh | OLLAYA_INSTALL_DIR=$HOME/.local sh
 
 ornotto looks for it at the path in `ORNOTTO_OLLAYA_BIN`, then on your `PATH`, then in `~/.local/bin`. If none has it, a question for an ollaya model raises `EngineNotFound` with the install command. ollaya keeps its models in its own store, `OLLAYA_MODELS` (default `~/.ollaya/models`), not in the Hugging Face cache; set that variable if your home volume has no room.
 
+ollaya is young and moves quickly. Its first release, v0.1.0, came out on 2026-09-23, and v0.7.5 followed on 2026-09-28, the fifteenth release in five days.[^ollaya-releases] Two of those releases matter for ornotto on a Mac. v0.7.0 added llama.cpp for GGUF models, and v0.7.1 added GPU inference on Apple silicon through MLX, on macOS 14 or later. Which device a model runs on is ollaya's choice, steered by its own settings such as `OLLAYA_DEVICE`, which ornotto passes through unchanged ([engine lifecycle](#engine-lifecycle)). The ollaya rows in this book were measured with the ollaya release installed at the time of the second benchmark round; a later release can change their speed.
+
 Models download from Hugging Face on first use, through `huggingface_hub`, into the ordinary Hugging Face cache. Set `HF_HUB_CACHE` (or `HF_HOME`) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.
 
 ## Decider
@@ -232,6 +234,38 @@ The registry files `jevk5-4b` and `openjev-35b-a3b` as fine-tuned pcdServer mode
 
 `ornotto.DEFAULT_MODEL` is `"decider-0.8b"`.
 
+## ornotto and ollaya
+
+ollaya is the project nearest to ornotto, and it is also one of ornotto's engines. Its site describes it as "An independent open-source project, not affiliated with Ollama or TypeSafe".[^ollaya-site] It is one Rust binary that runs a daemon, pulls decision models from its own registry, and answers them over TypeSafe's `/v1/systemone` protocol. The site states that "The official TypeSafe Python SDK 0.7.1 works unchanged against a local server." If all you need is a local System One endpoint for code that already talks to jev, ollaya on its own may be enough.
+
+ornotto solves a neighbouring problem. It is a Python package that puts several engines behind one Python API, and ollaya is one of them:
+
+| | ornotto | ollaya on its own |
+|---|---|---|
+| What you install | a Python wheel with dohnuts and pcdServer inside; ollaya optional | one binary |
+| How you call it | Python: `Decider`, `decide`, `choose`, `extract`, `@decision`, pydantic-ai | HTTP: `/v1/systemone`, plus its own endpoints and an MCP server |
+| Models | Hugging Face GGUF files by name, path or `hf:` reference, plus any ollaya tag | ollaya's registry |
+| Engines | dohnuts, pcdServer, ollaya | ollaya's runtimes: ONNX Runtime, llama.cpp and MLX |
+| Typed Python | pydantic models, typed functions, pydantic-ai agents ([chapter 11](11-typed.md)) | through TypeSafe's SDK or pydantic-ai's `TypeSafeModel` |
+| Engine lifecycle | started per model on a free loopback port, stopped at exit | a daemon you start and stop |
+
+The practical difference is what happens when you change your mind about a model. With ollaya alone, you choose among the models its registry offers. With ornotto, a vanilla chat GGUF, a dedicated model on dohnuts and an ollaya tag are three `Decider` lines in the same script, and the benchmark in [chapter 6](06-results.md) is the reason you might want all three: the fastest, the most accurate and the easiest-to-install model are not the same model.
+
+The overlap is also real. The laya encoders, winnow, von, GLiClass, the ModernBERT NLI model, Decision 1.0 Eos and CLM run in ornotto only through ollaya ([registered models](#registered-models)). ornotto adds no readout of its own for them. It starts a private ollaya server, pulls the tag, and reads ollaya's answer, calibration included.
+
+ollaya's releases add features that ornotto does not wrap. v0.4.0 added an MCP server, v0.6.0 a `--preset agent` that decides whether an agent's action should run, ask or be blocked, and v0.7.5 image input through `decider:2b-vision`.[^ollaya-releases] None of them was part of our benchmark. From v0.7.4 ollaya's release notes recommend `winnow:e4b` for general use; ornotto registers `winnow:12b`, which is the one we measured, and `winnow:e4b` runs as `Decider("winnow:e4b", engine="ollaya")` without a registry entry.
+
+!!! quote "How it looked from the outside"
+    ollaya's Show HN thread, "Ollaya – Ollama for open-source, Jev-style decision models", reached 613 points on 2026-09-25.[^ollaya-hn] In the comments, one reader summed up how long open source had taken to copy TypeSafe's idea: "what, like 2 weeks?" TypeSafe had launched jev on 2026-09-15; ollaya's first release is dated 2026-09-23.
+
+## What changed in September 2026
+
+The package's API did not change during the month, but three things around it did:
+
+- **ollaya** went from its first release to v0.7.5 and gained a GPU path on Apple silicon ([above](#ollaya)).
+- **dohnuts upstream** merged our prefix-cache pull request on 2026-09-24 and added a cross-call cache of its own. The wheels still build dohnuts from our fork's branch; [chapter 12](12-choosing.md#contributing-upstream) describes that state and [chapter 8](08-speed.md#prefix-caching-in-dohnuts) the cache.
+- **pydantic-ai and typesafe-sdk** released changes that a fresh install of the `pydantic-ai` extra can pick up. ornotto's lock pins the versions it was tested with ([chapter 11](11-typed.md#which-versions-this-chapter-describes)).
+
 ## Errors
 
 | Exception | Raised when |
@@ -264,3 +298,7 @@ ornotto choose "Build a kern feature for A V W T" docs python fea --model=kev:4b
 ```
 
 `ornotto serve` is the easy way to get a server that another process can reach. Pass its URL to `Decider(url=...)`, or point any System One client at it if the engine is dohnuts or ollaya.
+
+[^ollaya-releases]: ollaya, "Releases", read 2026-09-30. <https://github.com/ollaya-dev/ollaya/releases>
+[^ollaya-site]: ollaya, "ollaya", read 2026-09-30. <https://ollaya.dev>
+[^ollaya-hn]: Hacker News, "Ollaya – Ollama for open-source, Jev-style decision models", 2026-09-25. <https://news.ycombinator.com/item?id=49848269>

@@ -6,6 +6,8 @@ this_file: src_docs/md/06-results.md
 
 jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. One local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Across both modes, the best local model is still Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 258 methods finished; five failed and are left out.
 
+The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every number in this chapter comes from our own run on one Mac, on one 67-query question. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
+
 ## The top of the table
 
 The fifteen best methods, ordered by translated accuracy, then direct accuracy, then speed:
@@ -65,6 +67,94 @@ A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on En
 
 If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms.
 
+The table also shows where the choice of engine is a choice of model. pcdServer ran 159 methods because it takes any chat GGUF, but it could not run the two Gemma 4 files at all, so rune appears only on slot. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
+
+## The second round, model by model
+
+The 50 methods added in the second round were mostly dedicated decision models that appeared on Hugging Face in the second half of September 2026. Their authors describe them against jev and against each other. Our numbers put them on one question and one machine, which is a narrower test than the authors' own, and a more even one.
+
+**rune-26b-a4b** is the only local model that matched jev on translated text: 65/67 at `Q3_K_M` on slot, in 367 ms from 13.52 GB. On the original, untranslated text it scored 57/67, the largest gap between the two modes among the top methods. The `Q4_K_M` file scored 64/67 and 55/67 in 335 ms from 17.03 GB. The file we measured is version 1 of the model, from a gated revision of the repository. The later v3, which leads the Decision Index board, was not published as GGUF when we ran the benchmark, so the two are not the same weights.
+
+**winnow-12b** in ollaya scored 64/67 translated and 65/67 direct, the same as the Hmm model on direct text, but at 891 ms per query from 12.67 GB. Its authors compare it to jev on a 231-item public subset of JevBench, where the `Q8_0` build and jev both scored 85.71%.[^winnow] ollaya's own measurement on typed-decisions put `winnow:12b` at 0.702 and the smaller `winnow:e4b` at 0.722.[^ollaya-rel] On our set the 12B model is among the most accurate and among the slowest.
+
+**NeoHorse-Jev-4B** scored 64/67 in both modes at `Q8_0`, in 273 ms from 5.17 GB, and 63/67 in both modes at `Q3_K_M`, in 296 ms from 2.95 GB. It is the smallest file in the benchmark to score 63 or more in both modes on its own server. We found no accuracy figure from its authors to set beside ours. The name also needs care: NeoHorse-1 is a general agentic and coding model, and only NeoHorse-Jev-4B is the decision model ([chapter 4](04-models.md#later-dedicated-models)).
+
+**Jev-Omni** scored 64/67 in both modes from its 6.09 GB `Q3_K_M` file, read through llama.cpp embeddings and its own head, but took 1,222 ms per query. The `Q5_K_M` and `Q8_0` files each scored 63/67 in both modes. On MLX, the 4-bit build scored 61/67 in both modes in 780 ms. Its card reports 86.15% on 231 matched JevBench decisions.[^jevomni]
+
+**GLiNER2.5-Decide** is the surprise among the encoders. It scored 61/67 on translated text on Core AI (27 ms), ONNX Runtime (67 ms) and Core ML (349 ms), nine answers above laya and within four of jev. Its card reports 60.2% exact match on the publisher's own 17-domain decision set.[^gliner] The two figures measure different things and cannot be compared, but they point the same way: a 340M English encoder with a label head can hold its own on a clean English question. It cannot read the original text of the 39 non-English queries, so it needs the translator in front of it.
+
+**Julia-1** runs the other way. Its card reports 73.15% on typed-decisions (1,463 of 2,000), above the 72.70% it quotes for jev.[^julia] On our router set it scored 31/67 in both modes, on MLX in 6.8 ms and on ONNX Runtime in 12.2 ms. A model that does well on one public board can still do badly on a question it was not trained near, which is the reason this book measures on a fixed question of its own ([chapter 5](05-method.md#limits)).
+
+**CLM**, the contrastive readout, scored 33 to 39 translated across five builds, and 39/67 in ollaya at 1,678 ms. Its heads were trained on the states and actions of agents rather than on routing, and ollaya's own typed-decisions run scored it at 0.357, which ollaya's release notes call "close to chance there".[^ollaya-rel] [Chapter 7](07-quantization.md#the-later-decision-models) shows that no quantization rescues it.
+
+## Numbers others report
+
+The same decision models are ranked on several public boards, and by their own publishers. None of these numbers comes from our run, and none of them can be compared with a score out of 67. They are here so that you can see where our result agrees with the outside view and where it does not.
+
+!!! note "Reported by others, not measured by us"
+    The tables in this section copy published figures. Each names its board, its version where it has one, and the date the figure was measured or read. Numbers from different boards use different questions, different metrics and different clients, so a row in one table says nothing about a row in another.
+
+### typed-decisions
+
+The Hugging Face dataset `LocalLLaMA/typed-decisions` was created on 16 September 2026. Its test split has 400 cases and 2,000 decisions from four workflows: agent-trace observability, customer service, invoice processing and security incidents. Its leaderboard, read on 30 September 2026:[^td]
+
+| # | Model | Accuracy ↑ | KL from gold ↓ | Brier ↓ | ECE ↓ | p50 latency |
+|---|---|---|---|---|---|---|
+| 1 | meraGPT Decider 1 (`sd-1`), hosted | 0.768 | 0.096 | 0.052 | 0.180 | 526 ms |
+| 2 | Liquid AI d1 (`d1:free`), hosted, measured 2026-09-30 | 0.742 | 0.475 | 0.155 | 0.124 | 525 ms |
+| 3 | TypeSafe jev 1.13.0, hosted, measured 2026-09-18 | 0.727 | 1.442 | 0.148 | 0.144 | 710 ms |
+| 4 | Featherless Simple Jev, hosted | 0.716 | 0.488 | 0.176 | – | – |
+| – | Prior (always the most common answer) | 0.470 | 0.347 | 0.189 | 0.088 | – |
+
+The card's own comment on jev: "Its accuracy is near the 0.735 ceiling, but it puts nearly all its probability on one answer, which is where the KL gap comes from." [Chapter 9](09-confidence.md#what-calibration-means) returns to that gap. The latency column is the card's client against each hosted API, not a local measurement, and it is not the 466 ms we measured for jev from our own client.
+
+jev's accuracy on this set is quoted three ways in September 2026: 0.727 on the card, 0.738 on ollaya's site (which cites Winnow's benchmark report for it), and 72.70% on the Julia-1 card.[^ollaya-site][^julia] The differences come from different runs and dates. This book uses the card's 0.727 with its measurement date.
+
+ollaya publishes its own runs on the same set, "measured by Ollaya", in its release notes between 24 and 28 September 2026:[^ollaya-rel]
+
+| ollaya tag | Accuracy on typed-decisions |
+|---|---|
+| `kev:9b` | 0.722 |
+| `winnow:e4b` | 0.722 |
+| `winnow:12b` | 0.702 |
+| `kev:4b` | 0.669 |
+| JevK5 | 0.625 |
+| `decider:2b` | 0.591 |
+| `nli` | 0.548 |
+| `decider:0.8b` | 0.506 |
+| `gliclass` | 0.477 |
+| `kev:0.8b` | 0.460 |
+| `laya:en` | 0.361 |
+| CLM | 0.357 |
+
+ollaya leaves out laya's own figure of 0.766, because laya "was fine-tuned on this dataset".[^ollaya-site] The two lists agree with ours on some points and not on others. Both put winnow near the top and CLM near the bottom. On typed-decisions, `decider:0.8b` sits well below `kev:4b`; on our router set, decider-0.8b through its own readout (62/67) scored the same as kev-4b on translated text and above it on direct text. A board with four business workflows and a five-way router over FontLab tasks reward different things.
+
+### Decision 1.0
+
+The vLLM Semantic Router project published its Decision 1.0 family on 21 and 22 September 2026, with its own benchmark of 54 tasks and 3,766 questions. Its card reports:[^d1]
+
+| Model | Overall, Decision 1.0 benchmark |
+|---|---|
+| Decision-1.0-Eos-0.8B | 61.89 |
+| Kev 0.8B | 58.28 |
+| Qwen3.5-2B, letter readout | 57.24 |
+| Laya English | 51.03 |
+
+We ran Eos through ollaya as `decision:eos`: 57/67 translated and 56/67 direct, in 323 ms. That is below kev-0.8b in ollaya (60/67 and 62/67) and below vanilla Qwen3.5-2B on pcdServer (61/67 and 62/67), the opposite order from the card. The board is the publisher's own, and so is the set of tasks it chose.
+
+!!! quote "How it looked from the outside"
+    On 26 September 2026 Lijuan Tang and Yuemeng Zheng posted an audit of 28 papers on typed decision models, all posted between 19 and 24 September, in the ten days after jev's launch. Their abstract concludes that "the typed readout itself has not shown an independent accuracy advantage over comparable label-probability readouts. Jev's clearest gains are in latency and cost".[^audit]
+
+    Our table points the same way from a different direction. The best local rows read label probabilities: letter logits on slot and dohnuts, first-token probabilities on pcdServer. A vanilla Qwen3.5-4B read that way scored 63/67 and 64/67 without any decision training.
+
+## What changed in September 2026
+
+The first round of this benchmark had 208 methods, most of them vanilla and fine-tuned chat models on pcdServer. By the time the second round ran, at the end of September 2026, the field had changed shape. Nearly every decision model in the second round first appeared on Hugging Face between 16 and 29 September, and several public boards had appeared alongside them. Three things follow for this chapter.
+
+- **The top of the table is more crowded, not higher.** rune reached jev's 65 on translated text, and four other second-round models reached 64. None of them beat jev in both modes, and none beat Qwen3.5-4B-Hmm on direct text.
+- **Hosted alternatives to jev appeared.** meraGPT Decider 1 and Liquid AI d1 rank above jev on typed-decisions, and OpenAI announced a Decision API on 29 September.[^openai] None of them is in our benchmark. Neither of the first two states its weights or licence.
+- **Board numbers moved during the month.** JevBench changed its scale more than once in two weeks, and jev's own typed-decisions figure is quoted three ways. [Chapter 5](05-method.md#limits) explains why this book reports one question on one date instead.
+
 ## One set of weights, three scores
 
 An engine is not a neutral container. The same GGUF file, read two ways, gives different answers:
@@ -86,3 +176,17 @@ Reading a dedicated model through its own readout is worth several answers on sm
 ## What the results do not say
 
 A five-way router over 67 queries decides nothing about your task. A model that is one query behind another here is not measurably worse, and the ranking between models within two or three queries of each other would change with a different set of 67. The results are clear about the large gaps: dedicated or modern models against old ones, sensible quantizations against 1- and 2-bit ones, and a trained readout against a foreign one. [Chapter 12](12-choosing.md) turns those gaps into recommendations. [Chapter 8](08-speed.md) explains where the milliseconds go.
+
+The same caution applies to the public boards in [Numbers others report](#numbers-others-report). Each measures its own question, and a model's rank moves from one board to the next. If a board and this chapter disagree about a model, the disagreement is information about the two questions, not an error in either. The only way to know how a model will do on your decision is to run it on your own labelled examples, which is what [chapter 5](05-method.md) describes and [chapter 9](09-confidence.md#a-fallback-gate) builds on.
+
+[^ts-models]: TypeSafe, "Models", documentation page, read 2026-09-30. <https://docs.typesafe.ai/models>
+[^winnow]: EldanRing, "Winnow-12B" model card, created 2026-09-20, read 2026-09-30. <https://huggingface.co/EldanRing/Winnow-12B>
+[^ollaya-rel]: ollaya-dev, "ollaya" release notes v0.3.0 to v0.7.4, 2026-09-24 to 2026-09-28. <https://github.com/ollaya-dev/ollaya/releases>
+[^ollaya-site]: ollaya, "ollaya.dev", project site, read 2026-09-30. <https://ollaya.dev>
+[^jevomni]: akhilaaa3, "Jev-Omni" model card, created 2026-09-20, read 2026-09-30. <https://huggingface.co/akhilaaa3/Jev-Omni>
+[^gliner]: fastino, "GLiNER2.5-Decide" model card, created 2026-09-23, read 2026-09-30. <https://huggingface.co/fastino/GLiNER2.5-Decide>
+[^julia]: SupersonicLabs, "Julia-1" model card, measured 2026-09-24, read 2026-09-30. <https://huggingface.co/SupersonicLabs/Julia-1>
+[^td]: LocalLLaMA, "typed-decisions" dataset card and leaderboard, created 2026-09-16, read 2026-09-30. <https://huggingface.co/datasets/LocalLLaMA/typed-decisions>
+[^d1]: vLLM Semantic Router, "Decision-1.0-Eos-0.8B" model card, created 2026-09-21, read 2026-09-30. <https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B>
+[^audit]: Lijuan Tang and Yuemeng Zheng, "Typed Decision Models: An Early Evidence Audit and Evaluation Checklist", arXiv 2609.32160, 2026-09-26. <https://arxiv.org/abs/2609.32160>
+[^openai]: The New Stack, "OpenAI Decision API on Luna", 2026-09-29. <https://thenewstack.io/openai-decision-api-luna/>
