@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 0.1.2 (2026-09-30)
+
 - Landing page redesigned as an editorial composition: two-column hero with a generated illustration,
   a three-step "How a decision works" strip, a typographic numbers row, a pull quote, a bar chart of the
   eight best methods with the top-15 table collapsed beneath it, alternating engine rows, a twelve-chapter
