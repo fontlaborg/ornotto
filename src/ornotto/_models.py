@@ -4,6 +4,10 @@
 A model is a GGUF file plus, for dohnuts, the metadata JSON that selects its profile and temperature (and,
 for kev and Dohnuts, a scorer head). Registered models download from Hugging Face on first use into the
 normal Hugging Face cache. Anything else can be given as a local path or as `hf:owner/repo/file.gguf`.
+
+An ollaya model is a tag in ollaya's own registry (`kev:0.8b`) instead of a file: ollaya pulls it into its
+store (`OLLAYA_MODELS`, default `~/.ollaya/models`) the first time a managed server needs it. Any tag can
+be given as `ollaya:<tag>`.
 """
 
 from __future__ import annotations
@@ -12,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-Engine = Literal["dohnuts", "pcd"]
+Engine = Literal["dohnuts", "pcd", "ollaya"]
 Family = Literal["dedicated", "fine-tuned", "vanilla"]
 
 
@@ -33,6 +37,23 @@ class ModelSpec:
     metadata: str | None = None
     head: str | None = None
     note: str = ""
+    tag: str | None = None
+    """ollaya only: the registry tag, which replaces `repo` and `file`."""
+
+
+def _ollaya(name: str, tag: str, size_gb: float, note: str) -> ModelSpec:
+    """A model that ollaya pulls from its own registry. Every one of them is Apache-2.0."""
+    return ModelSpec(
+        name,
+        f"ollaya-dev/{tag.split(':')[0]}",
+        "",
+        ("ollaya",),
+        "dedicated",
+        "apache-2.0",
+        size_gb,
+        note=note,
+        tag=tag,
+    )
 
 
 MODELS: dict[str, ModelSpec] = {
@@ -122,6 +143,38 @@ MODELS: dict[str, ModelSpec] = {
             2.7,
             note="The most accurate local model on the FontLab router set (64/67).",
         ),
+        ModelSpec(
+            "jevk5-4b",
+            "alibiserikbay/JevK5-GGUF",
+            "jevk5-4b-v0.3-Q4_K_M.gguf",
+            ("pcd",),
+            "fine-tuned",
+            "apache-2.0",
+            2.7,
+            note="JevK5 v0.3, a Qwen3.5-4B decision fine-tune, Q4_K_M. 62/67 with its own letter readout, "
+            "61/67 on pcdServer.",
+        ),
+        ModelSpec(
+            "openjev-35b-a3b",
+            "apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF",
+            "APUS-OpenJev-v1-35B-A3B-Q4_K_M.gguf",
+            ("pcd",),
+            "fine-tuned",
+            "apache-2.0",
+            21.2,
+            note="APUS-OpenJev v1, a Qwen3.5-35B-A3B decision fine-tune, Q4_K_M. "
+            "Needs the machine to itself.",
+        ),
+        _ollaya("ollaya-kev-0.8b", "kev:0.8b", 1.8, "Kev 0.8B (Jared Palmer): LoRA and pointer head, ONNX."),
+        _ollaya("ollaya-decider-0.8b", "decider:0.8b", 1.5, "decider-0.8b (Mapika), slot readout, ONNX."),
+        _ollaya("ollaya-laya-en", "laya:en", 0.9, "Laya (Convai Innovations), ModernBERT-large, 512 tokens."),
+        _ollaya("ollaya-laya-multilingual", "laya:multilingual", 0.7, "Laya multilingual, mmBERT-base."),
+        _ollaya("ollaya-nli-modernbert-large", "nli:modernbert-large", 0.8, "Zero-shot NLI (Moritz Laurer)."),
+        _ollaya("ollaya-gliclass-large", "gliclass:large", 1.8, "GLiClass instruct large (Knowledgator)."),
+        _ollaya("ollaya-von-1.1", "von:1.1", 1.6, "Von 1.1 (Victor Hugo Panisa), ModernBERT-large."),
+        _ollaya("ollaya-decision-eos", "decision:eos", 1.5, "Decision 1.0 Eos (vLLM Semantic Router)."),
+        _ollaya("ollaya-winnow-12b", "winnow:12b", 12.7, "Winnow 12B (EldanRing), Gemma 4, Q8_0 GGUF."),
+        _ollaya("ollaya-clm-8b", "clm:8b", 16.5, "CLM v0.1 8B (Contrastive-LM), Qwen3-8B encoder."),
     )
 }
 
@@ -133,10 +186,12 @@ class ResolvedModel:
     """Files on disk for one model."""
 
     name: str
-    gguf: Path
+    gguf: Path | None
+    """None for an ollaya model, which is a `tag` instead."""
     engines: tuple[Engine, ...]
     metadata: Path | None = None
     head: Path | None = None
+    tag: str | None = None
 
 
 def _download(repo: str, file: str) -> Path:
@@ -151,9 +206,14 @@ def resolve(
     """Turn a registered name, a local .gguf path or `hf:owner/repo/file.gguf` into files on disk.
 
     Registered models download on first use. For an unregistered model on dohnuts, pass `metadata` (the
-    profile JSON) and, for kev or Dohnuts, `head`.
+    profile JSON) and, for kev or Dohnuts, `head`. `ollaya:<tag>` and registered ollaya models resolve to a
+    tag with no file; the ollaya server pulls it.
     """
+    if model.startswith("ollaya:"):
+        return ResolvedModel(model, None, ("ollaya",), tag=model.removeprefix("ollaya:"))
     if spec := MODELS.get(model):
+        if spec.tag:
+            return ResolvedModel(spec.name, None, spec.engines, tag=spec.tag)
         return ResolvedModel(
             spec.name,
             _download(spec.repo, spec.file),

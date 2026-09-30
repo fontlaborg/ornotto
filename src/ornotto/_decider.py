@@ -11,7 +11,7 @@ from typing import Any
 import httpx
 
 from ._engines import Adapter, Server, gpu_available
-from ._models import DEFAULT_MODEL, Engine, resolve
+from ._models import DEFAULT_MODEL, MODELS, Engine, resolve
 from ._protocol import JSON, Answer, Decision, Question, as_question, choice, parse_answer, score, yes_no
 
 QuestionLike = Question | Mapping[str, JSON]
@@ -19,6 +19,12 @@ QuestionLike = Question | Mapping[str, JSON]
 
 class DecisionError(RuntimeError):
     """The engine rejected a request or failed to answer it."""
+
+
+# ollaya error codes that deserve a plainer message than the raw 422 body.
+OLLAYA_ERRORS = {
+    "STATE_TRUNCATED": "the state is longer than {model}'s context; shorten it or use a model with more",
+}
 
 
 class Decider:
@@ -29,8 +35,9 @@ class Decider:
     'fea'
 
     Args:
-        model: a registered name (see `ornotto.MODELS`), a local .gguf path, or `hf:owner/repo/file.gguf`.
-        engine: "dohnuts" or "pcd". Defaults to the first engine the model supports.
+        model: a registered name (see `ornotto.MODELS`), a local .gguf path, `hf:owner/repo/file.gguf`, or an
+            ollaya tag (`ollaya:kev:4b`, or plain `kev:4b` with engine="ollaya").
+        engine: "dohnuts", "pcd" or "ollaya". Defaults to the first engine the model supports.
         url: talk to an engine that is already running instead of starting one.
         gpu: offload to the GPU (Metal on macOS). Defaults to on where the bundled build has a GPU backend.
         metadata, head: dohnuts profile JSON and scorer head, for a model that is not registered.
@@ -54,15 +61,21 @@ class Decider:
         self.gpu = gpu_available() if gpu is None else gpu
         self.timeout = timeout
         self._url = url.rstrip("/") if url else None
+        wire = model
         if url:
             self.model_name, self.engine, self._resolved = model, engine or "dohnuts", None
+            spec = MODELS.get(model)
+            wire = spec.tag if spec and spec.tag else model.removeprefix("ollaya:")
         else:
+            if engine == "ollaya" and model not in MODELS and not model.startswith("ollaya:"):
+                model = "ollaya:" + model
             resolved = resolve(model, metadata=metadata, head=head)
             chosen = engine or resolved.engines[0]
             if chosen not in resolved.engines:
                 raise ValueError(f"{resolved.name} runs on {' or '.join(resolved.engines)}, not {chosen}")
             self.model_name, self.engine, self._resolved = resolved.name, chosen, resolved
-        self.adapter = Adapter(self.engine, self.model_name)
+            wire = resolved.tag or resolved.name
+        self.adapter = Adapter(self.engine, wire)
 
     def __repr__(self) -> str:
         return f"Decider({self.model_name!r}, engine={self.engine!r})"
@@ -113,7 +126,11 @@ class Decider:
 
     def _check(self, response: httpx.Response, qs: Mapping[str, Question]) -> dict[str, JSON]:
         if response.status_code != 200:
-            raise DecisionError(f"{self.engine} answered {response.status_code}: {response.text[:500]}")
+            reply = f"{self.engine} answered {response.status_code}: {response.text[:500]}"
+            for code, hint in OLLAYA_ERRORS.items():
+                if code in response.text:
+                    raise DecisionError(f"{hint.format(model=self.adapter.model_name)} ({reply})")
+            raise DecisionError(reply)
         return self.adapter.response(response.json(), qs)
 
     def _decision(self, raw: list[dict[str, JSON]], start: float) -> Decision:

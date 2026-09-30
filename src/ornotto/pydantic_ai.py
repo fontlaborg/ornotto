@@ -37,7 +37,7 @@ LOCAL_KEY = "ornotto-local"
 
 def provider(decider: Decider) -> TypeSafeProvider:
     """A TypeSafe provider whose requests go to `decider`'s engine."""
-    if decider.engine == "dohnuts":
+    if decider.adapter.native:  # dohnuts and ollaya speak TypeSafe's wire format
         return TypeSafeProvider(api_key=LOCAL_KEY, base_url=decider.url)
 
     async def handle(request: httpx2.Request) -> httpx2.Response:
@@ -71,4 +71,4 @@ def model(
 ) -> TypeSafeModel:
     """A pydantic-ai model on a local engine: pass a model name (with `Decider` options) or a Decider."""
     decider = model if isinstance(model, Decider) else Decider(model, engine=engine, **kwargs)
-    return TypeSafeModel(decider.model_name, provider=provider(decider))
+    return TypeSafeModel(decider.adapter.model_name, provider=provider(decider))
