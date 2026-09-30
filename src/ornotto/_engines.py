@@ -170,8 +170,12 @@ class Server:
 
     @classmethod
     def shared(cls, engine: Engine, model: ResolvedModel, gpu: bool) -> Server:
-        """The running server for this engine, model and device, started on first use."""
-        key = (engine, model.gguf, model.metadata, model.head, model.tag, gpu)
+        """The running server for this engine, model and device, started on first use.
+
+        ollaya picks its own device (OLLAYA_DEVICE) and ignores `gpu`, so the flag is left out of its key:
+        Deciders that differ only in `gpu` share one server, keeping one model resident.
+        """
+        key = (engine, model.gguf, model.metadata, model.head, model.tag, None if engine == "ollaya" else gpu)
         with cls._lock:
             server = cls._running.get(key)
             if server is None or server.process.poll() is not None:
@@ -219,7 +223,8 @@ class Server:
     def _ollaya_load(self, preload: bool) -> None:
         """Pull the tag if the store lacks it, then load it, so the first question does not wait for it."""
         tag = self.model.tag
-        assert tag is not None  # command() refused an ollaya server without one
+        if tag is None:  # command() refuses this too, but asserts vanish under -O
+            raise ValueError(f"{self.model.name} has no ollaya tag")
         full = tag if ":" in tag else tag + ":latest"
         tags = httpx.get(self.url + "/api/tags", timeout=10.0).json().get("models", [])
         if not any(full in (m.get("name"), m.get("model")) for m in tags):

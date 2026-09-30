@@ -9,6 +9,7 @@ import httpx
 import pytest
 
 import ornotto
+from ornotto.__main__ import Cli
 from ornotto._decider import Decider, DecisionError
 from ornotto._engines import (
     Adapter,
@@ -73,9 +74,10 @@ def fake_ollaya(monkeypatch):
 # -- models ------------------------------------------------------------------------------------------------
 
 
-def test_registry_when_any_model_then_default_engine_listed_and_source_consistent():
+def test_registry_when_any_model_then_default_engine_listed_and_source_consistent(monkeypatch):
+    monkeypatch.setattr("ornotto._models._download", lambda repo, file: Path(file))  # no network
     for spec in MODELS.values():
-        assert spec.engines and spec.engines[0] in spec.engines, spec.name
+        assert spec.engines and resolve(spec.name).engines[0] == spec.engines[0], spec.name
         assert spec.size_gb > 0, f"{spec.name} has no size"
         assert spec.file.endswith(".gguf") != bool(spec.tag), (
             f"{spec.name} needs exactly one of a GGUF or a tag"
@@ -272,3 +274,26 @@ def test_engine_ollaya_when_kev_then_one_decision():
     finally:
         ornotto.shutdown()
     assert not Server._running, "ollaya is stopped after the test"
+
+
+def test_shared_when_ollaya_deciders_differ_only_in_gpu_then_one_server(fake_ollaya, monkeypatch):
+    monkeypatch.setattr(Server, "_running", {})
+    on, off = Decider("ollaya:kev:0.8b", gpu=True), Decider("ollaya:kev:0.8b", gpu=False)
+    assert on.url == off.url, "ollaya ignores gpu, so a second resident server would waste memory"
+    assert len(Server._running) == 1
+
+
+def test_cli_pull_when_ollaya_model_then_private_server_started_without_preload_and_stopped(fake_ollaya):
+    assert Cli().pull("ollaya:von:1.1") == "ollaya von:1.1"
+    assert [args for args, _ in fake_ollaya["run"]] == [["pull", "von:1.1"], ["stop"]]
+    assert fake_ollaya["post"] == [], "pull must not load the model"
+
+
+def test_cli_models_when_listed_then_column_fits_longest_name():
+    rows = Cli().models().splitlines()
+    width = max(map(len, MODELS))
+    assert len(rows) == len(MODELS) + 1
+    assert rows[0].startswith("name".ljust(width) + " engines"), "header aligns with the longest name"
+    assert all(row.startswith(name.ljust(width) + " ") for row, name in zip(rows[1:], MODELS, strict=True)), (
+        "every name is padded to the same width"
+    )

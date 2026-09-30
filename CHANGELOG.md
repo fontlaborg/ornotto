@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- ollaya review follow-ups: Deciders that differ only in `gpu` share one ollaya server, a missing tag raises
+  instead of asserting, and the `pull` and `models` commands have tests.
 - New engine `ollaya`: ornotto starts a private `ollaya serve` on a free loopback port (one model, kept
   loaded, `OLLAYA_MODELS` inherited), pulls the tag if the store lacks it, preloads it through
   `/api/decide`, and stops it with `ollaya stop`. Requests go to `/v1/systemone` unchanged; answers are

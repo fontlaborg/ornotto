@@ -21,10 +21,8 @@ class DecisionError(RuntimeError):
     """The engine rejected a request or failed to answer it."""
 
 
-# ollaya error codes that deserve a plainer message than the raw 422 body.
-OLLAYA_ERRORS = {
-    "STATE_TRUNCATED": "the state is longer than {model}'s context; shorten it or use a model with more",
-}
+# The ollaya error code that deserves a plainer message than the raw 422 body.
+STATE_TRUNCATED = "STATE_TRUNCATED"
 
 
 class Decider:
@@ -127,9 +125,12 @@ class Decider:
     def _check(self, response: httpx.Response, qs: Mapping[str, Question]) -> dict[str, JSON]:
         if response.status_code != 200:
             reply = f"{self.engine} answered {response.status_code}: {response.text[:500]}"
-            for code, hint in OLLAYA_ERRORS.items():
-                if code in response.text:
-                    raise DecisionError(f"{hint.format(model=self.adapter.model_name)} ({reply})")
+            if STATE_TRUNCATED in response.text:
+                hint = (
+                    f"the state is longer than {self.adapter.model_name}'s context; "
+                    "shorten it or use a model with more"
+                )
+                raise DecisionError(f"{hint} ({reply})")
             raise DecisionError(reply)
         return self.adapter.response(response.json(), qs)
 
