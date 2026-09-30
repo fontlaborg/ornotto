@@ -497,6 +497,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#how-a-request-reaches-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a request reaches a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#jev" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -646,10 +657,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#option-order-and-the-readouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option order and the readouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-others-found-about-readouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What others found about readouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
         Side by side
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1069,6 +1113,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#how-a-request-reaches-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a request reaches a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#jev" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1218,10 +1273,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#option-order-and-the-readouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option order and the readouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-others-found-about-readouts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What others found about readouts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
         Side by side
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1277,6 +1365,8 @@
 
 <h1 id="3-ways-to-read-an-answer">3. Ways to read an answer<a class="headerlink" href="#3-ways-to-read-an-answer" title="Permanent link">&para;</a></h1>
 <p>A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The readouts in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models a readout can use, how fast it answers, and whether its probabilities mean what they say.</p>
+<p><img alt="Five machines reading the same stream in different ways" src="../img/ch03-five-readouts.png" />
+<em>Each readout in this chapter takes its answer from a different place in the model.</em></p>
 <p>Four words recur in the rest of this book, each with one meaning:</p>
 <ul>
 <li>A <strong>readout</strong> is how the answer is read out of the model: jev's (not public), dohnuts' answer slot, pcdServer's first-token scoring, slot's top-100 log-probabilities, and laya's decision head. The second half of the chapter adds the readouts of the models benchmarked later: a linear head on a hidden state, entailment per option, contrastive similarity, and the readouts that model authors ship in their own servers.</li>
@@ -1285,10 +1375,35 @@
 <li>A <strong>method</strong> is one row of the benchmark: one model file, read by one readout, on one engine or runtime, such as <code>pcdserver@qwen3.5-4b-hmm-q8</code>.</li>
 </ul>
 <p>Two of the readouts belong to the engines the <code>ornotto</code> package bundles, dohnuts and pcdServer, and <code>ornotto</code> can also start ollaya if you install it. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model with a readout of its own.</p>
+<p>Almost every readout in this chapter belongs to one of six families. The answer is read either at a letter the model would write next, at a hidden state through a trained head, at the first token of each allowed value, at a marker in front of each option in an encoder, from an entailment score per option, or from the similarity of two embeddings. Each family gets a diagram in its section below. The diagrams show where the probability comes from, not every step of the engine.</p>
+<h2 id="how-a-request-reaches-a-model">How a request reaches a model<a class="headerlink" href="#how-a-request-reaches-a-model" title="Permanent link">&para;</a></h2>
+<p>Whatever the readout, a local decision in <code>ornotto</code> takes the same path. The package starts one engine process per model, on a free port on the loopback interface, and waits until the engine says it is ready. It then sends the request, receives the engine's reply and turns it into a <code>Decision</code> object. The model itself never sees the System One request: it sees the prompt, or the encoder sequence, that the engine builds from it.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant App as Your code
+    participant Orn as ornotto Decider
+    participant Eng as Engine server
+    participant Mod as Model weights
+    App-&gt;&gt;Orn: decide(state, questions)
+    Orn-&gt;&gt;Eng: start the process on a loopback port
+    Eng-&gt;&gt;Mod: load the GGUF or the registry model
+    Orn-&gt;&gt;Eng: poll until ready
+    Orn-&gt;&gt;Eng: POST /v1/systemone, or /v1/pcd/decode for pcdServer
+    Eng-&gt;&gt;Mod: build the prompt and run one forward pass per row
+    Mod--&gt;&gt;Eng: logits or hidden states at the read position
+    Eng--&gt;&gt;Orn: probability for every allowed answer
+    Orn--&gt;&gt;App: Decision with answers and confidences</code></pre>
+<p>dohnuts and ollaya speak System One themselves, so <code>ornotto</code> forwards the request as it is. pcdServer speaks its own field format, so <code>ornotto</code> translates each question into a field on the way in and the fields back into answers on the way out. If an engine accepts fewer questions per request than you ask, <code>ornotto</code> splits the questions into several requests and joins the answers. <a href="../10-package/#engine-lifecycle">Chapter 10</a> describes the lifecycle from the package's side, and <a href="../11-typed/">chapter 11</a> shows the same path under pydantic-ai.</p>
+<p>The path has one consequence worth keeping in mind when you read the benchmark. The time <code>ornotto</code> reports includes the HTTP round trip to the loopback engine, and the engines differ in how much work they do before the model runs: dohnuts builds its prompt in C++, pcdServer applies a chat template, and slot needs a second round trip to tokenize. <a href="../08-speed/#where-the-time-goes">Chapter 8</a> separates those costs.</p>
 <h2 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h2>
 <p>jev is TypeSafe's hosted System One model. You send the request shape from <a href="../02-decisions/">chapter 2</a> to <code>/v1/systemone</code> and get answers with <code>choice</code>, <code>confidence</code> and <code>probabilities</code>, plus <code>usage.billing_units</code>. Our harness reaches it through OpenRouter's System One API as <code>jev-latest</code>.</p>
 <p>What jev does inside is not public: we know its inputs and outputs, not its prompt or its readout. Its answers are calibrated by its provider. On the router set it scores 65 of 67, translated or direct, at 466 ms per query measured from our client, network included.</p>
 <p>jev matters to the local engines in two ways. It sets the accuracy to beat, and it defined the API that dohnuts and pydantic-ai's <code>TypeSafeModel</code> speak.</p>
+<p>TypeSafe has said a little about the design, in the launch post and in replies on the launch thread. The post names a training method, "Reinforcement Learning for Calibrated Decisions (RLCD)", and a "parallel sampler", and it states that "Jev supports a cardinality up to 255": a question with more options than that is answered in two stages, a score first and a choice after it.<sup id="fnref:jev-launch"><a class="footnote-ref" href="#fn:jev-launch">1</a></sup> Diogo Almeida, TypeSafe's founder, explained on the thread why the API has no string answers: "strings (and all sequential data structures) are not allowed at all - this is how we make sure all outputs can be computed in parallel (thus no output token cost)".<sup id="fnref:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">2</a></sup> He did not describe the architecture: "architecture is close to the chest for now".</p>
+<p>That is still less than the book needs to call jev a readout in the sense of this chapter. The benchmark therefore treats it as a black box with a known interface. Every row of jev in this book measured <code>jev-latest</code>, which pointed to version 1.13.0 whenever it was checked during September 2026 (<a href="../01-deciding/">chapter 1</a>).</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>When the launch thread turned to whether a model that generates no text can hallucinate, Almeida answered with a question: "Would you say a linear classifier hallucinates?"<sup id="fnref3:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">2</a></sup> The point applies to every readout in this chapter. None of them can produce an answer outside the list you gave, and every one of them can put a high probability on the wrong item in that list. <a href="../09-confidence/">Chapter 9</a> is about the second problem.</p>
+</div>
 <h2 id="dohnuts">dohnuts<a class="headerlink" href="#dohnuts" title="Permanent link">&para;</a></h2>
 <p>dohnuts (<a href="https://github.com/DreamBlooms/dohnuts.cpp">dohnuts.cpp</a>) is a C++ server on llama.cpp that runs models trained for System One decisions, each through its own <em>profile</em>. The metadata JSON that ships with a model names the profile:</p>
 <ul>
@@ -1307,8 +1422,20 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Answer: (
 </code></pre></div>
 <p>The model reads the row once. dohnuts takes the logits of the option-letter tokens at the position after <code>Answer: (</code>, divides them by the model's temperature (1.03 for decider-0.8b), and applies a softmax. Nothing is generated: the letter the model would write next is scored, never written.</p>
+<pre class="mermaid"><code>flowchart LR
+    S["State and question"] --&gt; P["Row in the trained layout:&lt;br&gt;Context, Question, Options (A) (B) ...,&lt;br&gt;Answer: ("]
+    P --&gt; F["One forward pass"]
+    F --&gt; L["Logits at the next position"]
+    L --&gt; K["Keep only the option-letter tokens&lt;br&gt;A, B, C, ..."]
+    K --&gt; T["Divide by the fitted temperature"]
+    T --&gt; X["Softmax over the options"]
+    X --&gt; R["Probability per option"]</code></pre>
+<p>This is the <em>answer-slot letter readout</em>, the most common family in the benchmark. decider, Qwen3.5-4B-Hmm read through slot, rune, JevK5, APUS-OpenJev and winnow all read a letter or an option label at one position; they differ in the prompt that leads up to it and in whether a temperature follows. The logits of every other token in the vocabulary are ignored, so the probabilities always sum to one over the options, whatever else the model would have liked to write. The temperature is what separates a calibrated readout from a raw one: the decider recipe fits it per checkpoint and ships it in the metadata, and <a href="../04-models/#decider">chapter 4</a> lists the values.</p>
+<p>Because the letters are tied to positions in the list, this family is the one most exposed to option order. A model that has learnt a preference for <code>(A)</code> will show it on every question. <a href="#option-order-and-the-readouts">Option order and the readouts</a>, below, collects what is known about it.</p>
 <p>Every question is its own row, and an isolated score is one row per level. Upstream dohnuts cleared the model's memory before each row and decoded it from scratch, so a request with four questions paid for its state four times. Our fork reuses the decoded state across the rows of a request; <a href="../08-speed/">chapter 8</a> has the measurements and the pull request.</p>
 <p>dohnuts batches concurrent requests at its queue and says which batch served a call in the <code>X-Dohnuts-Batch-Id</code> and <code>X-Dohnuts-Batch-Offset</code> headers. Its replies carry no timings.</p>
+<p>The kev and Dohnuts profiles do not read a letter. They read hidden states through a head that ships with the model, the family described under <a href="#a-linear-head-on-a-hidden-state-jev-omni">a linear head on a hidden state</a>. One binary can serve both families because the profile, not the server, decides where the model is read.</p>
+<p>Upstream dohnuts changed its reply on 2026-09-23 with a commit titled "Align the systemone API with TypeSafe responses".<sup id="fnref:dohnuts-align"><a class="footnote-ref" href="#fn:dohnuts-align">3</a></sup> Our fork was last updated late on the same day, and upstream has moved on since then. <a href="../12-choosing/#contributing-upstream">Chapter 12</a> describes where the fork stands against upstream.</p>
 <p>The same binary runs on the CPU or, built with <code>-DDOHNUTS_METAL=ON</code> and started with <code>--gpu-layers -1</code>, on Apple's GPU. With decider-0.8b at Q8_0, the Metal build answers a router query in 52 ms and the CPU build (8 threads) in 275 ms, with the same 62 of 67. Qwen3.5 is a hybrid of 18 gated delta-net layers and 6 attention layers, and the delta-net layers dominate CPU time.</p>
 <h2 id="pcdserver">pcdServer<a class="headerlink" href="#pcdserver" title="Permanent link">&para;</a></h2>
 <p>pcdServer (<a href="https://github.com/stephanj/pcdServer">stephanj/pcdServer</a>) implements Parallel Constrained Decoding. It runs any chat GGUF that llama.cpp supports and needs no special training, because it asks the model to write a JSON object and then scores only the tokens that could legally come next.</p>
@@ -1335,6 +1462,19 @@
 <li><strong>Scoring.</strong> pcdServer applies a softmax over the first tokens of the allowed values only. A boolean field ends at the colon, so the scored tokens are <code>true</code> and <code>false</code>.</li>
 </ol>
 <p>The expensive part, the context, is decoded once however many fields a request has. Each extra field adds only a short suffix to one batch.</p>
+<pre class="mermaid"><code>flowchart LR
+    Q["Fields with allowed values"] --&gt; C["Chat prompt:&lt;br&gt;system turn lists every field,&lt;br&gt;user turn holds the state"]
+    C --&gt; O["Assistant turn opens the JSON object"]
+    O --&gt; M["One member prefix per field:&lt;br&gt;  task: and an opening quote"]
+    M --&gt; L["Logits at the last token of each prefix"]
+    L --&gt; A["Keep only the first tokens&lt;br&gt;of the allowed values"]
+    A --&gt; X["Softmax over those tokens, no temperature"]
+    X --&gt; D{"Two values share&lt;br&gt;the first token?"}
+    D -- "no" --&gt; R["Probability per value"]
+    D -- "yes" --&gt; E["Expand the winning group&lt;br&gt;by one more token"]
+    E --&gt; L</code></pre>
+<p>This is the <em>constrained first-token</em> family, and pcdServer is its only member in the benchmark. It needs no training because the model is doing what it was trained for, writing the next token of a JSON answer, and the server only restricts which tokens count. <a href="../08-speed/#the-schema-cache-in-pcdserver">Chapter 8</a> draws the same decode from the timing side, with the schema checkpoint in it.</p>
+<p>Not everyone agrees that restricting tokens is a good way to ask a model. On jev's launch thread, Almeida wrote that "constrained decoding (OpenAI-style structured outputs) make models dumber unfortunately", and that "if ever a model was assigning probability to an invalid token, the model is by definition confused."<sup id="fnref2:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">2</a></sup> pcdServer throws that probability away and renormalises over the valid tokens, so a confused model can still return a confident answer. The benchmark offers some evidence on both sides. The same decider-0.8b weights scored 62 through their trained slot and 55 through pcdServer. A chat model tuned for decisions, Qwen3.5-4B-Hmm, scored 64 and 65 through pcdServer, the best local result, and fewer through its own letter readout (<a href="../06-results/">chapter 6</a>).</p>
 <h3 id="the-collision-tree">The collision tree<a class="headerlink" href="#the-collision-tree" title="Permanent link">&para;</a></h3>
 <p>Two allowed values can start with the same token, such as <code>kern pair</code> and <code>kern class</code>. pcdServer then resolves them level by level: the winning group of the first token stays live and is expanded with its next token, until every live candidate differs. <code>levels</code> in the reply reports how many levels were needed, and each level costs another forward pass. In one of our FontLab examples, the choices <code>kern pair</code>, <code>kern class</code>, <code>kerning panel settings</code> and <code>class definition</code> needed 3 levels and 5 forward passes.</p>
 <p>Only the winning group is expanded. A losing group's probability is split <strong>equally</strong> among its members, so two losing options that share a first token always report the same probability, whatever the model thought of them. In a 14-option panel example, "Font Info" and "Font Audit" both came back at 0.0105. If the probability of an alternative matters to you, give it a distinct first word.</p>
@@ -1356,24 +1496,74 @@
 </li>
 </ul>
 <p>A letter that falls outside the top 100 tokens gets probability 0, and the harness counts it as a miss.</p>
+<p>slot depends on one feature of llama-server, the <code>n_probs</code> list of top candidates, and on nothing that is specific to decision models. That makes it the easiest readout to keep running as llama.cpp changes. None of the llama.cpp releases between 2026-09-09 and 2026-09-30 touched the log-probability output or <code>n_probs</code>, so the slot rows stay valid for newer servers as far as the readout is concerned.<sup id="fnref:llamacpp-releases"><a class="footnote-ref" href="#fn:llamacpp-releases">4</a></sup></p>
 <p>Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. pcdServer could not serve the Gemma 4 files at all: it answered every request with HTTP 422, so rune has no pcdServer rows.</p>
 <p>slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.</p>
 <h2 id="laya">laya<a class="headerlink" href="#laya" title="Permanent link">&para;</a></h2>
 <p>laya (<a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya</a>) is not a language model. It is a multilingual encoder, mmBERT-base, with a decision head trained for System One questions. Its input is one sequence:</p>
 <div class="language-text highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[CLS] choice question: &lt;instructions&gt; [SEP] [MASK] &lt;option 1&gt; [MASK] &lt;option 2&gt; … [SEP] &lt;state&gt; [SEP]
 </code></pre></div>
-<p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet.</p>
+<p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet (<a href="../09-confidence/#the-abstain-signal-nobody-used">chapter 9</a>).</p>
+<pre class="mermaid"><code>flowchart LR
+    Q["Question, options and state"] --&gt; S["One encoder sequence:&lt;br&gt;CLS, question, SEP,&lt;br&gt;MASK option 1, MASK option 2, ...,&lt;br&gt;SEP, state, SEP"]
+    S --&gt; E["One encoder pass, no decoding"]
+    E --&gt; H["Hidden state at each MASK"]
+    H --&gt; D["Decision head: one score per option"]
+    D --&gt; T["Temperature by bucket:&lt;br&gt;number of options, question type"]
+    T --&gt; X["Softmax over the options"]
+    E --&gt; A["Act head:&lt;br&gt;answer or escalate"]</code></pre>
+<p>This is the <em>encoder marker</em> family. GLiNER2.5-Decide, von and Julia-1, described under <a href="#more-encoders">more encoders</a>, read the same way: a marker in front of each option, one hidden state per marker, one score per option. The whole input is read in both directions at once, so, unless the model restricts attention as von does, every option can see the state and the other options. The cost is the input budget: an encoder has a fixed maximum length, and the question, every option and the state have to share it.</p>
+<p>laya's README states two details that matter when you compare it with jev. Its <code>confidence</code> is one minus the normalised entropy of the distribution, which the README notes is "not Jev's (n·p_max − 1)/(n − 1)", so the two services can report different confidences for the same distribution.<sup id="fnref:laya-readme"><a class="footnote-ref" href="#fn:laya-readme">5</a></sup> And its option budget is counted in tokens, <code>head_max_len</code> of 192 or 256 tokens, "not Jev's cap of 255 options". The same README also reports what happens outside the languages a checkpoint was trained on: the English checkpoint, given Khmer, scored "0.000 accuracy at 0.952 confidence". That is the encoder family's version of the lesson in <a href="../09-confidence/">chapter 9</a>: a confident answer can be read from any input, whether the model understood it or not.</p>
 <p>An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.</p>
 <p>The same checkpoint ran on eight engines and runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client (with the head in Python, or converted to GGUF), laya.cpp, which also serves the kev GGUFs, and ollaya. <a href="../06-results/">Chapter 6</a> lists them all.</p>
 <h2 id="a-linear-head-on-a-hidden-state-jev-omni">A linear head on a hidden state: Jev-Omni<a class="headerlink" href="#a-linear-head-on-a-hidden-state-jev-omni" title="Permanent link">&para;</a></h2>
 <p><a href="https://huggingface.co/akhilaaa3/Jev-Omni">Jev-Omni</a> is a Gemma 4 12B-class model with a trained 256-way linear decision head over the hidden state of the prompt's last token. The GGUF conversions at <a href="https://huggingface.co/ngquocvinh/Jev-Omni-GGUF">ngquocvinh/Jev-Omni-GGUF</a> hold the backbone only. The head ships beside them as a float32 NumPy file.</p>
 <p>llama.cpp does not know the head, so the benchmark starts a stock llama-server as an embedding server with <code>--embedding --pooling none</code>, takes the hidden state of the last token, and applies the head and a softmax on the client. This is the <code>llama.cpp embeddings + head</code> engine in the tables, which also runs laya's Q4_0 encoders with a head GGUF. The MLX build, <a href="https://huggingface.co/Ruiruiz30/Jev-Omni-MLX-4bit">Ruiruiz30/Jev-Omni-MLX-4bit</a>, runs the same head in process with a temperature of 1.115.</p>
 <p>The Q3_K_M file scored 64/67 in both modes, and the Q5_K_M and Q8_0 files 63/67. At 1.1 to 1.2 seconds per query, it is slower than every other method that scored 63 or more, except lev. The MLX 4-bit build scored 61/67 at 780 ms.</p>
+<p>Jev-Omni and kev belong to the same family: a trained head reads one or more hidden states of a decoder, and nothing is read from the vocabulary. They differ in where the head looks.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph JO["Jev-Omni: linear head"]
+        J1["Prompt with the state,&lt;br&gt;question and options"] --&gt; J2["Hidden state of the last token"]
+        J2 --&gt; J3["256-way linear head"]
+        J3 --&gt; J4["Keep the rows of the listed options"]
+    end
+    subgraph KV["kev: pointer head"]
+        K1["Prompt with a decide marker&lt;br&gt;and an end marker per option"] --&gt; K2["Hidden state at the decide marker"]
+        K1 --&gt; K3["Hidden state at the end of each option"]
+        K2 --&gt; K4["Project both, take the dot product"]
+        K3 --&gt; K4
+    end
+    J4 --&gt; X["Softmax over the options"]
+    K4 --&gt; X
+    X --&gt; R["Probability per option"]</code></pre>
+<p>A pointer head scores each option by comparing it with the decision point, so the number of options is limited by the prompt length rather than by the head. A fixed linear head has one output per code, so its width is a hard limit. imajev's 255 option codes plus one <code>unknown</code> code match the 255-option limit that TypeSafe states for jev, and Jev-Omni's head has 256 outputs. NeoHorse-Jev-4B and leo-1.7b, under <a href="#servers-that-model-authors-publish">servers that model authors publish</a>, are pointer heads of the kev kind, and Dohnuts' scalar head at each candidate marker is a close relative.</p>
 <h2 id="entailment-per-option-semif">Entailment per option: semif<a class="headerlink" href="#entailment-per-option-semif" title="Permanent link">&para;</a></h2>
 <p><a href="https://huggingface.co/jacksodj/semif-4b-nli-v5-mlx">semif</a> is a Qwen3.5-4B cross-encoder for natural-language inference, converted to MLX. Its head classifies a text pair as contradiction, entailment or neutral, so it answers one option at a time. The benchmark pairs the state with one hypothesis per option, reads the probability of entailment for each, and renormalises over the options. That renormalisation is our choice; the model does not define a multi-option answer.</p>
 <p>semif scored 51/67 translated and 49/67 direct, at 121 ms. ollaya's <code>nli:modernbert-large</code> reads a zero-shot NLI encoder the same way, one pair per option, and scored 20/67.</p>
+<pre class="mermaid"><code>flowchart LR
+    S["State"] --&gt; P1["Pair: state + hypothesis for option 1"]
+    S --&gt; P2["Pair: state + hypothesis for option 2"]
+    S --&gt; Pn["Pair: state + hypothesis for option n"]
+    P1 --&gt; C["Cross-encoder, one pass per pair:&lt;br&gt;contradiction, entailment, neutral"]
+    P2 --&gt; C
+    Pn --&gt; C
+    C --&gt; E["Keep p(entailment) for each option"]
+    E --&gt; N["Renormalise over the options"]
+    N --&gt; R["Probability per option"]</code></pre>
+<p>The <em>entailment per option</em> family was not built for a closed list. Each pair is judged on its own, so the model never compares two options with each other, and two options that both follow from the state can both score high. The renormalisation turns those independent judgements into a distribution, but the model did not produce one. The cost also grows with the list: one pass per option, where the readouts above need one pass for the whole question. Pulse Decide 150M, a pair cross-encoder with a value head, has the same shape and the same limits.</p>
 <h2 id="contrastive-similarity-clm">Contrastive similarity: CLM<a class="headerlink" href="#contrastive-similarity-clm" title="Permanent link">&para;</a></h2>
 <p><a href="https://huggingface.co/Contrastive-LM/CLM-v0.1-8B">CLM-v0.1-8B</a> embeds the state and each option and compares them. A frozen Qwen3-8B encodes each text with last-token pooling, a state head and an action head project the two embeddings, and the score of an option is their cosine similarity times a learned scale capped at 100, followed by a softmax over the options.</p>
+<pre class="mermaid"><code>flowchart LR
+    S["State"] --&gt; B1["Frozen Qwen3-8B,&lt;br&gt;last-token pooling"]
+    O["Each option"] --&gt; B2["Frozen Qwen3-8B,&lt;br&gt;last-token pooling"]
+    B1 --&gt; H1["State head"]
+    B2 --&gt; H2["Action head"]
+    H1 --&gt; C["Cosine similarity per option"]
+    H2 --&gt; C
+    C --&gt; K["Times a learned scale, at most 100"]
+    K --&gt; X["Softmax over the options"]
+    X --&gt; R["Probability per option"]</code></pre>
+<p>In the <em>contrastive</em> family the option texts carry most of the meaning of the decision, and the state is matched to whichever option it most resembles in the learned space. Because each option is embedded on its own, an option's embedding can in principle be computed once and reused for every request that offers the same option.</p>
 <p>The GGUF builds (<a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">czl/CLM-v0.1-8B-GGUF</a>) run in llama-server with <code>--pooling last</code>, and the heads run in the authors' <code>clm-serve</code>, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. Every CLM method scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.</p>
 <h2 id="servers-that-model-authors-publish">Servers that model authors publish<a class="headerlink" href="#servers-that-model-authors-publish" title="Permanent link">&para;</a></h2>
 <p>Several decision models ship with a server of their own that answers the System One request from <a href="../02-decisions/">chapter 2</a>. The benchmark sends each one the request it sends jev, and the tables list them under the engine <em>System One server</em>. The readouts behind that one API differ:</p>
@@ -1408,6 +1598,49 @@
 <li><strong>Lumma-fev-0.6b</strong> (<a href="https://huggingface.co/FrontiersMind/Lumma-fev-0.6b">FrontiersMind/Lumma-fev-0.6b</a>) is not an encoder but a small decoder trained from scratch, read by a pointer head over the end of each option in a single prefill. 33/67 in PyTorch.</li>
 </ul>
 <p>laya itself came back in four new builds. The Q4_0 encoders with head GGUFs from <a href="https://huggingface.co/wigcheng5566/laya-neutron-gguf">wigcheng5566/laya-neutron-gguf</a>, on llama.cpp embeddings, gave the best laya score so far, 54/67 at 43 ms; the English encoder in the same format scored 46/67. The MXFP8 and MXFP4 conversions on MLX scored 53/67 and 44/67, and a third ONNX export 52/67.</p>
+<h2 id="option-order-and-the-readouts">Option order and the readouts<a class="headerlink" href="#option-order-and-the-readouts" title="Permanent link">&para;</a></h2>
+<p>Every readout above sees the options in some order and under some name, and several of them are sensitive to both. The families handle it differently:</p>
+<ul>
+<li><strong>Letter readouts</strong> tie each option to a letter by its position, so a shuffled list is a different prompt. Order effects are not limited to them: the authors of OpenJev report on their model card that answers flipped in 18.5% of cases when the options were shuffled before their tuning, and in 2.3% after it.<sup id="fnref:openjev-card"><a class="footnote-ref" href="#fn:openjev-card">6</a></sup></li>
+<li><strong>lev</strong> reads its one-token codes in two option orders and averages the two readings, at the price of a second pass.</li>
+<li><strong>von</strong> 1.2 is order-invariant by construction: each option attends only to the shared prefix and to itself, so moving an option cannot change its score.</li>
+<li><strong>Entailment and contrastive readouts</strong> score each option on its own and have no position to be biased by. Their weakness is the opposite one: the options never see each other.</li>
+</ul>
+<p>Names matter as much as order. A paper posted on 2026-09-22 changed only how option names were assigned to the same rubric, and reports that renaming the options <code>0</code> and <code>1</code> to <code>no</code> and <code>yes</code> moved the AUC of open jev-like models from .94 to .23, and of hosted jev from .8146 to .5806, while the rate of type errors stayed at 0%.<sup id="fnref:option-names"><a class="footnote-ref" href="#fn:option-names">7</a></sup> The answer stayed well formed and became wrong. <a href="../02-decisions/">Chapter 2</a> shows how to write options that survive this, and the router set's fixed option names are one reason our results should not be read as a ranking on other questions.</p>
+<h2 id="what-others-found-about-readouts">What others found about readouts<a class="headerlink" href="#what-others-found-about-readouts" title="Permanent link">&para;</a></h2>
+<p>The benchmark in this book compares readouts on one question. Others have compared them on many, and their findings point the same way: the readout matters less than the model behind it.</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>Eleven days after jev's launch, Lijuan Tang and Yuemeng Zheng reviewed 28 papers posted between 19 and 24 September. Their conclusion: "the typed readout itself has not shown an independent accuracy advantage over comparable label-probability readouts. Jev's clearest gains are in latency and cost".<sup id="fnref:evidence-audit"><a class="footnote-ref" href="#fn:evidence-audit">8</a></sup></p>
+</div>
+<p>The Decision 1.0 model card from the vLLM Semantic Router project offers a comparison of readouts on its own benchmark of 54 tasks and 3,766 questions. It includes a stock Qwen3.5-2B read through a letter readout, next to trained heads. These are the card's figures, measured by its authors, and they are not comparable with the router set:<sup id="fnref:decision-card"><a class="footnote-ref" href="#fn:decision-card">9</a></sup></p>
+<table>
+<thead>
+<tr>
+<th>Model, readout</th>
+<th style="text-align: right;">Overall, Decision 1.0 benchmark (card, read 2026-09-30)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision 1.0 Eos-0.8B, trained endpoint head</td>
+<td style="text-align: right;">61.89</td>
+</tr>
+<tr>
+<td>Kev 0.8B, pointer head</td>
+<td style="text-align: right;">58.28</td>
+</tr>
+<tr>
+<td>Qwen3.5-2B, letter readout, no decision training</td>
+<td style="text-align: right;">57.24</td>
+</tr>
+<tr>
+<td>Laya English, encoder marker head</td>
+<td style="text-align: right;">51.03</td>
+</tr>
+</tbody>
+</table>
+<p>On the router set the same three dedicated models came in a different order (kev 0.8B in ollaya ahead of Decision Eos, laya English well behind), which is a reminder that a ranking belongs to its benchmark. What carries over is the place of the untrained letter readout, close to the trained heads: that is the vanilla-model result of <a href="../04-models/#vanilla-models">chapter 4</a> seen from outside.</p>
 <h2 id="side-by-side">Side by side<a class="headerlink" href="#side-by-side" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1552,6 +1785,57 @@
 </tr>
 </tbody>
 </table>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<p>Both engines that <code>ornotto</code> bundles were written in September 2026, and both still build against the llama.cpp of mid-September. The readouts in this chapter did not change during the month. The ground under them did:</p>
+<ul>
+<li><strong>Both engines pin llama.cpp v0.4.1</strong>, released on 2026-09-14. dohnuts carries it as a submodule and pcdServer fetches the tag when it builds.<sup id="fnref:dohnuts-repo"><a class="footnote-ref" href="#fn:dohnuts-repo">10</a></sup><sup id="fnref:pcdserver-repo"><a class="footnote-ref" href="#fn:pcdserver-repo">11</a></sup></li>
+<li><strong>llama.cpp moved on.</strong> v0.5.0 followed on 2026-09-23, and build b11236 on 2026-09-28 migrated the server, speculative decoding and multimodal code to <code>llama_batch_ext</code>.<sup id="fnref:llamacpp-batch"><a class="footnote-ref" href="#fn:llamacpp-batch">12</a></sup> Code that builds a <code>llama_batch</code> by hand will probably need porting past that point. Whether dohnuts and pcdServer do has not been tried.</li>
+<li><strong>Nothing touched the log-probabilities.</strong> No release in the month changed the log-probability output or <code>n_probs</code>, so the slot readout is unaffected.<sup id="fnref2:llamacpp-releases"><a class="footnote-ref" href="#fn:llamacpp-releases">4</a></sup></li>
+<li><strong>New server options.</strong> Build b11223 on 2026-09-27 added RANK pooling for causal rerankers, and b11240 on 2026-09-28 accepted images at <code>/v1/embeddings</code>. Neither is used here, but both are new ways to run a head on a hidden state from a stock llama-server, as the Jev-Omni and laya rows do.</li>
+<li><strong>pcdServer has been quiet.</strong> Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.<sup id="fnref2:pcdserver-repo"><a class="footnote-ref" href="#fn:pcdserver-repo">11</a></sup> It still cannot serve the Gemma 4 files. Fixes for it would be ours to carry or to send upstream.</li>
+<li><strong>dohnuts kept moving.</strong> Upstream aligned its System One replies with TypeSafe's on 2026-09-23, merged our prefix-reuse change on 2026-09-24, added its own cache of decoded prefixes across calls eight minutes after the merge, and added a new Dohnuts-family model and a flash-attention switch on 2026-09-29.<sup id="fnref2:dohnuts-repo"><a class="footnote-ref" href="#fn:dohnuts-repo">10</a></sup> <a href="../08-speed/#prefix-caching-in-dohnuts">Chapter 8</a> covers the caches, <a href="../04-models/">chapter 4</a> the models, and <a href="../12-choosing/#contributing-upstream">chapter 12</a> the state of our fork.</li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:jev-launch">
+<p>Diogo Almeida, TypeSafe, "Introducing System One Models &amp; Jev", 2026-09-15. <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">https://typesafe.ai/blog/introducing-system-one-models-and-jev</a>&#160;<a class="footnote-backref" href="#fnref:jev-launch" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hn-launch">
+<p>Hacker News, launch thread for jev, replies by Diogo Almeida, 2026-09-15. <a href="https://news.ycombinator.com/item?id=49717558">https://news.ycombinator.com/item?id=49717558</a>&#160;<a class="footnote-backref" href="#fnref:hn-launch" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:hn-launch" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:hn-launch" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dohnuts-align">
+<p>DreamBlooms, dohnuts.cpp commit 9a894b0e, "Align the systemone API with TypeSafe responses", 2026-09-23. <a href="https://github.com/DreamBlooms/dohnuts.cpp/commit/9a894b0e">https://github.com/DreamBlooms/dohnuts.cpp/commit/9a894b0e</a>&#160;<a class="footnote-backref" href="#fnref:dohnuts-align" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llamacpp-releases">
+<p>ggml-org, llama.cpp releases b10873 to b11268, 2026-09-09 to 2026-09-30. <a href="https://github.com/ggml-org/llama.cpp/releases">https://github.com/ggml-org/llama.cpp/releases</a>&#160;<a class="footnote-backref" href="#fnref:llamacpp-releases" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:llamacpp-releases" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:laya-readme">
+<p>NandhaKishorM, laya README, read 2026-09-30. <a href="https://github.com/NandhaKishorM/laya">https://github.com/NandhaKishorM/laya</a>&#160;<a class="footnote-backref" href="#fnref:laya-readme" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:openjev-card">
+<p>openjev, "openjev" model card, 2026-09-20, read 2026-09-30. <a href="https://huggingface.co/openjev/openjev">https://huggingface.co/openjev/openjev</a>&#160;<a class="footnote-backref" href="#fnref:openjev-card" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:option-names">
+<p>Yu Sun, Junhao Xu, Jiajia Shi and Zijin Yang, "Type-Safe Is Not Error-Free: A Constrained Decision Head Follows the Option Name, Not the Rubric Bound to It", arXiv 2609.26758, 2026-09-22. <a href="https://arxiv.org/abs/2609.26758">https://arxiv.org/abs/2609.26758</a>&#160;<a class="footnote-backref" href="#fnref:option-names" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:evidence-audit">
+<p>Lijuan Tang and Yuemeng Zheng, "Typed Decision Models: An Early Evidence Audit and Evaluation Checklist", arXiv 2609.32160, 2026-09-26. <a href="https://arxiv.org/abs/2609.32160">https://arxiv.org/abs/2609.32160</a>&#160;<a class="footnote-backref" href="#fnref:evidence-audit" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decision-card">
+<p>vLLM Semantic Router, "Decision-1.0-Eos-0.8B" model card, 2026-09-21, read 2026-09-30. <a href="https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B">https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B</a>&#160;<a class="footnote-backref" href="#fnref:decision-card" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dohnuts-repo">
+<p>DreamBlooms, dohnuts.cpp repository and commit history, read 2026-09-30. <a href="https://github.com/DreamBlooms/dohnuts.cpp">https://github.com/DreamBlooms/dohnuts.cpp</a>&#160;<a class="footnote-backref" href="#fnref:dohnuts-repo" title="Jump back to footnote 10 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:dohnuts-repo" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pcdserver-repo">
+<p>stephanj, pcdServer repository, v0.1.0, 2026-09-18, read 2026-09-30. <a href="https://github.com/stephanj/pcdServer">https://github.com/stephanj/pcdServer</a>&#160;<a class="footnote-backref" href="#fnref:pcdserver-repo" title="Jump back to footnote 11 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:pcdserver-repo" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llamacpp-batch">
+<p>ggml-org, llama.cpp pull request 29385, "batch: migrate speculative, mtmd and server to batch_ext", merged 2026-09-28. <a href="https://github.com/ggml-org/llama.cpp/pull/29385">https://github.com/ggml-org/llama.cpp/pull/29385</a>&#160;<a class="footnote-backref" href="#fnref:llamacpp-batch" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1609,7 +1893,9 @@
       <a href="../04-models/" rel="next">4. Dedicated, fine-tuned and vanilla models →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 

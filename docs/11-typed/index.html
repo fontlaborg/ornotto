@@ -901,6 +901,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#which-versions-this-chapter-describes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which versions this chapter describes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#how-requests-reach-the-engine" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -949,6 +960,67 @@
     <span class="md-ellipsis">
       
         Which model to put behind an agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What changed in September 2026">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typesafemodel-under-decisionmodel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeSafeModel under DecisionModel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemonemodel-not-yet-merged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SystemOneModel, not yet merged
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesafe-sdk-07-and-ordered-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        typesafe-sdk 0.7 and ordered criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-paths-to-jev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two paths to jev
       
     </span>
   </a>
@@ -1093,6 +1165,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#which-versions-this-chapter-describes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which versions this chapter describes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#how-requests-reach-the-engine" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1141,6 +1224,67 @@
     <span class="md-ellipsis">
       
         Which model to put behind an agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What changed in September 2026">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typesafemodel-under-decisionmodel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeSafeModel under DecisionModel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemonemodel-not-yet-merged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SystemOneModel, not yet merged
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typesafe-sdk-07-and-ordered-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        typesafe-sdk 0.7 and ordered criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-paths-to-jev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two paths to jev
       
     </span>
   </a>
@@ -1340,6 +1484,9 @@
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Triage(task='fea', wants_code=True)</span>
 </code></pre></div>
 <p><code>model(model="decider-0.8b", *, engine=None, **kwargs)</code> takes a model name with the same options as <code>Decider</code>, or a <code>Decider</code> you already have. It returns a <code>TypeSafeModel</code> whose provider points at that Decider's engine. pydantic-ai 2.48 prints an observability banner on the first run; set <code>PYDANTIC_AI_NO_BANNER=1</code> to turn it off.</p>
+<h3 id="which-versions-this-chapter-describes">Which versions this chapter describes<a class="headerlink" href="#which-versions-this-chapter-describes" title="Permanent link">&para;</a></h3>
+<p>The <code>pydantic-ai</code> extra asks for <code>pydantic-ai-slim[typesafe]</code> 2.48 or later. The lock file that the tests run against pins pydantic-ai-slim 2.48.0 and typesafe-sdk 0.7.1, and everything in this chapter was checked with those two versions. pydantic-ai moved on during September 2026 (<a href="#what-changed-in-september-2026">below</a>), and a fresh install without the lock may pull a later release. We have not run ornotto against pydantic-ai 2.50 or 2.51. If an import from <code>pydantic_ai.models.typesafe</code> or <code>pydantic_ai.providers.typesafe</code> fails after an upgrade, pin <code>pydantic-ai-slim==2.48.0</code> until ornotto catches up.</p>
+<p>The adapter is small on purpose. <code>ornotto.pydantic_ai</code> imports three names from outside the package: <code>TypeSafeModel</code>, <code>TypeSafeProvider</code> and <code>AsyncTypeSafeClient</code>. It adds no model class of its own. Everything the agent does with the answers, from thresholds to tool calls, is pydantic-ai's code, and ornotto only decides where the request goes.</p>
 <h3 id="how-requests-reach-the-engine">How requests reach the engine<a class="headerlink" href="#how-requests-reach-the-engine" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart LR
   A[Agent] --&gt; T[TypeSafeModel]
@@ -1348,7 +1495,22 @@
 <ul>
 <li><strong>dohnuts</strong>: the provider is a <code>TypeSafeProvider</code> with the engine's loopback URL as <code>base_url</code>. The TypeSafe client sends its request straight to dohnuts, which answers it natively. The API key is a fixed placeholder, because the client requires one and the local engine checks none.</li>
 <li><strong>pcdServer</strong>: pcdServer does not speak System One. The provider's HTTP client has an in-process transport that catches each <code>/v1/systemone</code> request, translates the questions into pcdServer fields (<a href="../03-engines/">chapter 3</a>), calls the engine through the <code>Decider</code>, and returns a System One response. The transport also answers <code>GET /v1/models</code> with the one local model. Nothing leaves the process except the call to the loopback engine.</li>
+<li><strong>ollaya</strong>: ollaya answers <code>/v1/systemone</code> itself, as dohnuts does, so an ollaya model gets the same direct provider with the engine's loopback URL. ollaya's own site says that "The official TypeSafe Python SDK 0.7.1 works unchanged against a local server."<sup id="fnref:ollaya-site"><a class="footnote-ref" href="#fn:ollaya-site">1</a></sup> The integration tests exercise the dohnuts and pcdServer paths; the ollaya path uses the same provider code as dohnuts but has no agent test of its own.</li>
 </ul>
+<p>For pcdServer, one agent step makes three hops, all inside your machine:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant A as Agent
+    participant T as TypeSafeModel
+    participant X as ornotto transport
+    participant P as pcdServer
+    A-&gt;&gt;T: run: prompt and output_type
+    T-&gt;&gt;X: POST /v1/systemone&lt;br&gt;state and questions
+    X-&gt;&gt;X: questions to pcdServer fields
+    X-&gt;&gt;P: POST /v1/pcd/decode
+    P--&gt;&gt;X: values and probabilities per field
+    X--&gt;&gt;T: System One answers
+    T--&gt;&gt;A: validated output</code></pre>
+<p>The translation step is the same code that <code>Decider.decide</code> uses, so an agent on pcdServer and a plain <code>decide</code> call on pcdServer send the engine the same fields. The response the transport builds reports zero input and output tokens: a local engine has no bill, and the usage counters in pydantic-ai's run summary stay at zero.</p>
 <h3 id="what-an-output-type-may-contain">What an output type may contain<a class="headerlink" href="#what-an-output-type-may-contain" title="Permanent link">&para;</a></h3>
 <p>pydantic-ai's <code>TypeSafeModel</code> decides which field types it can express, and refuses the rest with a <code>UserError</code> before any request. Its documentation lists:</p>
 <table>
@@ -1422,8 +1584,106 @@
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">FallbackModel</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">),</span> <span class="s2">"anthropic:claude-sonnet-5"</span><span class="p">),</span> <span class="n">output_type</span><span class="o">=</span><span class="n">Triage</span><span class="p">)</span>
 </code></pre></div>
 <p><code>TypeSafeModel</code> refuses plain text output, native tools, and files in the prompt or history. A local engine cannot produce any of them either.</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>On the Latent Space episode with TypeSafe's chief executive, Diogo Almeida, on 2026-09-21, the host swyx summed up the argument as one that "makes the case that you should always make one or 10 or 100 Jev calls for every one reasoning call that you make."<sup id="fnref:latent-space"><a class="footnote-ref" href="#fn:latent-space">2</a></sup> A <code>FallbackModel</code> with a local engine in front is that ratio run on your own machine: the decisions stay local, and the language model is called only for the steps a decision cannot finish.</p>
+</div>
 <h3 id="which-model-to-put-behind-an-agent">Which model to put behind an agent<a class="headerlink" href="#which-model-to-put-behind-an-agent" title="Permanent link">&para;</a></h3>
 <p>On the FontLab router question, decider-0.8b on dohnuts is the faster of the two and Qwen3.5-4B-Hmm on pcdServer the more accurate (<a href="../06-results/">chapter 6</a> has the figures). Through pydantic-ai the prompt differs from the benchmark's, so treat that as a ranking, not a promise. In our own integration tests, decider-0.8b on pcdServer, which reads it without its trained answer slot, got the task of a short Python request wrong where the same model on dohnuts got it right. If you run a dedicated model, run it on dohnuts.</p>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<p><code>TypeSafeModel</code> is young. TypeSafe launched jev on 2026-09-15, <code>TypeSafeModel</code> arrived in pydantic-ai 2.45.0 on 2026-09-18, and pydantic-ai kept releasing through the rest of the month. The typesafe-sdk package that it depends on had two breaking releases in the same weeks. None of the changes below alters how ornotto's adapter works with the locked versions, but each one changes what a newer install looks like.</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Release</th>
+<th>What changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-15</td>
+<td>typesafe-sdk 0.6.0</td>
+<td><code>Score.criteria</code> becomes an ordered sequence, not a dict keyed by integers (breaking)</td>
+</tr>
+<tr>
+<td>2026-09-18</td>
+<td>pydantic-ai 2.45.0</td>
+<td><code>TypeSafeModel</code> for jev</td>
+</tr>
+<tr>
+<td>2026-09-18</td>
+<td>typesafe-sdk 0.7.0</td>
+<td>serialisation moves from msgspec to pydantic; <code>response_model</code> argument (breaking)</td>
+</tr>
+<tr>
+<td>2026-09-19</td>
+<td>pydantic-ai 2.46.0</td>
+<td>tool-argument filling, <code>typesafe_boolean_threshold</code>, union outputs, a refusal when a question has too many options</td>
+</tr>
+<tr>
+<td>2026-09-21</td>
+<td>typesafe-sdk 0.7.1</td>
+<td>early API-key validation; the version ornotto locks</td>
+</tr>
+<tr>
+<td>2026-09-24</td>
+<td>pydantic-ai 2.49.0</td>
+<td>"None of these" handling for optional fields</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>pydantic-ai 2.50.0</td>
+<td><code>DecisionModel</code> becomes the base class, <code>TypeSafeModel</code> one subclass</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>pydantic-ai 2.51.0</td>
+<td>latest release on 2026-09-30</td>
+</tr>
+<tr>
+<td>2026-09-26</td>
+<td>typesafe-sdk 0.7.2</td>
+<td>an <code>http2</code> extra</td>
+</tr>
+</tbody>
+</table>
+<p>The dates come from the pydantic-ai releases page and the typesafe-sdk changelog.<sup id="fnref:pai-releases"><a class="footnote-ref" href="#fn:pai-releases">3</a></sup><sup id="fnref:sdk-changelog"><a class="footnote-ref" href="#fn:sdk-changelog">4</a></sup></p>
+<h3 id="typesafemodel-under-decisionmodel">TypeSafeModel under DecisionModel<a class="headerlink" href="#typesafemodel-under-decisionmodel" title="Permanent link">&para;</a></h3>
+<p>Pull request #8696, "Add <code>DecisionModel</code>, a base for Decisions-protocol models, and make <code>TypeSafeModel</code> one", was merged on 2026-09-24 and shipped in pydantic-ai 2.50.0 the next day.<sup id="fnref:pai-8696"><a class="footnote-ref" href="#fn:pai-8696">5</a></sup> The release also added routing by name, a <code>decision_route_threshold</code> setting and <code>decide</code> spans for tracing. The change separates the protocol from the vendor: the part of the code that turns an <code>output_type</code> into questions and answers into an output now lives in the base class, and <code>TypeSafeModel</code> is the variant that talks to TypeSafe's client.</p>
+<p>For ornotto this is good news in principle and untested in practice. <code>ornotto.pydantic_ai.model()</code> returns a <code>TypeSafeModel</code>, and under 2.50 a <code>TypeSafeModel</code> is still a <code>TypeSafeModel</code>, now with a parent class. Whether the provider and client classes the adapter imports kept their names and arguments is what an upgrade has to show. Until the tests run against 2.50 or later, treat the lock file as the supported combination.</p>
+<h3 id="systemonemodel-not-yet-merged">SystemOneModel, not yet merged<a class="headerlink" href="#systemonemodel-not-yet-merged" title="Permanent link">&para;</a></h3>
+<p>Pull request #8942, opened on 2026-09-28, proposes a <code>SystemOneModel</code> "to run decision models such as CLM and Laya over the <code>/v1/systemone</code> API".<sup id="fnref:pai-8942"><a class="footnote-ref" href="#fn:pai-8942">6</a></sup> On 2026-09-30 it was still open. If it lands, it names in pydantic-ai what ornotto does by indirection today: a decision model on a server that speaks System One, with no TypeSafe account behind it. ornotto's adapter would then no longer need the placeholder API key it passes to the TypeSafe client for dohnuts and ollaya. The pcdServer transport would stay, because pcdServer does not speak System One at all (<a href="../03-engines/#pcdserver">chapter 3</a>).</p>
+<h3 id="typesafe-sdk-07-and-ordered-criteria">typesafe-sdk 0.7 and ordered criteria<a class="headerlink" href="#typesafe-sdk-07-and-ordered-criteria" title="Permanent link">&para;</a></h3>
+<p>Before typesafe-sdk 0.6.0, a score question could carry its levels as a dict keyed by integers. Since 0.6.0 the levels are an ordered list: the first entry is level 0, the second level 1, and so on. ornotto sends score levels as a list, in that order, to dohnuts, ollaya and the pydantic-ai adapter alike. When it receives a question dict through the pcdServer transport or through <code>decide</code>, it still accepts the older mapping and sorts its keys by number, so code written against an earlier SDK keeps working with ornotto. It will not keep working against TypeSafe's own client, which since 0.7.0 validates requests with pydantic models.</p>
+<h3 id="two-paths-to-jev">Two paths to jev<a class="headerlink" href="#two-paths-to-jev" title="Permanent link">&para;</a></h3>
+<p>The book's jev rows went through OpenRouter's System One path (<a href="../01-deciding/#jev-the-hosted-reference">chapter 1</a>). pydantic-ai issue #8552, opened on 2026-09-19, states that OpenRouter also serves the protocol at <code>POST https://openrouter.ai/api/alpha/decisions</code>.<sup id="fnref:pai-8552"><a class="footnote-ref" href="#fn:pai-8552">7</a></sup> We have not called that path, and we do not know whether the two return the same answers or whether one of them will be retired. If you move a hosted agent between them, compare a few answers first.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:ollaya-site">
+<p>ollaya, "ollaya", read 2026-09-30. <a href="https://ollaya.dev">https://ollaya.dev</a>&#160;<a class="footnote-backref" href="#fnref:ollaya-site" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:latent-space">
+<p>Latent Space, "Jev: System One models for Prod, not God, with Diogo Almeida, CEO, TypeSafe AI", 2026-09-21, at 01:37:25. <a href="https://www.latent.space/p/jev">https://www.latent.space/p/jev</a>&#160;<a class="footnote-backref" href="#fnref:latent-space" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pai-releases">
+<p>pydantic, "pydantic-ai releases", read 2026-09-30. <a href="https://github.com/pydantic/pydantic-ai/releases">https://github.com/pydantic/pydantic-ai/releases</a>&#160;<a class="footnote-backref" href="#fnref:pai-releases" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sdk-changelog">
+<p>TypeSafe, "Python SDK changelog", read 2026-09-30. <a href="https://docs.typesafe.ai/sdk/python/changelog.md">https://docs.typesafe.ai/sdk/python/changelog.md</a>&#160;<a class="footnote-backref" href="#fnref:sdk-changelog" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pai-8696">
+<p>pydantic, "pydantic-ai v2.50.0", 2026-09-25. <a href="https://github.com/pydantic/pydantic-ai/releases/tag/v2.50.0">https://github.com/pydantic/pydantic-ai/releases/tag/v2.50.0</a>&#160;<a class="footnote-backref" href="#fnref:pai-8696" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pai-8942">
+<p>pydantic, "Add <code>SystemOneModel</code> to run decision models such as CLM and Laya over the <code>/v1/systemone</code> API", pull request #8942, 2026-09-28. <a href="https://github.com/pydantic/pydantic-ai/pull/8942">https://github.com/pydantic/pydantic-ai/pull/8942</a>&#160;<a class="footnote-backref" href="#fnref:pai-8942" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pai-8552">
+<p>pydantic, "Route Jev (TypeSafeModel) through OpenRouter's Decisions API", issue #8552, 2026-09-19. <a href="https://github.com/pydantic/pydantic-ai/issues/8552">https://github.com/pydantic/pydantic-ai/issues/8552</a>&#160;<a class="footnote-backref" href="#fnref:pai-8552" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1481,7 +1741,9 @@
       <a href="../12-choosing/" rel="next">12. Choosing, building and contributing →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 

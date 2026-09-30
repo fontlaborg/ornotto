@@ -469,6 +469,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#three-types-three-control-flow-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three types, three control-flow statements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-state" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -476,6 +487,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="The state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-leave-out-of-the-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to leave out of the state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -496,6 +524,17 @@
     <span class="md-ellipsis">
       
         Choice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-and-order-are-part-of-the-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Names and order are part of the question
       
     </span>
   </a>
@@ -584,6 +623,17 @@
     <span class="md-ellipsis">
       
         Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1031,6 +1081,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#three-types-three-control-flow-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three types, three control-flow statements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-state" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1038,6 +1099,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="The state">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-to-leave-out-of-the-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to leave out of the state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1058,6 +1136,17 @@
     <span class="md-ellipsis">
       
         Choice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-and-order-are-part-of-the-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Names and order are part of the question
       
     </span>
   </a>
@@ -1152,6 +1241,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1201,6 +1301,36 @@
 
 <h1 id="2-the-shape-of-a-decision">2. The shape of a decision<a class="headerlink" href="#2-the-shape-of-a-decision" title="Permanent link">&para;</a></h1>
 <p>A decision request carries a state and a set of named questions. Both engines in the <code>ornotto</code> package accept the same three question kinds, but they build different prompts from them and return different fields. This chapter describes the request and the answer in System One terms, then shows what changes on pcdServer. The <code>ornotto</code> package hides most of the difference (<a href="../10-package/">chapter 10</a>); the parts it cannot hide, such as calibration and limits, are here.</p>
+<h2 id="three-types-three-control-flow-statements">Three types, three control-flow statements<a class="headerlink" href="#three-types-three-control-flow-statements" title="Permanent link">&para;</a></h2>
+<p>The three question kinds map onto code a programmer already writes. Diogo Almeida, who designed jev's API, put it this way in the Hacker News thread on the launch: "choice maps to "match" statement, "score" maps to sorting, "noul" short for bernoulli maps to if-statements".<sup id="fnref:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">1</a></sup></p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>In code</th>
+<th>What the software does with the answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>choice</td>
+<td><code>match</code> / <code>switch</code></td>
+<td>takes one branch out of several</td>
+</tr>
+<tr>
+<td>score</td>
+<td>sorting, ranking</td>
+<td>orders items, or compares a level with a threshold</td>
+</tr>
+<tr>
+<td>yes/no (<code>noul</code>)</td>
+<td><code>if</code></td>
+<td>takes a branch or not</td>
+</tr>
+</tbody>
+</table>
+<p>The analogy explains the design. A branch in a program needs a value from a known set, and so does a decision. A branch never needs prose, so neither does the answer. The same thread has Almeida on the rule that follows: "strings (and all sequential data structures) are not allowed at all". That is also why the reply can be computed in one pass, and why TypeSafe does not charge for output (<a href="../01-deciding/#how-jev-arrived">chapter 1</a>).</p>
+<p>The name <code>noul</code> is short for Bernoulli, the distribution of a single yes/no trial. Not every reader liked it. One Hacker News commenter, alienbaby, wrote: "A Noul performs a Bernoulli trial … I hate it :)". dohnuts also accepts <code>bool</code> as an alias.</p>
 <h2 id="the-state">The state<a class="headerlink" href="#the-state" title="Permanent link">&para;</a></h2>
 <p>The state is what the model judges. It can be a string or any JSON value, and every question in the request refers to the same state.</p>
 <p>On dohnuts the state shapes the prompt directly:</p>
@@ -1214,18 +1344,36 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w"> </span><span class="nt">"selection"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"A"</span><span class="p">,</span><span class="w"> </span><span class="s2">"V"</span><span class="p">],</span><span class="w"> </span><span class="nt">"font"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Garamond Pro Italic"</span><span class="p">}</span>
 </code></pre></div>
 <p>pcdServer takes a <code>context</code> string of at most 64 KiB. Structured state has to be serialised first; <code>ornotto</code> does it with <code>json.dumps</code>, so pcdServer sees JSON text where dohnuts sees a Python-style dict.</p>
+<h3 id="what-to-leave-out-of-the-state">What to leave out of the state<a class="headerlink" href="#what-to-leave-out-of-the-state" title="Permanent link">&para;</a></h3>
+<p>More state is not better state. TypeSafe's own page on jev's weak spots says so directly: "Jev suffers from context rot, so unrelated material in the <code>state</code> costs you accuracy." The same page warns that jev "may struggle with tasks that require additional levels of indirection. It can be quite literal".<sup id="fnref:jagged"><a class="footnote-ref" href="#fn:jagged">2</a></sup> Our benchmark did not measure the effect on the local models, and there is no reason to assume a 0.8B model ignores unrelated text better than jev does.</p>
+<p>Two papers from September measured what an unhelpful state can do:</p>
+<ul>
+<li><strong>One sentence of opinion.</strong> JevAdvBench appended a single unverified opinion to the state and found that it flipped 12.1% of jev-1.13.0 decisions.<sup id="fnref:advbench"><a class="footnote-ref" href="#fn:advbench">3</a></sup></li>
+<li><strong>Natural context.</strong> "JevOut" reports that natural context redirected 312 of 508 correct jev decisions, 61.4%.<sup id="fnref:jevout"><a class="footnote-ref" href="#fn:jevout">4</a></sup></li>
+</ul>
+<p>Neither paper tested the local models in this book, so the figures describe jev, not dohnuts or pcdServer. The practical rule is the same for both. Pass the state the question needs: the message, the window, the selection. Leave out the history, the log and the user's guess at the answer. If a field in your application state can carry someone's opinion about the right branch, treat it as input to be judged, not as context.</p>
 <h2 id="the-three-question-kinds">The three question kinds<a class="headerlink" href="#the-three-question-kinds" title="Permanent link">&para;</a></h2>
 <h3 id="choice">Choice<a class="headerlink" href="#choice" title="Permanent link">&para;</a></h3>
 <p>A choice picks one option. In System One, <code>criteria</code> is either a list of names or an object mapping each name to a description of when it applies:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"choice"</span><span class="p">,</span><span class="w"> </span><span class="nt">"instructions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Which team should handle this?"</span><span class="p">,</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="nt">"criteria"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"billing"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Charges and invoices"</span><span class="p">,</span><span class="w"> </span><span class="nt">"shipping"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Delivery status"</span><span class="p">,</span><span class="w"> </span><span class="nt">"other"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}}</span>
 </code></pre></div>
-<p>A name without a description is read by its name alone. dohnuts accepts 2 to 255 options per question. Up to 10 options are labelled with the letters A to J; longer lists use single-token labels A to Z, then AA, AB and so on.</p>
+<p>A name without a description is read by its name alone. dohnuts accepts 2 to 255 options per question. Up to 10 options are labelled with the letters A to J; longer lists use single-token labels A to Z, then AA, AB and so on. jev documents the same ceiling of 255 options, and above that scores the options independently before making an explicit choice (<a href="../01-deciding/#how-jev-arrived">chapter 1</a>).</p>
 <p>pcdServer has no per-option descriptions. A field is a name, one <code>description</code> of up to 1,024 bytes, and <code>choices</code>, a list of 2 to 256 distinct strings of up to 256 bytes each:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"team"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Which team should handle this? billing: Charges and invoices; shipping: Delivery status"</span><span class="p">,</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span><span class="nt">"choices"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"billing"</span><span class="p">,</span><span class="w"> </span><span class="s2">"shipping"</span><span class="p">,</span><span class="w"> </span><span class="s2">"other"</span><span class="p">]}</span>
 </code></pre></div>
 <p>When <code>ornotto</code> translates a choice for pcdServer, it folds the option descriptions into the field description, one <code>name: description</code> line per option, and clips the result at 1,024 bytes.</p>
+<h3 id="names-and-order-are-part-of-the-question">Names and order are part of the question<a class="headerlink" href="#names-and-order-are-part-of-the-question" title="Permanent link">&para;</a></h3>
+<p>A choice is typed, but the type does not guarantee that the model reads the options the way you meant them. The option name is text the model reads, and so is its position in the list.</p>
+<p>The clearest evidence came out in September. The paper "Type-Safe Is Not Error-Free" renamed the options from <code>0</code>/<code>1</code> to <code>no</code>/<code>yes</code> and kept the rubric behind them the same.<sup id="fnref:typesafe-not"><a class="footnote-ref" href="#fn:typesafe-not">5</a></sup> On the open jev-like models it tested, the renaming changed 70.4 answers in every hundred and moved AUC from .94 to .23. On hosted jev, AUC moved from .8146 to .5806. The type-error rate stayed at 0% throughout: every answer was a valid option; what changed was which one.</p>
+<p>Order has a similar effect. The OpenJev model card reports that shuffling the options flipped its answers in 18.5% of cases before the authors tuned for it, and in 2.3% after.<sup id="fnref:openjev"><a class="footnote-ref" href="#fn:openjev">6</a></sup></p>
+<p>For the questions you write, this suggests three habits:</p>
+<ul>
+<li><strong>Name options by what they mean.</strong> <code>billing</code> is safer than <code>A</code>, and <code>urgent</code> safer than <code>1</code>. The router in this book uses <code>docs</code>, <code>python</code>, <code>fea</code>, <code>vfj</code> and <code>sample</code> for that reason.</li>
+<li><strong>Give each option a description when names could overlap.</strong> On dohnuts the description sits next to the option in the prompt. On pcdServer <code>ornotto</code> folds it into the field description.</li>
+<li><strong>Test a reordering.</strong> If the answers change when you reverse the list, the question is ambiguous or the model is guessing. <a href="../09-confidence/">Chapter 9</a> shows how the probabilities of such answers look.</li>
+</ul>
 <h3 id="yesno">Yes/no<a class="headerlink" href="#yesno" title="Permanent link">&para;</a></h3>
 <p>A yes/no question (<code>noul</code>, with <code>bool</code> accepted as an alias) returns the probability that the answer is yes. The optional <code>criteria</code> object says what counts as each answer:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"noul"</span><span class="p">,</span><span class="w"> </span><span class="nt">"instructions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Is this message spam?"</span><span class="p">,</span>
@@ -1238,6 +1386,7 @@
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w"> </span><span class="nt">"criteria"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"calm"</span><span class="p">,</span><span class="w"> </span><span class="s2">"frustrated"</span><span class="p">,</span><span class="w"> </span><span class="s2">"very frustrated"</span><span class="p">]}</span>
 </code></pre></div>
 <p>The answer is the expected level, the probability-weighted average of the levels, so a score of 1.44 sits between "frustrated" and "very frustrated". pcdServer has no graded type. <code>ornotto</code> sends the levels as the choices <code>"0"</code>, <code>"1"</code>, <code>"2"</code>, lists the level texts in the field description, and computes the expected level from the probabilities pcdServer returns.</p>
+<p>The order of <code>criteria</code> is the order of the levels. TypeSafe's Python SDK made this explicit in version 0.6.0, released on launch day, which turned <code>Score.criteria</code> into an ordered sequence; 0.7.0, three days later, replaced msgspec with pydantic for its request types.<sup id="fnref:sdk"><a class="footnote-ref" href="#fn:sdk">7</a></sup> Code that still builds a rubric as a dict keyed by level numbers works with dohnuts, which sorts the keys, but is out of date against the current SDK.</p>
 <h2 id="the-answer">The answer<a class="headerlink" href="#the-answer" title="Permanent link">&para;</a></h2>
 <p>Each answer carries a <code>type</code> matching its question. Beyond that, the fields depend on the kind and the engine.</p>
 <table>
@@ -1292,12 +1441,27 @@
 <h3 id="isolated-score-levels">Isolated score levels<a class="headerlink" href="#isolated-score-levels" title="Permanent link">&para;</a></h3>
 <p>The decider model's recipe scores a rubric one level at a time by default (<code>isolated_levels: true</code> in its metadata). Each level becomes its own yes/no row: the question, then <code>Proposed answer: &lt;level&gt;</code>, then <code>Does the proposed answer fit?</code>. dohnuts reports the yes probabilities as <code>native.level_fit</code> and their sum as <code>native.fit_mass</code>; normalised, they give <code>probabilities</code>, and <code>score</code> is their expected value.</p>
 <p>A low <code>fit_mass</code> is a warning in its own right: no level describes the state well. In one of our FontLab examples, "Loop through masters and print their names" scored 0.63 on a rubric of general type design, the FontLab UI and the FontLab Python API. Every level fitted poorly (fit_mass 0.50) and "general type design" fitted least badly, so the score was wrong and the fit mass said so. Send <code>"isolated": false</code> on the question to score all levels in one lettered row instead.</p>
+<pre class="mermaid"><code>flowchart TD
+    Q["Score question&lt;br&gt;with 3 levels"] --&gt; R0["Row: level 0&lt;br&gt;Does it fit?"]
+    Q --&gt; R1["Row: level 1&lt;br&gt;Does it fit?"]
+    Q --&gt; R2["Row: level 2&lt;br&gt;Does it fit?"]
+    R0 --&gt; F["level_fit: three&lt;br&gt;yes probabilities"]
+    R1 --&gt; F
+    R2 --&gt; F
+    F --&gt; M["fit_mass: their sum"]
+    F --&gt; N["normalise to&lt;br&gt;probabilities"]
+    N --&gt; S["score: expected level"]</code></pre>
+<p>Isolated levels cost one row per level, so a five-level rubric reads the state five times on dohnuts. <a href="../08-speed/#prefix-caching-in-dohnuts">Chapter 8</a> shows how the prefix cache keeps that from costing five full prefills.</p>
 <h2 id="calibration">Calibration<a class="headerlink" href="#calibration" title="Permanent link">&para;</a></h2>
 <p>A probability is <em>calibrated</em> when answers given with probability 0.8 are right about 80 percent of the time. The dedicated decision models are trained and then tuned for this: decider, kev and laya divide their logits by a fitted temperature before the softmax. decider-0.8b uses T = 1.03 and decider-2b T = 1.3, both read from the model's metadata. jev's probabilities are calibrated by its provider.</p>
 <p>pcdServer's probabilities are not calibrated. It computes a softmax over the first tokens of the allowed values only, with no temperature, and reports the model's raw preference among them. A chat model can put 0.998 on an answer that a calibrated model would give 0.9, which is exactly what happened on the router's kern example: decider on dohnuts said <code>fea</code> with 0.90, a 4B model on pcdServer said <code>fea</code> with 0.998.</p>
 <div class="admonition warning">
 <p class="admonition-title">Compare confidences only within one kind</p>
 <p>A 0.9 from dohnuts and a 0.9 from pcdServer are different measurements. Thresholds tuned on one engine do not transfer to the other. Accuracy comparisons are safe, because they use only the winning option. <code>ornotto</code> marks every answer with <code>calibrated</code>: true for dohnuts, false for pcdServer.</p>
+</div>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>Asked on Hacker News whether a model that cannot write text can still hallucinate, Almeida answered with a question: "Would you say a linear classifier hallucinates?"<sup id="fnref2:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">1</a></sup> The typed answer rules out invented options. It does not rule out a confident wrong one. The papers above, and the calibration numbers in <a href="../09-confidence/">chapter 9</a>, are about that second kind of error.</p>
 </div>
 <p>Calibration is a property of the recipe, not a guarantee. On the 67 router queries, translated and direct runs pooled, decider-0.8b's top probabilities between 0.6 and 0.8 were right 19 times out of 20, while those of 0.95 and above were right 61 times out of 63 (<a href="../09-confidence/">chapter 9</a>).</p>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>
@@ -1362,6 +1526,39 @@
 </tr>
 </tbody>
 </table>
+<p>jev's documented limits are wider in one direction and narrower in another: a 64k-token context, of which 32k cover the state plus the longest question, text input only, and up to 255 options per choice (<a href="../01-deciding/#how-jev-arrived">chapter 1</a>).</p>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The SDK types moved.</strong> <code>typesafe-sdk</code> 0.6.0 (15 September) made <code>Score.criteria</code> ordered, and 0.7.0 (18 September) switched its models to pydantic.<sup id="fnref2:sdk"><a class="footnote-ref" href="#fn:sdk">7</a></sup> pydantic-ai adapted within the month (<a href="../11-typed/">chapter 11</a>).</li>
+<li><strong>dohnuts aligned its answers with TypeSafe's.</strong> On 23 September the upstream project committed "Align the systemone API with TypeSafe responses", which brings its <code>/v1/systemone</code> replies closer to the shape jev returns.</li>
+<li><strong>The weak spots got numbers.</strong> Option names, option order, appended opinions and unrelated context were each measured within two weeks of the launch. None of those papers changes the request format. Each changes how carefully you should write the questions.</li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:hn-launch">
+<p>Hacker News, discussion of the jev launch post, replies by Diogo Almeida, 2026-09-15. <a href="https://news.ycombinator.com/item?id=49717558">https://news.ycombinator.com/item?id=49717558</a>&#160;<a class="footnote-backref" href="#fnref:hn-launch" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:hn-launch" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:jagged">
+<p>TypeSafe, "Jev 1.13 jaggedness", documentation, read 2026-09-30. <a href="https://docs.typesafe.ai/model-jaggedness/jev-1.13">https://docs.typesafe.ai/model-jaggedness/jev-1.13</a>&#160;<a class="footnote-backref" href="#fnref:jagged" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:advbench">
+<p>arXiv 2609.31142, "JevAdvBench: A Benchmark and Black-Box Attacks for Reinforcement Learning for Calibrated Decisions Models", 2026-09-25. <a href="https://arxiv.org/abs/2609.31142">https://arxiv.org/abs/2609.31142</a>&#160;<a class="footnote-backref" href="#fnref:advbench" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:jevout">
+<p>arXiv 2609.30243, "JevOut: Natural Context Can Flip Decision Models", 2026-09-24. <a href="https://arxiv.org/abs/2609.30243">https://arxiv.org/abs/2609.30243</a>&#160;<a class="footnote-backref" href="#fnref:jevout" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:typesafe-not">
+<p>Yu Sun et al., arXiv 2609.26758, "Type-Safe Is Not Error-Free", 2026-09-22. <a href="https://arxiv.org/abs/2609.26758">https://arxiv.org/abs/2609.26758</a>&#160;<a class="footnote-backref" href="#fnref:typesafe-not" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:openjev">
+<p>openjev, "openjev" model card, read 2026-09-30. <a href="https://huggingface.co/openjev/openjev">https://huggingface.co/openjev/openjev</a>&#160;<a class="footnote-backref" href="#fnref:openjev" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sdk">
+<p>TypeSafe, "Python SDK changelog", documentation, read 2026-09-30. <a href="https://docs.typesafe.ai/sdk/python/changelog.md">https://docs.typesafe.ai/sdk/python/changelog.md</a>&#160;<a class="footnote-backref" href="#fnref:sdk" title="Jump back to footnote 7 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:sdk" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1419,7 +1616,9 @@
       <a href="../03-engines/" rel="next">3. Ways to read an answer →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 

@@ -525,6 +525,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#a-family-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A family tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dedicated-models" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -608,6 +619,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#licences-and-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licences and provenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fine-tuned-models" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -623,6 +645,34 @@
     <span class="md-ellipsis">
       
         Vanilla models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanilla models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stock-models-on-the-public-boards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stock models on the public boards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1025,6 +1075,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#a-family-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A family tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dedicated-models" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1108,6 +1169,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#licences-and-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licences and provenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fine-tuned-models" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1123,6 +1195,34 @@
     <span class="md-ellipsis">
       
         Vanilla models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vanilla models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stock-models-on-the-public-boards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stock models on the public boards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1189,6 +1289,8 @@
 
 <h1 id="4-dedicated-fine-tuned-and-vanilla-models">4. Dedicated, fine-tuned and vanilla models<a class="headerlink" href="#4-dedicated-fine-tuned-and-vanilla-models" title="Permanent link">&para;</a></h1>
 <p>A model's size tells you less about how it will decide than the place its answer is read from. This book sorts every model into one of three families by that place. A <strong>dedicated</strong> model was trained to answer System One questions and has its own readout: a letter at a trained answer slot, a pointer head, or a decision head on an encoder. A <strong>fine-tuned</strong> model is a chat model that someone tuned for a task, sometimes this task, sometimes a neighbouring one. A <strong>vanilla</strong> model is a stock chat model as its publisher released it.</p>
+<p><img alt="Three trunks branching into many small nodes" src="../img/ch04-model-families.png" />
+<em>Most decision models grow from a few base models: Qwen, Gemma and a handful of encoders.</em></p>
 <p>The family decides which engines can run the model. It also decides how much prompt work you have to do before its answers are worth reading.</p>
 <table>
 <thead>
@@ -1298,6 +1400,56 @@
 </tbody></table>
 </div>
 
+<h2 id="a-family-tree">A family tree<a class="headerlink" href="#a-family-tree" title="Permanent link">&para;</a></h2>
+<p>Almost every decision model in this book is a small change to a model someone else released. The diagram below traces each model we ran, and a few we did not, back to the base weights its card names. A solid arrow means the weights were trained further: a full fine-tune, a LoRA, or a new head over a trained backbone. A dotted arrow means the base weights were left alone and only read in a new way.</p>
+<pre class="mermaid"><code>flowchart LR
+    Q35["Qwen3.5&lt;br&gt;0.8B to 35B-A3B"]
+    Q36["Qwen3.6"]
+    Q3["Qwen3"]
+    G4["Gemma 4"]
+    MMB["mmBERT"]
+    DEB["DeBERTa-v3-large"]
+    MOD["ModernBERT"]
+    E5["multilingual-e5-small"]
+    SCR["trained from scratch"]
+
+    Q35 --&gt; DEC["decider 0.8B to 35B-A3B"]
+    Q35 --&gt; KEV["kev 0.8B to 27B"]
+    Q35 --&gt; DOH["Dohnuts 0.8B"]
+    Q35 --&gt; LIN["Linnaeus 2B"]
+    Q35 --&gt; JK5["JevK5"]
+    Q35 --&gt; LEV["lev 4B"]
+    Q35 --&gt; IMA["imajev 4B"]
+    Q35 --&gt; HMM["Qwen3.5-4B-Hmm"]
+    Q35 --&gt; SEM["semif 4B NLI"]
+    Q35 --&gt; EOS["Decision 1.0 Eos 0.8B"]
+    Q35 --&gt; APU["APUS-OpenJev 35B-A3B"]
+    Q35 --&gt; NH1["NeoHorse-1 4B"]
+    NH1 --&gt; NHJ["NeoHorse-Jev 4B"]
+    Q36 --&gt; JEB["jeb 35B-A3B"]
+    Q36 -.-&gt; DCQ["decider-chat 27B"]
+    Q3 --&gt; LEO["leo 1.7B"]
+    Q3 --&gt; CLM["CLM 8B"]
+    G4 --&gt; RUN["rune 26B-A4B"]
+    G4 --&gt; WIN["winnow 12B and E4B"]
+    G4 --&gt; OMN["Jev-Omni"]
+    G4 --&gt; D12["decider-12b"]
+    G4 -.-&gt; CYG["Cygnet"]
+    G4 -.-&gt; DCG["decider-chat 31B"]
+    MMB --&gt; LAY["laya-multilingual"]
+    MMB --&gt; JUL["Julia-1"]
+    DEB --&gt; GLN["GLiNER2.5-Decide"]
+    DEB --&gt; GLC["GLiClass large"]
+    MOD --&gt; VON["von"]
+    MOD --&gt; PUL["Pulse Decide 150M"]
+    MOD --&gt; NLI["NLI ModernBERT-large"]
+    E5 --&gt; DCM["decima-small"]
+    SCR --&gt; LUM["Lumma-fev 0.6B"]</code></pre>
+<p>Three things stand out.</p>
+<p><strong>Qwen3.5 is the common ancestor.</strong> Most decoder models in the benchmark start from it, at every size from 0.8B to the 35B-A3B mixture of experts. That is why pcdServer, dohnuts and slot can run so many of them with the same llama.cpp code: the architecture is one they already know. NeoHorse-Jev-4B is a two-step descendant. Its base, NeoHorse-1-4B, is a general agentic and coding model, not a decision model, and its GGUF header reports the Qwen3.5 architecture. Only the NeoHorse-Jev build answers System One questions.<sup id="fnref:neohorse"><a class="footnote-ref" href="#fn:neohorse">1</a></sup></p>
+<p><strong>Gemma 4 arrived late and went far.</strong> rune, winnow, Jev-Omni and decider-12b are all Gemma 4 fine-tunes, and all of them appeared in the second half of September. Two of the dotted edges are Gemma 4 models used with no training at all. pcdServer cannot serve Gemma 4 GGUFs yet, so rune ran through slot and winnow through ollaya (<a href="../03-engines/#ollaya">chapter 3</a>).</p>
+<p><strong>The encoders come from three families.</strong> laya and Julia-1 are mmBERT, the base and the small size. GLiNER2.5-Decide and GLiClass are DeBERTa-v3-large. von, Pulse and the NLI model are ModernBERT. decima-small starts from multilingual-e5-small. Lumma-fev is the only model here trained from scratch.</p>
+<p>The dotted edges matter for the rest of this chapter. They are the evidence that a stock model, read well, is already a decision model. The <a href="#vanilla-models">vanilla models</a> section returns to them.</p>
 <h2 id="dedicated-models">Dedicated models<a class="headerlink" href="#dedicated-models" title="Permanent link">&para;</a></h2>
 <h3 id="decider">decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/Mapika/decider">Mapika/decider</a> is a family of full fine-tunes of Qwen3.5 trained to answer System One questions. The prompt is fixed by training: <code>Context:</code> and the state, then the question, the options lettered <code>(A)</code>, <code>(B)</code>, …, and <code>Answer: (</code>. The model is read at that last token, and only the logits of the option letters count. They are divided by a temperature from the checkpoint's <code>decider.json</code> (1.03 for the 0.8B model) before the softmax, so the probabilities are calibrated by the recipe.</p>
@@ -1347,21 +1499,99 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the trained readout</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">same_weights</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>  <span class="c1"># pcdServer, as a chat model</span>
 </code></pre></div>
+<p>decider changed more than any other model while this book was being written. Its Python package, <code>decider-ai</code>, shipped 18 releases between 1.0.0 on 2026-09-22 and 1.8.0 on 2026-09-29.<sup id="fnref:decider-pypi"><a class="footnote-ref" href="#fn:decider-pypi">2</a></sup> The ones that matter for local use:</p>
+<table>
+<thead>
+<tr>
+<th>version</th>
+<th>date</th>
+<th>change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.4.0</td>
+<td>2026-09-24</td>
+<td>temperatures per question type; decider-4b v2.1 and decider-2b v11</td>
+</tr>
+<tr>
+<td>1.5.0</td>
+<td>2026-09-25</td>
+<td>a vLLM server</td>
+</tr>
+<tr>
+<td>1.6.0</td>
+<td>2026-09-27</td>
+<td>reads GGUF checkpoints, and GGUF files for decider-4b v2.1 and decider-2b v11</td>
+</tr>
+<tr>
+<td>1.7.0</td>
+<td>2026-09-29</td>
+<td>decider-12b, on Gemma-4-12B-it</td>
+</tr>
+<tr>
+<td>1.8.0</td>
+<td>2026-09-29</td>
+<td><code>temperature_by_options</code>, and two <code>decider-chat</code> repositories</td>
+</tr>
+</tbody>
+</table>
+<p>The temperature is where the recipe moved furthest. In our run, one number per checkpoint divided every logit. From 1.4.0 the temperature can depend on the question type, and from 1.8.0 on the number of options as well, following T(n) = max(min, a + b ln n), where n is the number of options and the temperature never falls below a fitted minimum.<sup id="fnref:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> A five-way router and a yes/no question on the same checkpoint no longer share one temperature. If you load a newer decider checkpoint in dohnuts, read its <code>decider.json</code> first to see which kind of temperature it carries.</p>
+<p>The GGUF reader in 1.6.0 closes a gap. The reference PyTorch package and dohnuts can now load the same file, so a difference between them is a difference in code, not in weights (<a href="../12-choosing/#contributing-upstream">chapter 12</a>).</p>
+<p>The two <code>decider-chat</code> repositories are the stranger addition. They hold stock instruct weights, Gemma-4-31B-it and Qwen3.6-27B, read through decider's prompt and letter readout with a fitted temperature. Nothing in them is trained. They are the dotted edges in the family tree.</p>
+<p>decider's README states: "Nothing was distilled from Jev." The teacher for its training data is a local Qwen3.5-27B.<sup id="fnref2:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> <code>Mapika/decider-2b</code> had 244,279 downloads by 2026-09-30, the most of any decision-model repository created in September.<sup id="fnref:decider2b"><a class="footnote-ref" href="#fn:decider2b">4</a></sup></p>
 <h3 id="kev">kev<a class="headerlink" href="#kev" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/jaredpalmer/kev">jaredpalmer/kev</a> is a LoRA over Qwen3.5 plus a bilinear pointer head. The prompt marks the decision point and the end of every option with special tokens, and the head scores each option by the dot product of two projected hidden states. The benchmark ran the <a href="https://huggingface.co/mys/kev-0.8b-GGUF">mys/kev-0.8b-GGUF</a> and kev-4b conversions through laya.cpp's <code>laya serve</code>. kev-4b reached 62/67 translated but 55/67 direct, and took 1,103 ms per query. kev-0.8b dropped to 45/67 on untranslated text.</p>
 <p>ollaya's <code>kev:0.8b</code> reads the same LoRA and pointer head over Qwen3.5-0.8B-Base as a float32 ONNX graph and scored 60/67 translated and 62/67 direct, at 268 ms.</p>
 <p><code>ornotto</code> registers <code>kev-0.8b</code> from <a href="https://huggingface.co/DreamBlooms/kev-0.8b-GGUF">DreamBlooms/kev-0.8b-GGUF</a> (Apache-2.0) on dohnuts, which reads the same pointer head. That build was not part of the benchmark run.</p>
+<p>kev started with a single 0.5B model on 2026-09-17 and grew into a family three days later: Kev-27B, Kev-9B, Kev-4B and Kev-0.8B, released together on 2026-09-20.<sup id="fnref:kev"><a class="footnote-ref" href="#fn:kev">5</a></sup> Each size has its own temperature, fitted after training:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>fitted temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kev-27B</td>
+<td>1.38</td>
+</tr>
+<tr>
+<td>Kev-9B</td>
+<td>2.30</td>
+</tr>
+<tr>
+<td>Kev-4B</td>
+<td>2.41</td>
+</tr>
+<tr>
+<td>Kev-0.8B</td>
+<td>2.35</td>
+</tr>
+</tbody>
+</table>
+<p>The spread is worth noticing. decider's 0.8B checkpoint divides by 1.03, and Kev-0.8B by 2.35. A temperature says how sharp the raw scores of one particular head were before calibration. It says nothing about which model is more accurate, and two readouts' temperatures are not comparable with each other. They matter when you compare the probabilities of two models: see <a href="../09-confidence/#what-calibration-means">chapter 9</a>.</p>
+<p>Like decider, kev states its provenance: "No Jev outputs were used for training."<sup id="fnref2:kev"><a class="footnote-ref" href="#fn:kev">5</a></sup></p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>kev trains in public. From 2026-09-26 its commits are numbered training rounds, each with a pass rule written down before the round runs. Not every round passes. Round 25 ended with "no candidate (0 of 8)", and round 26, on 2026-09-29, with "no candidate (0 of 4)".<sup id="fnref3:kev"><a class="footnote-ref" href="#fn:kev">5</a></sup> Most model repositories publish only the checkpoints that worked. This one also publishes the ones that did not, which tells you how often a plausible change fails to beat the last model.</p>
+</div>
 <h3 id="dohnuts">Dohnuts<a class="headerlink" href="#dohnuts" title="Permanent link">&para;</a></h3>
 <p><a href="https://huggingface.co/PsiACE/Dohnuts-0.1.0-0.8B">PsiACE/Dohnuts</a> is the model dohnuts.cpp was first written for: Qwen3.5-0.8B with language LoRA adapters and one scalar head read at each candidate marker. It also takes images through an <code>mmproj</code> projector. <code>ornotto</code> registers it as <code>dohnuts-0.8b</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Non-commercial weights</p>
 <p>The Dohnuts weights are licensed CC-BY-NC-SA-4.0. The engine is Apache-2.0, the weights are not. Dohnuts was not benchmarked here and is not the <code>ornotto</code> default.</p>
 </div>
+<p>On 2026-09-29 the dohnuts.cpp authors added a second model to the family: <a href="https://huggingface.co/DreamBlooms/Linnaeus-0.1.0-2B-GGUF">Linnaeus-0.1.0-2B</a>, Qwen3.5-2B with a rank-8 LoRA, published as F16, Q8_0 and Q4_K_M GGUF files with an <code>mmproj</code> projector and its own profile, <code>linnaeus.json</code>.<sup id="fnref:linnaeus"><a class="footnote-ref" href="#fn:linnaeus">6</a></sup> It arrived after our benchmark runs, so it is not in the tables and not registered in <code>ornotto</code>. Upstream dohnuts.cpp gained its Linnaeus support in the same week. The dohnuts that <code>ornotto</code> bundles was built from an earlier commit, so check the engine version before you try it (<a href="../12-choosing/#contributing-upstream">chapter 12</a>).</p>
 <h3 id="laya-multilingual">laya-multilingual<a class="headerlink" href="#laya-multilingual" title="Permanent link">&para;</a></h3>
 <p><a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya-multilingual</a> (Apache-2.0) is an encoder with a decision head, not a chat model; <a href="../03-engines/#laya">chapter 3</a> describes its readout and its token budget.</p>
 <p>The same checkpoint ran on eight engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, except an MXFP8 conversion on MLX at 53/67, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 12.3 ms in ollaya, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. The 4-bit conversions spread widely: one lost an answer, one lost 16, the MXFP4 conversion lost 8, and the Q4_0 encoder from laya-neutron, read with its head converted to GGUF, gained two, to 54/67. <code>ornotto</code> runs laya only through ollaya (<code>ollaya-laya-multilingual</code>, <code>ollaya-laya-en</code>).</p>
+<p>The weights live on Hugging Face under <code>convaiinnovations</code>, but that name does not exist on GitHub. laya's code is at <a href="https://github.com/NandhaKishorM/laya">NandhaKishorM/laya</a>, created on 2026-09-18. By 2026-09-30 it had 28,626 stars and 2,501 forks, the largest repository in the ecosystem that grew around jev, and 25 releases, the last of them v0.3.22 on 2026-09-29.<sup id="fnref:laya"><a class="footnote-ref" href="#fn:laya">7</a></sup> That release added checksum checks for each checkpoint and an abstention gate driven by confidence. Independent ports followed within two days: laya-mlx and laya-coreml for Apple silicon, and a C++ laya.cpp. Their speed claims are in <a href="../08-speed/#the-later-engines-and-runtimes">chapter 8</a>, next to our measurements and kept apart from them.</p>
 <h3 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h3>
 <p>jev is TypeSafe's hosted System One model and the best result in the benchmark (<a href="../03-engines/#jev">chapter 3</a>). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine (<a href="../11-typed/">chapter 11</a>).</p>
+<p>There was only one jev in September. TypeSafe's model list on 2026-09-30 shows <code>jev-1.13.0</code> as the only model, with both <code>jev-latest</code> and <code>jev-preview</code> pointing to it.<sup id="fnref:tsmodels"><a class="footnote-ref" href="#fn:tsmodels">8</a></sup> Every public board that ranked jev during the month names the same version. Our harness called <code>jev-latest</code> and did not record the version it resolved to. Our jev rows almost certainly measure 1.13.0, but that is an inference from the boards and the docs, not a logged fact.</p>
+<p>Several open models were built to be compared with jev, and some carry a version of its name. The name tells you what the authors were aiming at. It does not tell you whether jev's outputs were used to train them: that is a separate question, answered in <a href="#licences-and-provenance">licences and provenance</a> below.</p>
 <h3 id="later-dedicated-models">Later dedicated models<a class="headerlink" href="#later-dedicated-models" title="Permanent link">&para;</a></h3>
 <p>A second benchmark round added decision models that the first round did not cover. Several were published as open alternatives to jev, and some say so in their names. They use the readouts described in <a href="../03-engines/#a-linear-head-on-a-hidden-state-jev-omni">chapter 3</a>, from letter logits to contrastive heads, and each ran on the runtime its authors provide. The licences are taken from the model cards.</p>
 <table>
@@ -1527,6 +1757,38 @@
 <p>An empty direct score means the model was trained on English only, so only the translated text was sent to it.</p>
 <p>Three licence notes travel with the rows. Pulse Decide 150M is a research preview whose training data carries non-commercial and terms-of-service restrictions; it is in the tables with that note and is not cleared for use in a product. The MXFP8 and MXFP4 conversions of laya declare no licence, and the MLX library that runs them, mlx-embeddings, is GPL-3.0. And two models were left out on purpose: Launchables' Myles encoders are gated, and their evaluation licence does not allow benchmark results to be published without the publisher's review.</p>
 <p>Some of these models are in <code>ornotto</code> without any extra runtime: JevK5 and APUS-OpenJev as pcdServer models, and winnow, von, decision-eos, CLM, GLiClass and the ModernBERT NLI model as ollaya models (<a href="../10-package/#registered-models">chapter 10</a>). The rest need the runtimes their authors publish.</p>
+<p>Some notes on the rows, from the models' own cards:</p>
+<ul>
+<li><strong>NeoHorse.</strong> Two different things share the name. NeoHorse-1, published on 2026-09-09, is a general agentic and coding model, and its many community builds on Hugging Face are chat models. Only TokenRhythm's NeoHorse-Jev-4B, published on 2026-09-23, is a decision model with a pointer head.<sup id="fnref2:neohorse"><a class="footnote-ref" href="#fn:neohorse">1</a></sup> If you search Hugging Face for NeoHorse, most results are the wrong one.</li>
+<li><strong>winnow</strong> comes in two sizes on Gemma 4: 12B, published on 2026-09-20, and E4B, on 2026-09-24. We ran the 12B through ollaya. ollaya's own documentation recommends <code>winnow:e4b</code> for general use.<sup id="fnref:ollaya"><a class="footnote-ref" href="#fn:ollaya">9</a></sup></li>
+<li><strong>JevK5</strong> has 2B, 4B and 9B builds, published between 2026-09-22 and 2026-09-25. We ran the 4B.</li>
+<li><strong>decision-eos</strong> is the smallest decoder of the Decision 1.0 family from the vLLM Semantic Router project: Eos-0.8B, Sol-2B, Nox-4B and Lux-9B, plus two 0.6B encoders, Kai and Lex. The card gives a maximum input of 16,384 tokens.<sup id="fnref:decision1"><a class="footnote-ref" href="#fn:decision1">10</a></sup></li>
+<li><strong>CLM</strong> comes from a Stanford and Nvidia group and was built for agent, game and tool-calling states. Its low score here is a question of fit as much as of quality (<a href="../03-engines/#contrastive-similarity-clm">chapter 3</a>).</li>
+</ul>
+<p>Where these models also appear on public leaderboards, their positions are in <a href="../05-method/#other-public-boards">chapter 5</a>. Those boards use other questions and other scales, and their numbers are not comparable with the 67-query scores in this table.</p>
+<h2 id="licences-and-provenance">Licences and provenance<a class="headerlink" href="#licences-and-provenance" title="Permanent link">&para;</a></h2>
+<p>A decision model has three things you might need to clear before shipping it: the licence of its weights, the licence of its base model, and where its training labels came from. The table above takes the first from each model card. The other two need a closer look.</p>
+<div class="admonition warning">
+<p class="admonition-title">Non-commercial and research licences</p>
+<p>Most models in this chapter are Apache-2.0 or MIT. The exceptions:</p>
+<ul>
+<li><strong>Dohnuts</strong> weights are CC-BY-NC-SA-4.0 (<a href="#dohnuts">above</a>).</li>
+<li><strong>openjev/openjev</strong>, an open jev alternative published on 2026-09-20, is CC-BY-NC-4.0.<sup id="fnref:openjev"><a class="footnote-ref" href="#fn:openjev">11</a></sup> It is not the same model as APUS-OpenJev from <code>apus-ailab</code>, which is Apache-2.0 and is in our tables. The names are close enough to confuse.</li>
+<li><strong>Pulse Decide 150M</strong> uses a research-preview licence.</li>
+<li><strong>Qwen2.5-3B, Qwen2.5-Coder-3B and Qwen1.5</strong> carry Qwen research licences (<a href="#vanilla-models">below</a>).</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Models trained on jev's answers</p>
+<p>TypeSafe's Master Customer Agreement, in the version marked "Last updated Sep 23, 2026", says in §2.3(b) that a customer may not use the service or its output "to perform model distillation, train a model to imitate the output of the Services", or build a competing product.<sup id="fnref:mca"><a class="footnote-ref" href="#fn:mca">12</a></sup> We do not know whether that clause was new on 2026-09-23 or already in the earlier text.</p>
+<p>Two days before that date, on 2026-09-21, the dataset <code>SargeDev/jev-distill-corpus-v3</code> was published under Apache-2.0. It has 740,957 rows, and its 498,010-row <code>yuri_v3</code> part carries the note "Labels distilled from Jev 1.13 (TypeSafe) via OpenRouter".<sup id="fnref:corpus"><a class="footnote-ref" href="#fn:corpus">13</a></sup> The models <code>autotrust/JEV-9B</code> and <code>JEV-27B</code> describe themselves as "student of TypeSafe Jev 1.13" and train on that corpus.<sup id="fnref:jev9b"><a class="footnote-ref" href="#fn:jev9b">14</a></sup></p>
+<p>The dataset's Apache-2.0 licence covers what its publisher can license. It does not settle whether the labels could be produced under TypeSafe's terms in the first place. None of these models is in our benchmark or in <code>ornotto</code>.</p>
+</div>
+<p>The models we did run say where their labels came from when their READMEs address it. decider's teacher is a local Qwen3.5-27B, and its README says "Nothing was distilled from Jev". kev's README says "No Jev outputs were used for training". For the others, the model card is the only source, and a card that says nothing about training data leaves the question open.</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>The copies came fast. On the Hacker News thread for ollaya on 2026-09-25, a commenter asked how long open source had taken to copy the idea: "what, like 2 weeks?"<sup id="fnref:hn-ollaya"><a class="footnote-ref" href="#fn:hn-ollaya">15</a></sup> The question was fair. Every model in our benchmark that was trained to answer System One questions first appeared on Hugging Face between 2026-09-16 and 2026-09-29, in the fortnight after jev's launch on 2026-09-15.</p>
+</div>
 <h2 id="fine-tuned-models">Fine-tuned models<a class="headerlink" href="#fine-tuned-models" title="Permanent link">&para;</a></h2>
 <p>These are chat models tuned by third parties. None of them has a trained answer slot, so every one ran on pcdServer, which scores the first token of each allowed value under the model's chat template.</p>
 <p><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a> (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result in the benchmark, at 88 to 95 ms per query. Read through its own letter readout on llama-server (the <code>slot</code> rows), the same weights scored 62/67 and 63/67 and took three times as long.</p>
@@ -1558,6 +1820,108 @@
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">hub</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf"</span><span class="p">)</span>    <span class="c1"># downloaded on first use</span>
 </code></pre></div>
 <p>An unregistered GGUF runs on pcdServer only. To run one on dohnuts, pass the profile JSON as <code>metadata=</code> (and the scorer head as <code>head=</code> for kev or Dohnuts): dohnuts needs to know which readout the weights were trained for.</p>
+<h3 id="stock-models-on-the-public-boards">Stock models on the public boards<a class="headerlink" href="#stock-models-on-the-public-boards" title="Permanent link">&para;</a></h3>
+<p>Our result, that a vanilla Qwen3.5-4B comes within one or two answers of the best dedicated models, is not only ours. Two public leaderboards reached the same point in the last week of September, with larger models and other questions.</p>
+<p>On JevBench v1.5.2, the first place went to Cygnet, a frozen, stock Gemma-4-12B-it read at one letter token, served on vLLM.<sup id="fnref:cygnet"><a class="footnote-ref" href="#fn:cygnet">16</a></sup> Nothing in Cygnet is trained for decisions. The recipe is the prompt and the readout. On the Decision Index v0.2.1, the second place went to decider-chat-gemma4-31b, the stock Gemma-4-31B-it read through decider's prompt with a fitted temperature.</p>
+<p>These are other people's numbers, on scales unlike ours and unlike each other's. The table is here to show order within each board, not to compare boards:</p>
+<table>
+<thead>
+<tr>
+<th>board, version, date read</th>
+<th>system</th>
+<th>what it is</th>
+<th>score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JevBench v1.5.2, read 2026-09-29</td>
+<td>Cygnet</td>
+<td>stock Gemma-4-12B-it, letter readout</td>
+<td>73.7 (#1)</td>
+</tr>
+<tr>
+<td></td>
+<td>Winnow-12B Q8</td>
+<td>Gemma 4 fine-tune</td>
+<td>73.2 (#2)</td>
+</tr>
+<tr>
+<td></td>
+<td>Jev 1.13.0</td>
+<td>hosted</td>
+<td>72.1 (#3)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-4b v2</td>
+<td>Qwen3.5 fine-tune</td>
+<td>71.3 (#7)</td>
+</tr>
+<tr>
+<td>Decision Index v0.2.1, 2026-09-28</td>
+<td>Jev 1.13.0</td>
+<td>hosted, listed separately</td>
+<td>57.91</td>
+</tr>
+<tr>
+<td></td>
+<td>rune 26B-A4B v3</td>
+<td>Gemma 4 fine-tune</td>
+<td>57.44 (#1)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-chat-gemma4-31b</td>
+<td>stock Gemma-4-31B-it, decider readout</td>
+<td>57.33 (#2)</td>
+</tr>
+<tr>
+<td></td>
+<td>AutoJev-27B</td>
+<td>open 27B model by Denis Yarats</td>
+<td>56.40 (#3)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-chat-qwen3.6-27b</td>
+<td>stock Qwen3.6-27B, decider readout</td>
+<td>51.35 (#8)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-35b-a3b, NVFP4</td>
+<td>Qwen3.5 fine-tune</td>
+<td>47.11 (#12)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-4b</td>
+<td>Qwen3.5 fine-tune</td>
+<td>40.70 (#19)</td>
+</tr>
+<tr>
+<td></td>
+<td>decider-2b</td>
+<td>Qwen3.5 fine-tune</td>
+<td>28.97 (#37)</td>
+</tr>
+</tbody>
+</table>
+<p>Both sets of figures are as the decider README reports them. Its authors did not run either board themselves, and neither did we.<sup id="fnref3:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> <a href="../05-method/#other-public-boards">Chapter 5</a> describes how each board scores.</p>
+<p>The decider authors drew the conclusion themselves: "On the index the base model sets most of the score: our trained 35B, 4B and 2B are below these two stock models read the same way."<sup id="fnref4:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> An evidence audit of 28 early papers on typed decision models, posted on 2026-09-26, put it more generally: "the typed readout itself has not shown an independent accuracy advantage over comparable label-probability readouts."<sup id="fnref:audit"><a class="footnote-ref" href="#fn:audit">17</a></sup></p>
+<p>None of this makes training useless. It moves the question. A trained readout gives you a fixed prompt, a fitted temperature and a small model that answers fast. A larger stock model, read at the right token, may give you the accuracy. Which of the two you need depends on the latency and memory you can spend, which is what <a href="../08-speed/">chapter 8</a> and <a href="../12-choosing/">chapter 12</a> are about.</p>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<p>This chapter was first written from the benchmark runs of 2026-09-22 and 2026-09-23. By the end of the month:</p>
+<ul>
+<li>decider gained temperatures per question type and per number of options, a GGUF reader, a Gemma 4 model and two readouts over stock chat models.</li>
+<li>kev had released four sizes with fitted temperatures and was publishing numbered training rounds.</li>
+<li>The dohnuts.cpp authors added Linnaeus-0.1.0-2B.</li>
+<li>laya became the most starred project around jev and gained ports to MLX, Core ML and C++.</li>
+<li>TypeSafe's customer agreement gained, or restated, a ban on distillation, while an Apache-2.0 corpus of jev labels and two models trained on it were already public.</li>
+<li>A stock Gemma 4 model read at one letter token took the first place on one public leaderboard.</li>
+</ul>
+<p>jev itself did not change: 1.13.0 was the only version all month.</p>
 <h2 id="which-family-for-which-job">Which family for which job<a class="headerlink" href="#which-family-for-which-job" title="Permanent link">&para;</a></h2>
 <ul>
 <li>If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.</li>
@@ -1566,6 +1930,62 @@
 <li>If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.</li>
 </ul>
 <p><a href="../07-quantization/">Chapter 7</a> shows how far each family can be quantized, and <a href="../12-choosing/">chapter 12</a> turns these results into a choice.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:neohorse">
+<p>TokenRhythm, "NeoHorse-Jev-4B" model card, 2026-09-23; ngquocvinh, "NeoHorse-1-4B-GGUF" model card, 2026-09-13. Read 2026-09-30. <a href="https://huggingface.co/TokenRhythm/NeoHorse-Jev-4B">https://huggingface.co/TokenRhythm/NeoHorse-Jev-4B</a>, <a href="https://huggingface.co/ngquocvinh/NeoHorse-1-4B-GGUF">https://huggingface.co/ngquocvinh/NeoHorse-1-4B-GGUF</a>&#160;<a class="footnote-backref" href="#fnref:neohorse" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:neohorse" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decider-pypi">
+<p>PyPI, "decider-ai" release history, 2026-09-22 to 2026-09-29. Read 2026-09-30. <a href="https://pypi.org/project/decider-ai/">https://pypi.org/project/decider-ai/</a>&#160;<a class="footnote-backref" href="#fnref:decider-pypi" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decider">
+<p>Mapika, "decider" README, What's new and Standing sections. Read 2026-09-30. <a href="https://github.com/Mapika/decider">https://github.com/Mapika/decider</a>&#160;<a class="footnote-backref" href="#fnref:decider" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:decider" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:decider" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:decider" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decider2b">
+<p>Hugging Face, "Mapika/decider-2b" model page, download count. Read 2026-09-30. <a href="https://huggingface.co/Mapika/decider-2b">https://huggingface.co/Mapika/decider-2b</a>&#160;<a class="footnote-backref" href="#fnref:decider2b" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:kev">
+<p>Jared Palmer, "kev" README, releases and commit history, 2026-09-17 to 2026-09-29. Read 2026-09-30. <a href="https://github.com/jaredpalmer/kev">https://github.com/jaredpalmer/kev</a>&#160;<a class="footnote-backref" href="#fnref:kev" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:kev" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:kev" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:linnaeus">
+<p>DreamBlooms, "Linnaeus-0.1.0-2B-GGUF" model card and dohnuts.cpp commit history, 2026-09-29. <a href="https://huggingface.co/DreamBlooms/Linnaeus-0.1.0-2B-GGUF">https://huggingface.co/DreamBlooms/Linnaeus-0.1.0-2B-GGUF</a>, <a href="https://github.com/DreamBlooms/dohnuts.cpp">https://github.com/DreamBlooms/dohnuts.cpp</a>&#160;<a class="footnote-backref" href="#fnref:linnaeus" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:laya">
+<p>NandhaKishorM, "laya" repository and releases, 2026-09-18 to 2026-09-29. Read 2026-09-30. <a href="https://github.com/NandhaKishorM/laya">https://github.com/NandhaKishorM/laya</a>&#160;<a class="footnote-backref" href="#fnref:laya" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tsmodels">
+<p>TypeSafe, "Models", documentation page. Read 2026-09-30. <a href="https://docs.typesafe.ai/models">https://docs.typesafe.ai/models</a>&#160;<a class="footnote-backref" href="#fnref:tsmodels" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ollaya">
+<p>ollaya, release notes v0.1.0 to v0.7.5, 2026-09-23 to 2026-09-28. <a href="https://github.com/ollaya-dev/ollaya/releases">https://github.com/ollaya-dev/ollaya/releases</a>&#160;<a class="footnote-backref" href="#fnref:ollaya" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decision1">
+<p>vLLM Semantic Router, "Decision-1.0-Eos-0.8B" model card, 2026-09-21. Read 2026-09-30. <a href="https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B">https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B</a>&#160;<a class="footnote-backref" href="#fnref:decision1" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:openjev">
+<p>openjev, "openjev" model card, 2026-09-20. Read 2026-09-30. <a href="https://huggingface.co/openjev/openjev">https://huggingface.co/openjev/openjev</a>&#160;<a class="footnote-backref" href="#fnref:openjev" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mca">
+<p>TypeSafe, "Master Customer Agreement", last updated 2026-09-23. Read 2026-09-30. <a href="https://typesafe.ai/legal/mca">https://typesafe.ai/legal/mca</a>&#160;<a class="footnote-backref" href="#fnref:mca" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:corpus">
+<p>SargeDev, "jev-distill-corpus-v3" dataset card, 2026-09-21. Read 2026-09-30. <a href="https://huggingface.co/datasets/SargeDev/jev-distill-corpus-v3">https://huggingface.co/datasets/SargeDev/jev-distill-corpus-v3</a>&#160;<a class="footnote-backref" href="#fnref:corpus" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:jev9b">
+<p>autotrust, "JEV-9B" model card. Read 2026-09-30. <a href="https://huggingface.co/autotrust/JEV-9B">https://huggingface.co/autotrust/JEV-9B</a>&#160;<a class="footnote-backref" href="#fnref:jev9b" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hn-ollaya">
+<p>Hacker News, discussion of the ollaya launch, comment by pradn, 2026-09-25. <a href="https://news.ycombinator.com/item?id=49848269">https://news.ycombinator.com/item?id=49848269</a>&#160;<a class="footnote-backref" href="#fnref:hn-ollaya" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:cygnet">
+<p>blockbrain-ai, "cygnet-recipe" repository, 2026-09-24. <a href="https://github.com/blockbrain-ai/cygnet-recipe">https://github.com/blockbrain-ai/cygnet-recipe</a>&#160;<a class="footnote-backref" href="#fnref:cygnet" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:audit">
+<p>Lijuan Tang and Yuemeng Zheng, "Typed Decision Models: An Early Evidence Audit and Evaluation Checklist", arXiv 2609.32160, 2026-09-26. <a href="https://arxiv.org/abs/2609.32160">https://arxiv.org/abs/2609.32160</a>&#160;<a class="footnote-backref" href="#fnref:audit" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1623,7 +2043,9 @@
       <a href="../05-method/" rel="next">5. How we measured →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 

@@ -687,6 +687,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Q4 to Q8 is a plateau">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-model-at-every-quant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One model at every quant
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -731,6 +748,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The later decision models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#smaller-files-are-not-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smaller files are not faster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gguf-against-mlx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GGUF against MLX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-clms-publishers-say-about-its-quants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What CLM's publishers say about its quants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -738,6 +794,28 @@
     <span class="md-ellipsis">
       
         Size against accuracy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-chapter-did-not-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this chapter did not measure
       
     </span>
   </a>
@@ -1016,6 +1094,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Q4 to Q8 is a plateau">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-model-at-every-quant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One model at every quant
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1060,6 +1155,45 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="The later decision models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#smaller-files-are-not-faster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smaller files are not faster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gguf-against-mlx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GGUF against MLX
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-clms-publishers-say-about-its-quants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What CLM's publishers say about its quants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1067,6 +1201,28 @@
     <span class="md-ellipsis">
       
         Size against accuracy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-chapter-did-not-measure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this chapter did not measure
       
     </span>
   </a>
@@ -1133,6 +1289,7 @@
 
 <h1 id="7-quantization-and-size">7. Quantization and size<a class="headerlink" href="#7-quantization-and-size" title="Permanent link">&para;</a></h1>
 <p>A GGUF file stores a model's weights at reduced precision, and the precision you pick decides the file size, the memory the engine needs, and how many answers survive. On the router set, precision matters much less than you might expect, until it suddenly matters a lot.</p>
+<p>This chapter reads the router benchmark by file rather than by model. It covers what the quantization labels mean, where the plateau ends, how the engine shifts the curve, and which file to download. The numbers are ours, from the same 67 queries as <a href="../06-results/">chapter 6</a>. Where a model's publisher rates its own quantizations, the rating is quoted and kept apart from our scores.</p>
 <h2 id="what-the-labels-mean">What the labels mean<a class="headerlink" href="#what-the-labels-mean" title="Permanent link">&para;</a></h2>
 <p>The suffix of a GGUF file names its quantization: how many bits each weight keeps, and how llama.cpp groups them.</p>
 <table>
@@ -1218,6 +1375,40 @@
 </ul>
 <p>One query is 1.5 percentage points of accuracy on a 67-query set, so a difference of one or two answers between neighbouring quants is noise. If you read the grid expecting a smooth curve, you will find bumps that do not repeat: Qwen3.5-2B scores 61 at <code>q3</code> and 57 at <code>q8</code>, which says more about three borderline queries than about 3-bit weights.</p>
 <p>The time column is flat too. On a GPU the engines are limited by memory bandwidth and by the per-request overhead, not by the size of the weights, so a smaller file does not make a single short decision faster: decider-0.8b takes 51 to 55 ms per query on dohnuts (Metal) at every quant.</p>
+<h3 id="one-model-at-every-quant">One model at every quant<a class="headerlink" href="#one-model-at-every-quant" title="Permanent link">&para;</a></h3>
+<p>decider-0.8b on dohnuts (Metal) is the model with the fullest sweep: seven files of the same weights, read through the same trained readout on the same engine. Its translated scores, from the table above:</p>
+<pre class="mermaid"><code>xychart-beta
+    title "decider-0.8b on dohnuts (Metal): translated score by quant"
+    x-axis ["f16", "q8", "q6", "q5", "q4", "q3", "q2"]
+    y-axis "Correct of 67" 0 --&gt; 67
+    bar [61, 62, 62, 62, 61, 57, 18]</code></pre>
+<table>
+<thead>
+<tr>
+<th>quant</th>
+<th style="text-align: right;"><code>f16</code></th>
+<th style="text-align: right;"><code>q8</code></th>
+<th style="text-align: right;"><code>q6</code></th>
+<th style="text-align: right;"><code>q5</code></th>
+<th style="text-align: right;"><code>q4</code></th>
+<th style="text-align: right;"><code>q3</code></th>
+<th style="text-align: right;"><code>q2</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>translated, of 67</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">18</td>
+</tr>
+</tbody>
+</table>
+<p>Five files from <code>f16</code> down to <code>q4</code> score 61 or 62. The <code>q3</code> file scores 57, and the <code>q2</code> file 18. The chart is the whole chapter in one picture: a flat top, a step, and a cliff.</p>
 <h2 id="below-q3-it-collapses">Below Q3 it collapses<a class="headerlink" href="#below-q3-it-collapses" title="Permanent link">&para;</a></h2>
 <p>The plateau ends at three bits, and the drop below it is steep and uneven:</p>
 <table>
@@ -1307,6 +1498,7 @@
 </ul>
 <p>The quant curve has the same shape on every engine; the engine shifts it up or down. <a href="../03-engines/">Chapter 3</a> explains the readouts, and <a href="../06-results/">chapter 6</a> has the full cross-engine comparison.</p>
 <p>Laya shows a different failure: the laya-multilingual encoder run as a llama.cpp embedding model scores 52 at <code>q8</code> and <code>f16</code>, 51 at <code>q6</code>, 47 at <code>q5</code>, 36 at <code>q4</code> and 49 at <code>q3</code>. An encoder's hidden states feed a decision head that expects float precision, and the loss does not follow bit count in order. If you run laya through llama.cpp, keep <code>q8</code> or <code>f16</code>.</p>
+<p>The same engine can also hide a quant's cost. slot reads the same trained answer slot as dohnuts, and the two scored decider-0.8b identically at every quant. On the file compared text by text, their probabilities differed by at most 0.0004 (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>). Two engines that read the same position of the same file give the same answer, whatever the file's precision. A difference between engines is a difference between readouts, and a difference between files on one engine is a difference between quants. Keeping the two apart is what lets the sweeps above be read at all.</p>
 <h2 id="the-later-decision-models">The later decision models<a class="headerlink" href="#the-later-decision-models" title="Permanent link">&para;</a></h2>
 <p>The decision models added in the second round were mostly measured at two or three quantizations. They show the same plateau, and for the large ones the smallest file measured was as good as the largest:</p>
 <table>
@@ -1360,8 +1552,140 @@
 </tr>
 </tbody>
 </table>
-<p>Jev-Omni and rune are Gemma 4 models of 12B and 26B parameters, and at <code>q3</code> they lose nothing against <code>q5</code>, <code>q8</code> or <code>q4</code>; the one-answer differences favour the smaller file, which is what noise looks like. NeoHorse at 4B shows the small-model pattern in miniature: <code>q3</code> costs one answer in each mode. The CLM rows spread by six answers across five builds, but every one of them is far below the models above, so the choice of quant does not rescue the readout. jeb-35b-a3b was measured at <code>q3</code> only (63/63); its <code>q5</code> file needed more memory than the benchmark machine could spare.</p>
+<p>Jev-Omni and rune are Gemma 4 models of 12B and 26B parameters, and at <code>q3</code> they lose nothing against <code>q5</code>, <code>q8</code> or <code>q4</code>; the one-answer differences favour the smaller file, which is what noise looks like. NeoHorse at 4B shows the small-model pattern in miniature: <code>q3</code> costs one answer in each mode. The CLM rows spread by six answers across five builds, but every one of them is far below the models above, so the choice of quant does not rescue the readout. jeb-35b-a3b was measured at <code>q3</code> only (63/63); its <code>q5</code> file needed more memory than the benchmark machine could spare. That file is 23.6 GB. The benchmark stops a load when free memory falls below a fixed safety margin, because loading several large GGUFs at once had earlier filled the swap on the 48 GB test Mac and hung it. The <code>q5</code> load crossed that margin and was stopped before it could run a query (<a href="../08-speed/#memory-one-model-at-a-time">chapter 8</a>).</p>
+<p>Jev-Omni shows how much memory the plateau saves. Its three files are 6.09 GB at <code>q3</code>, 8.55 GB at <code>q5</code> and 12.67 GB at <code>q8</code>, and they scored 64, 63 and 63 in both modes. The smallest file is the best one here.</p>
 <p>For laya, the MXFP4 conversion lost eight answers, and the Q4_0 encoder from laya-neutron, read through llama.cpp with its head converted to GGUF, scored 54/67 and 51/67, the best laya result. Two 4-bit conversions of the same encoder scored 44 and 54, which says more about the conversion than about the bit count.</p>
+<h3 id="smaller-files-are-not-faster">Smaller files are not faster<a class="headerlink" href="#smaller-files-are-not-faster" title="Permanent link">&para;</a></h3>
+<p>The second-round models repeat the timing result of the first round. A smaller file of the same model did not answer faster, and several answered slower:</p>
+<table>
+<thead>
+<tr>
+<th>Model and engine</th>
+<th>Smaller file</th>
+<th>Larger file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NeoHorse-Jev-4B, its own server</td>
+<td><code>q3</code>: 296.1 ms, 2.95 GB</td>
+<td><code>q8</code>: 273.1 ms, 5.17 GB</td>
+</tr>
+<tr>
+<td>rune-26b-a4b, slot</td>
+<td><code>q3</code>: 366.6 ms, 13.52 GB</td>
+<td><code>q4</code>: 335.3 ms, 17.03 GB</td>
+</tr>
+<tr>
+<td>Jev-Omni, llama.cpp embeddings + head</td>
+<td><code>q3</code>: 1,222.3 ms, 6.09 GB</td>
+<td><code>q8</code>: 1,124.1 ms, 12.67 GB</td>
+</tr>
+<tr>
+<td>JevK5 4B, pcdServer</td>
+<td><code>q4</code>: 89.9 ms, 2.71 GB</td>
+<td><code>q8</code>: 84.2 ms, 4.48 GB</td>
+</tr>
+</tbody>
+</table>
+<p>As with the first-round models, the size of the file does not set the time of one short decision. Pick a quant for memory and for accuracy. Do not pick one for speed; <a href="../08-speed/#where-the-time-goes">chapter 8</a> shows where the time goes instead.</p>
+<h3 id="gguf-against-mlx">GGUF against MLX<a class="headerlink" href="#gguf-against-mlx" title="Permanent link">&para;</a></h3>
+<p>Four models ran both as GGUF files and as MLX builds. The runtimes differ as well as the formats, so these pairs compare two whole setups, not two quantizations of one file:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>GGUF</th>
+<th>MLX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APUS-OpenJev 35B-A3B</td>
+<td><code>q4</code> on pcdServer: 63/64, 296.8 ms</td>
+<td><code>4bit</code>: 63/62, 250.0 ms</td>
+</tr>
+<tr>
+<td>Jev-Omni</td>
+<td><code>q3</code> with its head: 64/64, 1,222.3 ms</td>
+<td><code>4bit</code>: 61/61, 780.1 ms</td>
+</tr>
+<tr>
+<td>CLM-v0.1-8B</td>
+<td><code>q8</code>: 39/28, 107.6 ms</td>
+<td><code>mlx8</code>: 38/31, 100.4 ms</td>
+</tr>
+<tr>
+<td>laya-multilingual</td>
+<td><code>q8</code> as embeddings: 52/49</td>
+<td><code>mxfp8</code>: 53/49, 57.8 ms</td>
+</tr>
+</tbody>
+</table>
+<p>At eight bits the two formats gave the same score within an answer or two. At four bits the results differ by model: Jev-Omni's MLX build scored 61/61 where its 3-bit GGUF scored 64/64, while APUS-OpenJev scored 63 on translated text in both formats. laya's 4-bit files spread from 36 to 54 across formats and converters, as shown above. We did not measure enough pairs to say whether that is the format, the converter or the model. If you run MLX, prefer the 8-bit build unless you have checked the 4-bit one on your own question.</p>
+<h3 id="what-clms-publishers-say-about-its-quants">What CLM's publishers say about its quants<a class="headerlink" href="#what-clms-publishers-say-about-its-quants" title="Permanent link">&para;</a></h3>
+<p>CLM is the one model in the benchmark whose publishers rate their own quantizations. The model card of the GGUF conversion marks <code>Q4_K_M</code> as "not recommended" and <code>Q5_K_M</code> as "usable", and only the <code>Q8_0</code> file passes the card's own quality gate. The card of the 4-bit MLX build carries the same "not recommended" rating.<sup id="fnref:clm-gguf"><a class="footnote-ref" href="#fn:clm-gguf">1</a></sup><sup id="fnref:clm-mlx4"><a class="footnote-ref" href="#fn:clm-mlx4">2</a></sup></p>
+<p>Our scores follow the same order at the edges and are flat in between:</p>
+<table>
+<thead>
+<tr>
+<th>CLM-v0.1-8B build</th>
+<th>Publisher's rating</th>
+<th>Translated / direct, of 67</th>
+<th style="text-align: right;">ms/query</th>
+<th style="text-align: right;">GB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Q8_0</code> GGUF</td>
+<td>passes the card's gate</td>
+<td>39 / 28</td>
+<td style="text-align: right;">107.6</td>
+<td style="text-align: right;">8.25</td>
+</tr>
+<tr>
+<td><code>Q5_K_M</code> GGUF</td>
+<td>"usable"</td>
+<td>38 / 27</td>
+<td style="text-align: right;">119.2</td>
+<td style="text-align: right;">5.78</td>
+</tr>
+<tr>
+<td><code>Q4_K_M</code> GGUF</td>
+<td>"not recommended"</td>
+<td>36 / 28</td>
+<td style="text-align: right;">113.8</td>
+<td style="text-align: right;">5.03</td>
+</tr>
+<tr>
+<td>MLX 8-bit</td>
+<td></td>
+<td>38 / 31</td>
+<td style="text-align: right;">100.4</td>
+<td style="text-align: right;">9.29</td>
+</tr>
+<tr>
+<td>MLX 4-bit</td>
+<td>"not recommended"</td>
+<td>33 / 28</td>
+<td style="text-align: right;">89.6</td>
+<td style="text-align: right;">5.20</td>
+</tr>
+<tr>
+<td>ollaya <code>clm:8b</code>, float32 ONNX</td>
+<td></td>
+<td>39 / 30</td>
+<td style="text-align: right;">1,677.9</td>
+<td style="text-align: right;">16.50</td>
+</tr>
+</tbody>
+</table>
+<p>The publisher's warning is right about the direction: the two 4-bit builds are the two lowest translated scores. It does not change the conclusion: the best CLM file scored 39 on translated text, where Qwen3.5-4B-Hmm scored 64. ollaya's own run of CLM on typed-decisions reached 0.357, which its release notes describe as "close to chance there".<sup id="fnref:ollaya-074"><a class="footnote-ref" href="#fn:ollaya-074">3</a></sup> A readout that is not suited to a question cannot be fixed by keeping more bits.</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>A published score is a score for one file. Winnow's card names it: it compares the <code>Q8_0</code> build with jev on a 231-item public subset of JevBench, where both score 85.71%.<sup id="fnref:winnow"><a class="footnote-ref" href="#fn:winnow">5</a></sup> ollaya builds <code>winnow:e4b</code> from the author's own <code>Q8_0</code> GGUF.<sup id="fnref:ollaya-070"><a class="footnote-ref" href="#fn:ollaya-070">4</a></sup> CLM's cards go further and rate two of their own files "not recommended". A board row with no quant named is a claim about some file, and it may not be the one you download.</p>
+</div>
 <h2 id="size-against-accuracy">Size against accuracy<a class="headerlink" href="#size-against-accuracy" title="Permanent link">&para;</a></h2>
 <p>Across families, parameters buy more than bits do. The best translated score of each size class on the router set:</p>
 <table>
@@ -1434,6 +1758,17 @@
 </tbody>
 </table>
 <p>The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. rune, a 26B mixture of experts at <code>q3</code>, is the only local row to match jev on translated text, and it drops to 57/67 on the original text. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.</p>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<p>Many files in the first round of this benchmark came from third-party quantizers such as bartowski, unsloth and mradermacher. In the second half of September 2026 the publishers of decision models began to ship their own GGUF files, sometimes with ratings, and the tools around them caught up.</p>
+<ul>
+<li><strong>Publishers now ship quants.</strong> NeoHorse-Jev-4B, JevK5, APUS-OpenJev, Jev-Omni and CLM all had GGUF files within days of release, from their authors or from converters. The decider GGUFs <code>ornotto</code> registers come from DreamBlooms, the organisation behind dohnuts.cpp.</li>
+<li><strong>The reference runtime reads GGUF.</strong> Mapika's <code>decider-ai</code> package added GGUF checkpoints in version 1.6.0 on 27 September 2026.<sup id="fnref:decider-ai"><a class="footnote-ref" href="#fn:decider-ai">6</a></sup> The PyTorch reference and dohnuts can now read the same quantized file, so a quant can be checked against the reference without a second conversion (<a href="../12-choosing/">chapter 12</a>).</li>
+<li><strong>Not every model has a GGUF.</strong> The rune file in this benchmark is version 1, from an earlier revision of the repository. The later v3 was published as full-precision weights only when we ran the benchmark.</li>
+<li><strong>llama.cpp moved, the engines did not.</strong> Both dohnuts.cpp and pcdServer pin llama.cpp v0.4.1 of 14 September 2026. The quant formats in this chapter are the ones that version reads (<a href="../03-engines/">chapter 3</a>).</li>
+</ul>
+<h2 id="what-this-chapter-did-not-measure">What this chapter did not measure<a class="headerlink" href="#what-this-chapter-did-not-measure" title="Permanent link">&para;</a></h2>
+<p>Every score in this chapter is an accuracy: the number of the 67 queries answered correctly. None of them says how a quant changes the probabilities that come with each answer. A dedicated model's temperature is fitted once, for the checkpoint, and every quantized file of that checkpoint reuses it. A quantized file may be more or less confident than the weights the temperature was fitted on. We did not measure calibration per quant. If your application thresholds the probability, as the gate in <a href="../09-confidence/#a-fallback-gate">chapter 9</a> does, check the threshold again on the file you ship.</p>
+<p>The benchmark also ran one quant of each file on one machine. The noise between neighbouring quants, one or two answers, is the same size as the differences it hides. A quant that scores one answer higher here is not better; it is the same.</p>
 <h2 id="which-quant-to-download">Which quant to download<a class="headerlink" href="#which-quant-to-download" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>0.5B to 1B models</strong>: <code>q5</code>, or <code>q8</code> if the file size does not matter. Never below <code>q4</code>; at <code>q2</code> they fail.</li>
@@ -1444,6 +1779,29 @@
 <li><strong>Anything larger</strong>: <code>q4</code>, and check the memory arithmetic in <a href="../08-speed/#memory-one-model-at-a-time">chapter 8</a> before you load it.</li>
 </ul>
 <p>The registered models in the <code>ornotto</code> package follow this: <code>decider-0.8b</code>, <code>decider-2b</code>, <code>kev-0.8b</code>, <code>dohnuts-0.8b</code> and <code>qwen3.5-0.8b</code> are <code>q8</code>, the 2B and 4B chat models are <code>q4</code> (<a href="../10-package/">chapter 10</a>).</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:clm-gguf">
+<p>czl, "CLM-v0.1-8B-GGUF" model card, created 2026-09-26, read 2026-09-30. <a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">https://huggingface.co/czl/CLM-v0.1-8B-GGUF</a>&#160;<a class="footnote-backref" href="#fnref:clm-gguf" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:clm-mlx4">
+<p>czl, "CLM-v0.1-8B-MLX-4bit" model card, read 2026-09-30. <a href="https://huggingface.co/czl/CLM-v0.1-8B-MLX-4bit">https://huggingface.co/czl/CLM-v0.1-8B-MLX-4bit</a>&#160;<a class="footnote-backref" href="#fnref:clm-mlx4" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ollaya-074">
+<p>ollaya-dev, "ollaya v0.7.4" release notes, 2026-09-28. <a href="https://github.com/ollaya-dev/ollaya/releases">https://github.com/ollaya-dev/ollaya/releases</a>&#160;<a class="footnote-backref" href="#fnref:ollaya-074" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ollaya-070">
+<p>ollaya-dev, "ollaya v0.7.0" release notes, 2026-09-26. <a href="https://github.com/ollaya-dev/ollaya/releases">https://github.com/ollaya-dev/ollaya/releases</a>&#160;<a class="footnote-backref" href="#fnref:ollaya-070" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:winnow">
+<p>EldanRing, "Winnow-12B" model card, created 2026-09-20, read 2026-09-30. <a href="https://huggingface.co/EldanRing/Winnow-12B">https://huggingface.co/EldanRing/Winnow-12B</a>&#160;<a class="footnote-backref" href="#fnref:winnow" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:decider-ai">
+<p>Mapika, "decider" README and <code>decider-ai</code> release notes, version 1.6.0, 2026-09-27. <a href="https://github.com/Mapika/decider">https://github.com/Mapika/decider</a>&#160;<a class="footnote-backref" href="#fnref:decider-ai" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1501,7 +1859,9 @@
       <a href="../08-speed/" rel="next">8. Speed, memory and caching →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 

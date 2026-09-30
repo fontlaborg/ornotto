@@ -31,3 +31,43 @@
 .md-typeset .bench td.score[data-sort] { font-weight: 500; }
 .md-typeset .bench th:not([aria-sort])::after { content: " ↕"; font-size: .8em; opacity: .35; }
 .md-typeset .bench .table-filter { position: sticky; left: 0; }
+
+/* ---- Landing page (index.md) ----------------------------------------------
+   Only theme tokens (--color-base-*, --md-*, --fl-*), so every subtheme and the
+   dark palette follow. Grids use min(100%, …) so nothing overflows at phone width. */
+.md-content__inner.md-typeset > .ornotto-hero,
+.md-content__inner.md-typeset > .ornotto-stats,
+.md-content__inner.md-typeset > .ornotto-grid { max-width: min(100%, 60rem); }
+.md-content__inner.md-typeset .ornotto-hero { background: var(--color-base-200); border-radius: var(--radius-box); min-height: 0; padding: var(--fl-space-12) var(--fl-space-6) var(--fl-space-6); }
+.md-content__inner.md-typeset .ornotto-hero .fl-hero__title { font-size: var(--fl-h1, var(--fl-h2)); max-width: 40rem; margin-inline: auto; }
+.md-content__inner.md-typeset .ornotto-hero .fl-hero__title .headerlink { display: none; }
+.md-content__inner.md-typeset .ornotto-hero p.ornotto-hero__eyebrow { margin-bottom: var(--fl-space-3);
+  font-family: var(--fl-font-navi); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--md-accent-fg-color); }
+.md-content__inner.md-typeset .ornotto-hero p:has(.md-button) { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--fl-space-3); }
+.md-content__inner.md-typeset .ornotto-hero p:has(.ornotto-hero__img) { max-width: none; margin: var(--fl-space-8) 0 0; }
+.md-content__inner.md-typeset .ornotto-hero__img { display: block; width: 100%; height: auto; border-radius: var(--radius-box); }
+
+.md-content__inner.md-typeset .ornotto-stats { display: grid; gap: var(--fl-space-4); margin: var(--fl-space-8) 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 60em) { .md-content__inner.md-typeset .ornotto-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.md-content__inner.md-typeset .ornotto-stats .ornotto-stat { display: flex; flex-direction: column; gap: var(--fl-space-1, .25rem);
+  padding: var(--fl-space-4); border: 0; min-width: 0; background: var(--color-base-200); border-radius: var(--radius-box);
+  color: var(--color-base-content); }
+.md-content__inner.md-typeset .ornotto-stats .ornotto-stat__title { font-family: var(--fl-font-navi); font-size: .75rem; white-space: normal;
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent); }
+.md-content__inner.md-typeset .ornotto-stats .ornotto-stat__value { font-family: var(--fl-font-head); font-size: 2rem; line-height: 1.1;
+  font-variant-numeric: tabular-nums; color: var(--color-base-content); }
+.md-content__inner.md-typeset .ornotto-stats .ornotto-stat__desc { font-size: .75rem; white-space: normal;
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent); }
+
+.md-content__inner.md-typeset .ornotto-grid { display: grid; gap: var(--fl-space-4); margin: var(--fl-space-6) 0 var(--fl-space-8);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.md-content__inner.md-typeset .ornotto-grid .fl-card { display: flex; flex-direction: column; }
+.md-content__inner.md-typeset .ornotto-grid .fl-card h3 { margin-top: 0; }
+.md-content__inner.md-typeset .ornotto-grid .fl-card > p:last-child { margin-top: auto; padding-top: var(--fl-space-3); }
+
+/* Home-page footer strip: licence and project links. */
+.ornotto-home-strip { display: flex; flex-wrap: wrap; gap: var(--fl-space-2) var(--fl-space-6); align-items: baseline;
+  margin-top: var(--fl-space-6); font-size: .7rem; color: var(--md-default-fg-color--light); }
+.ornotto-home-strip p { margin: 0 !important; }

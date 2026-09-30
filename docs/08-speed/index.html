@@ -737,6 +737,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Prefix caching in dohnuts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upstream-after-the-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upstream after the merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -762,10 +779,60 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#speed-claims-by-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Speed claims by others
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#memory-one-model-at-a-time" class="md-nav__link">
     <span class="md-ellipsis">
       
         Memory: one model at a time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory: one model at a time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-went-wrong-and-what-the-guard-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What went wrong, and what the guard does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budgeting-memory-on-a-mac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budgeting memory on a Mac
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1027,6 +1094,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Prefix caching in dohnuts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upstream-after-the-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upstream after the merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1052,10 +1136,60 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#speed-claims-by-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Speed claims by others
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#memory-one-model-at-a-time" class="md-nav__link">
     <span class="md-ellipsis">
       
         Memory: one model at a time
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory: one model at a time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-went-wrong-and-what-the-guard-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What went wrong, and what the guard does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budgeting-memory-on-a-mac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budgeting memory on a Mac
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-in-september-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed in September 2026
       
     </span>
   </a>
@@ -1111,6 +1245,8 @@
 
 <h1 id="8-speed-memory-and-caching">8. Speed, memory and caching<a class="headerlink" href="#8-speed-memory-and-caching" title="Permanent link">&para;</a></h1>
 <p>A decision costs one forward pass over the prompt and nothing more: no readout in this book lets the model write its answer (slot asks llama-server for a single token only to read the candidates' log-probabilities). So the latency of a decision is the time to prefill the prompt, plus whatever the engine can avoid prefilling again, plus the HTTP round trip. That is why the same GGUF file answers in 28 ms on one engine and in 275 ms on another.</p>
+<p><img alt="A laptop with a stopwatch and stacked memory bars" src="../img/ch08-speed-memory.png" />
+<em>On a Mac, speed and memory share one budget.</em></p>
 <h2 id="same-weights-four-setups">Same weights, four setups<a class="headerlink" href="#same-weights-four-setups" title="Permanent link">&para;</a></h2>
 <p>The DreamBlooms conversion of decider-0.8b (<code>decider-0.8b-q8_0.gguf</code>) ran in four setups. Times are the mean client wall-clock per query over the 67 translated queries, HTTP included, on an Apple M4 Max:</p>
 <table>
@@ -1307,6 +1443,31 @@
 </ul>
 <p>An earlier draft also cached single-question requests the second time their state appeared. It was dropped: the same request then scored differently depending on what the server had seen before (by up to 0.014 on the CPU), and always splitting the prompt cost single-question requests 7 to 10 percent. The version in the pull request changes nothing for a request with one row.</p>
 <p>The <code>ornotto</code> wheels build dohnuts from the branch of that pull request, so you get the faster multi-question path without waiting for the upstream merge.</p>
+<p>The path a request takes through the patched runner:</p>
+<pre class="mermaid"><code>flowchart TD
+    R["Request: one state, several questions"] --&gt; N{"More than one row?"}
+    N -- "no" --&gt; S["Old path: prefill the whole row"]
+    N -- "yes" --&gt; L{"Prefix of 16 tokens or more?"}
+    L -- "no" --&gt; S
+    L -- "yes" --&gt; C{"Checkpoint for these exact&lt;br&gt;prefix tokens in the LRU?"}
+    C -- "hit" --&gt; H["Restore the checkpoint"]
+    C -- "miss" --&gt; P["Decode the state prefix alone,&lt;br&gt;save a full checkpoint"]
+    H --&gt; X["Decode only each row's suffix"]
+    P --&gt; X
+    X --&gt; O["Letter logits or pointer scores,&lt;br&gt;divided by the profile temperature"]
+    S --&gt; O</code></pre>
+<h3 id="upstream-after-the-merge">Upstream after the merge<a class="headerlink" href="#upstream-after-the-merge" title="Permanent link">&para;</a></h3>
+<p>The maintainer, mili-tan, merged the pull request on 2026-09-24, about six hours after it was opened, with the only comment on it: "lgtm, thank you very much."<sup id="fnref:pr1"><a class="footnote-ref" href="#fn:pr1">1</a></sup> Eight minutes later the upstream repository gained a commit of its own, "Cache decoded state prefixes across calls" (<code>60d247e5</code>).<sup id="fnref:upstream-cache"><a class="footnote-ref" href="#fn:upstream-cache">2</a></sup> It does two things:</p>
+<ul>
+<li>It moves the checkpoint LRU out of the decider and kev runner into a shared cache, still bounded at 256 MiB and still keyed by the exact prefix tokens.</li>
+<li>It uses that cache in the Dohnuts model's own decode path as well. That path already decoded the shared <code>State:</code> prefix once per call and copied it to every candidate sequence; it now also keeps the decoded prefix across calls, so a state the server has seen before skips its prefill there too. The upstream README says the side models share the same cache.</li>
+</ul>
+<p>So there are now two layers of reuse in upstream dohnuts. Within one request, rows that share a state decode it once. Across requests, a state seen before is restored from the LRU, on every model family dohnuts runs. pcdServer's schema cache sits on the other side of the prompt: it keeps the fixed schema prefix warm, not the user's state, because pcdServer puts the schema first and the user text after it.</p>
+<p>Two further upstream changes affect speed. On 2026-09-29 dohnuts gained a <code>--flash-attn</code> switch that takes <code>true</code>, <code>false</code> or <code>auto</code>, with <code>auto</code> as the default; <code>auto</code> leaves the choice to llama.cpp, which enables flash attention when the active device supports it.<sup id="fnref:flash"><a class="footnote-ref" href="#fn:flash">3</a></sup> The same day it added a new Dohnuts-family model, Linnaeus-0.1.0-2B (<a href="../04-models/#dohnuts">chapter 4</a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Measured before the upstream changes</p>
+<p>Every dohnuts number in this book was measured on the pull request branch, before the cross-call cache and the flash-attention switch existed upstream. The <code>ornotto</code> submodule still follows that branch. After the submodule moves to upstream, the dohnuts rows need to be measured again: the new cache overlaps the one in the pull request, and the <code>auto</code> default lets the backend turn flash attention on when the device supports it.</p>
+</div>
 <h2 id="load-time-and-the-latency-floor">Load time and the latency floor<a class="headerlink" href="#load-time-and-the-latency-floor" title="Permanent link">&para;</a></h2>
 <p>Load time is paid once per process, but it decides whether an engine suits a command-line tool that starts cold. From the benchmark's load column:</p>
 <table>
@@ -1523,6 +1684,90 @@
 <li><strong>ollaya's CPU path is slow for decoders.</strong> ollaya runs most of its models as float32 ONNX graphs on the CPU. decider-0.8b takes 285 ms there, against 52 ms on dohnuts (Metal) with the same weights and the same score within one answer. CLM takes 1.7 seconds in ollaya and 108 ms when its encoder runs in llama.cpp. The encoders that ollaya runs on MLX are fast: laya in 12.3 ms.</li>
 <li><strong>Load time is a real cost for the large and the fixed-shape models.</strong> The benchmark preloaded every ollaya model through <code>/api/decide</code> and kept it resident, so the preload stays out of ms/query. It took 36 seconds for winnow and 49 seconds for clm. The MLX build of APUS-OpenJev loaded in 27 seconds; the same model as a GGUF on pcdServer in a third of a second. The authors' System One servers were started before the timed run, so their load is not measured.</li>
 </ul>
+<h2 id="speed-claims-by-others">Speed claims by others<a class="headerlink" href="#speed-claims-by-others" title="Permanent link">&para;</a></h2>
+<p>Decision models were sold on speed from the first day, and September 2026 produced many latency figures. None of them was measured the way the tables above were. They come from other machines, other prompts, other numbers of options, and different ideas of where the clock starts and stops. They are collected here, apart from our measurements, so that each keeps its context.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Model or service</th>
+<th>Claimed latency</th>
+<th>Context as stated</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TypeSafe blog<sup id="fnref:ts-launch"><a class="footnote-ref" href="#fn:ts-launch">4</a></sup></td>
+<td>jev, hosted</td>
+<td>70 to 500 ms</td>
+<td>end to end, vendor claim</td>
+<td>2026-09-15</td>
+</tr>
+<tr>
+<td>typed-decisions dataset card<sup id="fnref:typed"><a class="footnote-ref" href="#fn:typed">6</a></sup></td>
+<td>jev 1.13.0, hosted</td>
+<td>710 ms p50</td>
+<td>the card's client, measured 2026-09-18</td>
+<td>read 2026-09-30</td>
+</tr>
+<tr>
+<td>typed-decisions dataset card<sup id="fnref2:typed"><a class="footnote-ref" href="#fn:typed">6</a></sup></td>
+<td>meraGPT Decider 1, hosted</td>
+<td>526 ms p50</td>
+<td>the card's client</td>
+<td>read 2026-09-30</td>
+</tr>
+<tr>
+<td>typed-decisions dataset card<sup id="fnref3:typed"><a class="footnote-ref" href="#fn:typed">6</a></sup></td>
+<td>Liquid AI d1, hosted</td>
+<td>525 ms p50</td>
+<td>the card's client, measured 2026-09-30</td>
+<td>read 2026-09-30</td>
+</tr>
+<tr>
+<td>The New Stack on OpenAI DevDay<sup id="fnref:openai"><a class="footnote-ref" href="#fn:openai">7</a></sup></td>
+<td>OpenAI Decision API on Luna</td>
+<td>150 ms</td>
+<td>vendor claim, "compared to GPT-6 Luna, which would take 1.6 seconds"</td>
+<td>2026-09-29</td>
+</tr>
+<tr>
+<td>laya-mlx README<sup id="fnref:laya-ports"><a class="footnote-ref" href="#fn:laya-ports">8</a></sup></td>
+<td>laya on MLX</td>
+<td>7 to 14 ms</td>
+<td>"short decisions on M3 Max"</td>
+<td>2026-09-19 onwards</td>
+</tr>
+<tr>
+<td>laya-coreml README<sup id="fnref2:laya-ports"><a class="footnote-ref" href="#fn:laya-ports">8</a></sup></td>
+<td>laya on Core ML</td>
+<td>about 5 ms</td>
+<td>"short decisions on M3 Max", Neural Engine</td>
+<td>2026-09-19 onwards</td>
+</tr>
+<tr>
+<td>Jeff README<sup id="fnref:jeff"><a class="footnote-ref" href="#fn:jeff">9</a></sup></td>
+<td>Jeff 0.8B</td>
+<td>28 ms</td>
+<td>Apple M4 Max, MLX</td>
+<td>2026-09-28</td>
+</tr>
+<tr>
+<td>Red Hat Developer<sup id="fnref:redhat"><a class="footnote-ref" href="#fn:redhat">10</a></sup></td>
+<td>djev on vLLM</td>
+<td>35 to 60 ms</td>
+<td>single step on vLLM, Red Hat's measurement</td>
+<td>2026-09-28</td>
+</tr>
+</tbody>
+</table>
+<p>Read the table as a list of what each author saw, not as a ranking. The hosted rows include a network round trip of unknown length, and our own figure for jev, 466 ms per query (<a href="../06-results/">chapter 6</a>), includes ours. The local rows differ in hardware (M3 Max, M4 Max, a server GPU), in the prompt, and in what "a decision" contains: the laya ports speak of short decisions, and the router question here carries five options with a description each. The closest comparison the tables above allow is our own laya run on the same kind of hardware: 6.9 ms on MLX and 4.2 ms on the Neural Engine with a compact prompt (<a href="#load-time-and-the-latency-floor">load time and the latency floor</a>).</p>
+<p>Hosted speed also depends on how busy the service is. On 2026-09-18, three days after launch, TechCrunch reported that jev's API briefly failed under demand.<sup id="fnref:techcrunch"><a class="footnote-ref" href="#fn:techcrunch">11</a></sup> TypeSafe's documentation lists rate limits of 100K tokens per second and 40 requests per second.<sup id="fnref:ts-models"><a class="footnote-ref" href="#fn:ts-models">5</a></sup> A local engine has no queue but its own, and no limit but the machine.</p>
+<div class="admonition quote">
+<p class="admonition-title">How it looked from the outside</p>
+<p>Our contribution to dohnuts, the prefix reuse described above, was a pull request opened late on 2026-09-23. It was merged the next morning with a one-line review, "lgtm, thank you very much." Eight minutes after the merge the maintainer pushed a commit that took the same checkpoint cache and applied it across calls to every model family the server runs. Most projects in this field were days old that month, and the code moved while it was being measured: the dohnuts rows in this chapter were measured before either commit.<sup id="fnref2:pr1"><a class="footnote-ref" href="#fn:pr1">1</a></sup><sup id="fnref2:upstream-cache"><a class="footnote-ref" href="#fn:upstream-cache">2</a></sup></p>
+</div>
 <h2 id="memory-one-model-at-a-time">Memory: one model at a time<a class="headerlink" href="#memory-one-model-at-a-time" title="Permanent link">&para;</a></h2>
 <p>Every engine in this book loads its whole model into memory, and on a Mac the GPU shares that memory with everything else. Loading several models at once on the 48 GB benchmark machine filled its boot disk with swap and hung macOS (<a href="../05-method/#one-model-at-a-time">chapter 5</a>).</p>
 <p>The fix was procedural, and it is worth copying if you benchmark models yourself:</p>
@@ -1531,7 +1776,77 @@
 <li>Stop a server by its process and then confirm that its port is free; a server that ignores the stop signal still holds its memory.</li>
 <li>Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit. That limit stopped one measurement in the second round: the Q5_K_M file of jeb-35b-a3b took available memory below 4 GB while it loaded, and it has no row.</li>
 </ul>
+<h3 id="what-went-wrong-and-what-the-guard-does">What went wrong, and what the guard does<a class="headerlink" href="#what-went-wrong-and-what-the-guard-does" title="Permanent link">&para;</a></h3>
+<p>The incident happened on 2026-09-23, during the first benchmark round. Three things were running at once. The quantization sweep loaded several GGUF files per batch to save time, and the translation model stayed loaded beside them. A set of exploratory Core AI probes of decider ran, without any guard, while an encoder step was still running. And the driver kept loading the next model after the previous one had failed. macOS reported "No space left on device" while the 16-bit GGUF of laya was running: swap had filled the boot disk, and the machine stopped responding. The root cause was never isolated to one process; all three contributed.</p>
+<p>A second defect made it worse. The helper that stopped a server found it by its port on the command line, and matched the port followed by a space. A server whose port was the last argument never matched, so it was never stopped, and it kept its model in memory while the next one loaded.</p>
+<p>The rerun used a guard that sampled the machine every two seconds and stopped the unit under test when any of these held:</p>
+<ul>
+<li>swap had grown by more than 4 GB since the unit started;</li>
+<li>the boot disk had less than 30 GB free;</li>
+<li>available RAM had dropped below 4 GB;</li>
+<li>the unit had run for 30 minutes.</li>
+</ul>
+<p>When the guard tripped it logged the largest memory users, stopped every server, aborted the run and marked the method so that it would be skipped next time. Before each unit the driver asserted that no model process was resident, and after each unit it stopped the server and checked that the port was free. With that in place, swap stayed flat at about 2.7 GB for every unit of the rerun, the 35B models included.</p>
+<p>The guard tripped twice in the rounds that followed, and both times it did what it was for:</p>
+<ul>
+<li>The jeb-35b-a3b Q5_K_M file is 23.6 GB. While it loaded, available memory fell below 4 GB, the guard stopped it, and the model was not benchmarked at that quantization. Its Q3_K_M row, 63/67 on both texts, stands (<a href="../04-models/#later-dedicated-models">chapter 4</a>).</li>
+<li>A Core AI export of decider-0.8b built for GPU pipelining grew swap by more than 2 GB within seconds of loading, under a tighter probe-only limit, and logged a connection error from the Neural Engine compiler service. The probe was stopped, and that export has no row either.</li>
+</ul>
+<p>Neither result says the model is broken. Each says the file needed more free memory at load time than the benchmark machine had left, which is better learned from a log line than from a frozen screen.</p>
+<h3 id="budgeting-memory-on-a-mac">Budgeting memory on a Mac<a class="headerlink" href="#budgeting-memory-on-a-mac" title="Permanent link">&para;</a></h3>
+<p>On Apple silicon the GPU has no memory of its own. A model loaded with Metal takes its weights from the same pool as the applications you have open, and macOS starts swapping when that pool runs out. The numbers to add up before you load are the ones this book already gives:</p>
+<ul>
+<li>the model file itself, which is roughly what the engine keeps resident (<a href="../07-quantization/#size-against-accuracy">chapter 7</a> lists the file sizes);</li>
+<li>the checkpoint cache: pcdServer's LRU is bounded by <code>--cache-bytes</code>, 512 MiB as <code>ornotto</code> starts it, and dohnuts' prefix LRU by 256 MiB;</li>
+<li>for a fallback gate, both models at once (<a href="../09-confidence/#a-fallback-gate">chapter 9</a>);</li>
+<li>everything else on the machine, which on a working Mac is rarely small.</li>
+</ul>
+<p>A model that fits with room to spare runs at the speeds in this chapter. A model that does not fit may still load and run from swap, at speeds this chapter does not report, or it may stop the machine as it did here. <a href="../12-choosing/#which-engine-and-model">Chapter 12</a> turns these sizes into a choice by the memory you have.</p>
 <p>The <code>ornotto</code> package applies the same discipline to itself. Each <code>Decider</code> shares one engine process per model, engine and device; the processes stop when Python exits, and <code>ornotto.shutdown()</code> stops them earlier (<a href="../10-package/">chapter 10</a>). If your code opens several models at once, add up their GGUF sizes plus the pcdServer checkpoint budget before you do.</p>
+<h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Upstream dohnuts</strong> merged our prefix reuse on 2026-09-24, generalised it into a cross-call prefix cache the same morning, and added a <code>--flash-attn</code> switch defaulting to <code>auto</code> on 2026-09-29. The dohnuts rows here predate both; re-measurement on upstream is pending (<a href="#upstream-after-the-merge">upstream after the merge</a>).</li>
+<li><strong>Hosted decision services</strong> multiplied. OpenAI announced a Decision API with a 150 ms claim on 2026-09-29, and Liquid AI's d1 and meraGPT's Decider 1 joined jev on the typed-decisions board with p50 latencies near 525 ms (<a href="#speed-claims-by-others">speed claims by others</a>).</li>
+<li><strong>The engines' base</strong> did not move. dohnuts and pcdServer both pin llama.cpp v0.4.1 of 2026-09-14, so none of the llama.cpp changes later in the month is in these timings (<a href="../03-engines/">chapter 3</a>).</li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:pr1">
+<p>DreamBlooms/dohnuts.cpp, pull request #1, "Reuse the state prefix across side-model rows", opened 2026-09-23, merged 2026-09-24. <a href="https://github.com/DreamBlooms/dohnuts.cpp/pull/1">https://github.com/DreamBlooms/dohnuts.cpp/pull/1</a>&#160;<a class="footnote-backref" href="#fnref:pr1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:pr1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:upstream-cache">
+<p>DreamBlooms/dohnuts.cpp, commit <code>60d247e5</code>, "Cache decoded state prefixes across calls", 2026-09-24. <a href="https://github.com/DreamBlooms/dohnuts.cpp/commit/60d247e5362e233fac94bdf19b74c9f7bf395704">https://github.com/DreamBlooms/dohnuts.cpp/commit/60d247e5362e233fac94bdf19b74c9f7bf395704</a>&#160;<a class="footnote-backref" href="#fnref:upstream-cache" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:upstream-cache" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:flash">
+<p>DreamBlooms/dohnuts.cpp, commit <code>4ba1cf5</code>, "Make Flash Attention a --flash-attn[=true|false|auto] switch", 2026-09-29. <a href="https://github.com/DreamBlooms/dohnuts.cpp/commits/main">https://github.com/DreamBlooms/dohnuts.cpp/commits/main</a>&#160;<a class="footnote-backref" href="#fnref:flash" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ts-launch">
+<p>Diogo Almeida, TypeSafe, "Introducing System One Models &amp; Jev", 2026-09-15. <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">https://typesafe.ai/blog/introducing-system-one-models-and-jev</a>&#160;<a class="footnote-backref" href="#fnref:ts-launch" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ts-models">
+<p>TypeSafe, "Models", documentation, read 2026-09-30. <a href="https://docs.typesafe.ai/models">https://docs.typesafe.ai/models</a>&#160;<a class="footnote-backref" href="#fnref:ts-models" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:typed">
+<p>LocalLLaMA, "typed-decisions" dataset card, Hugging Face, read 2026-09-30. <a href="https://huggingface.co/datasets/LocalLLaMA/typed-decisions">https://huggingface.co/datasets/LocalLLaMA/typed-decisions</a>&#160;<a class="footnote-backref" href="#fnref:typed" title="Jump back to footnote 6 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:typed" title="Jump back to footnote 6 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:typed" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:openai">
+<p>Frederic Lardinois, The New Stack, "OpenAI Decision API on Luna", 2026-09-29. <a href="https://thenewstack.io/openai-decision-api-luna/">https://thenewstack.io/openai-decision-api-luna/</a>&#160;<a class="footnote-backref" href="#fnref:openai" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:laya-ports">
+<p>mizorewww, laya-mlx and laya-coreml READMEs, read 2026-09-30. <a href="https://github.com/mizorewww/laya-mlx">https://github.com/mizorewww/laya-mlx</a>, <a href="https://github.com/mizorewww/laya-coreml">https://github.com/mizorewww/laya-coreml</a>&#160;<a class="footnote-backref" href="#fnref:laya-ports" title="Jump back to footnote 8 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:laya-ports" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:jeff">
+<p>firelex, "jeff" README, read 2026-09-30. <a href="https://github.com/firelex/jeff">https://github.com/firelex/jeff</a>&#160;<a class="footnote-backref" href="#fnref:jeff" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:redhat">
+<p>Lucas Wilkinson and Rob Greenberg, Red Hat Developer, "Run decision models on vLLM and Red Hat AI using DiffusionGemma", 2026-09-28. <a href="https://developers.redhat.com/articles/2026/09/28/run-decision-model-vllm-and-red-hat-ai">https://developers.redhat.com/articles/2026/09/28/run-decision-model-vllm-and-red-hat-ai</a>&#160;<a class="footnote-backref" href="#fnref:redhat" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:techcrunch">
+<p>TechCrunch, "A new kind of AI model from a ChatGPT inventor is thrilling developers", 2026-09-18. <a href="https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/">https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/</a>&#160;<a class="footnote-backref" href="#fnref:techcrunch" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -1589,7 +1904,9 @@
       <a href="../09-confidence/" rel="next">9. Confidence and fallback →</a>
       
     </nav>
+    
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 
