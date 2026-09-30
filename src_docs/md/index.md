@@ -18,8 +18,8 @@ ornotto · a book and a Python package
 Send a message and a closed list of answers. The model returns one of them and a probability for every alternative, with no generated text to parse, repair or retry.
 { .ornotto-lead }
 
-[Read the book](01-deciding.md){ .md-button .md-button--primary }
-[Install the package](#try-it-in-two-lines){ .md-button }
+[See the results](results/tldr.md){ .md-button .md-button--primary }
+[Read the book](01-deciding.md){ .md-button }
 
 </div>
 
@@ -79,7 +79,7 @@ Almeida asked this on jev's launch thread, when the discussion turned to whether
 
 ## What we measured
 
-One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 891 ms. [Chapter 6](06-results.md) has all 258 methods.
+One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 891 ms. [All 258 rows and every table](results/details.md) are on the results page.
 { .ornotto-section-lead }
 
 <figure class="ornotto-bars">

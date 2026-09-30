@@ -33,19 +33,23 @@ theme:
       accent: red
 
 nav:
-  - Concepts:
-      - Home: index.md
-      - 1. Deciding, not generating: 01-deciding.md
-      - 2. The shape of a decision: 02-decisions.md
-      - 3. Ways to read an answer: 03-engines.md
-      - 4. Dedicated, fine-tuned and vanilla models: 04-models.md
-  - Benchmarks:
-      - 5. How we measured: 05-method.md
-      - 6. Results: 06-results.md
-      - 7. Quantization and size: 07-quantization.md
-      - 8. Speed, memory and caching: 08-speed.md
-      - 9. Confidence and fallback: 09-confidence.md
-  - The package:
+  - Home: index.md
+  - Results:
+      - "Results: the short version": results/tldr.md
+      - "Results: every table": results/details.md
+  - Book:
+      - Concepts:
+          - 1. Deciding, not generating: 01-deciding.md
+          - 2. The shape of a decision: 02-decisions.md
+          - 3. Ways to read an answer: 03-engines.md
+          - 4. Dedicated, fine-tuned and vanilla models: 04-models.md
+      - Method and analysis:
+          - 5. How we measured: 05-method.md
+          - 6. Results: 06-results.md
+          - 7. Quantization and size: 07-quantization.md
+          - 8. Speed, memory and caching: 08-speed.md
+          - 9. Confidence and fallback: 09-confidence.md
+  - Use ornotto:
       - 10. The ornotto package: 10-package.md
       - 11. Typed decisions and pydantic-ai: 11-typed.md
       - 12. Choosing, building and contributing: 12-choosing.md
