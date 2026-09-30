@@ -129,7 +129,8 @@ for text in ("Build a kern feature for A V", "Jak zmienić kąt pochylenia kursy
 The gate is ordinary code around two `Decider` objects; `ornotto` has no built-in fallback. It relies on two properties of every `Answer`. `confidence` is the probability of the answer given: the top option for a choice, the top level for a score, and the larger of p(yes) and p(no) for a yes/no question. `calibrated` says whether that probability was temperature-scaled by the model's recipe. Here the first stage runs on dohnuts, where `calibrated` is `True`, and only its confidence is compared with the threshold; the second stage's confidence is printed but never tested. Keep it that way if you build your own: a threshold belongs to one model on one engine.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Query"] --> F["decider-0.8b on dohnuts<br>calibrated"]
     F --> T{"confidence at or above<br>the threshold?"}
     T -- "yes" --> A["Use the fast answer"]

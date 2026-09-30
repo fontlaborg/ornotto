@@ -68,6 +68,7 @@ Each query was translated once and the English text was cached, so every classif
 The whole run, from a labelled query to a row in this book, has five stages. Translation happens once per query. Classification happens once per query, per mode, per method.
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart TD
     Q["67 labelled queries"] --> L{"English?"}
     L -- "yes, 28" --> EN["English text"]

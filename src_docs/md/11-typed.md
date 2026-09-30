@@ -140,7 +140,8 @@ The adapter is small on purpose. `ornotto.pydantic_ai` imports three names from 
 ### How requests reach the engine
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
   A[Agent] --> T[TypeSafeModel]
   T -- "POST /v1/systemone" --> D[dohnuts]
   T -- "in-process transport" --> X[ornotto translator] -- "POST /v1/pcd/decode" --> P[pcdServer]
@@ -153,16 +154,17 @@ flowchart LR
 For pcdServer, one agent step makes three hops, all inside your machine:
 
 ```mermaid
+%%{init: {"sequence": {"useMaxWidth": false}}}%%
 sequenceDiagram
     participant A as Agent
     participant T as TypeSafeModel
     participant X as ornotto transport
     participant P as pcdServer
-    A->>T: run: prompt and output_type
+    A->>T: run: prompt<br>and output_type
     T->>X: POST /v1/systemone<br>state and questions
-    X->>X: questions to pcdServer fields
+    X->>X: questions to<br>pcdServer fields
     X->>P: POST /v1/pcd/decode
-    P-->>X: values and probabilities per field
+    P-->>X: values and probabilities<br>per field
     X-->>T: System One answers
     T-->>A: validated output
 ```

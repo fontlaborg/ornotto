@@ -39,18 +39,29 @@ Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which s
 On Apple silicon the GPU shares the machine's memory with everything else, so the first practical limit is not speed but whether the model fits. The tree below sorts the models this book measured by how much memory they need. The tiers are guidance, not measurements: every number in it comes from one 48 GB M4 Max ([chapter 5](05-method.md#one-model-at-a-time)). The rule behind the tiers is the file size plus headroom for macOS, your other applications and the engine's own cache. pcdServer, as ornotto starts it, may add up to 512 MiB of schema checkpoints ([chapter 8](08-speed.md#the-schema-cache-in-pcdserver)).
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart TD
     S["A decision to run"] --> H{"May the text leave<br>the machine?"}
     H -->|"yes"| J["jev, hosted<br>65/67 at 466 ms, per call"]
     H -->|"no"| M{"Memory you can give<br>one model"}
-    M -->|"8 GB Mac"| A1["decider-0.8b on dohnuts<br>0.81 GB, 62/67, 52 ms"]
-    M -->|"8 GB Mac"| A2["Qwen3.5-2B Q3_K_M on pcdServer<br>1.2 GB, 61/67, 43 ms"]
-    M -->|"16 GB"| B1["qwen3.5-4b-hmm on pcdServer<br>2.7 GB, 64/67 and 65/67"]
-    M -->|"16 GB"| B2["NeoHorse-Jev-4B Q8_0<br>5.2 GB, 64/67, not in ornotto"]
-    M -->|"24 to 32 GB"| C1["ollaya-winnow-12b<br>12.7 GB, 64/67 and 65/67"]
-    M -->|"24 to 32 GB"| C2["rune-26b-a4b Q3_K_M<br>13.5 GB, 65/67 translated, not in ornotto"]
-    M -->|"48 GB or more"| D1["decider-35b-a3b on dohnuts<br>21 GB, 64/67"]
-    M -->|"48 GB or more"| D2["openjev-35b-a3b on pcdServer<br>21.2 GB, 63/67 and 64/67"]
+    M --> T8
+    subgraph T8["8 GB Mac"]
+        A1["decider-0.8b<br>on dohnuts<br>0.81 GB, 62/67, 52 ms"]
+        A2["Qwen3.5-2B Q3_K_M<br>on pcdServer<br>1.2 GB, 61/67, 43 ms"]
+    end
+    subgraph T16["16 GB"]
+        B1["qwen3.5-4b-hmm<br>on pcdServer<br>2.7 GB, 64/67<br>and 65/67"]
+        B2["NeoHorse-Jev-4B Q8_0<br>5.2 GB, 64/67,<br>not in ornotto"]
+    end
+    subgraph T24["24 to 32 GB"]
+        C1["ollaya-winnow-12b<br>12.7 GB, 64/67<br>and 65/67"]
+        C2["rune-26b-a4b Q3_K_M<br>13.5 GB, 65/67<br>translated,<br>not in ornotto"]
+    end
+    subgraph T48["48 GB or more"]
+        D1["decider-35b-a3b<br>on dohnuts<br>21 GB, 64/67"]
+        D2["openjev-35b-a3b<br>on pcdServer<br>21.2 GB, 63/67<br>and 64/67"]
+    end
+    T8 ~~~ T16 ~~~ T24 ~~~ T48
     A1 --> G{"Need a confidence<br>to gate on?"}
     B1 --> G
     G -->|"yes"| F["dedicated model on dohnuts,<br>fallback to a larger model"]
@@ -137,13 +148,14 @@ A local engine is only as trustworthy as its agreement with the model's referenc
 `decider-ai` 1.6.0, released on 2026-09-27, added GGUF checkpoints to its `Decider`, together with GGUF files for decider-4b v2.1 and decider-2b v11.[^decider] The reference and dohnuts can now read the same file. A difference between them is then the engine's, not the conversion's.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     G["one GGUF file"] --> R["decider-ai reference"]
     G --> D["dohnuts"]
     R --> C{"Compare answers<br>and probabilities"}
     D --> C
     C -->|"answers differ"| E["an engine difference:<br>report it upstream"]
-    C -->|"only confidences differ"| T["check the temperature<br>in the profile JSON"]
+    C -->|"only confidences<br>differ"| T["check the temperature<br>in the profile JSON"]
     C -->|"same"| OK["parity holds"]
 ```
 

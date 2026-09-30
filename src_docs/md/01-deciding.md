@@ -135,6 +135,7 @@ Most of the writing about jev in September assumed a server: a web backend, an a
 The same reasoning holds for other desktop tools that route between a few handlers: a code editor deciding whether a request needs the language server, a mail client sorting incoming messages, a photo tool choosing between a filter and a generative fill. The local engine does not need to be as accurate as jev on every query. It needs to be accurate enough on the queries the product sees, with a known fallback for the rest. [Chapter 9](09-confidence.md#a-fallback-gate) shows how to build that fallback from the model's own probabilities.
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart LR
     U["User message<br>plus app state"] --> R{"Local router<br>decision"}
     R -- "docs" --> D["Documentation answer"]

@@ -142,6 +142,7 @@ The decider model's recipe scores a rubric one level at a time by default (`isol
 A low `fit_mass` is a warning in its own right: no level describes the state well. In one of our FontLab examples, "Loop through masters and print their names" scored 0.63 on a rubric of general type design, the FontLab UI and the FontLab Python API. Every level fitted poorly (fit_mass 0.50) and "general type design" fitted least badly, so the score was wrong and the fit mass said so. Send `"isolated": false` on the question to score all levels in one lettered row instead.
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart TD
     Q["Score question<br>with 3 levels"] --> R0["Row: level 0<br>Does it fit?"]
     Q --> R1["Row: level 1<br>Does it fit?"]

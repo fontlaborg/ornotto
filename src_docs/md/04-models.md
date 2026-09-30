@@ -26,6 +26,7 @@ The best row of every model in the benchmark, grouped by family:
 Almost every decision model in this book is a small change to a model someone else released. The diagram below traces each model we ran, and a few we did not, back to the base weights its card names. A solid arrow means the weights were trained further: a full fine-tune, a LoRA, or a new head over a trained backbone. A dotted arrow means the base weights were left alone and only read in a new way.
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart LR
     Q35["Qwen3.5<br>0.8B to 35B-A3B"]
     Q36["Qwen3.6"]

@@ -35,7 +35,8 @@ The four setups do different amounts of work per question.
 **pcdServer** puts the fixed part of the prompt first. The system prompt lists every field, its description and its allowed values; the user's text comes after it. The fixed part is the same for every request with the same schema, so pcdServer computes it once, saves the model's state after it, and restores that state for later requests. Only the user text and a short suffix per field are decoded per request.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     A[Request: context + fields] --> B{Schema checkpoint<br>in the LRU?}
     B -- hit --> C[Restore checkpoint]
     B -- miss --> D[Prefill schema prompt,<br>save checkpoint]
@@ -108,6 +109,7 @@ The `ornotto` wheels build dohnuts from the branch of that pull request, so you 
 The path a request takes through the patched runner:
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart TD
     R["Request: one state, several questions"] --> N{"More than one row?"}
     N -- "no" --> S["Old path: prefill the whole row"]

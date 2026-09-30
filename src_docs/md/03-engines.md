@@ -25,20 +25,21 @@ Almost every readout in this chapter belongs to one of six families. The answer 
 Whatever the readout, a local decision in `ornotto` takes the same path. The package starts one engine process per model, on a free port on the loopback interface, and waits until the engine says it is ready. It then sends the request, receives the engine's reply and turns it into a `Decision` object. The model itself never sees the System One request: it sees the prompt, or the encoder sequence, that the engine builds from it.
 
 ```mermaid
+%%{init: {"sequence": {"useMaxWidth": false}}}%%
 sequenceDiagram
     participant App as Your code
     participant Orn as ornotto Decider
     participant Eng as Engine server
     participant Mod as Model weights
     App->>Orn: decide(state, questions)
-    Orn->>Eng: start the process on a loopback port
-    Eng->>Mod: load the GGUF or the registry model
+    Orn->>Eng: start the process<br>on a loopback port
+    Eng->>Mod: load the GGUF<br>or the registry model
     Orn->>Eng: poll until ready
-    Orn->>Eng: POST /v1/systemone, or /v1/pcd/decode for pcdServer
-    Eng->>Mod: build the prompt and run one forward pass per row
-    Mod-->>Eng: logits or hidden states at the read position
-    Eng-->>Orn: probability for every allowed answer
-    Orn-->>App: Decision with answers and confidences
+    Orn->>Eng: POST /v1/systemone,<br>or /v1/pcd/decode<br>for pcdServer
+    Eng->>Mod: build the prompt,<br>run one forward<br>pass per row
+    Mod-->>Eng: logits or hidden<br>states at the<br>read position
+    Eng-->>Orn: probability for<br>every allowed answer
+    Orn-->>App: Decision with answers<br>and confidences
 ```
 
 dohnuts and ollaya speak System One themselves, so `ornotto` forwards the request as it is. pcdServer speaks its own field format, so `ornotto` translates each question into a field on the way in and the fields back into answers on the way out. If an engine accepts fewer questions per request than you ask, `ornotto` splits the questions into several requests and joins the answers. [Chapter 10](10-package.md#engine-lifecycle) describes the lifecycle from the package's side, and [chapter 11](11-typed.md) shows the same path under pydantic-ai.
@@ -84,12 +85,13 @@ Answer: (
 The model reads the row once. dohnuts takes the logits of the option-letter tokens at the position after `Answer: (`, divides them by the model's temperature (1.03 for decider-0.8b), and applies a softmax. Nothing is generated: the letter the model would write next is scored, never written.
 
 ```mermaid
-flowchart LR
-    S["State and question"] --> P["Row in the trained layout:<br>Context, Question, Options (A) (B) ...,<br>Answer: ("]
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
+    S["State and question"] --> P["Row in the trained layout:<br>Context, Question,<br>Options (A) (B) ...,<br>Answer: ("]
     P --> F["One forward pass"]
     F --> L["Logits at the next position"]
-    L --> K["Keep only the option-letter tokens<br>A, B, C, ..."]
-    K --> T["Divide by the fitted temperature"]
+    L --> K["Keep only the option-letter<br>tokens A, B, C, ..."]
+    K --> T["Divide by the<br>fitted temperature"]
     T --> X["Softmax over the options"]
     X --> R["Probability per option"]
 ```
@@ -141,13 +143,14 @@ A decode then runs in phases:
 The expensive part, the context, is decoded once however many fields a request has. Each extra field adds only a short suffix to one batch.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Fields with allowed values"] --> C["Chat prompt:<br>system turn lists every field,<br>user turn holds the state"]
-    C --> O["Assistant turn opens the JSON object"]
-    O --> M["One member prefix per field:<br>  task: and an opening quote"]
-    M --> L["Logits at the last token of each prefix"]
+    C --> O["Assistant turn opens<br>the JSON object"]
+    O --> M["One member prefix per field:<br>task: and an opening quote"]
+    M --> L["Logits at the last token<br>of each prefix"]
     L --> A["Keep only the first tokens<br>of the allowed values"]
-    A --> X["Softmax over those tokens, no temperature"]
+    A --> X["Softmax over those tokens,<br>no temperature"]
     X --> D{"Two values share<br>the first token?"}
     D -- "no" --> R["Probability per value"]
     D -- "yes" --> E["Expand the winning group<br>by one more token"]
@@ -204,14 +207,15 @@ laya ([convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya-mul
 The head reads the encoder's hidden states at the `[MASK]` in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the *act head*, returns `action.act_probability`: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet ([chapter 9](09-confidence.md#the-abstain-signal-nobody-used)).
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Question, options and state"] --> S["One encoder sequence:<br>CLS, question, SEP,<br>MASK option 1, MASK option 2, ...,<br>SEP, state, SEP"]
-    S --> E["One encoder pass, no decoding"]
+    S --> E["One encoder pass,<br>no decoding"]
     E --> H["Hidden state at each MASK"]
-    H --> D["Decision head: one score per option"]
-    D --> T["Temperature by bucket:<br>number of options, question type"]
-    T --> X["Softmax over the options"]
     E --> A["Act head:<br>answer or escalate"]
+    H --> D["Decision head:<br>one score per option"]
+    D --> T["Temperature by bucket:<br>number of options,<br>question type"]
+    T --> X["Softmax over the options"]
 ```
 
 This is the *encoder marker* family. GLiNER2.5-Decide, von and Julia-1, described under [more encoders](#more-encoders), read the same way: a marker in front of each option, one hidden state per marker, one score per option. The whole input is read in both directions at once, so, unless the model restricts attention as von does, every option can see the state and the other options. The cost is the input budget: an encoder has a fixed maximum length, and the question, every option and the state have to share it.
@@ -233,16 +237,17 @@ The Q3_K_M file scored 64/67 in both modes, and the Q5_K_M and Q8_0 files 63/67.
 Jev-Omni and kev belong to the same family: a trained head reads one or more hidden states of a decoder, and nothing is read from the vocabulary. They differ in where the head looks.
 
 ```mermaid
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
 flowchart TB
     subgraph JO["Jev-Omni: linear head"]
-        J1["Prompt with the state,<br>question and options"] --> J2["Hidden state of the last token"]
+        J1["Prompt with the state,<br>question and options"] --> J2["Hidden state of<br>the last token"]
         J2 --> J3["256-way linear head"]
-        J3 --> J4["Keep the rows of the listed options"]
+        J3 --> J4["Keep the rows of<br>the listed options"]
     end
     subgraph KV["kev: pointer head"]
-        K1["Prompt with a decide marker<br>and an end marker per option"] --> K2["Hidden state at the decide marker"]
-        K1 --> K3["Hidden state at the end of each option"]
-        K2 --> K4["Project both, take the dot product"]
+        K1["Prompt with a decide<br>marker and an end<br>marker per option"] --> K2["Hidden state at<br>the decide marker"]
+        K1 --> K3["Hidden state at the<br>end of each option"]
+        K2 --> K4["Project both, take<br>the dot product"]
         K3 --> K4
     end
     J4 --> X["Softmax over the options"]
@@ -259,14 +264,15 @@ A pointer head scores each option by comparing it with the decision point, so th
 semif scored 51/67 translated and 49/67 direct, at 121 ms. ollaya's `nli:modernbert-large` reads a zero-shot NLI encoder the same way, one pair per option, and scored 20/67.
 
 ```mermaid
-flowchart LR
-    S["State"] --> P1["Pair: state + hypothesis for option 1"]
-    S --> P2["Pair: state + hypothesis for option 2"]
-    S --> Pn["Pair: state + hypothesis for option n"]
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
+    S["State"] --> P1["Pair: state + hypothesis<br>for option 1"]
+    S --> P2["Pair: state + hypothesis<br>for option 2"]
+    S --> Pn["Pair: state + hypothesis<br>for option n"]
     P1 --> C["Cross-encoder, one pass per pair:<br>contradiction, entailment, neutral"]
     P2 --> C
     Pn --> C
-    C --> E["Keep p(entailment) for each option"]
+    C --> E["Keep p(entailment)<br>for each option"]
     E --> N["Renormalise over the options"]
     N --> R["Probability per option"]
 ```
@@ -278,14 +284,15 @@ The *entailment per option* family was not built for a closed list. Each pair is
 [CLM-v0.1-8B](https://huggingface.co/Contrastive-LM/CLM-v0.1-8B) embeds the state and each option and compares them. A frozen Qwen3-8B encodes each text with last-token pooling, a state head and an action head project the two embeddings, and the score of an option is their cosine similarity times a learned scale capped at 100, followed by a softmax over the options.
 
 ```mermaid
-flowchart LR
+%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     S["State"] --> B1["Frozen Qwen3-8B,<br>last-token pooling"]
     O["Each option"] --> B2["Frozen Qwen3-8B,<br>last-token pooling"]
     B1 --> H1["State head"]
     B2 --> H2["Action head"]
     H1 --> C["Cosine similarity per option"]
     H2 --> C
-    C --> K["Times a learned scale, at most 100"]
+    C --> K["Times a learned scale,<br>at most 100"]
     K --> X["Softmax over the options"]
     X --> R["Probability per option"]
 ```

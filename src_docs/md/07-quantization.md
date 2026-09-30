@@ -47,8 +47,9 @@ The time column is flat too. On a GPU the engines are limited by memory bandwidt
 decider-0.8b on dohnuts (Metal) is the model with the fullest sweep: seven files of the same weights, read through the same trained readout on the same engine. Its translated scores, from the table above:
 
 ```mermaid
+%%{init: {"xyChart": {"width": 400, "height": 340}, "themeCSS": ".background { fill: transparent; } text { fill: var(--md-default-fg-color); } .plot rect { fill: var(--ornotto-diagram-line); stroke: none; } path { stroke: var(--md-default-fg-color--light); }"}}%%
 xychart-beta
-    title "decider-0.8b on dohnuts (Metal): translated score by quant"
+    title "Translated score by quant"
     x-axis ["f16", "q8", "q6", "q5", "q4", "q3", "q2"]
     y-axis "Correct of 67" 0 --> 67
     bar [61, 62, 62, 62, 61, 57, 18]

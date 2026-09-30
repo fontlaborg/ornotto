@@ -71,3 +71,43 @@
 .ornotto-home-strip { display: flex; flex-wrap: wrap; gap: var(--fl-space-2) var(--fl-space-6); align-items: baseline;
   margin-top: var(--fl-space-6); font-size: .7rem; color: var(--md-default-fg-color--light); }
 .ornotto-home-strip p { margin: 0 !important; }
+
+/* ---- Mermaid diagrams -------------------------------------------------------
+   MaterialX renders each diagram into a closed shadow root and styles it through
+   the --md-mermaid-* variables, which it declares on :root>* (the body). Redefine
+   them at the same level (higher specificity), so the derived sequence colours
+   follow too: off-white fills, near-black borders and text, red lines. Theme tokens
+   flip with the dark subtheme; the line red gets a lighter value on slate.
+   Diagrams opt out of shrink-to-fit with an init directive (useMaxWidth: false),
+   so a diagram wider than the column scrolls sideways at full size instead. */
+body[data-md-color-scheme] {
+  --ornotto-diagram-line: #8b1e1e;
+  --md-mermaid-font-family: var(--md-text-font-family), sans-serif;
+  --md-mermaid-node-bg-color: var(--color-base-200);
+  --md-mermaid-node-fg-color: var(--md-default-fg-color);
+  --md-mermaid-edge-color: var(--ornotto-diagram-line);
+  --md-mermaid-label-bg-color: var(--md-default-bg-color);
+  --md-mermaid-label-fg-color: var(--md-default-fg-color);
+  --md-mermaid-sequence-actor-bg-color: var(--md-mermaid-node-bg-color);
+  --md-mermaid-sequence-actor-border-color: var(--md-mermaid-node-fg-color);
+  --md-mermaid-sequence-actor-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-actor-line-color: var(--md-default-fg-color--light);
+  --md-mermaid-sequence-actorman-bg-color: var(--md-mermaid-label-bg-color);
+  --md-mermaid-sequence-actorman-line-color: var(--md-mermaid-node-fg-color);
+  --md-mermaid-sequence-box-bg-color: var(--md-mermaid-node-bg-color);
+  --md-mermaid-sequence-box-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-label-bg-color: var(--md-mermaid-node-bg-color);
+  --md-mermaid-sequence-label-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-loop-bg-color: var(--md-mermaid-node-bg-color);
+  --md-mermaid-sequence-loop-border-color: var(--md-mermaid-node-fg-color);
+  --md-mermaid-sequence-loop-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-message-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-message-line-color: var(--md-mermaid-edge-color);
+  --md-mermaid-sequence-note-bg-color: var(--md-mermaid-label-bg-color);
+  --md-mermaid-sequence-note-border-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-note-fg-color: var(--md-mermaid-label-fg-color);
+  --md-mermaid-sequence-number-bg-color: var(--md-mermaid-edge-color);
+  --md-mermaid-sequence-number-fg-color: var(--md-default-bg-color);
+}
+body[data-md-color-scheme="slate"] { --ornotto-diagram-line: #e8837c; }
+.md-typeset div.mermaid { overflow-x: auto; margin: 1em 0 1.5em; }
