@@ -75,7 +75,7 @@ jev is TypeSafe's hosted System One model and the best result in the benchmark (
 
 ### Later dedicated models
 
-A second benchmark round added the decision models published after the first one. Several were published as open alternatives to jev, and some say so in their names. They use the readouts described in [chapter 3](03-engines.md#a-linear-head-on-a-hidden-state-jev-omni), from letter logits to contrastive heads, and each ran on the runtime its authors provide. The licences are taken from the model cards.
+A second benchmark round added decision models that the first round did not cover. Several were published as open alternatives to jev, and some say so in their names. They use the readouts described in [chapter 3](03-engines.md#a-linear-head-on-a-hidden-state-jev-omni), from letter logits to contrastive heads, and each ran on the runtime its authors provide. The licences are taken from the model cards.
 
 | model | what it is | source | licence | best result (translated / direct, ms/query) |
 |---|---|---|---|---|

@@ -17,8 +17,8 @@
   context.
 - The pydantic-ai provider talks to ollaya directly and sends the tag as the model name.
 - CLI: `--engine=ollaya`, `ornotto pull` for ollaya models, and a wider `ornotto models` table.
-- Book: the benchmark grows from 208 to 258 methods with the decision models published since the first
-  round: rune, winnow, NeoHorse-Jev, Jev-Omni, APUS-OpenJev, jeb, lev, leo, imajev, JevK5, semif, CLM, and
+- Book: the benchmark grows from 208 to 258 methods with decision models the first round did not
+  cover: rune, winnow, NeoHorse-Jev, Jev-Omni, APUS-OpenJev, jeb, lev, leo, imajev, JevK5, semif, CLM, and
   the encoders GLiNER2.5-Decide, Julia-1, von, decima-small, Pulse Decide, Lumma and new laya builds, on
   ollaya, the authors' System One servers, llama.cpp embeddings with a head, MLX, ONNX Runtime, Core ML
   and Core AI. Chapters 3 (new readouts), 4 (the later dedicated models and their licences), 5, 6, 7, 8,
