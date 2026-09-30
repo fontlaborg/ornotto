@@ -81,7 +81,15 @@
       <a href="{{ page.next_page.url | url }}" rel="next">{{ page.next_page.title }} →</a>
       {% endif %}
     </nav>
+    {% if page and page.file and page.file.src_uri == "index.md" %}
+    <div class="ornotto-home-strip">
+      <p>{{ config.copyright }}</p>
+      <a href="{{ config.repo_url }}">GitHub: {{ config.repo_name }}</a>
+      <a href="https://pypi.org/project/ornotto/">PyPI: ornotto</a>
+    </div>
+    {% else %}
     <p>{{ config.copyright }}</p>
+    {% endif %}
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 {% endblock %}
