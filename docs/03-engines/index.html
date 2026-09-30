@@ -1378,20 +1378,21 @@
 <p>Almost every readout in this chapter belongs to one of six families. The answer is read either at a letter the model would write next, at a hidden state through a trained head, at the first token of each allowed value, at a marker in front of each option in an encoder, from an entailment score per option, or from the similarity of two embeddings. Each family gets a diagram in its section below. The diagrams show where the probability comes from, not every step of the engine.</p>
 <h2 id="how-a-request-reaches-a-model">How a request reaches a model<a class="headerlink" href="#how-a-request-reaches-a-model" title="Permanent link">&para;</a></h2>
 <p>Whatever the readout, a local decision in <code>ornotto</code> takes the same path. The package starts one engine process per model, on a free port on the loopback interface, and waits until the engine says it is ready. It then sends the request, receives the engine's reply and turns it into a <code>Decision</code> object. The model itself never sees the System One request: it sees the prompt, or the encoder sequence, that the engine builds from it.</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"useMaxWidth": false}}}%%
+sequenceDiagram
     participant App as Your code
     participant Orn as ornotto Decider
     participant Eng as Engine server
     participant Mod as Model weights
     App-&gt;&gt;Orn: decide(state, questions)
-    Orn-&gt;&gt;Eng: start the process on a loopback port
-    Eng-&gt;&gt;Mod: load the GGUF or the registry model
+    Orn-&gt;&gt;Eng: start the process&lt;br&gt;on a loopback port
+    Eng-&gt;&gt;Mod: load the GGUF&lt;br&gt;or the registry model
     Orn-&gt;&gt;Eng: poll until ready
-    Orn-&gt;&gt;Eng: POST /v1/systemone, or /v1/pcd/decode for pcdServer
-    Eng-&gt;&gt;Mod: build the prompt and run one forward pass per row
-    Mod--&gt;&gt;Eng: logits or hidden states at the read position
-    Eng--&gt;&gt;Orn: probability for every allowed answer
-    Orn--&gt;&gt;App: Decision with answers and confidences</code></pre>
+    Orn-&gt;&gt;Eng: POST /v1/systemone,&lt;br&gt;or /v1/pcd/decode&lt;br&gt;for pcdServer
+    Eng-&gt;&gt;Mod: build the prompt,&lt;br&gt;run one forward&lt;br&gt;pass per row
+    Mod--&gt;&gt;Eng: logits or hidden&lt;br&gt;states at the&lt;br&gt;read position
+    Eng--&gt;&gt;Orn: probability for&lt;br&gt;every allowed answer
+    Orn--&gt;&gt;App: Decision with answers&lt;br&gt;and confidences</code></pre>
 <p>dohnuts and ollaya speak System One themselves, so <code>ornotto</code> forwards the request as it is. pcdServer speaks its own field format, so <code>ornotto</code> translates each question into a field on the way in and the fields back into answers on the way out. If an engine accepts fewer questions per request than you ask, <code>ornotto</code> splits the questions into several requests and joins the answers. <a href="../10-package/#engine-lifecycle">Chapter 10</a> describes the lifecycle from the package's side, and <a href="../11-typed/">chapter 11</a> shows the same path under pydantic-ai.</p>
 <p>The path has one consequence worth keeping in mind when you read the benchmark. The time <code>ornotto</code> reports includes the HTTP round trip to the loopback engine, and the engines differ in how much work they do before the model runs: dohnuts builds its prompt in C++, pcdServer applies a chat template, and slot needs a second round trip to tokenize. <a href="../08-speed/#where-the-time-goes">Chapter 8</a> separates those costs.</p>
 <h2 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h2>
@@ -1422,12 +1423,13 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Answer: (
 </code></pre></div>
 <p>The model reads the row once. dohnuts takes the logits of the option-letter tokens at the position after <code>Answer: (</code>, divides them by the model's temperature (1.03 for decider-0.8b), and applies a softmax. Nothing is generated: the letter the model would write next is scored, never written.</p>
-<pre class="mermaid"><code>flowchart LR
-    S["State and question"] --&gt; P["Row in the trained layout:&lt;br&gt;Context, Question, Options (A) (B) ...,&lt;br&gt;Answer: ("]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
+    S["State and question"] --&gt; P["Row in the trained layout:&lt;br&gt;Context, Question,&lt;br&gt;Options (A) (B) ...,&lt;br&gt;Answer: ("]
     P --&gt; F["One forward pass"]
     F --&gt; L["Logits at the next position"]
-    L --&gt; K["Keep only the option-letter tokens&lt;br&gt;A, B, C, ..."]
-    K --&gt; T["Divide by the fitted temperature"]
+    L --&gt; K["Keep only the option-letter&lt;br&gt;tokens A, B, C, ..."]
+    K --&gt; T["Divide by the&lt;br&gt;fitted temperature"]
     T --&gt; X["Softmax over the options"]
     X --&gt; R["Probability per option"]</code></pre>
 <p>This is the <em>answer-slot letter readout</em>, the most common family in the benchmark. decider, Qwen3.5-4B-Hmm read through slot, rune, JevK5, APUS-OpenJev and winnow all read a letter or an option label at one position; they differ in the prompt that leads up to it and in whether a temperature follows. The logits of every other token in the vocabulary are ignored, so the probabilities always sum to one over the options, whatever else the model would have liked to write. The temperature is what separates a calibrated readout from a raw one: the decider recipe fits it per checkpoint and ships it in the metadata, and <a href="../04-models/#decider">chapter 4</a> lists the values.</p>
@@ -1462,13 +1464,14 @@
 <li><strong>Scoring.</strong> pcdServer applies a softmax over the first tokens of the allowed values only. A boolean field ends at the colon, so the scored tokens are <code>true</code> and <code>false</code>.</li>
 </ol>
 <p>The expensive part, the context, is decoded once however many fields a request has. Each extra field adds only a short suffix to one batch.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Fields with allowed values"] --&gt; C["Chat prompt:&lt;br&gt;system turn lists every field,&lt;br&gt;user turn holds the state"]
-    C --&gt; O["Assistant turn opens the JSON object"]
-    O --&gt; M["One member prefix per field:&lt;br&gt;  task: and an opening quote"]
-    M --&gt; L["Logits at the last token of each prefix"]
+    C --&gt; O["Assistant turn opens&lt;br&gt;the JSON object"]
+    O --&gt; M["One member prefix per field:&lt;br&gt;task: and an opening quote"]
+    M --&gt; L["Logits at the last token&lt;br&gt;of each prefix"]
     L --&gt; A["Keep only the first tokens&lt;br&gt;of the allowed values"]
-    A --&gt; X["Softmax over those tokens, no temperature"]
+    A --&gt; X["Softmax over those tokens,&lt;br&gt;no temperature"]
     X --&gt; D{"Two values share&lt;br&gt;the first token?"}
     D -- "no" --&gt; R["Probability per value"]
     D -- "yes" --&gt; E["Expand the winning group&lt;br&gt;by one more token"]
@@ -1504,14 +1507,15 @@
 <div class="language-text highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[CLS] choice question: &lt;instructions&gt; [SEP] [MASK] &lt;option 1&gt; [MASK] &lt;option 2&gt; … [SEP] &lt;state&gt; [SEP]
 </code></pre></div>
 <p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet (<a href="../09-confidence/#the-abstain-signal-nobody-used">chapter 9</a>).</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Question, options and state"] --&gt; S["One encoder sequence:&lt;br&gt;CLS, question, SEP,&lt;br&gt;MASK option 1, MASK option 2, ...,&lt;br&gt;SEP, state, SEP"]
-    S --&gt; E["One encoder pass, no decoding"]
+    S --&gt; E["One encoder pass,&lt;br&gt;no decoding"]
     E --&gt; H["Hidden state at each MASK"]
-    H --&gt; D["Decision head: one score per option"]
-    D --&gt; T["Temperature by bucket:&lt;br&gt;number of options, question type"]
-    T --&gt; X["Softmax over the options"]
-    E --&gt; A["Act head:&lt;br&gt;answer or escalate"]</code></pre>
+    E --&gt; A["Act head:&lt;br&gt;answer or escalate"]
+    H --&gt; D["Decision head:&lt;br&gt;one score per option"]
+    D --&gt; T["Temperature by bucket:&lt;br&gt;number of options,&lt;br&gt;question type"]
+    T --&gt; X["Softmax over the options"]</code></pre>
 <p>This is the <em>encoder marker</em> family. GLiNER2.5-Decide, von and Julia-1, described under <a href="#more-encoders">more encoders</a>, read the same way: a marker in front of each option, one hidden state per marker, one score per option. The whole input is read in both directions at once, so, unless the model restricts attention as von does, every option can see the state and the other options. The cost is the input budget: an encoder has a fixed maximum length, and the question, every option and the state have to share it.</p>
 <p>laya's README states two details that matter when you compare it with jev. Its <code>confidence</code> is one minus the normalised entropy of the distribution, which the README notes is "not Jev's (n·p_max − 1)/(n − 1)", so the two services can report different confidences for the same distribution.<sup id="fnref:laya-readme"><a class="footnote-ref" href="#fn:laya-readme">5</a></sup> And its option budget is counted in tokens, <code>head_max_len</code> of 192 or 256 tokens, "not Jev's cap of 255 options". The same README also reports what happens outside the languages a checkpoint was trained on: the English checkpoint, given Khmer, scored "0.000 accuracy at 0.952 confidence". That is the encoder family's version of the lesson in <a href="../09-confidence/">chapter 9</a>: a confident answer can be read from any input, whether the model understood it or not.</p>
 <p>An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.</p>
@@ -1521,16 +1525,17 @@
 <p>llama.cpp does not know the head, so the benchmark starts a stock llama-server as an embedding server with <code>--embedding --pooling none</code>, takes the hidden state of the last token, and applies the head and a softmax on the client. This is the <code>llama.cpp embeddings + head</code> engine in the tables, which also runs laya's Q4_0 encoders with a head GGUF. The MLX build, <a href="https://huggingface.co/Ruiruiz30/Jev-Omni-MLX-4bit">Ruiruiz30/Jev-Omni-MLX-4bit</a>, runs the same head in process with a temperature of 1.115.</p>
 <p>The Q3_K_M file scored 64/67 in both modes, and the Q5_K_M and Q8_0 files 63/67. At 1.1 to 1.2 seconds per query, it is slower than every other method that scored 63 or more, except lev. The MLX 4-bit build scored 61/67 at 780 ms.</p>
 <p>Jev-Omni and kev belong to the same family: a trained head reads one or more hidden states of a decoder, and nothing is read from the vocabulary. They differ in where the head looks.</p>
-<pre class="mermaid"><code>flowchart TB
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TB
     subgraph JO["Jev-Omni: linear head"]
-        J1["Prompt with the state,&lt;br&gt;question and options"] --&gt; J2["Hidden state of the last token"]
+        J1["Prompt with the state,&lt;br&gt;question and options"] --&gt; J2["Hidden state of&lt;br&gt;the last token"]
         J2 --&gt; J3["256-way linear head"]
-        J3 --&gt; J4["Keep the rows of the listed options"]
+        J3 --&gt; J4["Keep the rows of&lt;br&gt;the listed options"]
     end
     subgraph KV["kev: pointer head"]
-        K1["Prompt with a decide marker&lt;br&gt;and an end marker per option"] --&gt; K2["Hidden state at the decide marker"]
-        K1 --&gt; K3["Hidden state at the end of each option"]
-        K2 --&gt; K4["Project both, take the dot product"]
+        K1["Prompt with a decide&lt;br&gt;marker and an end&lt;br&gt;marker per option"] --&gt; K2["Hidden state at&lt;br&gt;the decide marker"]
+        K1 --&gt; K3["Hidden state at the&lt;br&gt;end of each option"]
+        K2 --&gt; K4["Project both, take&lt;br&gt;the dot product"]
         K3 --&gt; K4
     end
     J4 --&gt; X["Softmax over the options"]
@@ -1540,27 +1545,29 @@
 <h2 id="entailment-per-option-semif">Entailment per option: semif<a class="headerlink" href="#entailment-per-option-semif" title="Permanent link">&para;</a></h2>
 <p><a href="https://huggingface.co/jacksodj/semif-4b-nli-v5-mlx">semif</a> is a Qwen3.5-4B cross-encoder for natural-language inference, converted to MLX. Its head classifies a text pair as contradiction, entailment or neutral, so it answers one option at a time. The benchmark pairs the state with one hypothesis per option, reads the probability of entailment for each, and renormalises over the options. That renormalisation is our choice; the model does not define a multi-option answer.</p>
 <p>semif scored 51/67 translated and 49/67 direct, at 121 ms. ollaya's <code>nli:modernbert-large</code> reads a zero-shot NLI encoder the same way, one pair per option, and scored 20/67.</p>
-<pre class="mermaid"><code>flowchart LR
-    S["State"] --&gt; P1["Pair: state + hypothesis for option 1"]
-    S --&gt; P2["Pair: state + hypothesis for option 2"]
-    S --&gt; Pn["Pair: state + hypothesis for option n"]
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
+    S["State"] --&gt; P1["Pair: state + hypothesis&lt;br&gt;for option 1"]
+    S --&gt; P2["Pair: state + hypothesis&lt;br&gt;for option 2"]
+    S --&gt; Pn["Pair: state + hypothesis&lt;br&gt;for option n"]
     P1 --&gt; C["Cross-encoder, one pass per pair:&lt;br&gt;contradiction, entailment, neutral"]
     P2 --&gt; C
     Pn --&gt; C
-    C --&gt; E["Keep p(entailment) for each option"]
+    C --&gt; E["Keep p(entailment)&lt;br&gt;for each option"]
     E --&gt; N["Renormalise over the options"]
     N --&gt; R["Probability per option"]</code></pre>
 <p>The <em>entailment per option</em> family was not built for a closed list. Each pair is judged on its own, so the model never compares two options with each other, and two options that both follow from the state can both score high. The renormalisation turns those independent judgements into a distribution, but the model did not produce one. The cost also grows with the list: one pass per option, where the readouts above need one pass for the whole question. Pulse Decide 150M, a pair cross-encoder with a value head, has the same shape and the same limits.</p>
 <h2 id="contrastive-similarity-clm">Contrastive similarity: CLM<a class="headerlink" href="#contrastive-similarity-clm" title="Permanent link">&para;</a></h2>
 <p><a href="https://huggingface.co/Contrastive-LM/CLM-v0.1-8B">CLM-v0.1-8B</a> embeds the state and each option and compares them. A frozen Qwen3-8B encodes each text with last-token pooling, a state head and an action head project the two embeddings, and the score of an option is their cosine similarity times a learned scale capped at 100, followed by a softmax over the options.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     S["State"] --&gt; B1["Frozen Qwen3-8B,&lt;br&gt;last-token pooling"]
     O["Each option"] --&gt; B2["Frozen Qwen3-8B,&lt;br&gt;last-token pooling"]
     B1 --&gt; H1["State head"]
     B2 --&gt; H2["Action head"]
     H1 --&gt; C["Cosine similarity per option"]
     H2 --&gt; C
-    C --&gt; K["Times a learned scale, at most 100"]
+    C --&gt; K["Times a learned scale,&lt;br&gt;at most 100"]
     K --&gt; X["Softmax over the options"]
     X --&gt; R["Probability per option"]</code></pre>
 <p>In the <em>contrastive</em> family the option texts carry most of the meaning of the decision, and the state is matched to whichever option it most resembles in the learned space. Because each option is embedded on its own, an option's embedding can in principle be computed once and reused for every request that offers the same option.</p>

@@ -1537,7 +1537,8 @@
 <p>Each query was translated once and the English text was cached, so every classifier in translated mode saw the same English.</p>
 <h2 id="from-query-to-table">From query to table<a class="headerlink" href="#from-query-to-table" title="Permanent link">&para;</a></h2>
 <p>The whole run, from a labelled query to a row in this book, has five stages. Translation happens once per query. Classification happens once per query, per mode, per method.</p>
-<pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["67 labelled queries"] --&gt; L{"English?"}
     L -- "yes, 28" --&gt; EN["English text"]
     L -- "no, 39" --&gt; T["Translate with Hy-MT2-1.8B&lt;br&gt;temperature 0, glossary"]

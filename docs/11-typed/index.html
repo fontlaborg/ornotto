@@ -1488,7 +1488,8 @@
 <p>The <code>pydantic-ai</code> extra asks for <code>pydantic-ai-slim[typesafe]</code> 2.48 or later. The lock file that the tests run against pins pydantic-ai-slim 2.48.0 and typesafe-sdk 0.7.1, and everything in this chapter was checked with those two versions. pydantic-ai moved on during September 2026 (<a href="#what-changed-in-september-2026">below</a>), and a fresh install without the lock may pull a later release. We have not run ornotto against pydantic-ai 2.50 or 2.51. If an import from <code>pydantic_ai.models.typesafe</code> or <code>pydantic_ai.providers.typesafe</code> fails after an upgrade, pin <code>pydantic-ai-slim==2.48.0</code> until ornotto catches up.</p>
 <p>The adapter is small on purpose. <code>ornotto.pydantic_ai</code> imports three names from outside the package: <code>TypeSafeModel</code>, <code>TypeSafeProvider</code> and <code>AsyncTypeSafeClient</code>. It adds no model class of its own. Everything the agent does with the answers, from thresholds to tool calls, is pydantic-ai's code, and ornotto only decides where the request goes.</p>
 <h3 id="how-requests-reach-the-engine">How requests reach the engine<a class="headerlink" href="#how-requests-reach-the-engine" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
   A[Agent] --&gt; T[TypeSafeModel]
   T -- "POST /v1/systemone" --&gt; D[dohnuts]
   T -- "in-process transport" --&gt; X[ornotto translator] -- "POST /v1/pcd/decode" --&gt; P[pcdServer]</code></pre>
@@ -1498,16 +1499,17 @@
 <li><strong>ollaya</strong>: ollaya answers <code>/v1/systemone</code> itself, as dohnuts does, so an ollaya model gets the same direct provider with the engine's loopback URL. ollaya's own site says that "The official TypeSafe Python SDK 0.7.1 works unchanged against a local server."<sup id="fnref:ollaya-site"><a class="footnote-ref" href="#fn:ollaya-site">1</a></sup> The integration tests exercise the dohnuts and pcdServer paths; the ollaya path uses the same provider code as dohnuts but has no agent test of its own.</li>
 </ul>
 <p>For pcdServer, one agent step makes three hops, all inside your machine:</p>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>%%{init: {"sequence": {"useMaxWidth": false}}}%%
+sequenceDiagram
     participant A as Agent
     participant T as TypeSafeModel
     participant X as ornotto transport
     participant P as pcdServer
-    A-&gt;&gt;T: run: prompt and output_type
+    A-&gt;&gt;T: run: prompt&lt;br&gt;and output_type
     T-&gt;&gt;X: POST /v1/systemone&lt;br&gt;state and questions
-    X-&gt;&gt;X: questions to pcdServer fields
+    X-&gt;&gt;X: questions to&lt;br&gt;pcdServer fields
     X-&gt;&gt;P: POST /v1/pcd/decode
-    P--&gt;&gt;X: values and probabilities per field
+    P--&gt;&gt;X: values and probabilities&lt;br&gt;per field
     X--&gt;&gt;T: System One answers
     T--&gt;&gt;A: validated output</code></pre>
 <p>The translation step is the same code that <code>Decider.decide</code> uses, so an agent on pcdServer and a plain <code>decide</code> call on pcdServer send the engine the same fields. The response the transport builds reports zero input and output tokens: a local engine has no bill, and the usage counters in pydantic-ai's run summary stay at zero.</p>

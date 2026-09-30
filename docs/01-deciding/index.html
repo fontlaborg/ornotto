@@ -1341,7 +1341,8 @@
 <li><strong>The machine is already there.</strong> A current Mac has a GPU that sits idle while the user reads the assistant's reply. The decider-0.8b file that <code>ornotto</code> registers is 0.81 GB (<a href="../08-speed/#memory-one-model-at-a-time">chapter 8</a>).</li>
 </ul>
 <p>The same reasoning holds for other desktop tools that route between a few handlers: a code editor deciding whether a request needs the language server, a mail client sorting incoming messages, a photo tool choosing between a filter and a generative fill. The local engine does not need to be as accurate as jev on every query. It needs to be accurate enough on the queries the product sees, with a known fallback for the rest. <a href="../09-confidence/#a-fallback-gate">Chapter 9</a> shows how to build that fallback from the model's own probabilities.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart LR
     U["User message&lt;br&gt;plus app state"] --&gt; R{"Local router&lt;br&gt;decision"}
     R -- "docs" --&gt; D["Documentation answer"]
     R -- "python" --&gt; P["Script generator"]

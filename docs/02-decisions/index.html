@@ -1441,7 +1441,8 @@
 <h3 id="isolated-score-levels">Isolated score levels<a class="headerlink" href="#isolated-score-levels" title="Permanent link">&para;</a></h3>
 <p>The decider model's recipe scores a rubric one level at a time by default (<code>isolated_levels: true</code> in its metadata). Each level becomes its own yes/no row: the question, then <code>Proposed answer: &lt;level&gt;</code>, then <code>Does the proposed answer fit?</code>. dohnuts reports the yes probabilities as <code>native.level_fit</code> and their sum as <code>native.fit_mass</code>; normalised, they give <code>probabilities</code>, and <code>score</code> is their expected value.</p>
 <p>A low <code>fit_mass</code> is a warning in its own right: no level describes the state well. In one of our FontLab examples, "Loop through masters and print their names" scored 0.63 on a rubric of general type design, the FontLab UI and the FontLab Python API. Every level fitted poorly (fit_mass 0.50) and "general type design" fitted least badly, so the score was wrong and the fit mass said so. Send <code>"isolated": false</code> on the question to score all levels in one lettered row instead.</p>
-<pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     Q["Score question&lt;br&gt;with 3 levels"] --&gt; R0["Row: level 0&lt;br&gt;Does it fit?"]
     Q --&gt; R1["Row: level 1&lt;br&gt;Does it fit?"]
     Q --&gt; R2["Row: level 2&lt;br&gt;Does it fit?"]

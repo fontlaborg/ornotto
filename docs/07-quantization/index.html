@@ -1377,8 +1377,9 @@
 <p>The time column is flat too. On a GPU the engines are limited by memory bandwidth and by the per-request overhead, not by the size of the weights, so a smaller file does not make a single short decision faster: decider-0.8b takes 51 to 55 ms per query on dohnuts (Metal) at every quant.</p>
 <h3 id="one-model-at-every-quant">One model at every quant<a class="headerlink" href="#one-model-at-every-quant" title="Permanent link">&para;</a></h3>
 <p>decider-0.8b on dohnuts (Metal) is the model with the fullest sweep: seven files of the same weights, read through the same trained readout on the same engine. Its translated scores, from the table above:</p>
-<pre class="mermaid"><code>xychart-beta
-    title "decider-0.8b on dohnuts (Metal): translated score by quant"
+<pre class="mermaid"><code>%%{init: {"xyChart": {"width": 400, "height": 340}, "themeCSS": ".background { fill: transparent; } text { fill: var(--md-default-fg-color); } .plot rect { fill: var(--ornotto-diagram-line); stroke: none; } path { stroke: var(--md-default-fg-color--light); }"}}%%
+xychart-beta
+    title "Translated score by quant"
     x-axis ["f16", "q8", "q6", "q5", "q4", "q3", "q2"]
     y-axis "Correct of 67" 0 --&gt; 67
     bar [61, 62, 62, 62, 61, 57, 18]</code></pre>

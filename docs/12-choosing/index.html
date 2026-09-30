@@ -1319,18 +1319,29 @@
 <p>Two catches in the registry. <code>qwen3.5-2b</code> in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms (<a href="../07-quantization/">chapter 7</a>). If a small vanilla model is what you want, pass that file as <code>hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf</code>. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in the wheel: laya is a different kind of model, on runtimes the package does not bundle (<a href="../03-engines/">chapter 3</a>). Through ollaya, <code>ollaya-laya-multilingual</code> answers in 12.3 ms with the same 52/67.</p>
 <h2 id="choosing-by-memory-on-a-mac">Choosing by memory on a Mac<a class="headerlink" href="#choosing-by-memory-on-a-mac" title="Permanent link">&para;</a></h2>
 <p>On Apple silicon the GPU shares the machine's memory with everything else, so the first practical limit is not speed but whether the model fits. The tree below sorts the models this book measured by how much memory they need. The tiers are guidance, not measurements: every number in it comes from one 48 GB M4 Max (<a href="../05-method/#one-model-at-a-time">chapter 5</a>). The rule behind the tiers is the file size plus headroom for macOS, your other applications and the engine's own cache. pcdServer, as ornotto starts it, may add up to 512 MiB of schema checkpoints (<a href="../08-speed/#the-schema-cache-in-pcdserver">chapter 8</a>).</p>
-<pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     S["A decision to run"] --&gt; H{"May the text leave&lt;br&gt;the machine?"}
     H --&gt;|"yes"| J["jev, hosted&lt;br&gt;65/67 at 466 ms, per call"]
     H --&gt;|"no"| M{"Memory you can give&lt;br&gt;one model"}
-    M --&gt;|"8 GB Mac"| A1["decider-0.8b on dohnuts&lt;br&gt;0.81 GB, 62/67, 52 ms"]
-    M --&gt;|"8 GB Mac"| A2["Qwen3.5-2B Q3_K_M on pcdServer&lt;br&gt;1.2 GB, 61/67, 43 ms"]
-    M --&gt;|"16 GB"| B1["qwen3.5-4b-hmm on pcdServer&lt;br&gt;2.7 GB, 64/67 and 65/67"]
-    M --&gt;|"16 GB"| B2["NeoHorse-Jev-4B Q8_0&lt;br&gt;5.2 GB, 64/67, not in ornotto"]
-    M --&gt;|"24 to 32 GB"| C1["ollaya-winnow-12b&lt;br&gt;12.7 GB, 64/67 and 65/67"]
-    M --&gt;|"24 to 32 GB"| C2["rune-26b-a4b Q3_K_M&lt;br&gt;13.5 GB, 65/67 translated, not in ornotto"]
-    M --&gt;|"48 GB or more"| D1["decider-35b-a3b on dohnuts&lt;br&gt;21 GB, 64/67"]
-    M --&gt;|"48 GB or more"| D2["openjev-35b-a3b on pcdServer&lt;br&gt;21.2 GB, 63/67 and 64/67"]
+    M --&gt; T8
+    subgraph T8["8 GB Mac"]
+        A1["decider-0.8b&lt;br&gt;on dohnuts&lt;br&gt;0.81 GB, 62/67, 52 ms"]
+        A2["Qwen3.5-2B Q3_K_M&lt;br&gt;on pcdServer&lt;br&gt;1.2 GB, 61/67, 43 ms"]
+    end
+    subgraph T16["16 GB"]
+        B1["qwen3.5-4b-hmm&lt;br&gt;on pcdServer&lt;br&gt;2.7 GB, 64/67&lt;br&gt;and 65/67"]
+        B2["NeoHorse-Jev-4B Q8_0&lt;br&gt;5.2 GB, 64/67,&lt;br&gt;not in ornotto"]
+    end
+    subgraph T24["24 to 32 GB"]
+        C1["ollaya-winnow-12b&lt;br&gt;12.7 GB, 64/67&lt;br&gt;and 65/67"]
+        C2["rune-26b-a4b Q3_K_M&lt;br&gt;13.5 GB, 65/67&lt;br&gt;translated,&lt;br&gt;not in ornotto"]
+    end
+    subgraph T48["48 GB or more"]
+        D1["decider-35b-a3b&lt;br&gt;on dohnuts&lt;br&gt;21 GB, 64/67"]
+        D2["openjev-35b-a3b&lt;br&gt;on pcdServer&lt;br&gt;21.2 GB, 63/67&lt;br&gt;and 64/67"]
+    end
+    T8 ~~~ T16 ~~~ T24 ~~~ T48
     A1 --&gt; G{"Need a confidence&lt;br&gt;to gate on?"}
     B1 --&gt; G
     G --&gt;|"yes"| F["dedicated model on dohnuts,&lt;br&gt;fallback to a larger model"]</code></pre>
@@ -1485,13 +1496,14 @@
 <h2 id="parity-checks-against-the-reference">Parity checks against the reference<a class="headerlink" href="#parity-checks-against-the-reference" title="Permanent link">&para;</a></h2>
 <p>A local engine is only as trustworthy as its agreement with the model's reference implementation. For decider the reference is Mapika's PyTorch package, <code>decider-ai</code>. Until late September that package read the original checkpoints and dohnuts read GGUF conversions, so a parity check compared two different files: when the answers differed, the cause could be the engine or the conversion.</p>
 <p><code>decider-ai</code> 1.6.0, released on 2026-09-27, added GGUF checkpoints to its <code>Decider</code>, together with GGUF files for decider-4b v2.1 and decider-2b v11.<sup id="fnref:decider"><a class="footnote-ref" href="#fn:decider">2</a></sup> The reference and dohnuts can now read the same file. A difference between them is then the engine's, not the conversion's.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     G["one GGUF file"] --&gt; R["decider-ai reference"]
     G --&gt; D["dohnuts"]
     R --&gt; C{"Compare answers&lt;br&gt;and probabilities"}
     D --&gt; C
     C --&gt;|"answers differ"| E["an engine difference:&lt;br&gt;report it upstream"]
-    C --&gt;|"only confidences differ"| T["check the temperature&lt;br&gt;in the profile JSON"]
+    C --&gt;|"only confidences&lt;br&gt;differ"| T["check the temperature&lt;br&gt;in the profile JSON"]
     C --&gt;|"same"| OK["parity holds"]</code></pre>
 <p>We have not rerun our own checks this way yet. The prefix cache in <a href="../08-speed/#prefix-caching-in-dohnuts">chapter 8</a> was checked against dohnuts' own comparison script and the f32 PyTorch model, as described under <a href="#contributing-upstream">contributing upstream</a>.</p>
 <p>Two later <code>decider-ai</code> releases change what a comparison has to account for. 1.7.0 added decider-12b, built on Gemma-4-12B-it; pcdServer rejects Gemma 4 files, and we have not tried the new model on dohnuts. 1.8.0 added <code>temperature_by_options</code>, a temperature that depends on the number of options, T(n) = max(min, a + b ln n). A reference that scales by option count and an engine that reads one fixed temperature from the profile will agree on the answer and disagree on its confidence. Read the profile JSON of a new checkpoint before you blame the engine.</p>

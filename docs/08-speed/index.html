@@ -1292,7 +1292,8 @@
 <p><strong>slot</strong> sends the whole prompt to a stock <code>llama-server</code> with <code>cache_prompt: false</code>, asks for one token with the top 100 log-probabilities, and reads the option letters out of that list on the client. Every query prefills everything, and the response carries 100 candidates it mostly throws away.</p>
 <p><strong>dohnuts</strong> builds the same prompt inside the server and reads the letter logits directly. It skips the tokenizer round trip and the candidate list, which is the 13 ms it gains over slot. It still prefills every row from scratch: the prompt starts with <code>Context:</code> and the state, then the question, then the lettered options with their descriptions. The router prompt carries a description for each of the five tasks, so one routing row takes about 52 ms on its own.</p>
 <p><strong>pcdServer</strong> puts the fixed part of the prompt first. The system prompt lists every field, its description and its allowed values; the user's text comes after it. The fixed part is the same for every request with the same schema, so pcdServer computes it once, saves the model's state after it, and restores that state for later requests. Only the user text and a short suffix per field are decoded per request.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     A[Request: context + fields] --&gt; B{Schema checkpoint&lt;br&gt;in the LRU?}
     B -- hit --&gt; C[Restore checkpoint]
     B -- miss --&gt; D[Prefill schema prompt,&lt;br&gt;save checkpoint]
@@ -1444,7 +1445,8 @@
 <p>An earlier draft also cached single-question requests the second time their state appeared. It was dropped: the same request then scored differently depending on what the server had seen before (by up to 0.014 on the CPU), and always splitting the prompt cost single-question requests 7 to 10 percent. The version in the pull request changes nothing for a request with one row.</p>
 <p>The <code>ornotto</code> wheels build dohnuts from the branch of that pull request, so you get the faster multi-question path without waiting for the upstream merge.</p>
 <p>The path a request takes through the patched runner:</p>
-<pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>%%{init: {"flowchart": {"useMaxWidth": false}}}%%
+flowchart TD
     R["Request: one state, several questions"] --&gt; N{"More than one row?"}
     N -- "no" --&gt; S["Old path: prefill the whole row"]
     N -- "yes" --&gt; L{"Prefix of 16 tokens or more?"}
