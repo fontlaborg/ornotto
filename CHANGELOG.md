@@ -4,6 +4,16 @@
 
 ## Unreleased
 
+- Landing page redesigned as an editorial composition: two-column hero with a generated illustration,
+  a three-step "How a decision works" strip, a typographic numbers row, a pull quote, a bar chart of the
+  eight best methods with the top-15 table collapsed beneath it, alternating engine rows, a twelve-chapter
+  map and a two-line install. Sidebars are hidden on the home page only.
+- Book expanded from about 26,000 to 47,000 words in the FontLab neutral voice: the September 2026 context
+  (jev launch, OpenAI Decision API, Liquid d1, ollaya, pydantic-ai 2.50), attributed anecdotes, third-party
+  benchmark numbers in separate tables, licence warnings, 19 Mermaid diagrams (readout families, model
+  family tree, method flowchart, quant chart, memory decision tree) and five generated illustrations.
+- Diagrams render at full size with `useMaxWidth: false`, wide ones scroll inside their own box, and their
+  colours follow the site theme in light and dark mode through the `--md-mermaid-*` variables.
 - ollaya review follow-ups: Deciders that differ only in `gpu` share one ollaya server, a missing tag raises
   instead of asserting, and the `pull` and `models` commands have tests.
 - New engine `ollaya`: ornotto starts a private `ollaya serve` on a free loopback port (one model, kept

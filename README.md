@@ -10,7 +10,7 @@ It gives three open-source engines one Python API:
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
 
-The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks.
+The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 258 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
 
 ## Install
 
