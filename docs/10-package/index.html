@@ -439,7 +439,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -819,6 +819,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollaya" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ollaya
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1044,6 +1061,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollaya" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ollaya
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1210,7 +1244,7 @@
 
 
 <h1 id="10-the-ornotto-package">10. The ornotto package<a class="headerlink" href="#10-the-ornotto-package" title="Permanent link">&para;</a></h1>
-<p><code>ornotto</code> is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to both local engines, starts and stops them for you, and downloads the models they need. This chapter is the reference: what each object takes, what it returns, and what happens underneath.</p>
+<p><code>ornotto</code> is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to the local engines, starts and stops them for you, and downloads the models they need. Two engines, dohnuts and pcdServer, ship inside the wheel; a third, ollaya, is a separate install that <code>ornotto</code> drives when it finds it. This chapter is the reference: what each object takes, what it returns, and what happens underneath.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
 <div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>add<span class="w"> </span>ornotto<span class="w">                      </span><span class="c1"># or: pip install ornotto</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"ornotto[pydantic-ai]"</span><span class="w">       </span><span class="c1"># adds pydantic-ai-slim[typesafe] for chapter 11</span>
@@ -1255,16 +1289,23 @@
 <li><code>dohnuts-cli</code> or <code>pcd_server</code> on your <code>PATH</code>.</li>
 </ol>
 <p>If none of them exists, the first question raises <code>EngineNotFound</code> with the name of the variable to set. <a href="../12-choosing/#building-from-source">Chapter 12</a> shows how to build both engines yourself.</p>
+<h3 id="ollaya">ollaya<a class="headerlink" href="#ollaya" title="Permanent link">&para;</a></h3>
+<p>ollaya is not in the wheel and not on PyPI: it is one Rust binary that fetches its models from its own registry. Install it without <code>sudo</code> into <code>~/.local</code>:</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollaya.dev/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">OLLAYA_INSTALL_DIR</span><span class="o">=</span><span class="nv">$HOME</span>/.local<span class="w"> </span>sh
+</code></pre></div>
+<p>ornotto looks for it at the path in <code>ORNOTTO_OLLAYA_BIN</code>, then on your <code>PATH</code>, then in <code>~/.local/bin</code>. If none has it, a question for an ollaya model raises <code>EngineNotFound</code> with the install command. ollaya keeps its models in its own store, <code>OLLAYA_MODELS</code> (default <code>~/.ollaya/models</code>), not in the Hugging Face cache; set that variable if your home volume has no room.</p>
 <p>Models download from Hugging Face on first use, through <code>huggingface_hub</code>, into the ordinary Hugging Face cache. Set <code>HF_HUB_CACHE</code> (or <code>HF_HOME</code>) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.</p>
 <h2 id="decider">Decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h2>
 <p>A <code>Decider</code> is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1278,12 +1319,12 @@
 <tr>
 <td><code>model</code></td>
 <td><code>"decider-0.8b"</code></td>
-<td>A registered name, a local <code>.gguf</code> path (<code>~</code> expands), or <code>hf:owner/repo/file.gguf</code>.</td>
+<td>A registered name, a local <code>.gguf</code> path (<code>~</code> expands), <code>hf:owner/repo/file.gguf</code>, or an ollaya tag as <code>ollaya:&lt;tag&gt;</code>.</td>
 </tr>
 <tr>
 <td><code>engine</code></td>
 <td>first engine the model supports</td>
-<td><code>"dohnuts"</code> or <code>"pcd"</code>. Asking a model for an engine it cannot run raises <code>ValueError</code>.</td>
+<td><code>"dohnuts"</code>, <code>"pcd"</code> or <code>"ollaya"</code>. With <code>"ollaya"</code>, a plain tag such as <code>kev:4b</code> also works. Asking a model for an engine it cannot run raises <code>ValueError</code>.</td>
 </tr>
 <tr>
 <td><code>url</code></td>
@@ -1391,16 +1432,16 @@
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
 <p><code>decide</code> takes a mapping from question name to question. The name you choose comes back as the key of the answer. Build questions with three functions:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1430,7 +1471,7 @@
 </table>
 <p>You can also pass a System One question as a plain dict, as the jev API and dohnuts accept it: <code>{"type": "choice", "instructions": "...", "criteria": {...}}</code>. <code>question</code> is accepted for <code>instructions</code>, <code>options</code> for <code>criteria</code>, and <code>bool</code> for <code>noul</code>. A <code>score</code> whose criteria are keyed by numbers (<code>{"0": ..., "1": ...}</code>) is sorted numerically. Instructions and criteria may be JSON values; ornotto turns them into text.</p>
 <h3 id="limits-per-request">Limits per request<a class="headerlink" href="#limits-per-request" title="Permanent link">&para;</a></h3>
-<p>dohnuts takes at most 64 questions per request (ornotto starts it with <code>--max-questions 64</code>; the server default is 8), and pcdServer takes at most 63 fields. If you ask more, your <code>Decider</code> splits them into several requests and merges the answers into one <code>Decision</code>. For pcdServer, ornotto also checks the 64 KiB state limit before it sends anything and clips each question's text, option descriptions included, to 1,024 bytes. <a href="../02-decisions/#limits">Chapter 2</a> lists every limit of both engines.</p>
+<p>dohnuts takes at most 64 questions per request (ornotto starts it with <code>--max-questions 64</code>; the server default is 8), ollaya 256, and pcdServer at most 63 fields. If you ask more, your <code>Decider</code> splits them into several requests and merges the answers into one <code>Decision</code>. For pcdServer, ornotto also checks the 64 KiB state limit before it sends anything and clips each question's text, option descriptions included, to 1,024 bytes. <a href="../02-decisions/#limits">Chapter 2</a> lists every limit of both engines.</p>
 <h2 id="answers">Answers<a class="headerlink" href="#answers" title="Permanent link">&para;</a></h2>
 <p>An <code>Answer</code> is one answer. Its fields mean slightly different things for the three kinds of question you can ask.</p>
 <table>
@@ -1488,14 +1529,14 @@
 </tbody>
 </table>
 <p><code>bool(answer)</code> is <code>bool(answer.value)</code>, so <code>if ornotto.check(text, "Is it spam?"):</code> reads as it should.</p>
-<p><code>calibrated</code> says what kind of number the probabilities are. It is <code>True</code> for dohnuts, whose models divide their logits by a temperature fitted during training before the softmax, so a 0.8 should be right about 80 percent of the time. It is <code>False</code> for pcdServer, whose probabilities are a plain softmax over the first tokens of the allowed answers. Both are fine for picking the winner. They are not interchangeable as confidences: compare a dohnuts 0.8 only with another dohnuts 0.8. <a href="../09-confidence/">Chapter 9</a> shows how well the calibration held up on our benchmark.</p>
+<p><code>calibrated</code> says what kind of number the probabilities are. It is <code>True</code> for dohnuts, whose models divide their logits by a temperature fitted during training before the softmax, so a 0.8 should be right about 80 percent of the time, and for ollaya, which ships a calibration with every model. It is <code>False</code> for pcdServer, whose probabilities are a plain softmax over the first tokens of the allowed answers. Both are fine for picking the winner. They are not interchangeable as confidences: compare a dohnuts 0.8 only with another dohnuts 0.8. <a href="../09-confidence/">Chapter 9</a> shows how well the calibration held up on our benchmark.</p>
 <p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
 <p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">})</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">})</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1515,7 +1556,7 @@
 </tr>
 <tr>
 <td><code>engine</code></td>
-<td><code>"dohnuts"</code> or <code>"pcd"</code></td>
+<td><code>"dohnuts"</code>, <code>"pcd"</code> or <code>"ollaya"</code></td>
 </tr>
 <tr>
 <td><code>usage</code></td>
@@ -1533,15 +1574,15 @@
 </table>
 <h2 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h2>
 <p><code>adecide</code> is <code>decide</code> for asyncio. It uses <code>httpx.AsyncClient</code>, so many decisions can be in flight at once. The first call may block briefly while the engine starts: starting a process and waiting for it to load a model is not asynchronous.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <p><code>ornotto.aextract</code> is the async form of <code>extract</code> (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="engine-lifecycle">Engine lifecycle<a class="headerlink" href="#engine-lifecycle" title="Permanent link">&para;</a></h2>
@@ -1553,6 +1594,7 @@
 <li>ornotto polls <code>/health</code> every 0.2 s until the model is loaded, for up to 180 s. If the process exits first, the error includes the last 2,000 characters of its log.</li>
 <li>At interpreter exit, an <code>atexit</code> handler stops every engine: terminate, wait 10 s, then kill.</li>
 </ol>
+<p>An ollaya engine is a private <code>ollaya serve</code> on its own loopback port, so it never touches an ollaya daemon you run yourself on ollaya's default port. ornotto starts it holding one model and keeping it loaded, waits until <code>/</code> answers, pulls the tag if the store lacks it, and loads the model through <code>/api/decide</code> before the first question, allowing up to 600 s for that load. At exit it stops the server with <code>ollaya stop</code>. Your <code>OLLAYA_*</code> settings, such as <code>OLLAYA_MODELS</code> and <code>OLLAYA_DEVICE</code>, pass through, except that ornotto sets the address, the one-model limit and the keep-alive itself and leaves out <code>OLLAYA_API_KEY</code> and <code>OLLAYA_LOG_DIR</code>.</p>
 <p>Every <code>Decider</code> in the process that names the same engine, model files and GPU setting shares one engine process. Opening <code>Decider("decider-0.8b")</code> twice costs one load. If the process died, the next question starts a new one.</p>
 <div class="admonition warning">
 <p class="admonition-title">Memory</p>
@@ -1636,9 +1678,105 @@
 <td>Apache-2.0</td>
 <td><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a></td>
 </tr>
+<tr>
+<td><code>jevk5-4b</code></td>
+<td>pcd</td>
+<td>fine-tuned</td>
+<td style="text-align: right;">2.7</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/alibiserikbay/JevK5-GGUF">alibiserikbay/JevK5-GGUF</a></td>
+</tr>
+<tr>
+<td><code>openjev-35b-a3b</code></td>
+<td>pcd</td>
+<td>fine-tuned</td>
+<td style="text-align: right;">21.2</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF">apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF</a></td>
+</tr>
+<tr>
+<td><code>ollaya-kev-0.8b</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.8</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>kev:0.8b</code></td>
+</tr>
+<tr>
+<td><code>ollaya-decider-0.8b</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.5</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>decider:0.8b</code></td>
+</tr>
+<tr>
+<td><code>ollaya-laya-en</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.9</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>laya:en</code></td>
+</tr>
+<tr>
+<td><code>ollaya-laya-multilingual</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.7</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>laya:multilingual</code></td>
+</tr>
+<tr>
+<td><code>ollaya-nli-modernbert-large</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.8</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>nli:modernbert-large</code></td>
+</tr>
+<tr>
+<td><code>ollaya-gliclass-large</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.8</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>gliclass:large</code></td>
+</tr>
+<tr>
+<td><code>ollaya-von-1.1</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.6</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>von:1.1</code></td>
+</tr>
+<tr>
+<td><code>ollaya-decision-eos</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.5</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>decision:eos</code></td>
+</tr>
+<tr>
+<td><code>ollaya-winnow-12b</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">12.7</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>winnow:12b</code></td>
+</tr>
+<tr>
+<td><code>ollaya-clm-8b</code></td>
+<td>ollaya</td>
+<td>dedicated</td>
+<td style="text-align: right;">16.5</td>
+<td>Apache-2.0</td>
+<td>ollaya <code>clm:8b</code></td>
+</tr>
 </tbody>
 </table>
-<p>The dedicated models are Q8_0; the Qwen chat models are Q4_K_M, except the 0.8B, which is Q8_0. For dohnuts, a dedicated model also downloads its profile JSON, and kev and Dohnuts download a scorer head. The Dohnuts weights are for non-commercial use only. <a href="../04-models/">Chapter 4</a> explains the three families, and <a href="../12-choosing/">chapter 12</a> which to pick.</p>
+<p>The dedicated GGUF models are Q8_0; the Qwen chat models, JevK5 and APUS-OpenJev are Q4_K_M, except the 0.8B, which is Q8_0. <code>openjev-35b-a3b</code> needs about 23 GB of memory, so run it with nothing else loaded. An ollaya model is its registry tag, and its size is ollaya's download; ollaya picks the runtime and precision for each tag. On the router benchmark, <code>ollaya-winnow-12b</code> scored 64/67 and <code>ollaya-decider-0.8b</code> 61/67, while <code>ollaya-clm-8b</code>, <code>ollaya-gliclass-large</code> and <code>ollaya-nli-modernbert-large</code> scored 39, 26 and 20 (<a href="../06-results/">chapter 6</a>). Every other tag in ollaya's registry works as <code>ollaya:&lt;tag&gt;</code>. For dohnuts, a dedicated model also downloads its profile JSON, and kev and Dohnuts download a scorer head. The Dohnuts weights are for non-commercial use only. <a href="../04-models/">Chapter 4</a> explains the three families, and <a href="../12-choosing/">chapter 12</a> which to pick.</p>
 <p><code>ornotto.DEFAULT_MODEL</code> is <code>"decider-0.8b"</code>.</p>
 <h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
 <table>
@@ -1651,11 +1789,11 @@
 <tbody>
 <tr>
 <td><code>EngineNotFound</code></td>
-<td>the engine executable is not in the environment variable, the wheel or <code>PATH</code></td>
+<td>the engine executable is not in the environment variable, the wheel or <code>PATH</code> (for ollaya: the variable, <code>PATH</code> or <code>~/.local/bin</code>)</td>
 </tr>
 <tr>
 <td><code>DecisionError</code></td>
-<td>the engine answered with an HTTP status other than 200; the message carries the status and the first 500 characters of the body</td>
+<td>the engine answered with an HTTP status other than 200; the message carries the status and the first 500 characters of the body. ollaya's <code>422 STATE_TRUNCATED</code> says that the state is longer than the model's context; <code>ollaya-laya-en</code> reads only 512 tokens</td>
 </tr>
 <tr>
 <td><code>ValueError</code></td>
@@ -1691,7 +1829,7 @@
 </tr>
 <tr>
 <td><code>ornotto pull NAME</code></td>
-<td>download a model and its metadata; prints the GGUF path</td>
+<td>download a model and its metadata and print the GGUF path; for an ollaya model, pull the tag into <code>OLLAYA_MODELS</code></td>
 </tr>
 <tr>
 <td><code>ornotto choose STATE OPTION... [--model=] [--engine=] [--question=]</code></td>
@@ -1711,10 +1849,12 @@
 </tr>
 </tbody>
 </table>
-<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
 </code></pre></div>
-<p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts.</p>
+<p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts or ollaya.</p>
 
 
 

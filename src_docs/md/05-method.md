@@ -51,7 +51,7 @@ The pipeline has to know whether a query is English before it can decide to tran
 
 --8<-- "tables/detectors.html"
 
-[lingua](https://github.com/pemistahl/lingua-rs) was right on 63 of 67 queries and handles 1,650 calls per second. papagan is 50 times faster and was right on 43. The majority vote, which breaks ties in lingua's favour, adds nothing to lingua alone. Its four misses: a Spanish and an English query read as Latin, a Bulgarian one as Russian, and a Hindi query full of English terms as Sotho.
+[lingua](https://github.com/pemistahl/lingua-rs) was right on 63 of 67 queries and handles about 1,940 calls per second. papagan is about 40 times faster and was right on 43. The majority vote, which breaks ties in lingua's favour, adds nothing to lingua alone. Its four misses: a Spanish and an English query read as Latin, a Bulgarian one as Russian, and a Hindi query full of English terms as Sotho.
 
 ### Translation
 
@@ -74,6 +74,10 @@ Engines and runtimes take different request shapes, so the same decision was phr
 | slot, Hmm readout | the Qwen chat template with thinking off, options as `A: name — description` lines, and "Return only the option letter." |
 | pcdServer | one enum field `task` with the choices `docs`, `python`, `fea`, `vfj`, `sample`, and a field description made of a short instruction and one short description per task |
 | laya runtimes | a System One request with the short instruction and short descriptions, because the encoder shares a 1,024-token budget; the Neural Engine exports hold 96 tokens and got a compact prompt |
+| ollaya, the authors' System One servers | a System One request, as for jev; ollaya's encoder tags (laya, nli, gliclass, von) got the short instruction and descriptions |
+| slot, rune, JevK5 and APUS-OpenJev readouts | each model's published prompt, with the options lettered and their long descriptions |
+| the later encoders (GLiNER2.5-Decide, Julia-1, von, decima-small, Pulse Decide, the new laya builds) | the short instruction and descriptions, laid out as each model's own code lays them out |
+| Jev-Omni, semif, Lumma | the prompt that each model's published code builds from the question, the options and the query |
 
 pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. [Chapter 3](03-engines.md) explains what each readout does with its prompt.
 
@@ -91,7 +95,7 @@ One model at a time also makes the timings fair: no model competes with another 
 - The **English** column counts the 28 English queries in translated mode. **Other, translated** and **other, direct** count the 39 non-English queries in each mode.
 - **ms/query** is the mean wall-clock time from the moment the harness sends a query to the moment it has the probabilities. For server engines it includes the HTTP round trip and JSON parsing on loopback. For jev it includes the network trip to OpenRouter. It excludes model loading and a warm-up call made before timing starts.
 - **Load ms** is the time to load the model and answer the warm-up call, for runtimes that load in-process or that the harness started itself. It is blank where a server was started outside the timed step.
-- **GB** is the size of the GGUF file as published on Hugging Face.
+- **GB** is the size of the GGUF file as published on Hugging Face. For other formats it is the size of the weight files the method loads; for the adapters lev, imajev and leo it includes the base model they load; for an ollaya model it is the tag's download. Tokenizers and configuration files are left out.
 
 In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so compare their milliseconds with a server's only loosely.
 
@@ -99,7 +103,7 @@ In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so
 
 - **Engines.** dohnuts.cpp at upstream commit `9a894b0`, with llama.cpp pinned by its submodule at `b29c606`. The benchmark predates our prefix cache ([chapter 8](08-speed.md#prefix-caching-in-dohnuts)), which leaves single-question requests unchanged. pcdServer at commit `1ce9e55`, which fetches llama.cpp tag `v0.4.1` when it is configured. slot used a stock llama-server.
 - **Translator.** Hy-MT2-1.8B at Q4_K_M, temperature 0, with the glossary above.
-- **Dates.** The runs, the jev calls included, took place on 2026-09-22 and 2026-09-23.
+- **Dates.** The first 208 methods, the jev calls included, ran on 2026-09-22 and 2026-09-23; the 50 later methods on 2026-09-29 and 2026-09-30. ollaya was version 0.7.5.
 - **Data.** The harness itself is private. Every method's scores, timings and file sizes are published in `src_docs/data/` in the [ornotto repository](https://github.com/fontlaborg/ornotto), and the tables in this book are generated from them.
 
 ## Limits

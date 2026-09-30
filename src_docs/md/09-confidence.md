@@ -85,17 +85,17 @@ If you run the two models as a pydantic-ai chain instead, [chapter 11](11-typed.
 
 ## The hardest queries
 
-Some queries defeat most of the 208 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.
+Some queries defeat most of the 258 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.
 
 --8<-- "tables/queries.html"
 
 The three hardest:
 
 - **"How do I write a liga feature?"** is labelled docs: the user asks how, not for code. 9 percent of the classifiers agree, and jev answers fea. The words "write" and "feature" pull every model towards the feature-code task. Whether the label or the models are right is a question about what the assistant should do, which a router cannot settle.
-- **"Which words should I look at to judge the spacing of round letters?"** is labelled sample: the user wants test text. 22 percent get it right, jev among them. The question is about spacing, and the request for text to look at is implied rather than stated.
-- **"Show me how a glyph is stored in a VFJ file"** is labelled docs, and 26 percent agree. It is the same trap as the liga query: the format's name pulls the answer to vfj, the task of writing VFJ, and jev answers vfj too.
+- **"Which words should I look at to judge the spacing of round letters?"** is labelled sample: the user wants test text. 23 percent get it right, jev among them. The question is about spacing, and the request for text to look at is implied rather than stated.
+- **"Show me how a glyph is stored in a VFJ file"** is labelled docs, and 28 percent agree. It is the same trap as the liga query: the format's name pulls the answer to vfj, the task of writing VFJ, and jev answers vfj too.
 
-One query shows what translation costs. The Korean request for a VFJ glyph named hyphen with a width of 300 is right for 90 percent of the classifiers on the original text and for 32 percent after translation, because the translator turned it into "The FontLab file has a hyphen name and a glyph definition with a width of 300." Most classifiers read the Korean better than the English they were given.
+One query shows what translation costs. The Korean request for a VFJ glyph named hyphen with a width of 300 is right for 90 percent of the classifiers on the original text and for 34 percent after translation, because the translator turned it into "The FontLab file has a hyphen name and a glyph definition with a width of 300." Most classifiers read the Korean better than the English they were given.
 
 ## The abstain signal nobody used
 

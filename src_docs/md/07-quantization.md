@@ -21,7 +21,7 @@ The suffix of a GGUF file names its quantization: how many bits each weight keep
 
 The perplexity cost is the increase llama.cpp's `llama-quantize` lists for Llama-3-8B; it grows slowly to `Q4_K_M` and fast below it, which is the shape the router benchmark shows too.
 
-In the tables below and in [chapter 6](06-results.md), the quant is shortened to its number: `q4` is `Q4_K_M` (or `Q4_0` for the ggml-org file), `iq2` is an `IQ2` variant, `f16` and `bf16` are the unquantized files.
+In the tables below and in [chapter 6](06-results.md), the quant is shortened to its number: `q4` is `Q4_K_M` (or `Q4_0` for the ggml-org file), `iq2` is an `IQ2` variant, `f16` and `bf16` are the unquantized files. Files outside llama.cpp keep their own labels: `mlx4` and `mlx8` (or `4bit`) are MLX affine quantizations, `mxfp4` and `mxfp8` MLX's microscaling floats, `q4_0` and `q8_0` the exact GGUF type where a row names it, and `int8`, `fp16` and `fp32` the precision of an ONNX, Core ML or Core AI build.
 
 ## Q4 to Q8 is a plateau
 
@@ -80,6 +80,25 @@ The quant curve has the same shape on every engine; the engine shifts it up or d
 
 Laya shows a different failure: the laya-multilingual encoder run as a llama.cpp embedding model scores 52 at `q8` and `f16`, 51 at `q6`, 47 at `q5`, 36 at `q4` and 49 at `q3`. An encoder's hidden states feed a decision head that expects float precision, and the loss does not follow bit count in order. If you run laya through llama.cpp, keep `q8` or `f16`.
 
+## The later decision models
+
+The decision models added in the second round were mostly measured at two or three quantizations. They show the same plateau, and for the large ones the smallest file measured was as good as the largest:
+
+| Model and engine | Scores (translated / direct) by quant | Best file |
+|---|---|---|
+| Jev-Omni, llama.cpp embeddings + head | `q3` 64/64, `q5` 63/63, `q8` 63/63 | `q3`, 6.1 GB |
+| rune-26b-a4b, slot | `q3` 65/57, `q4` 64/55 | `q3`, 13.5 GB |
+| NeoHorse-Jev-4B, its own server | `q3` 63/63, `q8` 64/64 | `q8`, 5.2 GB |
+| JevK5 4B, slot | `q4` 62/63, `q8` 61/63 | `q4`, 2.7 GB |
+| JevK5 4B, pcdServer | `q4` 61/62, `q8` 61/62 | `q4`, 2.7 GB |
+| APUS-OpenJev 35B-A3B | `q4` 63/64 on pcdServer, `4bit` 63/62 on MLX | `q4`, 21.2 GB |
+| CLM-v0.1-8B, its own server | `q4` 36, `q5` 38, `q8` 39, `mlx4` 33, `mlx8` 38 | none good |
+| laya-multilingual, MLX | `mxfp8` 53/49, `mxfp4` 44/44 | `mxfp8`, 0.32 GB |
+
+Jev-Omni and rune are Gemma 4 models of 12B and 26B parameters, and at `q3` they lose nothing against `q5`, `q8` or `q4`; the one-answer differences favour the smaller file, which is what noise looks like. NeoHorse at 4B shows the small-model pattern in miniature: `q3` costs one answer in each mode. The CLM rows spread by six answers across five builds, but every one of them is far below the models above, so the choice of quant does not rescue the readout. jeb-35b-a3b was measured at `q3` only (63/63); its `q5` file needed more memory than the benchmark machine could spare.
+
+For laya, the MXFP4 conversion lost eight answers, and the Q4_0 encoder from laya-neutron, read through llama.cpp with its head converted to GGUF, scored 54/67 and 51/67, the best laya result. Two 4-bit conversions of the same encoder scored 44 and 54, which says more about the conversion than about the bit count.
+
 ## Size against accuracy
 
 Across families, parameters buy more than bits do. The best translated score of each size class on the router set:
@@ -91,9 +110,11 @@ Across families, parameters buy more than bits do. The best translated score of 
 | 1.7 to 2B | Qwen3.5-2B `q3`, pcdServer | 1.22 | 61/67 | 42.7 |
 | 3B | Qwen2.5-3B `q8`, pcdServer | 3.29 | 62/67 | 53.3 |
 | 4B | Qwen3.5-4B-Hmm `q8`, pcdServer | 4.48 | 64/67 | 87.6 |
+| 12B | Jev-Omni `q3`, llama.cpp embeddings + head | 6.09 | 64/67 | 1,222.3 |
+| 26B (4B active) | rune-26b-a4b `q3`, slot (llama-server) | 13.52 | 65/67 | 366.6 |
 | 35B (3B active) | decider-35b-a3b `q4`, dohnuts (Metal) | 21.17 | 64/67 | 266.3 |
 
-The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.
+The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. rune, a 26B mixture of experts at `q3`, is the only local row to match jev on translated text, and it drops to 57/67 on the original text. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.
 
 ## Which quant to download
 
@@ -101,6 +122,7 @@ The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within
 - **1.7B to 2B models**: `q5` or `q4`. `q3` is usable on the Qwen3.5-2B files, `q2` and the i-quants are not.
 - **3B to 4B models**: `q4`. It costs nothing to two answers against `q8` (Qwen3.5-4B-Hmm 64 at both, unsloth's Qwen3.5-4B 61 against 63) and cuts the download from 4.48 GB to 2.71 GB for Qwen3.5-4B-Hmm. The Qwen3.5-4B files keep their score even at `q2`; Qwen3-4B at `IQ1_S` does not.
 - **Encoders run as embedding models** (laya through llama.cpp): `q8` or `f16`.
+- **Dedicated models of 12B and more** (Jev-Omni, rune): `q3` scored as well as the larger files here. Jev-Omni's `q3` file is half the size of its `q8`.
 - **Anything larger**: `q4`, and check the memory arithmetic in [chapter 8](08-speed.md#memory-one-model-at-a-time) before you load it.
 
 The registered models in the `ornotto` package follow this: `decider-0.8b`, `decider-2b`, `kev-0.8b`, `dohnuts-0.8b` and `qwen3.5-0.8b` are `q8`, the 2B and 4B chat models are `q4` ([chapter 10](10-package.md)).

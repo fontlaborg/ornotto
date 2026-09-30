@@ -37,7 +37,7 @@ nav:
       - Home: index.md
       - 1. Deciding, not generating: 01-deciding.md
       - 2. The shape of a decision: 02-decisions.md
-      - 3. Five ways to read an answer: 03-engines.md
+      - 3. Ways to read an answer: 03-engines.md
       - 4. Dedicated, fine-tuned and vanilla models: 04-models.md
   - Benchmarks:
       - 5. How we measured: 05-method.md

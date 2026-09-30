@@ -439,7 +439,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -716,6 +716,17 @@
     <span class="md-ellipsis">
       
         The same file on different engines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-later-decision-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The later decision models
       
     </span>
   </a>
@@ -1041,6 +1052,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-later-decision-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The later decision models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#size-against-accuracy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1155,34 +1177,35 @@
 </tbody>
 </table>
 <p>The perplexity cost is the increase llama.cpp's <code>llama-quantize</code> lists for Llama-3-8B; it grows slowly to <code>Q4_K_M</code> and fast below it, which is the shape the router benchmark shows too.</p>
-<p>In the tables below and in <a href="../06-results/">chapter 6</a>, the quant is shortened to its number: <code>q4</code> is <code>Q4_K_M</code> (or <code>Q4_0</code> for the ggml-org file), <code>iq2</code> is an <code>IQ2</code> variant, <code>f16</code> and <code>bf16</code> are the unquantized files.</p>
+<p>In the tables below and in <a href="../06-results/">chapter 6</a>, the quant is shortened to its number: <code>q4</code> is <code>Q4_K_M</code> (or <code>Q4_0</code> for the ggml-org file), <code>iq2</code> is an <code>IQ2</code> variant, <code>f16</code> and <code>bf16</code> are the unquantized files. Files outside llama.cpp keep their own labels: <code>mlx4</code> and <code>mlx8</code> (or <code>4bit</code>) are MLX affine quantizations, <code>mxfp4</code> and <code>mxfp8</code> MLX's microscaling floats, <code>q4_0</code> and <code>q8_0</code> the exact GGUF type where a row names it, and <code>int8</code>, <code>fp16</code> and <code>fp32</code> the precision of an ONNX, Core ML or Core AI build.</p>
 <h2 id="q4-to-q8-is-a-plateau">Q4 to Q8 is a plateau<a class="headerlink" href="#q4-to-q8-is-a-plateau" title="Permanent link">&para;</a></h2>
 <p>Across every model that was measured at four or more quantizations, the score between <code>q4</code> and <code>q8</code> barely moves. Each cell below is the translated score out of 67, then the mean time per query.</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 21 rows" aria-label="Filter the table" data-table="quant-sweeps">
-<table class="sortable" id="quant-sweeps"><caption>Translated score out of 67 and mean ms per query, per quantization</caption><thead><tr><th>Model</th><th>Engine</th><th>iq1</th><th>q2</th><th>iq2</th><th>q3</th><th>iq3</th><th>q4</th><th>q5</th><th>q6</th><th>q8</th><th>f16</th><th>bf16</th></tr></thead>
+<input class="table-filter" type="search" placeholder="Filter 22 rows" aria-label="Filter the table" data-table="quant-sweeps">
+<table class="sortable" id="quant-sweeps"><caption>Translated score out of 67 and mean ms per query, per quantization</caption><thead><tr><th>Model</th><th>Engine</th><th>iq1</th><th>q2</th><th>iq2</th><th>q3</th><th>iq3</th><th>q4</th><th>mlx4</th><th>q5</th><th>q6</th><th>q8</th><th>mlx8</th><th>f16</th><th>bf16</th></tr></thead>
 <tbody>
-<tr><td>decider-0.8b</td><td>dohnuts (Metal)</td><td class="num"></td><td data-sort="18" class="num">18 · 55 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 54 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 53 ms</td><td data-sort="62" class="num">62 · 55 ms</td><td data-sort="62" class="num">62 · 54 ms</td><td data-sort="62" class="num">62 · 51 ms</td><td data-sort="61" class="num">61 · 52 ms</td><td class="num"></td></tr>
-<tr><td>decider-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="17" class="num">17 · 29 ms</td><td class="num"></td><td data-sort="52" class="num">52 · 29 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="57" class="num">57 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td data-sort="55" class="num">55 · 31 ms</td><td class="num"></td></tr>
-<tr><td>decider-0.8b</td><td>slot (llama-server)</td><td class="num"></td><td data-sort="18" class="num">18 · 65 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 70 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 67 ms</td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 64 ms</td><td data-sort="61" class="num">61 · 64 ms</td><td class="num"></td></tr>
-<tr><td>laya-multilingual</td><td>llama.cpp embeddings</td><td class="num"></td><td class="num"></td><td class="num"></td><td data-sort="49" class="num">49 · 45 ms</td><td class="num"></td><td data-sort="36" class="num">36 · 43 ms</td><td data-sort="47" class="num">47 · 45 ms</td><td data-sort="51" class="num">51 · 45 ms</td><td data-sort="52" class="num">52 · 44 ms</td><td data-sort="52" class="num">52 · 44 ms</td><td class="num"></td></tr>
-<tr><td>qwen1.5-0.5b</td><td>pcdServer</td><td class="num"></td><td data-sort="21" class="num">21 · 21 ms</td><td class="num"></td><td data-sort="35" class="num">35 · 21 ms</td><td class="num"></td><td data-sort="26" class="num">26 · 22 ms</td><td data-sort="28" class="num">28 · 22 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td data-sort="28" class="num">28 · 21 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen1.5-1.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="26" class="num">26 · 40 ms</td><td class="num"></td><td data-sort="34" class="num">34 · 42 ms</td><td class="num"></td><td data-sort="33" class="num">33 · 40 ms</td><td data-sort="32" class="num">32 · 41 ms</td><td data-sort="31" class="num">31 · 40 ms</td><td data-sort="32" class="num">32 · 36 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen1.5-4b</td><td>pcdServer</td><td class="num"></td><td data-sort="41" class="num">41 · 233 ms</td><td class="num"></td><td data-sort="39" class="num">39 · 237 ms</td><td class="num"></td><td data-sort="41" class="num">41 · 232 ms</td><td data-sort="39" class="num">39 · 284 ms</td><td data-sort="40" class="num">40 · 276 ms</td><td data-sort="42" class="num">42 · 248 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen2.5-0.5b</td><td>pcdServer</td><td class="num"></td><td data-sort="15" class="num">15 · 18 ms</td><td class="num"></td><td data-sort="18" class="num">18 · 18 ms</td><td class="num"></td><td data-sort="28" class="num">28 · 20 ms</td><td data-sort="22" class="num">22 · 19 ms</td><td data-sort="23" class="num">23 · 22 ms</td><td data-sort="25" class="num">25 · 18 ms</td><td data-sort="26" class="num">26 · 18 ms</td><td class="num"></td></tr>
-<tr><td>qwen2.5-0.5b-pcb</td><td>pcdServer</td><td class="num"></td><td data-sort="27" class="num">27 · 18 ms</td><td class="num"></td><td data-sort="20" class="num">20 · 18 ms</td><td class="num"></td><td data-sort="17" class="num">17 · 23 ms</td><td data-sort="19" class="num">19 · 18 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td class="num"></td></tr>
-<tr><td>qwen2.5-3b</td><td>pcdServer</td><td class="num"></td><td data-sort="53" class="num">53 · 58 ms</td><td data-sort="49" class="num">49 · 56 ms</td><td data-sort="57" class="num">57 · 61 ms</td><td class="num"></td><td data-sort="62" class="num">62 · 59 ms</td><td data-sort="61" class="num">61 · 62 ms</td><td data-sort="62" class="num">62 · 62 ms</td><td data-sort="62" class="num">62 · 53 ms</td><td data-sort="62" class="num">62 · 54 ms</td><td class="num"></td></tr>
-<tr><td>qwen3-1.7b</td><td>pcdServer</td><td class="num"></td><td data-sort="54" class="num">54 · 38 ms</td><td class="num"></td><td data-sort="50" class="num">50 · 38 ms</td><td class="num"></td><td data-sort="54" class="num">54 · 41 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 36 ms</td></tr>
-<tr><td>qwen3-1.7b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="44" class="num">44 · 37 ms</td><td class="num"></td><td data-sort="53" class="num">53 · 38 ms</td><td class="num"></td><td data-sort="56" class="num">56 · 40 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen3-4b-unsloth</td><td>pcdServer</td><td data-sort="13" class="num">13 · 72 ms</td><td class="num"></td><td data-sort="59" class="num">59 · 73 ms</td><td data-sort="60" class="num">60 · 78 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 76 ms</td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 70 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 72 ms</td></tr>
-<tr><td>qwen3-reranker-0.6b</td><td>pcdServer</td><td class="num"></td><td data-sort="10" class="num">10 · 24 ms</td><td class="num"></td><td data-sort="21" class="num">21 · 24 ms</td><td class="num"></td><td data-sort="28" class="num">28 · 29 ms</td><td data-sort="40" class="num">40 · 25 ms</td><td data-sort="33" class="num">33 · 25 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td data-sort="30" class="num">30 · 24 ms</td><td class="num"></td></tr>
-<tr><td>qwen3.5-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="40" class="num">40 · 32 ms</td><td class="num"></td><td data-sort="46" class="num">46 · 31 ms</td><td class="num"></td><td data-sort="52" class="num">52 · 30 ms</td><td data-sort="57" class="num">57 · 32 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 31 ms</td><td class="num"></td><td data-sort="55" class="num">55 · 30 ms</td></tr>
-<tr><td>qwen3.5-0.8b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="43" class="num">43 · 28 ms</td><td data-sort="26" class="num">26 · 28 ms</td><td data-sort="48" class="num">48 · 30 ms</td><td data-sort="34" class="num">34 · 28 ms</td><td data-sort="55" class="num">55 · 50 ms</td><td data-sort="56" class="num">56 · 30 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td class="num"></td><td data-sort="55" class="num">55 · 31 ms</td></tr>
-<tr><td>qwen3.5-2b</td><td>pcdServer</td><td class="num"></td><td data-sort="49" class="num">49 · 41 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 43 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 47 ms</td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen3.5-2b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="53" class="num">53 · 41 ms</td><td data-sort="44" class="num">44 · 41 ms</td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="57" class="num">57 · 45 ms</td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="56" class="num">56 · 44 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 42 ms</td></tr>
-<tr><td>qwen3.5-4b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="61" class="num">61 · 94 ms</td><td data-sort="52" class="num">52 · 87 ms</td><td data-sort="60" class="num">60 · 93 ms</td><td data-sort="61" class="num">61 · 90 ms</td><td data-sort="61" class="num">61 · 94 ms</td><td data-sort="63" class="num">63 · 94 ms</td><td data-sort="62" class="num">62 · 94 ms</td><td data-sort="63" class="num">63 · 85 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>qwen3.8-2b-distill</td><td>pcdServer</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td data-sort="49" class="num">49 · 43 ms</td><td data-sort="45" class="num">45 · 46 ms</td><td data-sort="43" class="num">43 · 43 ms</td><td data-sort="44" class="num">44 · 39 ms</td><td class="num"></td><td class="num"></td></tr>
-<tr><td>zerocoder-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="42" class="num">42 · 35 ms</td><td class="num"></td><td data-sort="32" class="num">32 · 35 ms</td><td class="num"></td><td data-sort="27" class="num">27 · 46 ms</td><td data-sort="18" class="num">18 · 36 ms</td><td data-sort="24" class="num">24 · 35 ms</td><td data-sort="25" class="num">25 · 34 ms</td><td data-sort="27" class="num">27 · 33 ms</td><td class="num"></td></tr>
+<tr><td>clm-8b</td><td>System One server</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td data-sort="36" class="num">36 · 114 ms</td><td data-sort="33" class="num">33 · 90 ms</td><td data-sort="38" class="num">38 · 119 ms</td><td class="num"></td><td data-sort="39" class="num">39 · 108 ms</td><td data-sort="38" class="num">38 · 100 ms</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>decider-0.8b</td><td>dohnuts (Metal)</td><td class="num"></td><td data-sort="18" class="num">18 · 55 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 54 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 53 ms</td><td class="num"></td><td data-sort="62" class="num">62 · 55 ms</td><td data-sort="62" class="num">62 · 54 ms</td><td data-sort="62" class="num">62 · 51 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 52 ms</td><td class="num"></td></tr>
+<tr><td>decider-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="17" class="num">17 · 29 ms</td><td class="num"></td><td data-sort="52" class="num">52 · 29 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 40 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td data-sort="55" class="num">55 · 30 ms</td><td class="num"></td><td data-sort="55" class="num">55 · 31 ms</td><td class="num"></td></tr>
+<tr><td>decider-0.8b</td><td>slot (llama-server)</td><td class="num"></td><td data-sort="18" class="num">18 · 65 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 70 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 67 ms</td><td class="num"></td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 68 ms</td><td data-sort="62" class="num">62 · 64 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 64 ms</td><td class="num"></td></tr>
+<tr><td>laya-multilingual</td><td>llama.cpp embeddings</td><td class="num"></td><td class="num"></td><td class="num"></td><td data-sort="49" class="num">49 · 45 ms</td><td class="num"></td><td data-sort="36" class="num">36 · 43 ms</td><td class="num"></td><td data-sort="47" class="num">47 · 45 ms</td><td data-sort="51" class="num">51 · 45 ms</td><td data-sort="52" class="num">52 · 44 ms</td><td class="num"></td><td data-sort="52" class="num">52 · 44 ms</td><td class="num"></td></tr>
+<tr><td>qwen1.5-0.5b</td><td>pcdServer</td><td class="num"></td><td data-sort="21" class="num">21 · 21 ms</td><td class="num"></td><td data-sort="35" class="num">35 · 21 ms</td><td class="num"></td><td data-sort="26" class="num">26 · 22 ms</td><td class="num"></td><td data-sort="28" class="num">28 · 22 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td data-sort="28" class="num">28 · 21 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen1.5-1.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="26" class="num">26 · 40 ms</td><td class="num"></td><td data-sort="34" class="num">34 · 42 ms</td><td class="num"></td><td data-sort="33" class="num">33 · 40 ms</td><td class="num"></td><td data-sort="32" class="num">32 · 41 ms</td><td data-sort="31" class="num">31 · 40 ms</td><td data-sort="32" class="num">32 · 36 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen1.5-4b</td><td>pcdServer</td><td class="num"></td><td data-sort="41" class="num">41 · 233 ms</td><td class="num"></td><td data-sort="39" class="num">39 · 237 ms</td><td class="num"></td><td data-sort="41" class="num">41 · 232 ms</td><td class="num"></td><td data-sort="39" class="num">39 · 284 ms</td><td data-sort="40" class="num">40 · 276 ms</td><td data-sort="42" class="num">42 · 248 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen2.5-0.5b</td><td>pcdServer</td><td class="num"></td><td data-sort="15" class="num">15 · 18 ms</td><td class="num"></td><td data-sort="18" class="num">18 · 18 ms</td><td class="num"></td><td data-sort="28" class="num">28 · 20 ms</td><td class="num"></td><td data-sort="22" class="num">22 · 19 ms</td><td data-sort="23" class="num">23 · 22 ms</td><td data-sort="25" class="num">25 · 18 ms</td><td class="num"></td><td data-sort="26" class="num">26 · 18 ms</td><td class="num"></td></tr>
+<tr><td>qwen2.5-0.5b-pcb</td><td>pcdServer</td><td class="num"></td><td data-sort="27" class="num">27 · 18 ms</td><td class="num"></td><td data-sort="20" class="num">20 · 18 ms</td><td class="num"></td><td data-sort="17" class="num">17 · 23 ms</td><td class="num"></td><td data-sort="19" class="num">19 · 18 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td data-sort="19" class="num">19 · 17 ms</td><td class="num"></td><td data-sort="19" class="num">19 · 17 ms</td><td class="num"></td></tr>
+<tr><td>qwen2.5-3b</td><td>pcdServer</td><td class="num"></td><td data-sort="53" class="num">53 · 58 ms</td><td data-sort="49" class="num">49 · 56 ms</td><td data-sort="57" class="num">57 · 61 ms</td><td class="num"></td><td data-sort="62" class="num">62 · 59 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 62 ms</td><td data-sort="62" class="num">62 · 62 ms</td><td data-sort="62" class="num">62 · 53 ms</td><td class="num"></td><td data-sort="62" class="num">62 · 54 ms</td><td class="num"></td></tr>
+<tr><td>qwen3-1.7b</td><td>pcdServer</td><td class="num"></td><td data-sort="54" class="num">54 · 38 ms</td><td class="num"></td><td data-sort="50" class="num">50 · 38 ms</td><td class="num"></td><td data-sort="54" class="num">54 · 41 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td class="num"></td><td class="num"></td><td data-sort="57" class="num">57 · 36 ms</td></tr>
+<tr><td>qwen3-1.7b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="44" class="num">44 · 37 ms</td><td class="num"></td><td data-sort="53" class="num">53 · 38 ms</td><td class="num"></td><td data-sort="56" class="num">56 · 40 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td data-sort="57" class="num">57 · 35 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen3-4b-unsloth</td><td>pcdServer</td><td data-sort="13" class="num">13 · 72 ms</td><td class="num"></td><td data-sort="59" class="num">59 · 73 ms</td><td data-sort="60" class="num">60 · 78 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 76 ms</td><td class="num"></td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 79 ms</td><td data-sort="60" class="num">60 · 70 ms</td><td class="num"></td><td class="num"></td><td data-sort="61" class="num">61 · 72 ms</td></tr>
+<tr><td>qwen3-reranker-0.6b</td><td>pcdServer</td><td class="num"></td><td data-sort="10" class="num">10 · 24 ms</td><td class="num"></td><td data-sort="21" class="num">21 · 24 ms</td><td class="num"></td><td data-sort="28" class="num">28 · 29 ms</td><td class="num"></td><td data-sort="40" class="num">40 · 25 ms</td><td data-sort="33" class="num">33 · 25 ms</td><td data-sort="30" class="num">30 · 23 ms</td><td class="num"></td><td data-sort="30" class="num">30 · 24 ms</td><td class="num"></td></tr>
+<tr><td>qwen3.5-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="40" class="num">40 · 32 ms</td><td class="num"></td><td data-sort="46" class="num">46 · 31 ms</td><td class="num"></td><td data-sort="52" class="num">52 · 30 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 32 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 31 ms</td><td class="num"></td><td class="num"></td><td data-sort="55" class="num">55 · 30 ms</td></tr>
+<tr><td>qwen3.5-0.8b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="43" class="num">43 · 28 ms</td><td data-sort="26" class="num">26 · 28 ms</td><td data-sort="48" class="num">48 · 30 ms</td><td data-sort="34" class="num">34 · 28 ms</td><td data-sort="55" class="num">55 · 50 ms</td><td class="num"></td><td data-sort="56" class="num">56 · 30 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td data-sort="55" class="num">55 · 29 ms</td><td class="num"></td><td class="num"></td><td data-sort="55" class="num">55 · 31 ms</td></tr>
+<tr><td>qwen3.5-2b</td><td>pcdServer</td><td class="num"></td><td data-sort="49" class="num">49 · 41 ms</td><td class="num"></td><td data-sort="61" class="num">61 · 43 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 47 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="57" class="num">57 · 39 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen3.5-2b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="53" class="num">53 · 41 ms</td><td data-sort="44" class="num">44 · 41 ms</td><td data-sort="57" class="num">57 · 42 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td data-sort="57" class="num">57 · 45 ms</td><td class="num"></td><td data-sort="57" class="num">57 · 43 ms</td><td data-sort="56" class="num">56 · 44 ms</td><td data-sort="57" class="num">57 · 40 ms</td><td class="num"></td><td class="num"></td><td data-sort="57" class="num">57 · 42 ms</td></tr>
+<tr><td>qwen3.5-4b-unsloth</td><td>pcdServer</td><td class="num"></td><td data-sort="61" class="num">61 · 94 ms</td><td data-sort="52" class="num">52 · 87 ms</td><td data-sort="60" class="num">60 · 93 ms</td><td data-sort="61" class="num">61 · 90 ms</td><td data-sort="61" class="num">61 · 94 ms</td><td class="num"></td><td data-sort="63" class="num">63 · 94 ms</td><td data-sort="62" class="num">62 · 94 ms</td><td data-sort="63" class="num">63 · 85 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>qwen3.8-2b-distill</td><td>pcdServer</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td data-sort="49" class="num">49 · 43 ms</td><td class="num"></td><td data-sort="45" class="num">45 · 46 ms</td><td data-sort="43" class="num">43 · 43 ms</td><td data-sort="44" class="num">44 · 39 ms</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+<tr><td>zerocoder-0.8b</td><td>pcdServer</td><td class="num"></td><td data-sort="42" class="num">42 · 35 ms</td><td class="num"></td><td data-sort="32" class="num">32 · 35 ms</td><td class="num"></td><td data-sort="27" class="num">27 · 46 ms</td><td class="num"></td><td data-sort="18" class="num">18 · 36 ms</td><td data-sort="24" class="num">24 · 35 ms</td><td data-sort="25" class="num">25 · 34 ms</td><td class="num"></td><td data-sort="27" class="num">27 · 33 ms</td><td class="num"></td></tr>
 </tbody></table>
 </div>
 
@@ -1284,6 +1307,61 @@
 </ul>
 <p>The quant curve has the same shape on every engine; the engine shifts it up or down. <a href="../03-engines/">Chapter 3</a> explains the readouts, and <a href="../06-results/">chapter 6</a> has the full cross-engine comparison.</p>
 <p>Laya shows a different failure: the laya-multilingual encoder run as a llama.cpp embedding model scores 52 at <code>q8</code> and <code>f16</code>, 51 at <code>q6</code>, 47 at <code>q5</code>, 36 at <code>q4</code> and 49 at <code>q3</code>. An encoder's hidden states feed a decision head that expects float precision, and the loss does not follow bit count in order. If you run laya through llama.cpp, keep <code>q8</code> or <code>f16</code>.</p>
+<h2 id="the-later-decision-models">The later decision models<a class="headerlink" href="#the-later-decision-models" title="Permanent link">&para;</a></h2>
+<p>The decision models added in the second round were mostly measured at two or three quantizations. They show the same plateau, and for the large ones the smallest file measured was as good as the largest:</p>
+<table>
+<thead>
+<tr>
+<th>Model and engine</th>
+<th>Scores (translated / direct) by quant</th>
+<th>Best file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jev-Omni, llama.cpp embeddings + head</td>
+<td><code>q3</code> 64/64, <code>q5</code> 63/63, <code>q8</code> 63/63</td>
+<td><code>q3</code>, 6.1 GB</td>
+</tr>
+<tr>
+<td>rune-26b-a4b, slot</td>
+<td><code>q3</code> 65/57, <code>q4</code> 64/55</td>
+<td><code>q3</code>, 13.5 GB</td>
+</tr>
+<tr>
+<td>NeoHorse-Jev-4B, its own server</td>
+<td><code>q3</code> 63/63, <code>q8</code> 64/64</td>
+<td><code>q8</code>, 5.2 GB</td>
+</tr>
+<tr>
+<td>JevK5 4B, slot</td>
+<td><code>q4</code> 62/63, <code>q8</code> 61/63</td>
+<td><code>q4</code>, 2.7 GB</td>
+</tr>
+<tr>
+<td>JevK5 4B, pcdServer</td>
+<td><code>q4</code> 61/62, <code>q8</code> 61/62</td>
+<td><code>q4</code>, 2.7 GB</td>
+</tr>
+<tr>
+<td>APUS-OpenJev 35B-A3B</td>
+<td><code>q4</code> 63/64 on pcdServer, <code>4bit</code> 63/62 on MLX</td>
+<td><code>q4</code>, 21.2 GB</td>
+</tr>
+<tr>
+<td>CLM-v0.1-8B, its own server</td>
+<td><code>q4</code> 36, <code>q5</code> 38, <code>q8</code> 39, <code>mlx4</code> 33, <code>mlx8</code> 38</td>
+<td>none good</td>
+</tr>
+<tr>
+<td>laya-multilingual, MLX</td>
+<td><code>mxfp8</code> 53/49, <code>mxfp4</code> 44/44</td>
+<td><code>mxfp8</code>, 0.32 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Jev-Omni and rune are Gemma 4 models of 12B and 26B parameters, and at <code>q3</code> they lose nothing against <code>q5</code>, <code>q8</code> or <code>q4</code>; the one-answer differences favour the smaller file, which is what noise looks like. NeoHorse at 4B shows the small-model pattern in miniature: <code>q3</code> costs one answer in each mode. The CLM rows spread by six answers across five builds, but every one of them is far below the models above, so the choice of quant does not rescue the readout. jeb-35b-a3b was measured at <code>q3</code> only (63/63); its <code>q5</code> file needed more memory than the benchmark machine could spare.</p>
+<p>For laya, the MXFP4 conversion lost eight answers, and the Q4_0 encoder from laya-neutron, read through llama.cpp with its head converted to GGUF, scored 54/67 and 51/67, the best laya result. Two 4-bit conversions of the same encoder scored 44 and 54, which says more about the conversion than about the bit count.</p>
 <h2 id="size-against-accuracy">Size against accuracy<a class="headerlink" href="#size-against-accuracy" title="Permanent link">&para;</a></h2>
 <p>Across families, parameters buy more than bits do. The best translated score of each size class on the router set:</p>
 <table>
@@ -1333,6 +1411,20 @@
 <td>87.6</td>
 </tr>
 <tr>
+<td>12B</td>
+<td>Jev-Omni <code>q3</code>, llama.cpp embeddings + head</td>
+<td>6.09</td>
+<td>64/67</td>
+<td>1,222.3</td>
+</tr>
+<tr>
+<td>26B (4B active)</td>
+<td>rune-26b-a4b <code>q3</code>, slot (llama-server)</td>
+<td>13.52</td>
+<td>65/67</td>
+<td>366.6</td>
+</tr>
+<tr>
 <td>35B (3B active)</td>
 <td>decider-35b-a3b <code>q4</code>, dohnuts (Metal)</td>
 <td>21.17</td>
@@ -1341,13 +1433,14 @@
 </tr>
 </tbody>
 </table>
-<p>The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.</p>
+<p>The hosted jev scores 65 at 466 ms per query. A dedicated 0.8B model gets within three answers of it, and a fine-tuned 4B model within one, at a fifth of the latency. The 35B mixture-of-experts decider does no better than the 4B fine-tune and is three times slower. rune, a 26B mixture of experts at <code>q3</code>, is the only local row to match jev on translated text, and it drops to 57/67 on the original text. Generations matter as much as size: the Qwen1.5 models score 39 to 42 at 4B, which the newer 0.8B models beat.</p>
 <h2 id="which-quant-to-download">Which quant to download<a class="headerlink" href="#which-quant-to-download" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>0.5B to 1B models</strong>: <code>q5</code>, or <code>q8</code> if the file size does not matter. Never below <code>q4</code>; at <code>q2</code> they fail.</li>
 <li><strong>1.7B to 2B models</strong>: <code>q5</code> or <code>q4</code>. <code>q3</code> is usable on the Qwen3.5-2B files, <code>q2</code> and the i-quants are not.</li>
 <li><strong>3B to 4B models</strong>: <code>q4</code>. It costs nothing to two answers against <code>q8</code> (Qwen3.5-4B-Hmm 64 at both, unsloth's Qwen3.5-4B 61 against 63) and cuts the download from 4.48 GB to 2.71 GB for Qwen3.5-4B-Hmm. The Qwen3.5-4B files keep their score even at <code>q2</code>; Qwen3-4B at <code>IQ1_S</code> does not.</li>
 <li><strong>Encoders run as embedding models</strong> (laya through llama.cpp): <code>q8</code> or <code>f16</code>.</li>
+<li><strong>Dedicated models of 12B and more</strong> (Jev-Omni, rune): <code>q3</code> scored as well as the larger files here. Jev-Omni's <code>q3</code> file is half the size of its <code>q8</code>.</li>
 <li><strong>Anything larger</strong>: <code>q4</code>, and check the memory arithmetic in <a href="../08-speed/#memory-one-model-at-a-time">chapter 8</a> before you load it.</li>
 </ul>
 <p>The registered models in the <code>ornotto</code> package follow this: <code>decider-0.8b</code>, <code>decider-2b</code>, <code>kev-0.8b</code>, <code>dohnuts-0.8b</code> and <code>qwen3.5-0.8b</code> are <code>q8</code>, the 2B and 4B chat models are <code>q4</code> (<a href="../10-package/">chapter 10</a>).</p>

@@ -10,7 +10,7 @@ The family decides which engines can run the model. It also decides how much pro
 
 | family | where the answer comes from | engines in `ornotto` | engines and runtimes in the benchmark |
 |---|---|---|---|
-| dedicated | the model's own trained readout | dohnuts (decider, kev, Dohnuts), pcdServer (decider only, as a chat model) | jev, dohnuts, slot, pcdServer, laya runtimes, PyTorch, ExecuTorch |
+| dedicated | the model's own trained readout | dohnuts (decider, kev, Dohnuts), ollaya (its registry's models), pcdServer (as chat models) | jev, dohnuts, slot, pcdServer, ollaya, the authors' System One servers, llama.cpp embeddings, MLX, Core ML, Core AI, ONNX Runtime, PyTorch, ExecuTorch |
 | fine-tuned | the first token of each allowed value, under a chat template | pcdServer | pcdServer, slot (Hmm readout) |
 | vanilla | the first token of each allowed value, under a chat template | pcdServer | pcdServer |
 
@@ -35,6 +35,8 @@ The benchmark ran four sizes, from several converters:
 
 The DreamBlooms 2B build is a newer checkpoint with calibration-aware reinforcement learning and a temperature of 1.3. On this set it scores the same as the older 2B builds: calibration work shows up in the confidences, which the accuracy column does not see.
 
+ollaya's `decider:0.8b` runs the 0.8B weights as a float32 ONNX graph on the CPU: 61/67 and 60/67, at 285 ms per query.
+
 decider runs on dohnuts with its own readout, and on pcdServer as an ordinary chat model. The two are not the same measurement. [Chapter 6](06-results.md#one-set-of-weights-three-scores) shows the 0.8B model scoring 62 through its readout and 55 through pcdServer.
 
 In `ornotto`, `decider-0.8b` and `decider-2b` are registered and default to dohnuts:
@@ -50,6 +52,8 @@ same_weights = ornotto.Decider("decider-0.8b", engine="pcd")  # pcdServer, as a 
 
 [jaredpalmer/kev](https://github.com/jaredpalmer/kev) is a LoRA over Qwen3.5 plus a bilinear pointer head. The prompt marks the decision point and the end of every option with special tokens, and the head scores each option by the dot product of two projected hidden states. The benchmark ran the [mys/kev-0.8b-GGUF](https://huggingface.co/mys/kev-0.8b-GGUF) and kev-4b conversions through laya.cpp's `laya serve`. kev-4b reached 62/67 translated but 55/67 direct, and took 1,103 ms per query. kev-0.8b dropped to 45/67 on untranslated text.
 
+ollaya's `kev:0.8b` reads the same LoRA and pointer head over Qwen3.5-0.8B-Base as a float32 ONNX graph and scored 60/67 translated and 62/67 direct, at 268 ms.
+
 `ornotto` registers `kev-0.8b` from [DreamBlooms/kev-0.8b-GGUF](https://huggingface.co/DreamBlooms/kev-0.8b-GGUF) (Apache-2.0) on dohnuts, which reads the same pointer head. That build was not part of the benchmark run.
 
 ### Dohnuts
@@ -63,11 +67,45 @@ same_weights = ornotto.Decider("decider-0.8b", engine="pcd")  # pcdServer, as a 
 
 [convaiinnovations/laya-multilingual](https://huggingface.co/convaiinnovations/laya-multilingual) (Apache-2.0) is an encoder with a decision head, not a chat model; [chapter 3](03-engines.md#laya) describes its readout and its token budget.
 
-The same checkpoint ran on six engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. `ornotto` does not run laya.
+The same checkpoint ran on eight engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, except an MXFP8 conversion on MLX at 53/67, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 12.3 ms in ollaya, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. The 4-bit conversions spread widely: one lost an answer, one lost 16, the MXFP4 conversion lost 8, and the Q4_0 encoder from laya-neutron, read with its head converted to GGUF, gained two, to 54/67. `ornotto` runs laya only through ollaya (`ollaya-laya-multilingual`, `ollaya-laya-en`).
 
 ### jev
 
 jev is TypeSafe's hosted System One model and the best result in the benchmark ([chapter 3](03-engines.md#jev)). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine ([chapter 11](11-typed.md)).
+
+### Later dedicated models
+
+A second benchmark round added the decision models published after the first one. Several were published as open alternatives to jev, and some say so in their names. They use the readouts described in [chapter 3](03-engines.md#a-linear-head-on-a-hidden-state-jev-omni), from letter logits to contrastive heads, and each ran on the runtime its authors provide. The licences are taken from the model cards.
+
+| model | what it is | source | licence | best result (translated / direct, ms/query) |
+|---|---|---|---|---|
+| rune-26b-a4b | Gemma 4 26B-A4B mixture of experts, option-letter readout | [surogate/rune-26b-a4b-GGUF](https://huggingface.co/surogate/rune-26b-a4b-GGUF), version 1 (gated) | Apache-2.0 | 65/67 and 57/67, Q3_K_M on slot, 367 ms |
+| winnow-12b | Gemma 4 12B, option-label logits | EldanRing, through ollaya's `winnow:12b` | Apache-2.0 | 64/67 and 65/67, Q8_0 in ollaya, 891 ms |
+| neohorse-4b | NeoHorse-1-4B, packed prefill with a pointer head | [TokenRhythm/NeoHorse-Jev-4B-GGUF](https://huggingface.co/TokenRhythm/NeoHorse-Jev-4B-GGUF) | Apache-2.0 | 64/67 and 64/67, Q8_0, 273 ms |
+| jev-omni | Gemma 4 12B-class, 256-way head on the last hidden state | [akhilaaa3/Jev-Omni](https://huggingface.co/akhilaaa3/Jev-Omni), as [GGUF](https://huggingface.co/ngquocvinh/Jev-Omni-GGUF) and [MLX](https://huggingface.co/Ruiruiz30/Jev-Omni-MLX-4bit) | Apache-2.0 | 64/67 and 64/67, Q3_K_M, 1,222 ms |
+| openjev-35b-a3b | Qwen3.5-35B-A3B, option-letter readout, uncalibrated | [apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF](https://huggingface.co/apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF), and an MLX 4-bit build | Apache-2.0 | 63/67 and 64/67 on pcdServer, 297 ms |
+| jeb-35b-a3b | Qwen3.6-35B-A3B, softmax restricted to the answer tokens | [szybkie-ai/jeb-35b-a3b](https://huggingface.co/szybkie-ai/jeb-35b-a3b), GGUF by mradermacher | Apache-2.0 weights, MIT code | 63/67 and 63/67, Q3_K_M, 333 ms |
+| lev-4b | LoRA on Qwen3.5-4B, one-token option codes | [interfaze-ai/lev](https://huggingface.co/interfaze-ai/lev) | Apache-2.0 | 63/67 and 64/67, 2,204 ms |
+| jevk5-4b | Qwen3.5-4B, option-letter readout | [alibiserikbay/JevK5-GGUF](https://huggingface.co/alibiserikbay/JevK5-GGUF) | Apache-2.0 | 62/67 and 63/67, Q4_K_M on slot, 351 ms |
+| imajev-4b | LoRA on Qwen3.5-4B, 256-code readout | [mohit67890/imajev-4b](https://huggingface.co/mohit67890/imajev-4b) | Apache-2.0 | 62/67 and 64/67, 363 ms |
+| gliner25-decide | DeBERTa-v3-large with a label head, English only | [fastino/GLiNER2.5-Decide](https://huggingface.co/fastino/GLiNER2.5-Decide), as Core AI, ONNX and Core ML builds | Apache-2.0 (DeBERTa-v3: MIT) | 61/67, Core AI, 27 ms |
+| leo-1.7b | LoRA on Qwen3-1.7B-Base, listwise pointer head | [Suparva/leo-1.7b](https://huggingface.co/Suparva/leo-1.7b) | Apache-2.0 | 57/67 and 62/67, 136 ms |
+| von | ModernBERT-large, order-invariant option markers, English only | [wfzyx/von](https://huggingface.co/wfzyx/von): 1.2 as ONNX, 1.1 in ollaya | Apache-2.0 | 57/67, ONNX, 53 ms |
+| decision-eos | Qwen3.5-0.8B with an endpoint head | vLLM Semantic Router, through ollaya's `decision:eos` | Apache-2.0 | 57/67 and 56/67, 323 ms |
+| semif-4b-nli | Qwen3.5-4B entailment cross-encoder | [jacksodj/semif-4b-nli-v5-mlx](https://huggingface.co/jacksodj/semif-4b-nli-v5-mlx) | MIT | 51/67 and 49/67, 121 ms |
+| clm-8b | Qwen3-8B encoder with contrastive heads | [czl/CLM-v0.1-8B-GGUF](https://huggingface.co/czl/CLM-v0.1-8B-GGUF), MLX builds, ollaya's `clm:8b` | Apache-2.0 | 39/67 and 28/67, Q8_0, 108 ms |
+| decima-small | multilingual late-interaction encoder | [amyrmahdy/decima-small](https://huggingface.co/amyrmahdy/decima-small) | Apache-2.0 | 37/67 and 38/67, int8, 12 ms |
+| pulse-decide-150m | ModernBERT-base pair cross-encoder, English only | [RouterML/pulse-decide-150m](https://huggingface.co/RouterML/pulse-decide-150m) | Pulse Research Preview Licence | 34/67, 18 ms |
+| lumma-fev-0.6b | 0.6B decoder trained from scratch, pointer head | [FrontiersMind/Lumma-fev-0.6b](https://huggingface.co/FrontiersMind/Lumma-fev-0.6b) | Apache-2.0 | 33/67 and 28/67, 70 ms |
+| julia-1 | mmBERT-small with a laya-style head | [SupersonicLabs/Julia-1](https://huggingface.co/SupersonicLabs/Julia-1) | Apache-2.0 | 31/67 and 31/67, MLX, 6.8 ms |
+| gliclass-large | DeBERTa-v3-large zero-shot classifier, Knowledgator | through ollaya's `gliclass:large` | Apache-2.0 | 26/67, 60 ms |
+| nli-modernbert-large | ModernBERT-large zero-shot NLI, Moritz Laurer | through ollaya's `nli:modernbert-large` | Apache-2.0 | 20/67, 23 ms |
+
+An empty direct score means the model was trained on English only, so only the translated text was sent to it.
+
+Three licence notes travel with the rows. Pulse Decide 150M is a research preview whose training data carries non-commercial and terms-of-service restrictions; it is in the tables with that note and is not cleared for use in a product. The MXFP8 and MXFP4 conversions of laya declare no licence, and the MLX library that runs them, mlx-embeddings, is GPL-3.0. And two models were left out on purpose: Launchables' Myles encoders are gated, and their evaluation licence does not allow benchmark results to be published without the publisher's review.
+
+Some of these models are in `ornotto` without any extra runtime: JevK5 and APUS-OpenJev as pcdServer models, and winnow, von, decision-eos, CLM, GLiClass and the ModernBERT NLI model as ollaya models ([chapter 10](10-package.md#registered-models)). The rest need the runtimes their authors publish.
 
 ## Fine-tuned models
 
@@ -117,6 +155,7 @@ An unregistered GGUF runs on pcdServer only. To run one on dohnuts, pass the pro
 
 - If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.
 - If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.
+- If you want the best local score and have the memory, rune-26b-a4b at Q3_K_M (13.5 GB) matched jev on translated text. NeoHorse-Jev-4B at Q8_0 (5.2 GB) scored 64/67 in both modes.
 - If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.
 
 [Chapter 7](07-quantization.md) shows how far each family can be quantized, and [chapter 12](12-choosing.md) turns these results into a choice.

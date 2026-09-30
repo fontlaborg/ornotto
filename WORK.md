@@ -2,6 +2,40 @@
 
 # Work
 
+## 2026-09-30 — issue 101: the book for the second benchmark round
+
+Exported the second round into `src_docs/data/` (258 methods: the 208 earlier rows unchanged field by
+field, 50 new; 234 with a size) and rewrote the affected chapters from that data: 3, 4, 5, 6, 7, 8, 9, 10,
+12, 1 and the index, plus the README's model paragraph. `gen_tables.py` now counts the rows in its caption
+and orders the MLX, MXFP, `q4_0` and `q8_0` labels in the quantization grid.
+
+Results: `./docs.sh` builds 14 pages with `--strict`; `./test.sh` passes (ruff clean, 47 unit tests, 13
+engine tests deselected). The ollaya engine test is still not run (see TODO).
+
+## 2026-09-29 — issue 101, task 2: the ollaya engine and new models
+
+Added the `ollaya` engine and twelve registry entries (ten ollaya tags, JevK5 4B and APUS-OpenJev 35B on
+pcdServer). Models that need their own runtimes (NeoHorse, Jev-Omni head, MLX, ONNX, Core ML) stay
+benchmark-only and are named in the README.
+
+Checked against ollaya 0.7.5 with a bare daemon on a private port and no model loaded:
+
+- `GET /` answers `Ollaya is running`, and `/health` is 404.
+- `OLLAYA_KEEP_ALIVE=-1` is accepted.
+- `/api/tags` lists `name` and `model` as `kev:0.8b`.
+- A 422 body is `{"error": …, "code": …}`.
+- `ollaya stop` with our `OLLAYA_HOST` ends the server.
+
+Results: ruff clean, 47 unit tests pass, and 13 engine tests are deselected. `mypy --strict src` shows 6
+errors. All 6 were there before this change, which removed 3 others: the CLI `engine` types.
+
+Not yet run: `test_engine_ollaya_when_kev_then_one_decision`, which loads kev:0.8b. Run it when nothing else
+is resident:
+
+```sh
+OLLAYA_MODELS=<store with kev:0.8b> uv run pytest -q -m engine tests/test_ollaya.py
+```
+
 ## 2026-09-24 — shared FontLab documentation design
 
 Use the published Marketing/styleguide editorial assets, typography, five-theme

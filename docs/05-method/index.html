@@ -439,7 +439,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -1246,13 +1246,13 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
-<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="604.316937" class="num">604.3</td><td data-sort="1654.760835" class="num">1,655</td></tr>
-<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.130034" class="num">12.1</td><td data-sort="82439.998385" class="num">82,440</td></tr>
-<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="616.446972" class="num">616.4</td><td data-sort="1622.19955" class="num">1,622</td></tr>
+<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="515.017473" class="num">515.0</td><td data-sort="1941.681695" class="num">1,942</td></tr>
+<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.135552" class="num">12.1</td><td data-sort="82402.517131" class="num">82,403</td></tr>
+<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="527.153025" class="num">527.2</td><td data-sort="1896.982381" class="num">1,897</td></tr>
 </tbody></table>
 </div>
 
-<p><a href="https://github.com/pemistahl/lingua-rs">lingua</a> was right on 63 of 67 queries and handles 1,650 calls per second. papagan is 50 times faster and was right on 43. The majority vote, which breaks ties in lingua's favour, adds nothing to lingua alone. Its four misses: a Spanish and an English query read as Latin, a Bulgarian one as Russian, and a Hindi query full of English terms as Sotho.</p>
+<p><a href="https://github.com/pemistahl/lingua-rs">lingua</a> was right on 63 of 67 queries and handles about 1,940 calls per second. papagan is about 40 times faster and was right on 43. The majority vote, which breaks ties in lingua's favour, adds nothing to lingua alone. Its four misses: a Spanish and an English query read as Latin, a Bulgarian one as Russian, and a Hindi query full of English terms as Sotho.</p>
 <h3 id="translation">Translation<a class="headerlink" href="#translation" title="Permanent link">&para;</a></h3>
 <p>The translator is Hy-MT2-1.8B at Q4_K_M on llama-server, at temperature 0, with a prompt that names the source language and carries a short glossary. The glossary pins font-editing terms that the model otherwise paraphrased in early tests: without it, the Polish <em>kursywy</em> came back as "curve", and the German <em>kern-Feature</em> as "core feature". Terms such as <code>glyph</code>, <code>kerning</code>, <code>feature</code>, <code>italic</code>, <code>VFJ</code>, <code>FEA</code> and <code>Glyph window</code> map to themselves.</p>
 <p>The 39 translations, with the time each took:</p>
@@ -1333,6 +1333,22 @@
 <td>laya runtimes</td>
 <td>a System One request with the short instruction and short descriptions, because the encoder shares a 1,024-token budget; the Neural Engine exports hold 96 tokens and got a compact prompt</td>
 </tr>
+<tr>
+<td>ollaya, the authors' System One servers</td>
+<td>a System One request, as for jev; ollaya's encoder tags (laya, nli, gliclass, von) got the short instruction and descriptions</td>
+</tr>
+<tr>
+<td>slot, rune, JevK5 and APUS-OpenJev readouts</td>
+<td>each model's published prompt, with the options lettered and their long descriptions</td>
+</tr>
+<tr>
+<td>the later encoders (GLiNER2.5-Decide, Julia-1, von, decima-small, Pulse Decide, the new laya builds)</td>
+<td>the short instruction and descriptions, laid out as each model's own code lays them out</td>
+</tr>
+<tr>
+<td>Jev-Omni, semif, Lumma</td>
+<td>the prompt that each model's published code builds from the question, the options and the query</td>
+</tr>
 </tbody>
 </table>
 <p>pcdServer cannot attach a description to each allowed value, which is why its task descriptions live in the field description. <a href="../03-engines/">Chapter 3</a> explains what each readout does with its prompt.</p>
@@ -1346,14 +1362,14 @@
 <li>The <strong>English</strong> column counts the 28 English queries in translated mode. <strong>Other, translated</strong> and <strong>other, direct</strong> count the 39 non-English queries in each mode.</li>
 <li><strong>ms/query</strong> is the mean wall-clock time from the moment the harness sends a query to the moment it has the probabilities. For server engines it includes the HTTP round trip and JSON parsing on loopback. For jev it includes the network trip to OpenRouter. It excludes model loading and a warm-up call made before timing starts.</li>
 <li><strong>Load ms</strong> is the time to load the model and answer the warm-up call, for runtimes that load in-process or that the harness started itself. It is blank where a server was started outside the timed step.</li>
-<li><strong>GB</strong> is the size of the GGUF file as published on Hugging Face.</li>
+<li><strong>GB</strong> is the size of the GGUF file as published on Hugging Face. For other formats it is the size of the weight files the method loads; for the adapters lev, imajev and leo it includes the base model they load; for an ollaya model it is the tag's download. Tokenizers and configuration files are left out.</li>
 </ul>
 <p>In-process runtimes (MLX, Core ML, ONNX Runtime) have no HTTP in their times, so compare their milliseconds with a server's only loosely.</p>
 <h2 id="reproducibility">Reproducibility<a class="headerlink" href="#reproducibility" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Engines.</strong> dohnuts.cpp at upstream commit <code>9a894b0</code>, with llama.cpp pinned by its submodule at <code>b29c606</code>. The benchmark predates our prefix cache (<a href="../08-speed/#prefix-caching-in-dohnuts">chapter 8</a>), which leaves single-question requests unchanged. pcdServer at commit <code>1ce9e55</code>, which fetches llama.cpp tag <code>v0.4.1</code> when it is configured. slot used a stock llama-server.</li>
 <li><strong>Translator.</strong> Hy-MT2-1.8B at Q4_K_M, temperature 0, with the glossary above.</li>
-<li><strong>Dates.</strong> The runs, the jev calls included, took place on 2026-09-22 and 2026-09-23.</li>
+<li><strong>Dates.</strong> The first 208 methods, the jev calls included, ran on 2026-09-22 and 2026-09-23; the 50 later methods on 2026-09-29 and 2026-09-30. ollaya was version 0.7.5.</li>
 <li><strong>Data.</strong> The harness itself is private. Every method's scores, timings and file sizes are published in <code>src_docs/data/</code> in the <a href="https://github.com/fontlaborg/ornotto">ornotto repository</a>, and the tables in this book are generated from them.</li>
 </ul>
 <h2 id="limits">Limits<a class="headerlink" href="#limits" title="Permanent link">&para;</a></h2>

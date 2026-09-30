@@ -444,7 +444,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -585,6 +585,17 @@
     <span class="md-ellipsis">
       
         jev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#later-dedicated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Later dedicated models
       
     </span>
   </a>
@@ -1080,6 +1091,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#later-dedicated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Later dedicated models
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1181,8 +1203,8 @@
 <tr>
 <td>dedicated</td>
 <td>the model's own trained readout</td>
-<td>dohnuts (decider, kev, Dohnuts), pcdServer (decider only, as a chat model)</td>
-<td>jev, dohnuts, slot, pcdServer, laya runtimes, PyTorch, ExecuTorch</td>
+<td>dohnuts (decider, kev, Dohnuts), ollaya (its registry's models), pcdServer (as chat models)</td>
+<td>jev, dohnuts, slot, pcdServer, ollaya, the authors' System One servers, llama.cpp embeddings, MLX, Core ML, Core AI, ONNX Runtime, PyTorch, ExecuTorch</td>
 </tr>
 <tr>
 <td>fine-tuned</td>
@@ -1200,20 +1222,43 @@
 </table>
 <p>The best row of every model in the benchmark, grouped by family:</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 47 rows" aria-label="Filter the table" data-table="families">
+<input class="table-filter" type="search" placeholder="Filter 70 rows" aria-label="Filter the table" data-table="families">
 <table class="sortable" id="families"><caption>Click a column header to sort.</caption><thead><tr><th>Family</th><th>Model</th><th>Engine</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th><th>Best method</th></tr></thead>
 <tbody>
+<tr><td>dedicated</td><td>rune-26b-a4b</td><td>slot (llama-server)</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td class="method">slot@rune-26b-a4b-q3</td></tr>
 <tr><td>dedicated</td><td>jev</td><td>jev (hosted)</td><td class="num"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td class="method">jev</td></tr>
 <tr><td>dedicated</td><td>decider-35b-a3b</td><td>dohnuts (Metal)</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td class="method">dohnuts-metal@decider-35b-a3b-q4</td></tr>
+<tr><td>dedicated</td><td>neohorse-4b</td><td>System One server</td><td data-sort="5.17" class="num">5.17</td><td data-sort="273.114925" class="num">273.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td class="method">systemone@neohorse-4b-q8</td></tr>
+<tr><td>dedicated</td><td>winnow-12b</td><td>ollaya</td><td data-sort="12.67" class="num">12.67</td><td data-sort="891.125373" class="num">891.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td><td class="method">ollaya@winnow-12b</td></tr>
+<tr><td>dedicated</td><td>jev-omni</td><td>llama.cpp embeddings + head</td><td data-sort="6.09" class="num">6.09</td><td data-sort="1222.338806" class="num">1,222.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td class="method">gguf-head@jev-omni-q3</td></tr>
+<tr><td>dedicated</td><td>openjev-35b-a3b</td><td>MLX</td><td data-sort="20.99" class="num">20.99</td><td data-sort="250.031343" class="num">250.0</td><td data-sort="63" class="num score">63/67</td><td data-sort="62" class="num score">62/67</td><td class="method">mlx@openjev-35b-a3b-4bit</td></tr>
+<tr><td>dedicated</td><td>jeb-35b-a3b</td><td>System One server</td><td data-sort="17.17" class="num">17.17</td><td data-sort="333.186567" class="num">333.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="63" class="num score">63/67</td><td class="method">systemone@jeb-35b-a3b-q3</td></tr>
 <tr><td>dedicated</td><td>decider-4b</td><td>PyTorch</td><td class="num"></td><td data-sort="348.210448" class="num">348.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="65" class="num score">65/67</td><td class="method">torch@decider-4b-bf16</td></tr>
+<tr><td>dedicated</td><td>lev-4b</td><td>System One server</td><td data-sort="9.49" class="num">9.49</td><td data-sort="2203.832836" class="num">2,203.8</td><td data-sort="63" class="num score">63/67</td><td data-sort="64" class="num score">64/67</td><td class="method">systemone@lev-4b</td></tr>
 <tr><td>dedicated</td><td>decider-0.8b</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="51.379104" class="num">51.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-q8</td></tr>
 <tr><td>dedicated</td><td>decider-0.8b-dreamblooms</td><td>dohnuts (Metal)</td><td data-sort="0.81" class="num">0.81</td><td data-sort="52.238806" class="num">52.2</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-dreamblooms-q8</td></tr>
+<tr><td>dedicated</td><td>jevk5-4b</td><td>slot (llama-server)</td><td data-sort="2.71" class="num">2.71</td><td data-sort="350.51791" class="num">350.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td class="method">slot@jevk5-4b-q4</td></tr>
+<tr><td>dedicated</td><td>imajev-4b</td><td>System One server</td><td data-sort="9.81" class="num">9.81</td><td data-sort="363.062687" class="num">363.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td><td class="method">systemone@imajev-4b</td></tr>
 <tr><td>dedicated</td><td>kev-4b</td><td>laya.cpp</td><td class="num"></td><td data-sort="1103.074627" class="num">1,103.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="55" class="num score">55/67</td><td class="method">kev-4b-gguf</td></tr>
+<tr><td>dedicated</td><td>gliner25-decide</td><td>Core AI</td><td data-sort="0.87" class="num">0.87</td><td data-sort="26.891045" class="num">26.9</td><td data-sort="61" class="num score">61/67</td><td class="num"></td><td class="method">coreai@gliner25-decide</td></tr>
 <tr><td>dedicated</td><td>decider-2b</td><td>pcdServer</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-f16</td></tr>
+<tr><td>dedicated</td><td>kev-0.8b</td><td>ollaya</td><td data-sort="1.82" class="num">1.82</td><td data-sort="268.238806" class="num">268.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td class="method">ollaya@kev-0.8b</td></tr>
 <tr><td>dedicated</td><td>decider-2b-dreamblooms</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-dreamblooms-q8</td></tr>
-<tr><td>dedicated</td><td>kev-0.8b</td><td>laya.cpp</td><td class="num"></td><td data-sort="231.504478" class="num">231.5</td><td data-sort="57" class="num score">57/67</td><td data-sort="45" class="num score">45/67</td><td class="method">kev-0.8b-gguf</td></tr>
-<tr><td>dedicated</td><td>laya-multilingual</td><td>MLX</td><td class="num"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td class="method">laya-mlx</td></tr>
+<tr><td>dedicated</td><td>von-1.2</td><td>ONNX Runtime</td><td data-sort="1.58" class="num">1.58</td><td data-sort="52.623881" class="num">52.6</td><td data-sort="57" class="num score">57/67</td><td class="num"></td><td class="method">onnx@von-1.2</td></tr>
+<tr><td>dedicated</td><td>von-1.1</td><td>ollaya</td><td data-sort="1.59" class="num">1.59</td><td data-sort="62.825373" class="num">62.8</td><td data-sort="57" class="num score">57/67</td><td class="num"></td><td class="method">ollaya@von-1.1</td></tr>
+<tr><td>dedicated</td><td>leo-1.7b</td><td>System One server</td><td data-sort="3.52" class="num">3.52</td><td data-sort="136.234328" class="num">136.2</td><td data-sort="57" class="num score">57/67</td><td data-sort="62" class="num score">62/67</td><td class="method">systemone@leo-1.7b</td></tr>
+<tr><td>dedicated</td><td>decision-eos</td><td>ollaya</td><td data-sort="1.54" class="num">1.54</td><td data-sort="322.902985" class="num">322.9</td><td data-sort="57" class="num score">57/67</td><td data-sort="56" class="num score">56/67</td><td class="method">ollaya@decision-eos</td></tr>
+<tr><td>dedicated</td><td>laya-multilingual</td><td>llama.cpp embeddings + head</td><td data-sort="0.27" class="num">0.27</td><td data-sort="42.714925" class="num">42.7</td><td data-sort="54" class="num score">54/67</td><td data-sort="51" class="num score">51/67</td><td class="method">gguf-head@laya-neutron-ml</td></tr>
+<tr><td>dedicated</td><td>semif-4b-nli</td><td>MLX</td><td data-sort="8.41" class="num">8.41</td><td data-sort="120.608955" class="num">120.6</td><td data-sort="51" class="num score">51/67</td><td data-sort="49" class="num score">49/67</td><td class="method">mlx@semif-4b-nli</td></tr>
 <tr><td>dedicated</td><td>laya-typed-decisions</td><td>PyTorch</td><td class="num"></td><td data-sort="17.659701" class="num">17.7</td><td data-sort="48" class="num score">48/67</td><td data-sort="43" class="num score">43/67</td><td class="method">laya-typed-decisions</td></tr>
+<tr><td>dedicated</td><td>laya-en</td><td>llama.cpp embeddings + head</td><td data-sort="0.29" class="num">0.29</td><td data-sort="62.443284" class="num">62.4</td><td data-sort="46" class="num score">46/67</td><td class="num"></td><td class="method">gguf-head@laya-neutron-en</td></tr>
+<tr><td>dedicated</td><td>clm-8b</td><td>System One server</td><td data-sort="8.25" class="num">8.25</td><td data-sort="107.644776" class="num">107.6</td><td data-sort="39" class="num score">39/67</td><td data-sort="28" class="num score">28/67</td><td class="method">systemone@clm-8b-q8</td></tr>
+<tr><td>dedicated</td><td>decima-small</td><td>ONNX Runtime</td><td data-sort="0.13" class="num">0.13</td><td data-sort="12.380597" class="num">12.4</td><td data-sort="37" class="num score">37/67</td><td data-sort="38" class="num score">38/67</td><td class="method">onnx@decima-small-int8</td></tr>
+<tr><td>dedicated</td><td>pulse-decide-150m</td><td>PyTorch</td><td data-sort="0.6" class="num">0.60</td><td data-sort="17.932836" class="num">17.9</td><td data-sort="34" class="num score">34/67</td><td class="num"></td><td class="method">torch@pulse-decide-150m</td></tr>
+<tr><td>dedicated</td><td>lumma-fev-0.6b</td><td>PyTorch</td><td data-sort="1.3" class="num">1.30</td><td data-sort="69.497015" class="num">69.5</td><td data-sort="33" class="num score">33/67</td><td data-sort="28" class="num score">28/67</td><td class="method">torch@lumma-fev-0.6b</td></tr>
+<tr><td>dedicated</td><td>julia-1</td><td>MLX</td><td data-sort="0.58" class="num">0.58</td><td data-sort="6.779104" class="num">6.8</td><td data-sort="31" class="num score">31/67</td><td data-sort="31" class="num score">31/67</td><td class="method">mlx@julia-1</td></tr>
+<tr><td>dedicated</td><td>gliclass-large</td><td>ollaya</td><td data-sort="1.77" class="num">1.77</td><td data-sort="59.79403" class="num">59.8</td><td data-sort="26" class="num score">26/67</td><td class="num"></td><td class="method">ollaya@gliclass-large</td></tr>
+<tr><td>dedicated</td><td>nli-modernbert-large</td><td>ollaya</td><td data-sort="0.8" class="num">0.80</td><td data-sort="22.726866" class="num">22.7</td><td data-sort="20" class="num score">20/67</td><td class="num"></td><td class="method">ollaya@nli-modernbert-large</td></tr>
 <tr><td>fine-tuned</td><td>qwen3.5-4b-hmm</td><td>pcdServer</td><td data-sort="4.48" class="num">4.48</td><td data-sort="87.559701" class="num">87.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td><td class="method">pcdserver@qwen3.5-4b-hmm-q8</td></tr>
 <tr><td>fine-tuned</td><td>qwen3.8-4b-distill</td><td>pcdServer</td><td data-sort="2.78" class="num">2.78</td><td data-sort="93.58209" class="num">93.6</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td class="method">pcdserver@qwen3.8-4b-distill-q4</td></tr>
 <tr><td>fine-tuned</td><td>qwen3.8-9b-distill</td><td>pcdServer</td><td data-sort="5.78" class="num">5.78</td><td data-sort="137.80597" class="num">137.8</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td><td class="method">pcdserver@qwen3.8-9b-distill-q4</td></tr>
@@ -1294,6 +1339,7 @@
 </tbody>
 </table>
 <p>The DreamBlooms 2B build is a newer checkpoint with calibration-aware reinforcement learning and a temperature of 1.3. On this set it scores the same as the older 2B builds: calibration work shows up in the confidences, which the accuracy column does not see.</p>
+<p>ollaya's <code>decider:0.8b</code> runs the 0.8B weights as a float32 ONNX graph on the CPU: 61/67 and 60/67, at 285 ms per query.</p>
 <p>decider runs on dohnuts with its own readout, and on pcdServer as an ordinary chat model. The two are not the same measurement. <a href="../06-results/#one-set-of-weights-three-scores">Chapter 6</a> shows the 0.8B model scoring 62 through its readout and 55 through pcdServer.</p>
 <p>In <code>ornotto</code>, <code>decider-0.8b</code> and <code>decider-2b</code> are registered and default to dohnuts:</p>
 <div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
@@ -1303,6 +1349,7 @@
 </code></pre></div>
 <h3 id="kev">kev<a class="headerlink" href="#kev" title="Permanent link">&para;</a></h3>
 <p><a href="https://github.com/jaredpalmer/kev">jaredpalmer/kev</a> is a LoRA over Qwen3.5 plus a bilinear pointer head. The prompt marks the decision point and the end of every option with special tokens, and the head scores each option by the dot product of two projected hidden states. The benchmark ran the <a href="https://huggingface.co/mys/kev-0.8b-GGUF">mys/kev-0.8b-GGUF</a> and kev-4b conversions through laya.cpp's <code>laya serve</code>. kev-4b reached 62/67 translated but 55/67 direct, and took 1,103 ms per query. kev-0.8b dropped to 45/67 on untranslated text.</p>
+<p>ollaya's <code>kev:0.8b</code> reads the same LoRA and pointer head over Qwen3.5-0.8B-Base as a float32 ONNX graph and scored 60/67 translated and 62/67 direct, at 268 ms.</p>
 <p><code>ornotto</code> registers <code>kev-0.8b</code> from <a href="https://huggingface.co/DreamBlooms/kev-0.8b-GGUF">DreamBlooms/kev-0.8b-GGUF</a> (Apache-2.0) on dohnuts, which reads the same pointer head. That build was not part of the benchmark run.</p>
 <h3 id="dohnuts">Dohnuts<a class="headerlink" href="#dohnuts" title="Permanent link">&para;</a></h3>
 <p><a href="https://huggingface.co/PsiACE/Dohnuts-0.1.0-0.8B">PsiACE/Dohnuts</a> is the model dohnuts.cpp was first written for: Qwen3.5-0.8B with language LoRA adapters and one scalar head read at each candidate marker. It also takes images through an <code>mmproj</code> projector. <code>ornotto</code> registers it as <code>dohnuts-0.8b</code>.</p>
@@ -1312,9 +1359,174 @@
 </div>
 <h3 id="laya-multilingual">laya-multilingual<a class="headerlink" href="#laya-multilingual" title="Permanent link">&para;</a></h3>
 <p><a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya-multilingual</a> (Apache-2.0) is an encoder with a decision head, not a chat model; <a href="../03-engines/#laya">chapter 3</a> describes its readout and its token budget.</p>
-<p>The same checkpoint ran on six engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. Of the two 4-bit conversions, one lost an answer and the other lost 16. <code>ornotto</code> does not run laya.</p>
+<p>The same checkpoint ran on eight engines and runtimes. Every method at 8-bit precision or better with the full prompt scored 52/67 translated and 49/67 direct, except an MXFP8 conversion on MLX at 53/67, so the engine or runtime changed only the speed: 6.9 ms per query on MLX, 12.3 ms in ollaya, 57.6 ms on laya.cpp. The compact prompt of the Neural Engine exports cost four to five answers. The 4-bit conversions spread widely: one lost an answer, one lost 16, the MXFP4 conversion lost 8, and the Q4_0 encoder from laya-neutron, read with its head converted to GGUF, gained two, to 54/67. <code>ornotto</code> runs laya only through ollaya (<code>ollaya-laya-multilingual</code>, <code>ollaya-laya-en</code>).</p>
 <h3 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h3>
 <p>jev is TypeSafe's hosted System One model and the best result in the benchmark (<a href="../03-engines/#jev">chapter 3</a>). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine (<a href="../11-typed/">chapter 11</a>).</p>
+<h3 id="later-dedicated-models">Later dedicated models<a class="headerlink" href="#later-dedicated-models" title="Permanent link">&para;</a></h3>
+<p>A second benchmark round added the decision models published after the first one. Several were published as open alternatives to jev, and some say so in their names. They use the readouts described in <a href="../03-engines/#a-linear-head-on-a-hidden-state-jev-omni">chapter 3</a>, from letter logits to contrastive heads, and each ran on the runtime its authors provide. The licences are taken from the model cards.</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th>what it is</th>
+<th>source</th>
+<th>licence</th>
+<th>best result (translated / direct, ms/query)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rune-26b-a4b</td>
+<td>Gemma 4 26B-A4B mixture of experts, option-letter readout</td>
+<td><a href="https://huggingface.co/surogate/rune-26b-a4b-GGUF">surogate/rune-26b-a4b-GGUF</a>, version 1 (gated)</td>
+<td>Apache-2.0</td>
+<td>65/67 and 57/67, Q3_K_M on slot, 367 ms</td>
+</tr>
+<tr>
+<td>winnow-12b</td>
+<td>Gemma 4 12B, option-label logits</td>
+<td>EldanRing, through ollaya's <code>winnow:12b</code></td>
+<td>Apache-2.0</td>
+<td>64/67 and 65/67, Q8_0 in ollaya, 891 ms</td>
+</tr>
+<tr>
+<td>neohorse-4b</td>
+<td>NeoHorse-1-4B, packed prefill with a pointer head</td>
+<td><a href="https://huggingface.co/TokenRhythm/NeoHorse-Jev-4B-GGUF">TokenRhythm/NeoHorse-Jev-4B-GGUF</a></td>
+<td>Apache-2.0</td>
+<td>64/67 and 64/67, Q8_0, 273 ms</td>
+</tr>
+<tr>
+<td>jev-omni</td>
+<td>Gemma 4 12B-class, 256-way head on the last hidden state</td>
+<td><a href="https://huggingface.co/akhilaaa3/Jev-Omni">akhilaaa3/Jev-Omni</a>, as <a href="https://huggingface.co/ngquocvinh/Jev-Omni-GGUF">GGUF</a> and <a href="https://huggingface.co/Ruiruiz30/Jev-Omni-MLX-4bit">MLX</a></td>
+<td>Apache-2.0</td>
+<td>64/67 and 64/67, Q3_K_M, 1,222 ms</td>
+</tr>
+<tr>
+<td>openjev-35b-a3b</td>
+<td>Qwen3.5-35B-A3B, option-letter readout, uncalibrated</td>
+<td><a href="https://huggingface.co/apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF">apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF</a>, and an MLX 4-bit build</td>
+<td>Apache-2.0</td>
+<td>63/67 and 64/67 on pcdServer, 297 ms</td>
+</tr>
+<tr>
+<td>jeb-35b-a3b</td>
+<td>Qwen3.6-35B-A3B, softmax restricted to the answer tokens</td>
+<td><a href="https://huggingface.co/szybkie-ai/jeb-35b-a3b">szybkie-ai/jeb-35b-a3b</a>, GGUF by mradermacher</td>
+<td>Apache-2.0 weights, MIT code</td>
+<td>63/67 and 63/67, Q3_K_M, 333 ms</td>
+</tr>
+<tr>
+<td>lev-4b</td>
+<td>LoRA on Qwen3.5-4B, one-token option codes</td>
+<td><a href="https://huggingface.co/interfaze-ai/lev">interfaze-ai/lev</a></td>
+<td>Apache-2.0</td>
+<td>63/67 and 64/67, 2,204 ms</td>
+</tr>
+<tr>
+<td>jevk5-4b</td>
+<td>Qwen3.5-4B, option-letter readout</td>
+<td><a href="https://huggingface.co/alibiserikbay/JevK5-GGUF">alibiserikbay/JevK5-GGUF</a></td>
+<td>Apache-2.0</td>
+<td>62/67 and 63/67, Q4_K_M on slot, 351 ms</td>
+</tr>
+<tr>
+<td>imajev-4b</td>
+<td>LoRA on Qwen3.5-4B, 256-code readout</td>
+<td><a href="https://huggingface.co/mohit67890/imajev-4b">mohit67890/imajev-4b</a></td>
+<td>Apache-2.0</td>
+<td>62/67 and 64/67, 363 ms</td>
+</tr>
+<tr>
+<td>gliner25-decide</td>
+<td>DeBERTa-v3-large with a label head, English only</td>
+<td><a href="https://huggingface.co/fastino/GLiNER2.5-Decide">fastino/GLiNER2.5-Decide</a>, as Core AI, ONNX and Core ML builds</td>
+<td>Apache-2.0 (DeBERTa-v3: MIT)</td>
+<td>61/67, Core AI, 27 ms</td>
+</tr>
+<tr>
+<td>leo-1.7b</td>
+<td>LoRA on Qwen3-1.7B-Base, listwise pointer head</td>
+<td><a href="https://huggingface.co/Suparva/leo-1.7b">Suparva/leo-1.7b</a></td>
+<td>Apache-2.0</td>
+<td>57/67 and 62/67, 136 ms</td>
+</tr>
+<tr>
+<td>von</td>
+<td>ModernBERT-large, order-invariant option markers, English only</td>
+<td><a href="https://huggingface.co/wfzyx/von">wfzyx/von</a>: 1.2 as ONNX, 1.1 in ollaya</td>
+<td>Apache-2.0</td>
+<td>57/67, ONNX, 53 ms</td>
+</tr>
+<tr>
+<td>decision-eos</td>
+<td>Qwen3.5-0.8B with an endpoint head</td>
+<td>vLLM Semantic Router, through ollaya's <code>decision:eos</code></td>
+<td>Apache-2.0</td>
+<td>57/67 and 56/67, 323 ms</td>
+</tr>
+<tr>
+<td>semif-4b-nli</td>
+<td>Qwen3.5-4B entailment cross-encoder</td>
+<td><a href="https://huggingface.co/jacksodj/semif-4b-nli-v5-mlx">jacksodj/semif-4b-nli-v5-mlx</a></td>
+<td>MIT</td>
+<td>51/67 and 49/67, 121 ms</td>
+</tr>
+<tr>
+<td>clm-8b</td>
+<td>Qwen3-8B encoder with contrastive heads</td>
+<td><a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">czl/CLM-v0.1-8B-GGUF</a>, MLX builds, ollaya's <code>clm:8b</code></td>
+<td>Apache-2.0</td>
+<td>39/67 and 28/67, Q8_0, 108 ms</td>
+</tr>
+<tr>
+<td>decima-small</td>
+<td>multilingual late-interaction encoder</td>
+<td><a href="https://huggingface.co/amyrmahdy/decima-small">amyrmahdy/decima-small</a></td>
+<td>Apache-2.0</td>
+<td>37/67 and 38/67, int8, 12 ms</td>
+</tr>
+<tr>
+<td>pulse-decide-150m</td>
+<td>ModernBERT-base pair cross-encoder, English only</td>
+<td><a href="https://huggingface.co/RouterML/pulse-decide-150m">RouterML/pulse-decide-150m</a></td>
+<td>Pulse Research Preview Licence</td>
+<td>34/67, 18 ms</td>
+</tr>
+<tr>
+<td>lumma-fev-0.6b</td>
+<td>0.6B decoder trained from scratch, pointer head</td>
+<td><a href="https://huggingface.co/FrontiersMind/Lumma-fev-0.6b">FrontiersMind/Lumma-fev-0.6b</a></td>
+<td>Apache-2.0</td>
+<td>33/67 and 28/67, 70 ms</td>
+</tr>
+<tr>
+<td>julia-1</td>
+<td>mmBERT-small with a laya-style head</td>
+<td><a href="https://huggingface.co/SupersonicLabs/Julia-1">SupersonicLabs/Julia-1</a></td>
+<td>Apache-2.0</td>
+<td>31/67 and 31/67, MLX, 6.8 ms</td>
+</tr>
+<tr>
+<td>gliclass-large</td>
+<td>DeBERTa-v3-large zero-shot classifier, Knowledgator</td>
+<td>through ollaya's <code>gliclass:large</code></td>
+<td>Apache-2.0</td>
+<td>26/67, 60 ms</td>
+</tr>
+<tr>
+<td>nli-modernbert-large</td>
+<td>ModernBERT-large zero-shot NLI, Moritz Laurer</td>
+<td>through ollaya's <code>nli:modernbert-large</code></td>
+<td>Apache-2.0</td>
+<td>20/67, 23 ms</td>
+</tr>
+</tbody>
+</table>
+<p>An empty direct score means the model was trained on English only, so only the translated text was sent to it.</p>
+<p>Three licence notes travel with the rows. Pulse Decide 150M is a research preview whose training data carries non-commercial and terms-of-service restrictions; it is in the tables with that note and is not cleared for use in a product. The MXFP8 and MXFP4 conversions of laya declare no licence, and the MLX library that runs them, mlx-embeddings, is GPL-3.0. And two models were left out on purpose: Launchables' Myles encoders are gated, and their evaluation licence does not allow benchmark results to be published without the publisher's review.</p>
+<p>Some of these models are in <code>ornotto</code> without any extra runtime: JevK5 and APUS-OpenJev as pcdServer models, and winnow, von, decision-eos, CLM, GLiClass and the ModernBERT NLI model as ollaya models (<a href="../10-package/#registered-models">chapter 10</a>). The rest need the runtimes their authors publish.</p>
 <h2 id="fine-tuned-models">Fine-tuned models<a class="headerlink" href="#fine-tuned-models" title="Permanent link">&para;</a></h2>
 <p>These are chat models tuned by third parties. None of them has a trained answer slot, so every one ran on pcdServer, which scores the first token of each allowed value under the model's chat template.</p>
 <p><a href="https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm">n4ze3m/Qwen3.5-4B-Hmm</a> (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result in the benchmark, at 88 to 95 ms per query. Read through its own letter readout on llama-server (the <code>slot</code> rows), the same weights scored 62/67 and 63/67 and took three times as long.</p>
@@ -1350,6 +1562,7 @@
 <ul>
 <li>If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.</li>
 <li>If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.</li>
+<li>If you want the best local score and have the memory, rune-26b-a4b at Q3_K_M (13.5 GB) matched jev on translated text. NeoHorse-Jev-4B at Q8_0 (5.2 GB) scored 64/67 in both modes.</li>
 <li>If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.</li>
 </ul>
 <p><a href="../07-quantization/">Chapter 7</a> shows how far each family can be quantized, and <a href="../12-choosing/">chapter 12</a> turns these results into a choice.</p>
@@ -1404,7 +1617,7 @@
   <div class="ornotto-book-footer">
     <nav aria-label="Chapters">
       
-      <a href="../03-engines/" rel="prev">← 3. Five ways to read an answer</a>
+      <a href="../03-engines/" rel="prev">← 3. Ways to read an answer</a>
       
       
       <a href="../05-method/" rel="next">5. How we measured →</a>

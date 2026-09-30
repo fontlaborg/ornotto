@@ -13,7 +13,11 @@ Start from what your decision needs, not from the model list. The numbers in the
 | If you need | Use | Why, and what it costs |
 |---|---|---|
 | A good default | `decider-0.8b` on dohnuts | 62/67 at 52 ms per query on Metal, 0.81 GB, calibrated probabilities. On CPU the same model takes 275 ms. |
-| The most accurate local answer | `qwen3.5-4b-hmm` on pcdServer | 64/67 translated and 65/67 direct, at 88 to 93 ms, 2.7 GB at Q4_K_M. |
+| The most accurate answer in `ornotto`, in both modes | `qwen3.5-4b-hmm` on pcdServer | 64/67 translated and 65/67 direct, at 88 to 93 ms, 2.7 GB at Q4_K_M. |
+| The most accurate local answer on translated text, on a 48 GB Mac | rune-26b-a4b version 1 at Q3_K_M on llama-server | 65/67 translated, the same as jev, at 367 ms from 13.5 GB. It drops to 57/67 on the original text, so keep the translator. ornotto does not run it: pcdServer rejects Gemma 4 files. |
+| The best small dedicated model | NeoHorse-Jev-4B at Q8_0, in its authors' runtime | 64/67 in both modes at 273 ms, from 5.2 GB. Its Q3_K_M file (3.0 GB) scored 63/67. Not in ornotto; the runtime is a patched llama.cpp whose build script targets CUDA, and the benchmark built it for Metal. |
+| No setup beyond one install | an ollaya model | `ollaya-winnow-12b` scored 64/67 and 65/67 at 891 ms (12.7 GB); `ollaya-decider-0.8b` 61/67 at 285 ms. ornotto starts ollaya, pulls the tag and loads it; the answers are calibrated. |
+| An English encoder, fast | GLiNER2.5-Decide on Core AI | 61/67 on translated text in 27 ms, from 0.87 GB, nine answers above laya. It reads English only, so non-English queries need the translator. Not in ornotto. |
 | The lowest latency for one model | pcdServer | Same decider-0.8b GGUF: 28 ms on pcdServer against 52 ms on dohnuts (Metal). pcdServer reads it as a chat model, though, and scores 55/67 instead of 62. |
 | Non-English text without a translator | `qwen3.5-4b-hmm` on pcdServer | 65/67 on the original text. decider-0.8b drops from 62 to 61 without translation ([chapter 5](05-method.md)). |
 | Several questions about one message | either | pcdServer decodes the message once and adds a short suffix per field. dohnuts reuses the state across the questions of one request since our [prefix cache](08-speed.md#prefix-caching-in-dohnuts) (1.9× on Metal, 3.2× on CPU for three questions). |
@@ -25,7 +29,7 @@ Start from what your decision needs, not from the model list. The numbers in the
 | Many different question sets in rotation | dohnuts, or pcdServer with a larger cache | pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache. |
 | The best accuracy, cost no object | jev (hosted) | 65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's `TypeSafeModel` does. |
 
-Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in ornotto at all: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)).
+Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in the wheel: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)). Through ollaya, `ollaya-laya-multilingual` answers in 12.3 ms with the same 52/67.
 
 ## Building from source
 

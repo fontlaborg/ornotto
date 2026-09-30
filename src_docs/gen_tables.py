@@ -25,10 +25,17 @@ QUANT_ORDER = [
     "q3",
     "iq3",
     "q4",
+    "q4_0",
     "iq4",
+    "4bit",
+    "mlx4",
+    "mxfp4",
     "q5",
     "q6",
     "q8",
+    "q8_0",
+    "mlx8",
+    "mxfp8",
     "int8",
     "w8",
     "fp16",
@@ -43,9 +50,10 @@ def load(name: str):
     return json.loads((DATA / f"{name}.json").read_text())
 
 
-def cell(value, sort=None, cls: str = "") -> str:
+def cell(value, sort=None, cls: str = "", title: str = "") -> str:
     attrs = f' data-sort="{sort}"' if sort is not None else ""
     attrs += f' class="{cls}"' if cls else ""
+    attrs += f' title="{html.escape(title)}"' if title else ""
     return f"<td{attrs}>{html.escape(str(value))}</td>"
 
 
@@ -56,7 +64,10 @@ def num(value, digits: int = 0, suffix: str = "") -> str:
     return cell(text, value, "num")
 
 
-def score(value: int, total: int = TASKS) -> str:
+def score(value: int | None, total: int = TASKS) -> str:
+    """A score cell; None means "not measured" and renders empty (sorts last)."""
+    if value is None:
+        return '<td class="num"></td>'
     return cell(f"{value}/{total}", value, "num score")
 
 
@@ -94,13 +105,24 @@ def table(
     (OUT / f"{name}.html").write_text(text)
 
 
+def high_first(value: int | None) -> float:
+    """Sort key for "best first": higher scores first, None (not measured) last."""
+    return 1 if value is None else -value
+
+
+def method_cell(r: dict) -> str:
+    """The method name; rows with a `note` get a dagger and the note as tooltip."""
+    note = r.get("note")
+    return cell(f"{r['method']} †", cls="method", title=note) if note else cell(r["method"], cls="method")
+
+
 def classifier_rows(rows: list[dict]) -> list[str]:
     out = []
     for r in rows:
         out.append(
             "".join(
                 [
-                    cell(r["method"], cls="method"),
+                    method_cell(r),
                     cell(r["engine"]),
                     cell(r["model"]),
                     cell(r["family"]),
@@ -145,10 +167,11 @@ def main() -> None:
         CLASSIFIER_HEADERS,
         classifier_rows(rows),
         filterable=True,
-        caption="All 208 methods, best first. Click a header to sort; empty cells were not measured.",
+        caption=f"All {len(rows)} methods, best first. Click a header to sort; an empty cell was not measured, "
+        "or does not apply (the direct score of a model trained on English only).",
         sorted_by="Translated",
     )
-    top = sorted(rows, key=lambda r: (-r["translated"], -r["direct"], r["ms"]))[:15]
+    top = sorted(rows, key=lambda r: (high_first(r["translated"]), high_first(r["direct"]), r["ms"]))[:15]
     table(
         "top",
         CLASSIFIER_HEADERS[1:9],

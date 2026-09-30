@@ -6,7 +6,7 @@ this_file: src_docs/md/01-deciding.md
 
 A System One decision asks a language model to pick, not to write. You hand it a *state* (a message, a ticket, a slice of application data) and a set of named *questions*, each with a closed set of answers. The model returns one probability for every allowed answer. It never produces free text, so there is nothing to parse, repair or retry: the answer is always one of the values you listed.
 
-This book is about running those decisions on your own machine. It compares five ways of reading a decision out of a model, 208 benchmark methods, and the Python package, `ornotto`, that puts the two local engines behind one API.
+This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 258 benchmark methods, and the Python package, `ornotto`, that puts the local engines behind one API.
 
 ## What a decision looks like
 

@@ -114,8 +114,42 @@ Load time is paid once per process, but it decides whether an engine suits a com
 | laya, MLX | 1,797 | 6.9 | 52/67 |
 | laya, Core ML on the Neural Engine (compact prompt) | 20,130 | 4.2 | 47/67 |
 | decider-4b, PyTorch | 16,802 | 348.2 | 63/67 |
+| GLiNER2.5-Decide, Core AI | 3,378 | 26.9 | 61/67 |
+| GLiNER2.5-Decide, Core ML (fixed 256 tokens) | 82,062 | 349.1 | 61/67 |
+| Julia-1, MLX | 1,866 | 6.8 | 31/67 |
 
-The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes ([chapter 3](03-engines.md#laya)). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. The hosted jev takes 466 ms per query, the round trip to its API included.
+The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes ([chapter 3](03-engines.md#laya)). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. Julia-1, a smaller multilingual encoder, is as fast as laya on MLX and scores 31. GLiNER2.5-Decide on Core AI is the exception in the middle: 61/67 on translated text in 26.9 ms, but it reads English only. The hosted jev takes 466 ms per query, the round trip to its API included.
+
+## The later engines and runtimes
+
+The second benchmark round brought runtimes that the first did not have, and the same weights again cost very different amounts of time depending on where they run. Times are ms per translated query, load excluded; the load column is the separate load or preload time.
+
+| Engine or runtime | Method | ms/query | Load ms | Translated |
+|---|---|---:|---:|---|
+| Core AI | GLiNER2.5-Decide, fp16 | 26.9 | 3,378 | 61/67 |
+| ONNX Runtime, CPU | GLiNER2.5-Decide, fp32 | 67.3 | 4,607 | 61/67 |
+| Core ML | GLiNER2.5-Decide, fp16, 256 tokens | 349.1 | 82,062 | 61/67 |
+| ONNX Runtime, CPU | laya-multilingual, fp32 | 24.7 | 1,578 | 52/67 |
+| ONNX Runtime, CPU | laya-multilingual, fp16 | 57.6 | 1,067 | 52/67 |
+| ollaya (MLX) | `laya:multilingual` | 12.3 | 1,217 | 52/67 |
+| ollaya (ONNX Runtime, CPU) | `decider:0.8b` | 284.8 | 7,924 | 61/67 |
+| ollaya (ONNX Runtime, CPU) | `kev:0.8b` | 268.2 | 4,848 | 60/67 |
+| ollaya (llama.cpp, Metal) | `winnow:12b` | 891.1 | 36,488 | 64/67 |
+| ollaya (ONNX Runtime, CPU) | `clm:8b` | 1,677.9 | 49,184 | 39/67 |
+| llama.cpp embeddings + head | Jev-Omni `q3` | 1,222.3 | 1,411 | 64/67 |
+| MLX | Jev-Omni `4bit` | 780.1 | | 61/67 |
+| MLX | APUS-OpenJev 35B-A3B `4bit` | 250.0 | 27,426 | 63/67 |
+| pcdServer | APUS-OpenJev 35B-A3B `q4` | 296.8 | 338 | 63/67 |
+| System One server | NeoHorse-Jev-4B `q8` | 273.1 | | 64/67 |
+| System One server | CLM-v0.1-8B `q8` | 107.6 | | 39/67 |
+| System One server | leo-1.7b | 136.2 | | 57/67 |
+| System One server | lev (4B) | 2,203.8 | | 63/67 |
+
+Three things stand out.
+
+- **The runtime moves an encoder by an order of magnitude and leaves its score alone.** GLiNER2.5-Decide answers in 27 ms on Core AI, 67 ms on ONNX Runtime and 349 ms as a fixed-shape Core ML package, with 61/67 each time. On ONNX Runtime on the CPU, laya's fp16 graph is slower than its fp32 graph, 57.6 ms against 24.7.
+- **ollaya's CPU path is slow for decoders.** ollaya runs most of its models as float32 ONNX graphs on the CPU. decider-0.8b takes 285 ms there, against 52 ms on dohnuts (Metal) with the same weights and the same score within one answer. CLM takes 1.7 seconds in ollaya and 108 ms when its encoder runs in llama.cpp. The encoders that ollaya runs on MLX are fast: laya in 12.3 ms.
+- **Load time is a real cost for the large and the fixed-shape models.** The benchmark preloaded every ollaya model through `/api/decide` and kept it resident, so the preload stays out of ms/query. It took 36 seconds for winnow and 49 seconds for clm. The MLX build of APUS-OpenJev loaded in 27 seconds; the same model as a GGUF on pcdServer in a third of a second. The authors' System One servers were started before the timed run, so their load is not measured.
 
 ## Memory: one model at a time
 
@@ -125,6 +159,6 @@ The fix was procedural, and it is worth copying if you benchmark models yourself
 
 - Load one model process at a time, and check that none is resident before you load the next.
 - Stop a server by its process and then confirm that its port is free; a server that ignores the stop signal still holds its memory.
-- Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit.
+- Watch swap growth, free disk space and available RAM while a model runs, and stop the run when any of them crosses a limit. That limit stopped one measurement in the second round: the Q5_K_M file of jeb-35b-a3b took available memory below 4 GB while it loaded, and it has no row.
 
 The `ornotto` package applies the same discipline to itself. Each `Decider` shares one engine process per model, engine and device; the processes stop when Python exits, and `ornotto.shutdown()` stops them earlier ([chapter 10](10-package.md)). If your code opens several models at once, add up their GGUF sizes plus the pcdServer checkpoint budget before you do.

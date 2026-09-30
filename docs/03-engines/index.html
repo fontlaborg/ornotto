@@ -37,7 +37,7 @@
     
     
       
-        <title>3. Five ways to read an answer - ornotto</title>
+        <title>3. Ways to read an answer - ornotto</title>
       
     
     
@@ -124,7 +124,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#3-five-ways-to-read-an-answer" class="md-skip">
+        <a href="#3-ways-to-read-an-answer" class="md-skip">
           Skip to content
         </a>
       
@@ -453,7 +453,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -471,7 +471,7 @@
   <span class="md-ellipsis">
     
   
-    3. Five ways to read an answer
+    3. Ways to read an answer
   
 
     
@@ -573,6 +573,72 @@
     <span class="md-ellipsis">
       
         laya
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-linear-head-on-a-hidden-state-jev-omni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A linear head on a hidden state: Jev-Omni
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entailment-per-option-semif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entailment per option: semif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contrastive-similarity-clm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrastive similarity: CLM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servers-that-model-authors-publish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servers that model authors publish
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ollaya" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ollaya
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More encoders
       
     </span>
   </a>
@@ -1086,6 +1152,72 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#a-linear-head-on-a-hidden-state-jev-omni" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A linear head on a hidden state: Jev-Omni
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entailment-per-option-semif" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entailment per option: semif
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contrastive-similarity-clm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contrastive similarity: CLM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servers-that-model-authors-publish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servers that model authors publish
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ollaya" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ollaya
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More encoders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#side-by-side" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1143,16 +1275,16 @@
   
 
 
-<h1 id="3-five-ways-to-read-an-answer">3. Five ways to read an answer<a class="headerlink" href="#3-five-ways-to-read-an-answer" title="Permanent link">&para;</a></h1>
+<h1 id="3-ways-to-read-an-answer">3. Ways to read an answer<a class="headerlink" href="#3-ways-to-read-an-answer" title="Permanent link">&para;</a></h1>
 <p>A decision engine turns a state and a question into a prompt, runs the model once, and reads a probability for each allowed answer out of the result. The readouts in this book differ in all three steps: what the prompt looks like, where in the model they read, and what they return. Those differences decide which models a readout can use, how fast it answers, and whether its probabilities mean what they say.</p>
 <p>Four words recur in the rest of this book, each with one meaning:</p>
 <ul>
-<li>A <strong>readout</strong> is how the answer is read out of the model: jev's (not public), dohnuts' answer slot, pcdServer's first-token scoring, slot's top-100 log-probabilities, and laya's decision head. This chapter has one section per readout.</li>
-<li>A <strong>runtime</strong> is what executes the network: llama.cpp on Metal or on the CPU, MLX, Core ML, ONNX Runtime, PyTorch or ExecuTorch.</li>
-<li>An <strong>engine</strong> is a server you run: dohnuts, pcdServer, llama-server or laya.cpp. jev is a hosted service, not something you run.</li>
+<li>A <strong>readout</strong> is how the answer is read out of the model: jev's (not public), dohnuts' answer slot, pcdServer's first-token scoring, slot's top-100 log-probabilities, and laya's decision head. The second half of the chapter adds the readouts of the models benchmarked later: a linear head on a hidden state, entailment per option, contrastive similarity, and the readouts that model authors ship in their own servers.</li>
+<li>A <strong>runtime</strong> is what executes the network: llama.cpp on Metal or on the CPU, MLX, Core ML, Core AI, ONNX Runtime, PyTorch or ExecuTorch.</li>
+<li>An <strong>engine</strong> is a server you run: dohnuts, pcdServer, llama-server, laya.cpp, ollaya, or a server that a model's authors publish with the model. jev is a hosted service, not something you run.</li>
 <li>A <strong>method</strong> is one row of the benchmark: one model file, read by one readout, on one engine or runtime, such as <code>pcdserver@qwen3.5-4b-hmm-q8</code>.</li>
 </ul>
-<p>Two of the readouts belong to the engines the <code>ornotto</code> package bundles, dohnuts and pcdServer. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model with a readout of its own.</p>
+<p>Two of the readouts belong to the engines the <code>ornotto</code> package bundles, dohnuts and pcdServer, and <code>ornotto</code> can also start ollaya if you install it. jev is the hosted reference. slot is a readout our benchmark harness builds on top of a stock llama-server, and laya is a different kind of model with a readout of its own.</p>
 <h2 id="jev">jev<a class="headerlink" href="#jev" title="Permanent link">&para;</a></h2>
 <p>jev is TypeSafe's hosted System One model. You send the request shape from <a href="../02-decisions/">chapter 2</a> to <code>/v1/systemone</code> and get answers with <code>choice</code>, <code>confidence</code> and <code>probabilities</code>, plus <code>usage.billing_units</code>. Our harness reaches it through OpenRouter's System One API as <code>jev-latest</code>.</p>
 <p>What jev does inside is not public: we know its inputs and outputs, not its prompt or its readout. Its answers are calibrated by its provider. On the router set it scores 65 of 67, translated or direct, at 466 ms per query measured from our client, network included.</p>
@@ -1216,9 +1348,15 @@
 <p>and then does the readout on the client, in one of two ways:</p>
 <ul>
 <li><strong>decider readout.</strong> The prompt is the tokens of <code>Context:\n&lt;state&gt;</code> followed by the tokens of the question and options, tokenized separately as the decider package does. The harness looks up the log-probabilities of the option-letter token ids, divides them by the model's temperature and applies a softmax.</li>
-<li><strong>Hmm readout.</strong> For <a href="https://github.com/n4ze3m/hmm">n4ze3m/hmm</a> models, the prompt is a Qwen chat turn with thinking turned off: the state, the question, one <code>A: name — description</code> line per option, and <code>Return only the option letter.</code> The harness sums the probabilities of every top token whose trimmed text is a single option letter, then renormalises over the options.</li>
+<li>
+<p><strong>Hmm readout.</strong> For <a href="https://github.com/n4ze3m/hmm">n4ze3m/hmm</a> models, the prompt is a Qwen chat turn with thinking turned off: the state, the question, one <code>A: name — description</code> line per option, and <code>Return only the option letter.</code> The harness sums the probabilities of every top token whose trimmed text is a single option letter, then renormalises over the options.</p>
+</li>
+<li>
+<p><strong>Letter readouts of other decision models.</strong> Three later models are read the same way, each with the prompt and temperature its authors publish. Rune (<a href="https://huggingface.co/surogate/rune-26b-a4b-GGUF">surogate/rune-26b-a4b-GGUF</a>, version 1) is a Gemma 4 26B-A4B mixture-of-experts fine-tune; its option-letter logits are divided by a temperature of 2. JevK5 (<a href="https://huggingface.co/alibiserikbay/JevK5-GGUF">alibiserikbay/JevK5-GGUF</a>) is a Qwen3.5-4B fine-tune read at the next-token log-probabilities of the option letters, with a temperature of 1.22; a letter missing from the list gets the lowest listed log-probability minus 2. APUS-OpenJev (<a href="https://huggingface.co/apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF">apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF</a>) is a Qwen3.5-35B-A3B fine-tune read the same way from the top 1,024 candidates, without calibration.</p>
+</li>
 </ul>
 <p>A letter that falls outside the top 100 tokens gets probability 0, and the harness counts it as a miss.</p>
+<p>Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. pcdServer could not serve the Gemma 4 files at all: it answered every request with HTTP 422, so rune has no pcdServer rows.</p>
 <p>slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.</p>
 <h2 id="laya">laya<a class="headerlink" href="#laya" title="Permanent link">&para;</a></h2>
 <p>laya (<a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya</a>) is not a language model. It is a multilingual encoder, mmBERT-base, with a decision head trained for System One questions. Its input is one sequence:</p>
@@ -1226,7 +1364,50 @@
 </code></pre></div>
 <p>The head reads the encoder's hidden states at the <code>[MASK]</code> in front of each option and scores them. Probabilities are calibrated with a temperature chosen by bucket, first by the number of options and then by question type. A second head, the <em>act head</em>, returns <code>action.act_probability</code>: the probability that the question should be answered directly rather than escalated. It is the only built-in abstain signal among the readouts here, and our benchmark does not use it yet.</p>
 <p>An encoder reads its whole input in one pass and never decodes, so laya is fast: on MLX it answers a router query in 6.9 ms, and a compact Core ML export on the Neural Engine in 4.2 ms. The price is accuracy and length. laya-multilingual scores 52 of 67 translated and 49 direct, and its encoders share a budget of 1,024 tokens between the question, the options and the state. The Neural Engine exports hold 96 tokens in all, so they get a compact prompt, and their load time runs to about 20 seconds.</p>
-<p>The same checkpoint ran on six engines and runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client, and laya.cpp, which also serves the kev GGUFs. <a href="../06-results/">Chapter 6</a> lists them all.</p>
+<p>The same checkpoint ran on eight engines and runtimes in our benchmark: MLX, Core ML on the Neural Engine, Core AI, ONNX Runtime, llama.cpp as an embedding server with the head on the client (with the head in Python, or converted to GGUF), laya.cpp, which also serves the kev GGUFs, and ollaya. <a href="../06-results/">Chapter 6</a> lists them all.</p>
+<h2 id="a-linear-head-on-a-hidden-state-jev-omni">A linear head on a hidden state: Jev-Omni<a class="headerlink" href="#a-linear-head-on-a-hidden-state-jev-omni" title="Permanent link">&para;</a></h2>
+<p><a href="https://huggingface.co/akhilaaa3/Jev-Omni">Jev-Omni</a> is a Gemma 4 12B-class model with a trained 256-way linear decision head over the hidden state of the prompt's last token. The GGUF conversions at <a href="https://huggingface.co/ngquocvinh/Jev-Omni-GGUF">ngquocvinh/Jev-Omni-GGUF</a> hold the backbone only. The head ships beside them as a float32 NumPy file.</p>
+<p>llama.cpp does not know the head, so the benchmark starts a stock llama-server as an embedding server with <code>--embedding --pooling none</code>, takes the hidden state of the last token, and applies the head and a softmax on the client. This is the <code>llama.cpp embeddings + head</code> engine in the tables, which also runs laya's Q4_0 encoders with a head GGUF. The MLX build, <a href="https://huggingface.co/Ruiruiz30/Jev-Omni-MLX-4bit">Ruiruiz30/Jev-Omni-MLX-4bit</a>, runs the same head in process with a temperature of 1.115.</p>
+<p>The Q3_K_M file scored 64/67 in both modes, and the Q5_K_M and Q8_0 files 63/67. At 1.1 to 1.2 seconds per query, it is slower than every other method that scored 63 or more, except lev. The MLX 4-bit build scored 61/67 at 780 ms.</p>
+<h2 id="entailment-per-option-semif">Entailment per option: semif<a class="headerlink" href="#entailment-per-option-semif" title="Permanent link">&para;</a></h2>
+<p><a href="https://huggingface.co/jacksodj/semif-4b-nli-v5-mlx">semif</a> is a Qwen3.5-4B cross-encoder for natural-language inference, converted to MLX. Its head classifies a text pair as contradiction, entailment or neutral, so it answers one option at a time. The benchmark pairs the state with one hypothesis per option, reads the probability of entailment for each, and renormalises over the options. That renormalisation is our choice; the model does not define a multi-option answer.</p>
+<p>semif scored 51/67 translated and 49/67 direct, at 121 ms. ollaya's <code>nli:modernbert-large</code> reads a zero-shot NLI encoder the same way, one pair per option, and scored 20/67.</p>
+<h2 id="contrastive-similarity-clm">Contrastive similarity: CLM<a class="headerlink" href="#contrastive-similarity-clm" title="Permanent link">&para;</a></h2>
+<p><a href="https://huggingface.co/Contrastive-LM/CLM-v0.1-8B">CLM-v0.1-8B</a> embeds the state and each option and compares them. A frozen Qwen3-8B encodes each text with last-token pooling, a state head and an action head project the two embeddings, and the score of an option is their cosine similarity times a learned scale capped at 100, followed by a softmax over the options.</p>
+<p>The GGUF builds (<a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">czl/CLM-v0.1-8B-GGUF</a>) run in llama-server with <code>--pooling last</code>, and the heads run in the authors' <code>clm-serve</code>, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. Every CLM method scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.</p>
+<h2 id="servers-that-model-authors-publish">Servers that model authors publish<a class="headerlink" href="#servers-that-model-authors-publish" title="Permanent link">&para;</a></h2>
+<p>Several decision models ship with a server of their own that answers the System One request from <a href="../02-decisions/">chapter 2</a>. The benchmark sends each one the request it sends jev, and the tables list them under the engine <em>System One server</em>. The readouts behind that one API differ:</p>
+<ul>
+<li><strong>NeoHorse-Jev-4B</strong> (<a href="https://huggingface.co/TokenRhythm/NeoHorse-Jev-4B-GGUF">TokenRhythm/NeoHorse-Jev-4B-GGUF</a>) packs the state and the options into one prefill, as kev does, and reads a pointer head. Each GGUF holds the backbone, the head and the tokenizer, and runs in the authors' patched llama.cpp. That build targets CUDA; the benchmark ran it on a Metal build. Q8_0 scored 64/67 in both modes at 273 ms, and Q3_K_M 63/67 at 296 ms.</li>
+<li><strong>lev</strong> (<a href="https://huggingface.co/interfaze-ai/lev">interfaze-ai/lev</a>) is a LoRA on Qwen3.5-4B. It gives each option a one-token code, reads the codes in two option orders and averages them, and calibrates with a temperature per bucket. It scored 63/67 and 64/67, at 2.2 seconds per query. Its model card calls it English only; the direct score is a measurement, not evidence that it is multilingual.</li>
+<li><strong>imajev-4b</strong> (<a href="https://huggingface.co/mohit67890/imajev-4b">mohit67890/imajev-4b</a>) is a LoRA on the same Qwen3.5-4B with a 256-code readout: 255 option codes and one <code>unknown</code> code. The benchmark removes the <code>unknown</code> probability and renormalises. 62/67 and 64/67, at 363 ms.</li>
+<li><strong>leo-1.7b</strong> (<a href="https://huggingface.co/Suparva/leo-1.7b">Suparva/leo-1.7b</a>) is a LoRA on Qwen3-1.7B-Base with learned marker embeddings and a listwise pointer head, calibrated per question type and number of options. It runs with <code>--precise</code>, without which its server rounds probabilities to two decimals. 57/67 and 62/67, at 136 ms.</li>
+<li><strong>jeb-35b-a3b</strong> (<a href="https://huggingface.co/szybkie-ai/jeb-35b-a3b">szybkie-ai/jeb-35b-a3b</a>, GGUF by <a href="https://huggingface.co/mradermacher/jeb-35b-a3b-GGUF">mradermacher</a>) is a Qwen3.6-35B-A3B mixture-of-experts model trained with a softmax restricted to the answer tokens. Its <code>jeb serve</code> runs over llama-server. Q3_K_M scored 63/67 in both modes at 333 ms. The Q5_K_M file was not benchmarked: loading it took the machine's free memory below the benchmark's safety limit, and the run stopped.</li>
+<li><strong>CLM</strong>'s <code>clm-serve</code>, above.</li>
+</ul>
+<p>These servers were started before the timed run, so their load column is empty.</p>
+<h2 id="ollaya">ollaya<a class="headerlink" href="#ollaya" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/ollaya-dev/ollaya">ollaya</a> (Apache-2.0) calls itself Ollama for decision models. It is one Rust binary: <code>ollaya serve</code> runs a daemon, and <code>ollaya pull</code> fetches a model from its registry. A registry entry is a small ONNX graph with a <code>decision.json</code> and a <code>calibration.json</code>; the weights come from the model authors' own Hugging Face repositories, pinned to a commit and checked by hash. Each model keeps its authors' readout and calibration.</p>
+<p>ollaya answers on two APIs. <code>/v1/systemone</code> takes the same request and returns the same answer as jev. <code>/api/decide</code> is in the style of Ollama's API, and it also loads and unloads a model. The two treat a long state differently: <code>/api/decide</code> cuts a state that does not fit the model's context, and <code>/v1/systemone</code> refuses it with HTTP 422 and the code <code>STATE_TRUNCATED</code>. The benchmark sent the laya tags to <code>/api/decide</code> and every other tag to <code>/v1/systemone</code>.</p>
+<p>On a Mac, ollaya runs a model on one of three runtimes: llama.cpp on Metal for models whose authors publish a GGUF (winnow), MLX on the GPU for encoders that carry an architecture layer (laya, nli), and ONNX Runtime on the CPU, in float32, for the rest. Ten tags were benchmarked:</p>
+<ul>
+<li><code>winnow:12b</code>, a Gemma 4 fine-tune from EldanRing run from the authors' Q8_0 GGUF and read at the option-label logits, scored 64/67 translated and 65/67 direct, at 891 ms.</li>
+<li><code>decider:0.8b</code> scored 61/67 and 60/67 at 285 ms: the weights dohnuts reads in 52 ms, here as a float32 graph on the CPU. <code>kev:0.8b</code> scored 60/67 and 62/67 at 268 ms.</li>
+<li><code>laya:multilingual</code> scored 52/67 and 49/67 at 12 ms, like every other full-precision build of that checkpoint.</li>
+<li><code>von:1.1</code> and <code>decision:eos</code> scored 57/67, <code>laya:en</code> 42/67, <code>clm:8b</code> 39/67, <code>gliclass:large</code> 26/67 and <code>nli:modernbert-large</code> 20/67.</li>
+</ul>
+<p>The load column for ollaya includes the preload through <code>/api/decide</code>: from 1.2 seconds for <code>laya:multilingual</code> and <code>nli:modernbert-large</code> to 36 seconds for winnow and 49 seconds for clm.</p>
+<h2 id="more-encoders">More encoders<a class="headerlink" href="#more-encoders" title="Permanent link">&para;</a></h2>
+<p>laya is not the only encoder with a decision head. The later encoders read the hidden state at a marker per option, like laya, or score one text pair per option:</p>
+<ul>
+<li><strong>GLiNER2.5-Decide</strong> (<a href="https://huggingface.co/fastino/GLiNER2.5-Decide">fastino</a>) is DeBERTa-v3-large with a label head, scored at a marker in front of each option. It is English only, so it has no direct score. It ran on three runtimes: Core AI, Apple's runtime for <code>.aimodel</code> bundles on macOS 27, in 26.9 ms (<a href="https://huggingface.co/coreai-community/GLiNER2.5-Decide-CoreAI">coreai-community</a>); ONNX Runtime in 67.3 ms (<a href="https://huggingface.co/onnx-community/GLiNER2.5-Decide-ONNX">onnx-community</a>); and a fixed-shape Core ML package in 349 ms, after an 82-second load (<a href="https://huggingface.co/FluidInference/gliner2-5-decide-coreml">FluidInference</a>). All three scored 61/67, nine answers above laya-multilingual's usual 52 and the best encoder result in the benchmark.</li>
+<li><strong>von</strong> (<a href="https://huggingface.co/wfzyx/von">wfzyx/von</a>) is ModernBERT-large with an option-marker head. Since version 1.2 it is order-invariant: each option attends only to the shared prefix and to itself. English only. Version 1.2 as ONNX (<a href="https://huggingface.co/DanKau/von-1.2-onnx">DanKau/von-1.2-onnx</a>) and version 1.1 in ollaya both scored 57/67.</li>
+<li><strong>decima-small</strong> (<a href="https://huggingface.co/amyrmahdy/decima-small">amyrmahdy/decima-small</a>) is a multilingual late-interaction model: it encodes the state once and each option separately, then scores each option against the state with a small cross-attention scorer. Its int8 ONNX build scored 37/67 at 12 ms.</li>
+<li><strong>Pulse Decide 150M</strong> (<a href="https://huggingface.co/RouterML/pulse-decide-150m">RouterML/pulse-decide-150m</a>) is a pair cross-encoder on ModernBERT-base: one pass per option, mean pooling and a value head. English only. 34/67 at 18 ms in PyTorch.</li>
+<li><strong>Julia-1</strong> (<a href="https://huggingface.co/SupersonicLabs/Julia-1">SupersonicLabs/Julia-1</a>) is mmBERT-small with a laya-style head. It scored 31/67 on both MLX (6.8 ms) and ONNX Runtime.</li>
+<li><strong>Lumma-fev-0.6b</strong> (<a href="https://huggingface.co/FrontiersMind/Lumma-fev-0.6b">FrontiersMind/Lumma-fev-0.6b</a>) is not an encoder but a small decoder trained from scratch, read by a pointer head over the end of each option in a single prefill. 33/67 in PyTorch.</li>
+</ul>
+<p>laya itself came back in four new builds. The Q4_0 encoders with head GGUFs from <a href="https://huggingface.co/wigcheng5566/laya-neutron-gguf">wigcheng5566/laya-neutron-gguf</a>, on llama.cpp embeddings, gave the best laya score so far, 54/67 at 43 ms; the English encoder in the same format scored 46/67. The MXFP8 and MXFP4 conversions on MLX scored 53/67 and 44/67, and a third ONNX export 52/67.</p>
 <h2 id="side-by-side">Side by side<a class="headerlink" href="#side-by-side" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1253,7 +1434,7 @@
 <td>jev</td>
 <td>decider, kev, Dohnuts</td>
 <td>any chat GGUF</td>
-<td>decider, Hmm</td>
+<td>decider, Hmm, rune, JevK5, APUS-OpenJev</td>
 <td>laya checkpoints</td>
 </tr>
 <tr>
@@ -1301,8 +1482,8 @@
 <td>65/67</td>
 <td>64/67 (decider-35b-a3b)</td>
 <td>64/67 (Qwen3.5-4B-Hmm)</td>
-<td>64/67 (decider-35b-a3b)</td>
-<td>52/67</td>
+<td>65/67 (rune-26b-a4b)</td>
+<td>54/67 (laya-neutron)</td>
 </tr>
 <tr>
 <td>ms per query, decider-0.8b (DreamBlooms Q8_0)</td>
@@ -1314,7 +1495,63 @@
 </tr>
 </tbody>
 </table>
-<p>laya does not run decider; its own encoder answers in 6.9 ms on MLX. The best dohnuts method, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms.</p>
+<p>laya does not run decider; its own encoder answers in 6.9 ms on MLX. The best dohnuts method, decider-35b-a3b at Q4, answers in 266 ms; pcdServer's best, Qwen3.5-4B-Hmm at Q8_0, in 88 ms; slot's best, rune at Q3_K_M, in 367 ms.</p>
+<p>The later readouts, by their best row:</p>
+<table>
+<thead>
+<tr>
+<th>Readout</th>
+<th>Engine or runtime</th>
+<th>Best row</th>
+<th>Translated / direct</th>
+<th style="text-align: right;">ms/query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear head on the last hidden state</td>
+<td>llama.cpp embeddings + head</td>
+<td>Jev-Omni Q3_K_M</td>
+<td>64 / 64</td>
+<td style="text-align: right;">1,222</td>
+</tr>
+<tr>
+<td>Authors' servers</td>
+<td>System One server</td>
+<td>NeoHorse-Jev-4B Q8_0</td>
+<td>64 / 64</td>
+<td style="text-align: right;">273</td>
+</tr>
+<tr>
+<td>Authors' readouts in a registry</td>
+<td>ollaya</td>
+<td>winnow:12b</td>
+<td>64 / 65</td>
+<td style="text-align: right;">891</td>
+</tr>
+<tr>
+<td>Marker head on an encoder</td>
+<td>Core AI</td>
+<td>GLiNER2.5-Decide</td>
+<td>61 / not applicable</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr>
+<td>Entailment per option</td>
+<td>MLX</td>
+<td>semif-4b-nli</td>
+<td>51 / 49</td>
+<td style="text-align: right;">121</td>
+</tr>
+<tr>
+<td>Contrastive similarity</td>
+<td>System One server</td>
+<td>CLM-v0.1-8B Q8_0</td>
+<td>39 / 28</td>
+<td style="text-align: right;">108</td>
+</tr>
+</tbody>
+</table>
 
 
 
