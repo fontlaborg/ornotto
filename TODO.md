@@ -2,7 +2,7 @@
 
 # TODO
 
-- [ ] Publish and verify the 291-run Metal/device audit and interactive benchmark explorer.
+- [x] Publish and verify the 291-run Metal/device audit and interactive benchmark explorer.
 
 - [x] Complete issue 102: all variants measured, models integrated, 290-method report rebuilt and final publication verified live.
 

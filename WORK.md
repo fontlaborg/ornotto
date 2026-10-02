@@ -30,9 +30,16 @@ reload, CSV, SVG and completely offline report passed. Historical evidence
 was audited from recorded launches and runtime settings, not GPU utilization
 traces. Initial publication exposed a CDN cache mismatch: new HTML requested
 old unversioned JavaScript, which still expected the reserved search field.
-The docs build now derives benchmark CSS/JS URL versions from content hashes;
+The docs build now derives benchmark CSS/JS filenames from content hashes;
 a regression test checks the versions and build idempotence. Local browser
-acceptance passed after the fix. Final deployed acceptance pending.
+acceptance passed after the fix. Published `cecfecd`; Pages run `37065299780`
+succeeded. Fresh acceptance on the actual public URL passed all three charts,
+filters, Pareto membership, URL reload, CSV/SVG exports, mobile and dark layouts,
+offline HTML and homepage navigation with zero JavaScript errors. Analytics
+requests were blocked; the Cloudflare cookie dialog was dismissed with Reject
+All before interacting. All eight deployed artifacts match the reviewed build
+(HTML comparisons account for Cloudflare injection). Evidence remains in the
+private run folder as `browser-proof.json` and `live-proof.json`.
 
 ## 2026-10-02 — issue 102, complete measurement set
 
