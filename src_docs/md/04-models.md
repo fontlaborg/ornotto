@@ -320,6 +320,10 @@ The decider authors drew the conclusion themselves: "On the index the base model
 
 None of this makes training useless. It moves the question. A trained readout gives you a fixed prompt, a fitted temperature and a small model that answers fast. A larger stock model, read at the right token, may give you the accuracy. Which of the two you need depends on the latency and memory you can spend, which is what [chapter 8](08-speed.md) and [chapter 12](12-choosing.md) are about.
 
+## The October Tev1 and Kev exports
+
+Tev1 is Together AI's experimental Qwen3.5-0.8B decision fine-tune. The native interface supplies a state, question and labelled options; inference reads only the option-letter logits after the decision prompt. We measured its Q8 conversion on dohnuts and its MLX 4-bit conversion. The upstream licence remains unresolved. Kev now also has a FluidInference Core ML fp16 export with its native pointer head; we measured its single-question L512/K16 row on CPU and GPU. [Chapter 6](06-results.md#issue-102-october-additions) records the results and the remaining issue 102 variants.
+
 ## What changed in September 2026
 
 This chapter was first written from the benchmark runs of 2026-09-22 and 2026-09-23. By the end of the month:

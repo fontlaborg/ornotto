@@ -846,6 +846,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#issue-102-october-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 102: October additions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-top-of-the-table" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1239,6 +1250,17 @@
     <ul class="md-nav__list" data-md-component="toc">
       
         <li class="md-nav__item">
+  <a href="#issue-102-october-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issue 102: October additions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-top-of-the-table" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1402,8 +1424,46 @@
 
 
 <h1 id="6-results">6. Results<a class="headerlink" href="#6-results" title="Permanent link">&para;</a></h1>
-<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. One local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Across both modes, the best local model is still Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 258 methods finished; five failed and are left out.</p>
+<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. One local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Across both modes, the best local model is still Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 261 methods finished; five failed and are left out.</p>
 <p>The jev row measures <code>jev-1.13.0</code>. TypeSafe's model page listed no other version in September 2026, and both public aliases, <code>jev-latest</code> and <code>jev-preview</code>, pointed to it when we checked on 30 September.<sup id="fnref:ts-models"><a class="footnote-ref" href="#fn:ts-models">1</a></sup> <a href="../01-deciding/#jev-the-hosted-reference">Chapter 1</a> explains why the version behind an alias matters. Every number in this chapter comes from our own run on one Mac, on one 67-query question. Numbers that other people published about the same models are collected separately, in <a href="#numbers-others-report">Numbers others report</a>, and are never mixed into our tables.</p>
+<h2 id="issue-102-october-additions">Issue 102: October additions<a class="headerlink" href="#issue-102-october-additions" title="Permanent link">&para;</a></h2>
+<p>The first three additions were measured on 2 October 2026. They use the same 67 queries and recorded translation choices as the earlier round. Each model ran alone. The 258 earlier result rows are unchanged.</p>
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th style="text-align: right;">translated</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">ms/query</th>
+<th style="text-align: right;">weights GB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mlx@tev1-0.8b-4bit</code></td>
+<td style="text-align: right;">60/67</td>
+<td style="text-align: right;">59/67</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">0.42</td>
+</tr>
+<tr>
+<td><code>coreml@kev-0.8b-fp16-l512</code></td>
+<td style="text-align: right;">60/67</td>
+<td style="text-align: right;">62/67</td>
+<td style="text-align: right;">121.3</td>
+<td style="text-align: right;">1.51</td>
+</tr>
+<tr>
+<td><code>dohnuts-metal@tev1-0.8b-q8</code></td>
+<td style="text-align: right;">59/67</td>
+<td style="text-align: right;">62/67</td>
+<td style="text-align: right;">61.5</td>
+<td style="text-align: right;">0.81</td>
+</tr>
+</tbody>
+</table>
+<p>Kev uses the <a href="https://huggingface.co/FluidInference/kev-0.8b-coreml">FluidInference Core ML export</a>, the L512/K16 single-question row on CPU and GPU. This is not the fused multi-question path. Its fitted temperature is already in the graph. Tev1 uses the native decision prompt with thinking disabled and a single forward pass over option-letter logits, on <a href="https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF">dohnuts Q8</a> and <a href="https://huggingface.co/SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit">MLX 4-bit</a>. Its release licence is unresolved, and temperature 1.0 does not establish calibration.</p>
+<p>Issue 102 remains in progress. Rune (the mradermacher conversions), Jet, ThisThat, JPT and Bosun are pending storage capacity and runtime checks. The requested JPT repositories publish Q3, Q4 and Q5 but no Q8 files. The <code>mys/kev-0.8b-GGUF</code> Q4 and Q8 files are ggmlc programs, which their model card explicitly says cannot load in llama.cpp; they need that runtime rather than dohnuts. No pending variant is counted as a measurement.</p>
 <h2 id="the-top-of-the-table">The top of the table<a class="headerlink" href="#the-top-of-the-table" title="Permanent link">&para;</a></h2>
 <p>The fifteen best methods, ordered by translated accuracy, then direct accuracy, then speed:</p>
 <div class="bench" markdown="0">
@@ -1439,10 +1499,10 @@
 <li><strong>A new readout is no guarantee.</strong> The contrastive CLM scored 33 to 39, the entailment readouts 20 (ModernBERT NLI) and 51 (semif), GLiClass 26, and the small encoders Julia-1, Pulse Decide and decima-small 31 to 37. Apart from semif, they score no better than the old Qwen1.5 models, whose best was 42.</li>
 </ul>
 <h2 id="every-method">Every method<a class="headerlink" href="#every-method" title="Permanent link">&para;</a></h2>
-<p>All 258 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
+<p>All 261 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 258 rows" aria-label="Filter the table" data-table="classifiers">
-<table class="sortable" id="classifiers"><caption>All 258 methods, best first. Click a header to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
+<input class="table-filter" type="search" placeholder="Filter 261 rows" aria-label="Filter the table" data-table="classifiers">
+<table class="sortable" id="classifiers"><caption>All 261 methods, best first. Click a header to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
 <tbody>
 <tr><td class="method">slot@rune-26b-a4b-q3</td><td>slot (llama-server)</td><td>rune-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="31" class="num score">31/39</td><td data-sort="608.070417" class="num">608</td></tr>
 <tr><td class="method">jev</td><td>jev (hosted)</td><td>jev</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
@@ -1518,13 +1578,16 @@
 <tr><td class="method">mlx@jev-omni-4bit</td><td>MLX</td><td>jev-omni</td><td>dedicated</td><td>4bit</td><td data-sort="6.81" class="num">6.81</td><td data-sort="780.132836" class="num">780.1</td><td data-sort="61" class="num score">61/67</td><td data-sort="61" class="num score">61/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="37" class="num score">37/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@decider-2b-f16</td><td>pcdServer</td><td>decider-2b</td><td>dedicated</td><td>f16</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td><td data-sort="22" class="num score">22/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="166.155709" class="num">166</td></tr>
 <tr><td class="method">pcdserver@qwen2.5-coder-3b-q4</td><td>pcdServer</td><td>qwen2.5-coder-3b</td><td>fine-tuned</td><td>q4</td><td data-sort="2.1" class="num">2.10</td><td data-sort="60.222388" class="num">60.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="36" class="num score">36/39</td><td data-sort="35" class="num score">35/39</td><td data-sort="294.587833" class="num">295</td></tr>
+<tr><td class="method" title="Experimental Together Tev1, MLX 4-bit. Release licence is unresolved.">mlx@tev1-0.8b-4bit †</td><td>MLX</td><td>tev1-0.8b</td><td>dedicated</td><td>4bit</td><td data-sort="0.42" class="num">0.42</td><td data-sort="64.801493" class="num">64.8</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="3482.497834" class="num">3,482</td></tr>
 <tr><td class="method">pcdserver@qwen3-4b-unsloth-q8</td><td>pcdServer</td><td>qwen3-4b-unsloth</td><td>vanilla</td><td>q8</td><td data-sort="4.28" class="num">4.28</td><td data-sort="70.310448" class="num">70.3</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="23" class="num score">23/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="306.271042" class="num">306</td></tr>
 <tr><td class="method">pcdserver@qwen3-4b-unsloth-q3</td><td>pcdServer</td><td>qwen3-4b-unsloth</td><td>vanilla</td><td>q3</td><td data-sort="2.08" class="num">2.08</td><td data-sort="78.316418" class="num">78.3</td><td data-sort="60" class="num score">60/67</td><td data-sort="61" class="num score">61/67</td><td data-sort="22" class="num score">22/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="706.2225" class="num">706</td></tr>
 <tr><td class="method">pcdserver@qwen3-4b-unsloth-q6</td><td>pcdServer</td><td>qwen3-4b-unsloth</td><td>vanilla</td><td>q6</td><td data-sort="3.31" class="num">3.31</td><td data-sort="79.332836" class="num">79.3</td><td data-sort="60" class="num score">60/67</td><td data-sort="61" class="num score">61/67</td><td data-sort="22" class="num score">22/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="276.498666" class="num">276</td></tr>
 <tr><td class="method">pcdserver@qwen3-4b-unsloth-q5</td><td>pcdServer</td><td>qwen3-4b-unsloth</td><td>vanilla</td><td>q5</td><td data-sort="2.89" class="num">2.89</td><td data-sort="79.402985" class="num">79.4</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="23" class="num score">23/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="320.793292" class="num">321</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-4b-unsloth-q3</td><td>pcdServer</td><td>qwen3.5-4b-unsloth</td><td>vanilla</td><td>q3</td><td data-sort="2.29" class="num">2.29</td><td data-sort="92.685075" class="num">92.7</td><td data-sort="60" class="num score">60/67</td><td data-sort="61" class="num score">61/67</td><td data-sort="22" class="num score">22/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="358.435625" class="num">358</td></tr>
+<tr><td class="method" title="FluidInference Core ML fp16, L512 K16 row, CPU + GPU; temperature is embedded.">coreml@kev-0.8b-fp16-l512 †</td><td>Core ML</td><td>kev-0.8b</td><td>dedicated</td><td>fp16</td><td data-sort="1.51" class="num">1.51</td><td data-sort="121.320896" class="num">121.3</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="36" class="num score">36/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="11367.991208" class="num">11,368</td></tr>
 <tr><td class="method">ollaya@kev-0.8b</td><td>ollaya</td><td>kev-0.8b</td><td>dedicated</td><td>fp32</td><td data-sort="1.82" class="num">1.82</td><td data-sort="268.238806" class="num">268.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="36" class="num score">36/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="4848.099" class="num">4,848</td></tr>
 <tr><td class="method">pcdserver@decider-2b-dreamblooms-q8</td><td>pcdServer</td><td>decider-2b-dreamblooms</td><td>dedicated</td><td>q8</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td><td data-sort="22" class="num score">22/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="198.432041" class="num">198</td></tr>
+<tr><td class="method" title="Experimental Together Tev1. Release licence is unresolved.">dohnuts-metal@tev1-0.8b-q8 †</td><td>dohnuts (Metal)</td><td>tev1-0.8b</td><td>dedicated</td><td>q8</td><td data-sort="0.81" class="num">0.81</td><td data-sort="61.51194" class="num">61.5</td><td data-sort="59" class="num score">59/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="23" class="num score">23/28</td><td data-sort="36" class="num score">36/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@qwen3-4b-unsloth-iq2</td><td>pcdServer</td><td>qwen3-4b-unsloth</td><td>vanilla</td><td>iq2</td><td data-sort="1.53" class="num">1.53</td><td data-sort="72.71194" class="num">72.7</td><td data-sort="59" class="num score">59/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="36" class="num score">36/39</td><td data-sort="604.75225" class="num">605</td></tr>
 <tr><td class="method">dohnuts-metal@decider-2b-f16</td><td>dohnuts (Metal)</td><td>decider-2b</td><td>dedicated</td><td>f16</td><td data-sort="3.78" class="num">3.78</td><td data-sort="100.31791" class="num">100.3</td><td data-sort="59" class="num score">59/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="35" class="num score">35/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
 <tr><td class="method">dohnuts-metal@decider-2b-dreamblooms-q8</td><td>dohnuts (Metal)</td><td>decider-2b-dreamblooms</td><td>dedicated</td><td>q8</td><td data-sort="2.01" class="num">2.01</td><td data-sort="103.659701" class="num">103.7</td><td data-sort="59" class="num score">59/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="35" class="num score">35/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
@@ -1714,7 +1777,7 @@
 <li><strong>Five methods failed.</strong> A Core ML laya export fixed at 64 tokens and four options could not take a five-way question. The BF16 build of unsloth's Qwen3.5-4B was not on disk when its turn came. pcdServer answered every request for the two rune files, which are Gemma 4 models, with HTTP 422. The Q5_K_M file of jeb-35b-a3b took the machine's free memory below the benchmark's safety limit while it loaded, and the run was stopped. None of the five appears in the tables.</li>
 </ul>
 <h2 id="best-method-per-engine-and-runtime">Best method per engine and runtime<a class="headerlink" href="#best-method-per-engine-and-runtime" title="Permanent link">&para;</a></h2>
-<p>Most methods run on pcdServer, because it takes any chat GGUF: 159 of the 258. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
+<p>Most methods run on pcdServer, because it takes any chat GGUF: 159 of the 261. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
 <table>
 <thead>
 <tr>
@@ -1756,7 +1819,7 @@
 </tr>
 <tr>
 <td>dohnuts (Metal)</td>
-<td style="text-align: right;">12</td>
+<td style="text-align: right;">13</td>
 <td><code>dohnuts-metal@decider-35b-a3b-q4</code></td>
 <td>64 / 64</td>
 <td style="text-align: right;">266</td>
@@ -1784,7 +1847,7 @@
 </tr>
 <tr>
 <td>MLX</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">9</td>
 <td><code>mlx@openjev-35b-a3b-4bit</code></td>
 <td>63 / 62</td>
 <td style="text-align: right;">250</td>
@@ -1826,7 +1889,7 @@
 </tr>
 <tr>
 <td>Core ML</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td><code>coreml@gliner25-decide-fp16-l256</code></td>
 <td>61 / –</td>
 <td style="text-align: right;">349</td>

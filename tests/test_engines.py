@@ -7,6 +7,24 @@ from ornotto._engines import EngineNotFound, command, find_binary
 from ornotto._models import MODELS, ResolvedModel, resolve
 
 
+def test_resolve_when_tev1_then_native_profile_without_pointer_head(monkeypatch, tmp_path):
+    downloads = []
+
+    def download(repo, file):
+        downloads.append((repo, file))
+        return tmp_path / file
+
+    monkeypatch.setattr("ornotto._models._download", download)
+    model = resolve("tev1-0.8b")
+    assert model.engines == ("dohnuts",)
+    assert model.metadata == tmp_path / "tev1.json"
+    assert model.head is None, "Tev1 reads label logits and requires no pointer head"
+    assert downloads == [
+        ("DreamBlooms/Tev1-0.8B-experimental-GGUF", "tev1-Q8_0.gguf"),
+        ("DreamBlooms/Tev1-0.8B-experimental-GGUF", "tev1.json"),
+    ]
+
+
 def test_find_binary_when_env_points_to_file_then_used(tmp_path, monkeypatch):
     exe = tmp_path / "pcd_server"
     exe.write_text("")

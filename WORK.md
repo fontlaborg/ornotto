@@ -2,6 +2,21 @@
 
 # Work
 
+## 2026-10-02 — issue 102, first measurements
+
+Added three measured methods and retained all 258 earlier exported rows field by field.
+Tev1 Q8 on dohnuts: 59/67 translated, 62/67 direct, 61.5 ms/query.
+Tev1 MLX 4-bit: 60/67, 59/67, 64.8 ms/query. Kev Core ML fp16 L512/K16
+CPU + GPU: 60/67, 62/67, 121.3 ms/query. The 106 distinct texts per method
+are cached. Each ran alone under the watchdog; swap stayed at zero.
+
+Registered Tev1 and updated dohnuts to fork f1658b9 (upstream 85a917a plus ordered Tev1 score criteria; includes merged cache PR).
+The native macOS wheel and sdist build passed; 51 package tests passed.
+Private input and download tests: 56 passed, one optional test skipped.
+Issue 102 remains in progress: the other downloads and measurements need storage;
+JPT Q8 files are absent from the requested repositories. Publication checks follow.
+
+
 ## 2026-09-30 — issue 101: the book for the second benchmark round
 
 Exported the second round into `src_docs/data/` (258 methods: the 208 earlier rows unchanged field by

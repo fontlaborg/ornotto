@@ -2,6 +2,8 @@
 
 # TODO
 
+- [ ] Complete issue 102: storage for remaining models, JPT Q8 availability, runtime checks, benchmarks and final publication.
+
 - [ ] Run the ollaya engine test (`pytest -m engine tests/test_ollaya.py`) with kev:0.8b in `OLLAYA_MODELS`.
 - [ ] Decide whether `jevk5-4b` and `openjev-35b-a3b` are "fine-tuned" (registry) or "dedicated" (book data).
 

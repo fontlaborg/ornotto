@@ -871,6 +871,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-october-tev1-and-kev-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The October Tev1 and Kev exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1433,6 +1444,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-october-tev1-and-kev-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The October Tev1 and Kev exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1538,7 +1560,7 @@
 </table>
 <p>The best row of every model in the benchmark, grouped by family:</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 70 rows" aria-label="Filter the table" data-table="families">
+<input class="table-filter" type="search" placeholder="Filter 71 rows" aria-label="Filter the table" data-table="families">
 <table class="sortable" id="families"><caption>Click a column header to sort.</caption><thead><tr><th>Family</th><th>Model</th><th>Engine</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th><th>Best method</th></tr></thead>
 <tbody>
 <tr><td>dedicated</td><td>rune-26b-a4b</td><td>slot (llama-server)</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td class="method">slot@rune-26b-a4b-q3</td></tr>
@@ -1558,7 +1580,8 @@
 <tr><td>dedicated</td><td>kev-4b</td><td>laya.cpp</td><td class="num"></td><td data-sort="1103.074627" class="num">1,103.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="55" class="num score">55/67</td><td class="method">kev-4b-gguf</td></tr>
 <tr><td>dedicated</td><td>gliner25-decide</td><td>Core AI</td><td data-sort="0.87" class="num">0.87</td><td data-sort="26.891045" class="num">26.9</td><td data-sort="61" class="num score">61/67</td><td class="num"></td><td class="method">coreai@gliner25-decide</td></tr>
 <tr><td>dedicated</td><td>decider-2b</td><td>pcdServer</td><td data-sort="3.78" class="num">3.78</td><td data-sort="42.225373" class="num">42.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-f16</td></tr>
-<tr><td>dedicated</td><td>kev-0.8b</td><td>ollaya</td><td data-sort="1.82" class="num">1.82</td><td data-sort="268.238806" class="num">268.2</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td class="method">ollaya@kev-0.8b</td></tr>
+<tr><td>dedicated</td><td>tev1-0.8b</td><td>MLX</td><td data-sort="0.42" class="num">0.42</td><td data-sort="64.801493" class="num">64.8</td><td data-sort="60" class="num score">60/67</td><td data-sort="59" class="num score">59/67</td><td class="method">mlx@tev1-0.8b-4bit</td></tr>
+<tr><td>dedicated</td><td>kev-0.8b</td><td>Core ML</td><td data-sort="1.51" class="num">1.51</td><td data-sort="121.320896" class="num">121.3</td><td data-sort="60" class="num score">60/67</td><td data-sort="62" class="num score">62/67</td><td class="method">coreml@kev-0.8b-fp16-l512</td></tr>
 <tr><td>dedicated</td><td>decider-2b-dreamblooms</td><td>pcdServer</td><td data-sort="2.01" class="num">2.01</td><td data-sort="40.097015" class="num">40.1</td><td data-sort="59" class="num score">59/67</td><td data-sort="60" class="num score">60/67</td><td class="method">pcdserver@decider-2b-dreamblooms-q8</td></tr>
 <tr><td>dedicated</td><td>von-1.2</td><td>ONNX Runtime</td><td data-sort="1.58" class="num">1.58</td><td data-sort="52.623881" class="num">52.6</td><td data-sort="57" class="num score">57/67</td><td class="num"></td><td class="method">onnx@von-1.2</td></tr>
 <tr><td>dedicated</td><td>von-1.1</td><td>ollaya</td><td data-sort="1.59" class="num">1.59</td><td data-sort="62.825373" class="num">62.8</td><td data-sort="57" class="num score">57/67</td><td class="num"></td><td class="method">ollaya@von-1.1</td></tr>
@@ -2126,6 +2149,8 @@ flowchart LR
 <p>Both sets of figures are as the decider README reports them. Its authors did not run either board themselves, and neither did we.<sup id="fnref3:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> <a href="../05-method/#other-public-boards">Chapter 5</a> describes how each board scores.</p>
 <p>The decider authors drew the conclusion themselves: "On the index the base model sets most of the score: our trained 35B, 4B and 2B are below these two stock models read the same way."<sup id="fnref4:decider"><a class="footnote-ref" href="#fn:decider">3</a></sup> An evidence audit of 28 early papers on typed decision models, posted on 2026-09-26, put it more generally: "the typed readout itself has not shown an independent accuracy advantage over comparable label-probability readouts."<sup id="fnref:audit"><a class="footnote-ref" href="#fn:audit">17</a></sup></p>
 <p>None of this makes training useless. It moves the question. A trained readout gives you a fixed prompt, a fitted temperature and a small model that answers fast. A larger stock model, read at the right token, may give you the accuracy. Which of the two you need depends on the latency and memory you can spend, which is what <a href="../08-speed/">chapter 8</a> and <a href="../12-choosing/">chapter 12</a> are about.</p>
+<h2 id="the-october-tev1-and-kev-exports">The October Tev1 and Kev exports<a class="headerlink" href="#the-october-tev1-and-kev-exports" title="Permanent link">&para;</a></h2>
+<p>Tev1 is Together AI's experimental Qwen3.5-0.8B decision fine-tune. The native interface supplies a state, question and labelled options; inference reads only the option-letter logits after the decision prompt. We measured its Q8 conversion on dohnuts and its MLX 4-bit conversion. The upstream licence remains unresolved. Kev now also has a FluidInference Core ML fp16 export with its native pointer head; we measured its single-question L512/K16 row on CPU and GPU. <a href="../06-results/#issue-102-october-additions">Chapter 6</a> records the results and the remaining issue 102 variants.</p>
 <h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
 <p>This chapter was first written from the benchmark runs of 2026-09-22 and 2026-09-23. By the end of the month:</p>
 <ul>

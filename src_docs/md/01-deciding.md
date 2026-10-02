@@ -9,7 +9,7 @@ A System One decision asks a language model to pick, not to write. You hand it a
 ![A figure pointing at one of five cards](img/ch01-choosing-options.png)
 *A decision model points at one of the answers it was given. It does not write a new one.*
 
-This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 258 benchmark methods, and the Python package, `ornotto`, that puts the local engines behind one API.
+This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 261 benchmark methods, and the Python package, `ornotto`, that puts the local engines behind one API.
 
 ## What a decision looks like
 

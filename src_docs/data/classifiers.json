@@ -1184,6 +1184,23 @@
   "direct_other": 35
  },
  {
+  "method": "mlx@tev1-0.8b-4bit",
+  "engine": "MLX",
+  "model": "tev1-0.8b",
+  "quant": "4bit",
+  "family": "dedicated",
+  "source": "SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit",
+  "gb": 0.42,
+  "load_ms": 3482.497834,
+  "ms": 64.801493,
+  "translated": 60,
+  "direct": 59,
+  "translated_en": 21,
+  "translated_other": 39,
+  "direct_other": 38,
+  "note": "Experimental Together Tev1, MLX 4-bit. Release licence is unresolved."
+ },
+ {
   "method": "pcdserver@qwen3-4b-unsloth-q8",
   "engine": "pcdServer",
   "model": "qwen3-4b-unsloth",
@@ -1264,6 +1281,23 @@
   "direct_other": 39
  },
  {
+  "method": "coreml@kev-0.8b-fp16-l512",
+  "engine": "Core ML",
+  "model": "kev-0.8b",
+  "quant": "fp16",
+  "family": "dedicated",
+  "source": "FluidInference/kev-0.8b-coreml",
+  "gb": 1.51,
+  "load_ms": 11367.991208,
+  "ms": 121.320896,
+  "translated": 60,
+  "direct": 62,
+  "translated_en": 24,
+  "translated_other": 36,
+  "direct_other": 38,
+  "note": "FluidInference Core ML fp16, L512 K16 row, CPU + GPU; temperature is embedded."
+ },
+ {
   "method": "ollaya@kev-0.8b",
   "engine": "ollaya",
   "model": "kev-0.8b",
@@ -1294,6 +1328,23 @@
   "translated_en": 22,
   "translated_other": 37,
   "direct_other": 38
+ },
+ {
+  "method": "dohnuts-metal@tev1-0.8b-q8",
+  "engine": "dohnuts (Metal)",
+  "model": "tev1-0.8b",
+  "quant": "q8",
+  "family": "dedicated",
+  "source": "DreamBlooms/Tev1-0.8B-experimental-GGUF",
+  "gb": 0.81,
+  "load_ms": null,
+  "ms": 61.51194,
+  "translated": 59,
+  "direct": 62,
+  "translated_en": 23,
+  "translated_other": 36,
+  "direct_other": 39,
+  "note": "Experimental Together Tev1. Release licence is unresolved."
  },
  {
   "method": "pcdserver@qwen3-4b-unsloth-iq2",

@@ -94,6 +94,18 @@ MODELS: dict[str, ModelSpec] = {
             note="jaredpalmer/kev-0.8b: a pointer head over option markers, Q8_0.",
         ),
         ModelSpec(
+            "tev1-0.8b",
+            "DreamBlooms/Tev1-0.8B-experimental-GGUF",
+            "tev1-Q8_0.gguf",
+            ("dohnuts",),
+            "dedicated",
+            "other",
+            0.81,
+            metadata="tev1.json",
+            note="Together Tev1 experimental, Q8_0 label logits. Release licence is unresolved; "
+            "temperature 1.0 does not establish calibration.",
+        ),
+        ModelSpec(
             "dohnuts-0.8b",
             "DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF",
             "Dohnuts-0.1.0-0.8B-Q8_0.gguf",

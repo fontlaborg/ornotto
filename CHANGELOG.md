@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- Issue 102, first three measurements: Tev1 Q8 on dohnuts, Tev1 4-bit on MLX, and Kev fp16 on Core ML. The book now has 261 methods; all 258 previous result rows are unchanged. Remaining issue 102 variants are pending storage and runtime checks.
+- Register experimental `tev1-0.8b`, with its native metadata and unresolved release licence. Update bundled dohnuts to fork `f1658b9` (upstream `85a917a` plus ordered Tev1 score criteria), which includes the merged prefix cache and the Jet, JPT, Tev1 and ThisThat profiles.
+
 ## 0.1.2 (2026-09-30)
 
 - Landing page redesigned as an editorial composition: two-column hero with a generated illustration,

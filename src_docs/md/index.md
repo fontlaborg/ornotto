@@ -30,7 +30,7 @@ Send a message and a closed list of answers. The model returns one of them and a
 </div>
 
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">258</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">261</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">rune-26b-a4b q3, level with hosted jev</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
@@ -79,7 +79,7 @@ Almeida asked this on jev's launch thread, when the discussion turned to whether
 
 ## What we measured
 
-One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 891 ms. [All 258 rows and every table](results/details.md) are on the results page.
+One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 891 ms. [All 261 rows and every table](results/details.md) are on the results page.
 { .ornotto-section-lead }
 
 <figure class="ornotto-bars">
@@ -194,7 +194,7 @@ Benchmarks
 { .ornotto-chapters__group }
 
 5. [How we measured](05-method.md) One router question, 67 queries, labels fixed before the run.
-6. [Results](06-results.md) All 258 methods against jev, the hosted reference.
+6. [Results](06-results.md) All 261 methods against jev, the hosted reference.
 7. [Quantization and size](07-quantization.md) What precision changes: file size, memory and the answers that survive.
 8. [Speed, memory and caching](08-speed.md) One forward pass per decision, and what an engine avoids prefilling twice.
 9. [Confidence and fallback](09-confidence.md) Whether the probabilities mean what they say, and what a fallback buys.

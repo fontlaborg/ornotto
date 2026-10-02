@@ -6,11 +6,11 @@ ornotto asks a local language model to decide, not to write. You describe a deci
 
 It gives three open-source engines one Python API:
 
-- **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts) and reads their answer at a trained slot. Its probabilities are temperature-calibrated.
+- **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts, Tev1) and reads their answer at a trained slot. Its probabilities are temperature-calibrated.
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
 
-The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 258 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
+The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 261 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
 
 ## Install
 
@@ -83,7 +83,7 @@ remote = ornotto.Decider("decider", url="http://127.0.0.1:8298")   # an engine y
 | `ollaya-kev-0.8b`, `ollaya-decider-0.8b`, `ollaya-laya-en`, `ollaya-laya-multilingual`, `ollaya-nli-modernbert-large`, `ollaya-gliclass-large`, `ollaya-von-1.1`, `ollaya-decision-eos` | ollaya | dedicated | 0.7–1.8 | apache-2.0 |
 | `ollaya-winnow-12b`, `ollaya-clm-8b` | ollaya | dedicated | 12.7, 16.5 | apache-2.0 |
 
-`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: rune, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 258 methods in the book, rune-26b-a4b (Q3_K_M) matches the hosted jev on translated text, 65/67, and NeoHorse-Jev-4B scores 64/67 in both modes.
+`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: rune, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 261 methods in the book, rune-26b-a4b (Q3_K_M) matches the hosted jev on translated text, 65/67, and NeoHorse-Jev-4B scores 64/67 in both modes.
 
 The engine starts on the first question, on a free loopback port, and stops when Python exits. Every `Decider` in a process that names the same model, engine and device shares one engine process. `ornotto.shutdown()` stops them all now.
 
