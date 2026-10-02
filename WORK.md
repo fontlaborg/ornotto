@@ -28,8 +28,11 @@ Validation: 55 package unit tests and all 13 real-engine integration tests (incl
 a real JPT GGUF; Gemma 4 native template/BOS test passed (9 assertions);
 dohnuts helper CTest passed; 63 private tests passed, one optional skip.
 Strict book build: 16 pages. Native wheel and sdist built; both engine binaries
-and all three profiles inspected directly. Packaged pcd Rune and dohnuts JPT binaries passed choice, yes/no and score smoke checks. Final publication and live evidence
-are recorded after deployment.
+and all three profiles inspected directly. Packaged pcd Rune and dohnuts JPT binaries passed choice, yes/no and score smoke checks. Published commit `be02eaa1fb01b9c030b6e8da9475af6d4706cd3e`; Pages run
+`37057357552` succeeded. Fresh live landing/results/details/package/choosing
+reads match the generated content after the CDN script and email-marker changes;
+both full tables contain exactly 290 rows and every method ID. The public
+conversion manifest matches its pinned committed bytes.
 
 ## 2026-10-02 — issue 102, native Bosun and ggmlc Kev
 
