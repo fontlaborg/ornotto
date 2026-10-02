@@ -1635,6 +1635,23 @@
   "direct_other": 39
  },
  {
+  "method": "systemone@kev-ggmlc-0.8b-q8",
+  "engine": "ggmlc (Metal)",
+  "model": "kev-0.8b",
+  "quant": "q8",
+  "family": "dedicated",
+  "source": "mys/kev-0.8b-GGUF",
+  "gb": 0.83,
+  "load_ms": null,
+  "ms": 199.764179,
+  "translated": 57,
+  "direct": 45,
+  "translated_en": 24,
+  "translated_other": 34,
+  "direct_other": 21,
+  "note": "mys GGUF contains a ggmlc program, incompatible with llama.cpp/dohnuts. ggmlc Metal execution."
+ },
+ {
   "method": "kev-0.8b-gguf",
   "engine": "laya.cpp",
   "model": "kev-0.8b",
@@ -2179,6 +2196,23 @@
   "direct_other": 34
  },
  {
+  "method": "systemone@bosun-1.7b-q5",
+  "engine": "llama-cpp-python (Metal)",
+  "model": "bosun-1.7b",
+  "quant": "q5",
+  "family": "dedicated",
+  "source": "Hanno-Labs/bosun-v3.1-1.7b-GGUF",
+  "gb": 1.26,
+  "load_ms": null,
+  "ms": 130.831343,
+  "translated": 55,
+  "direct": 55,
+  "translated_en": 22,
+  "translated_other": 33,
+  "direct_other": 33,
+  "note": "Bosun native stable-slot prompt and decision-token logits, T=1; Apache 2.0."
+ },
+ {
   "method": "pcdserver@pulse-0.6b-q4",
   "engine": "pcdServer",
   "model": "pulse-0.6b",
@@ -2257,6 +2291,23 @@
   "translated_en": 21,
   "translated_other": 33,
   "direct_other": 30
+ },
+ {
+  "method": "systemone@kev-ggmlc-0.8b-q4",
+  "engine": "ggmlc (Metal)",
+  "model": "kev-0.8b",
+  "quant": "q4",
+  "family": "dedicated",
+  "source": "mys/kev-0.8b-GGUF",
+  "gb": 0.96,
+  "load_ms": null,
+  "ms": 207.161194,
+  "translated": 54,
+  "direct": 43,
+  "translated_en": 23,
+  "translated_other": 31,
+  "direct_other": 20,
+  "note": "mys GGUF contains a ggmlc program, incompatible with llama.cpp/dohnuts. ggmlc Metal execution."
  },
  {
   "method": "pcdserver@qwen3-0.6b-q8",

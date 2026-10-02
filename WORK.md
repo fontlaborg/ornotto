@@ -2,6 +2,19 @@
 
 # Work
 
+## 2026-10-02 — issue 102, native Bosun and ggmlc Kev
+
+Added three further measured rows: Bosun Q5_K_M (55/67 in both modes, 130.8 ms),
+mys Kev Q8 (57/67 translated, 45/67 direct, 199.8 ms) and dynamic Q4 (54/67,
+43/67, 207.2 ms). Each measured all 106 texts alone under the watchdog, with
+zero swap growth. The book now includes 264 methods; all 258 earlier rows are
+field-identical. Both mys Kev files fail to load in current dohnuts because their
+architecture is ggmlc, so the published rows use ggmlc Metal. Bosun uses native
+stable-slot prompts and valid decision-token logits, with exact prompt checks
+against its pinned source renderer and tokenizer template. Private tests:
+63 passed, one optional skip. Full issue remains open for larger files and
+unpublished JPT Q8 variants. No existing model files removed.
+
 ## 2026-10-02 — issue 102, first measurements
 
 Added three measured methods and retained all 258 earlier exported rows field by field.
@@ -14,7 +27,7 @@ Registered Tev1 and updated dohnuts to fork f1658b9 (upstream 85a917a plus order
 The native macOS wheel and sdist build passed; 51 package tests passed.
 Private input and download tests: 56 passed, one optional test skipped.
 Issue 102 remains in progress: the other downloads and measurements need storage;
-JPT Q8 files are absent from the requested repositories. Publication checks follow.
+JPT Q8 files are absent from the requested repositories. Initial publication passed Pages run 37033687821 and fresh live-page checks.
 
 
 ## 2026-09-30 — issue 101: the book for the second benchmark round
