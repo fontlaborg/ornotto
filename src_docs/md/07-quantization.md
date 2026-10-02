@@ -194,7 +194,7 @@ Many files in the first round of this benchmark came from third-party quantizers
 - **Publishers now ship quants.** NeoHorse-Jev-4B, JevK5, APUS-OpenJev, Jev-Omni and CLM all had GGUF files within days of release, from their authors or from converters. The decider GGUFs `ornotto` registers come from DreamBlooms, the organisation behind dohnuts.cpp.
 - **The reference runtime reads GGUF.** Mapika's `decider-ai` package added GGUF checkpoints in version 1.6.0 on 27 September 2026.[^decider-ai] The PyTorch reference and dohnuts can now read the same quantized file, so a quant can be checked against the reference without a second conversion ([chapter 12](12-choosing.md)).
 - **Not every model has a GGUF.** The rune file in this benchmark is version 1, from an earlier revision of the repository. The later v3 was published as full-precision weights only when we ran the benchmark.
-- **llama.cpp moved, the engines did not.** Both dohnuts.cpp and pcdServer pin llama.cpp v0.4.1 of 14 September 2026. The quant formats in this chapter are the ones that version reads ([chapter 3](03-engines.md)).
+- **The September engine builds retained llama.cpp v0.4.1** of 14 September 2026. The October dohnuts build uses upstream pin `7fe450e` (0.5.0-dev); pcdServer retains v0.4.1. Older rows keep their original runtime measurements ([chapter 3](03-engines.md)).
 
 ## What this chapter did not measure
 

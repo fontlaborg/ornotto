@@ -17,7 +17,8 @@ Q8 disables GPU weights, compute and KV offload after earlier guarded loads
 exceeded disk/swap limits. Swap grew during the larger attempts; no run loaded
 a second model. All requested downloaded models and BF16 inputs are retained.
 
-The bundled engine forks are dohnuts dbf48c0 and pcdServer 1046a00. Native
+The bundled engine forks are dohnuts dbf48c0 (llama.cpp 7fe450e, 0.5.0-dev)
+and pcdServer 1046a00 (llama.cpp v0.4.1). Native
 JPT prompts match the pinned source renderer byte for byte; Jet and JPT
 label mappings now follow their respective question types. pcdServer adds a
 Jinja fallback and avoids a duplicated Gemma 4 BOS. Registered metadata/head

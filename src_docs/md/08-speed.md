@@ -259,7 +259,7 @@ The `ornotto` package applies the same discipline to itself. Each `Decider` shar
 
 - **Upstream dohnuts** merged our prefix reuse on 2026-09-24, generalised it into a cross-call prefix cache the same morning, and added a `--flash-attn` switch defaulting to `auto` on 2026-09-29. The dohnuts rows here predate both; re-measurement on upstream is pending ([upstream after the merge](#upstream-after-the-merge)).
 - **Hosted decision services** multiplied. OpenAI announced a Decision API with a 150 ms claim on 2026-09-29, and Liquid AI's d1 and meraGPT's Decider 1 joined jev on the typed-decisions board with p50 latencies near 525 ms ([speed claims by others](#speed-claims-by-others)).
-- **The engines' base** did not move. dohnuts and pcdServer both pin llama.cpp v0.4.1 of 2026-09-14, so none of the llama.cpp changes later in the month is in these timings ([chapter 3](03-engines.md)).
+- **The September timings** use engine builds pinned to llama.cpp v0.4.1 of 2026-09-14. The October dohnuts additions use `7fe450e` (0.5.0-dev), while pcdServer retains v0.4.1; those new rows do not revise the older timings ([chapter 3](03-engines.md)).
 
 [^pr1]: DreamBlooms/dohnuts.cpp, pull request #1, "Reuse the state prefix across side-model rows", opened 2026-09-23, merged 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/pull/1>
 [^upstream-cache]: DreamBlooms/dohnuts.cpp, commit `60d247e5`, "Cache decoded state prefixes across calls", 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/commit/60d247e5362e233fac94bdf19b74c9f7bf395704>

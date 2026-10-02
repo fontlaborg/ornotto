@@ -402,7 +402,7 @@ The later readouts, by their best row:
 
 Both engines that `ornotto` bundles were written in September 2026, and both still build against the llama.cpp of mid-September. The readouts in this chapter did not change during the month. The ground under them did:
 
-- **Both engines pin llama.cpp v0.4.1**, released on 2026-09-14. dohnuts carries it as a submodule and pcdServer fetches the tag when it builds.[^dohnuts-repo][^pcdserver-repo]
+- **The September builds pinned llama.cpp v0.4.1**, released on 2026-09-14. The October dohnuts fork instead pins `7fe450e` (0.5.0-dev), inherited from current upstream; pcdServer retains `b29c606`, tag v0.4.1. dohnuts carries its dependency as a submodule and pcdServer fetches its tag when it builds.[^dohnuts-repo][^pcdserver-repo]
 - **llama.cpp moved on.** v0.5.0 followed on 2026-09-23, and build b11236 on 2026-09-28 migrated the server, speculative decoding and multimodal code to `llama_batch_ext`.[^llamacpp-batch] Code that builds a `llama_batch` by hand will probably need porting past that point. Whether dohnuts and pcdServer do has not been tried.
 - **Nothing touched the log-probabilities.** No release in the month changed the log-probability output or `n_probs`, so the slot readout is unaffected.[^llamacpp-releases]
 - **New server options.** Build b11223 on 2026-09-27 added RANK pooling for causal rerankers, and b11240 on 2026-09-28 accepted images at `/v1/embeddings`. Neither is used here, but both are new ways to run a head on a hidden state from a stock llama-server, as the Jev-Omni and laya rows do.
