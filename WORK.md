@@ -26,8 +26,12 @@ JSON. Validation: 98 package tests pass (13 local-engine tests deselected),
 18-page build succeeds. Fresh local browser checks pass all three plots,
 all nine API rows and readouts, filter reload, remote CSV, Pareto changes,
 Rune Q4 comparison, direct timing, mobile/dark layouts, SVG, offline HTML
-and homepage navigation with zero JavaScript errors. Live verification
-follows deployment.
+and homepage navigation with zero JavaScript errors. Published `a274b83`; Pages run `37076500508` succeeded. Fresh browser
+acceptance on the real HTTPS URL passes all the checks above with zero
+JavaScript errors, including the nine-row OpenRouter API filter and CSV.
+Twelve live HTML/assets match the reviewed build after accounting for CDN
+HTML injection. Remote benchmark, local/live browser and deployment evidence
+are retained privately. No package release was performed.
 
 ## 2026-10-03 — remote decision models
 

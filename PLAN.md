@@ -14,7 +14,7 @@ models accept all three question kinds; the three Respan variants accept only
 noul. Capability checks reject unsupported requests before inference. Private
 smoke evidence records resolved model, provider and usage. These are protocol
 checks. Full 67-query benchmarks are complete for all nine endpoints,
-with frozen translations and an explicit noul OVR readout for Respan. Rebuild
-all public tables and diagrams, publish main:/docs, and verify the deployed
-OpenRouter API engine filter against all nine measured rows.
+with frozen translations and an explicit noul OVR readout for Respan. All public tables and diagrams are rebuilt and published from main:/docs.
+Fresh live browser checks verify the OpenRouter API engine filter against all
+nine measured rows, the 300-run report and its chart/download interactions.
 Package publication remains a separate release through `publish.sh`.

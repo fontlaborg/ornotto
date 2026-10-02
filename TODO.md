@@ -2,7 +2,7 @@
 
 # TODO
 
-- [ ] Complete all nine remote benchmarks, rebuild all reports, publish and verify the OpenRouter API filter live.
+- [x] Complete all nine remote benchmarks, rebuild all reports, publish and verify the OpenRouter API filter live.
 
 - [x] Add OpenRouter native remote support, all nine IDs, tests and benchmark execution labels.
 - [x] Run authenticated smokes for all nine remote models; record Respan as noul-only and enforce its capabilities.
