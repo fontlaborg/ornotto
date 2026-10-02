@@ -67,9 +67,9 @@ tag  = ornotto.Decider("ollaya:kev:4b")                        # any ollaya tag;
 | `model` | `"decider-0.8b"` | A registered name, a local `.gguf` path (`~` expands), `hf:owner/repo/file.gguf`, or an ollaya tag as `ollaya:<tag>`. |
 | `engine` | first engine the model supports | `"dohnuts"`, `"pcd"` or `"ollaya"`. With `"ollaya"`, a plain tag such as `kev:4b` also works. Asking a model for an engine it cannot run raises `ValueError`. |
 | `url` | `None` | Talk to a running engine at this base URL instead of starting one. `engine` then defaults to `"dohnuts"`, and `model` is only a label. |
-| `gpu` | `True` on macOS, `False` elsewhere | Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects dohnuts; pcdServer offloads to Metal by itself. |
-| `metadata` | `None` | The dohnuts profile JSON (`decider.json`, `kev.json`, `dohnuts.json`) for a model that is not registered. Without it, an unregistered GGUF runs on pcdServer only. |
-| `head` | `None` | The scorer head for kev or Dohnuts, when the model is not registered. |
+| `gpu` | `True` on macOS, `False` elsewhere | Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects both engines. With `False`, pcdServer disables GPU weights, computation and KV offload. |
+| `metadata` | `None` | Explicit dohnuts profile JSON, overriding the registered profile too. Without it, an unregistered GGUF runs on pcdServer only. |
+| `head` | `None` | Explicit scorer head for kev or Dohnuts, overriding the registered head too. |
 | `timeout` | `60.0` | Seconds to wait for one answer. |
 
 A `Decider` has four methods, plus an async one. Each takes the `state` you ask about: a string, or any JSON value (a dict, a list, numbers).
@@ -145,7 +145,7 @@ An `Answer` is one answer. Its fields mean slightly different things for the thr
 
 `bool(answer)` is `bool(answer.value)`, so `if ornotto.check(text, "Is it spam?"):` reads as it should.
 
-`calibrated` says what kind of number the probabilities are. It is `True` for dohnuts, whose models divide their logits by a temperature fitted during training before the softmax, so a 0.8 should be right about 80 percent of the time, and for ollaya, which ships a calibration with every model. It is `False` for pcdServer, whose probabilities are a plain softmax over the first tokens of the allowed answers. Both are fine for picking the winner. They are not interchangeable as confidences: compare a dohnuts 0.8 only with another dohnuts 0.8. [Chapter 9](09-confidence.md) shows how well the calibration held up on our benchmark.
+`calibrated` identifies the readout: `True` for dohnuts and ollaya, `False` for pcdServer's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. [Chapter 9](09-confidence.md) explains that check.
 
 `raw` keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes `native.confidence` (the top probability) and `native.certainty` (1 − H/ln K); for isolated scores it adds `native.level_fit` and `native.fit_mass`.
 
@@ -205,13 +205,19 @@ Every `Decider` in the process that names the same engine, model files and GPU s
 
 ## Registered models
 
-`ornotto.MODELS` maps names to `ModelSpec` records. `ornotto models` prints the same list, with sizes rounded to one decimal and licence ids in lowercase.
+Build current `main` for the October registry and engine updates ([source build](12-choosing.md#building-from-source)). `ornotto.MODELS` maps names to `ModelSpec` records. `ornotto models` prints the same list, with sizes rounded to one decimal and licence ids in lowercase.
 
 | Name | Engines | Family | GB | Licence | Source |
 |---|---|---|---:|---|---|
 | `decider-0.8b` | dohnuts, pcd | dedicated | 0.81 | Apache-2.0 | [DreamBlooms/decider-0.8b-GGUF](https://huggingface.co/DreamBlooms/decider-0.8b-GGUF) |
 | `decider-2b` | dohnuts, pcd | dedicated | 2.0 | Apache-2.0 | [DreamBlooms/decider-2b-GGUF](https://huggingface.co/DreamBlooms/decider-2b-GGUF) |
 | `kev-0.8b` | dohnuts | dedicated | 0.81 | Apache-2.0 | [DreamBlooms/kev-0.8b-GGUF](https://huggingface.co/DreamBlooms/kev-0.8b-GGUF) |
+| `tev1-0.8b` | dohnuts | dedicated | 0.81 | unresolved | [DreamBlooms/Tev1-0.8B-experimental-GGUF](https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF) |
+| `jet-4b` | dohnuts | dedicated | 4.48 | Apache-2.0 | [DreamBlooms/jet-GGUF](https://huggingface.co/DreamBlooms/jet-GGUF) |
+| `this-that-1.2` | dohnuts | dedicated | 1.27 | MIT | [mradermacher/this-that-model-1.2-GGUF](https://huggingface.co/mradermacher/this-that-model-1.2-GGUF) |
+| `jpt-4b` | dohnuts, pcd | dedicated | 2.71 | CC-BY-NC-4.0 | [prithivMLmods/jpt-4b-GGUF](https://huggingface.co/prithivMLmods/jpt-4b-GGUF) |
+| `jpt-9b` | dohnuts, pcd | dedicated | 5.63 | CC-BY-NC-4.0 | [prithivMLmods/jpt-9b-GGUF](https://huggingface.co/prithivMLmods/jpt-9b-GGUF) |
+| `rune-26b-a4b` | pcd | dedicated | 13.29 | Apache-2.0 | [mradermacher/rune-26b-a4b-GGUF](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) |
 | `dohnuts-0.8b` | dohnuts | dedicated | 0.81 | CC-BY-NC-SA-4.0 | [DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF](https://huggingface.co/DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF) |
 | `qwen3.5-0.8b` | pcd | vanilla | 0.83 | Apache-2.0 | [ggml-org/Qwen3.5-0.8B-GGUF](https://huggingface.co/ggml-org/Qwen3.5-0.8B-GGUF) |
 | `qwen3.5-2b` | pcd | vanilla | 1.4 | Apache-2.0 | [bartowski/Qwen_Qwen3.5-2B-GGUF](https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF) |
@@ -230,7 +236,7 @@ Every `Decider` in the process that names the same engine, model files and GPU s
 | `ollaya-winnow-12b` | ollaya | dedicated | 12.7 | Apache-2.0 | ollaya `winnow:12b` |
 | `ollaya-clm-8b` | ollaya | dedicated | 16.5 | Apache-2.0 | ollaya `clm:8b` |
 
-The registry files `jevk5-4b` and `openjev-35b-a3b` as fine-tuned pcdServer models; the benchmark tables count them as dedicated, because each has a trained letter readout of its own ([chapter 4](04-models.md#later-dedicated-models)). The dedicated GGUF models are Q8_0; the Qwen chat models, JevK5 and APUS-OpenJev are Q4_K_M, except the 0.8B, which is Q8_0. `openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. An ollaya model is its registry tag, and its size is ollaya's download; ollaya picks the runtime and precision for each tag. On the router benchmark, `ollaya-winnow-12b` scored 64/67 and `ollaya-decider-0.8b` 61/67, while `ollaya-clm-8b`, `ollaya-gliclass-large` and `ollaya-nli-modernbert-large` scored 39, 26 and 20 ([chapter 6](06-results.md)). Every other tag in ollaya's registry works as `ollaya:<tag>`. For dohnuts, a dedicated model also downloads its profile JSON, and kev and Dohnuts download a scorer head. The Dohnuts weights are for non-commercial use only. [Chapter 4](04-models.md) explains the three families, and [chapter 12](12-choosing.md) which to pick.
+The registry files `jevk5-4b` and `openjev-35b-a3b` as fine-tuned pcdServer models; the benchmark tables count them as dedicated, because each has a trained letter readout of its own ([chapter 4](04-models.md#later-dedicated-models)). The dedicated GGUF models use Q8_0 except JPT and ThisThat (Q4_K_M), and Rune (Q3_K_M); the Qwen chat models, JevK5 and APUS-OpenJev are Q4_K_M, except the 0.8B, which is Q8_0. `openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. An ollaya model is its registry tag, and its size is ollaya's download; ollaya picks the runtime and precision for each tag. On the router benchmark, `ollaya-winnow-12b` scored 64/67 and `ollaya-decider-0.8b` 61/67, while `ollaya-clm-8b`, `ollaya-gliclass-large` and `ollaya-nli-modernbert-large` scored 39, 26 and 20 ([chapter 6](06-results.md)). Every other tag in ollaya's registry works as `ollaya:<tag>`. For dohnuts, a dedicated model downloads its profile JSON or uses a bundled one (JPT 4B, JPT 9B and ThisThat), and kev and Dohnuts download a scorer head. Dohnuts and JPT weights are for non-commercial use only. The JPT Q8 benchmark files are local conversions of pinned BF16 weights, not upstream downloads. Explicit `metadata=` and `head=` overrides are honored for registered models too. [Chapter 4](04-models.md) explains the three families, and [chapter 12](12-choosing.md) which to pick.
 
 `ornotto.DEFAULT_MODEL` is `"decider-0.8b"`.
 

@@ -116,7 +116,9 @@ def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[
         str(model.gguf.parent),
         "--cache-bytes",
         str(PCD_CACHE_BYTES),
-    ]
+        "--gpu-layers",
+        "-1" if gpu else "0",
+    ] + ([] if gpu else ["--cpu"])
 
 
 def environment(engine: Engine, port: int) -> dict[str, str] | None:

@@ -6,11 +6,11 @@ ornotto asks a local language model to decide, not to write. You describe a deci
 
 It gives three open-source engines one Python API:
 
-- **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts, Tev1) and reads their answer at a trained slot. Its probabilities are temperature-calibrated.
+- **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts, Tev1, Jet, JPT and ThisThat) and reads their answer at a trained slot. Its probabilities follow each model's temperature recipe.
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
 
-The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 264 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
+The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 290 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
 
 ## Install
 
@@ -55,7 +55,7 @@ decision = ornotto.decide(
 decision.area.value, decision.area.probabilities, decision.skill.value
 ```
 
-Each `Answer` has `value`, `probabilities`, `probability`, `confidence` and `calibrated`. `calibrated` is true for dohnuts and ollaya, whose probabilities are calibrated, and false for pcdServer, whose probabilities are a raw softmax over the allowed tokens. Compare confidences only between answers of the same kind.
+Each `Answer` has `value`, `probabilities`, `probability`, `confidence` and `calibrated`. `calibrated` identifies the native readout on dohnuts and ollaya; it is false for pcdServer's raw token softmax. Native profiles apply their recorded temperature, which can be 1.0; the flag does not prove calibration on your task. Compare confidences only between answers of the same kind.
 
 ## Pick a model and engine
 
@@ -76,6 +76,11 @@ remote = ornotto.Decider("decider", url="http://127.0.0.1:8298")   # an engine y
 | `decider-0.8b` | dohnuts, pcd | dedicated | 0.8 | apache-2.0 |
 | `decider-2b` | dohnuts, pcd | dedicated | 2.0 | apache-2.0 |
 | `kev-0.8b` | dohnuts | dedicated | 0.8 | apache-2.0 |
+| `tev1-0.8b` | dohnuts | dedicated | 0.8 | unresolved |
+| `jet-4b` | dohnuts | dedicated | 4.5 | apache-2.0 |
+| `this-that-1.2` | dohnuts | dedicated | 1.3 | mit |
+| `jpt-4b`, `jpt-9b` | dohnuts, pcd | dedicated | 2.7, 5.6 | cc-by-nc-4.0 |
+| `rune-26b-a4b` | pcd | dedicated | 13.3 | apache-2.0 |
 | `dohnuts-0.8b` | dohnuts | dedicated | 0.8 | cc-by-nc-sa-4.0 |
 | `qwen3.5-0.8b`, `qwen3.5-2b`, `qwen3.5-4b` | pcd | vanilla | 0.8, 1.4, 3.0 | apache-2.0 |
 | `qwen3.5-4b-hmm` | pcd | fine-tuned | 2.7 | apache-2.0 |
@@ -83,7 +88,17 @@ remote = ornotto.Decider("decider", url="http://127.0.0.1:8298")   # an engine y
 | `ollaya-kev-0.8b`, `ollaya-decider-0.8b`, `ollaya-laya-en`, `ollaya-laya-multilingual`, `ollaya-nli-modernbert-large`, `ollaya-gliclass-large`, `ollaya-von-1.1`, `ollaya-decision-eos` | ollaya | dedicated | 0.7–1.8 | apache-2.0 |
 | `ollaya-winnow-12b`, `ollaya-clm-8b` | ollaya | dedicated | 12.7, 16.5 | apache-2.0 |
 
-`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: rune, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 264 methods in the book, rune-26b-a4b (Q3_K_M) matches the hosted jev on translated text, 65/67, and NeoHorse-Jev-4B scores 64/67 in both modes.
+JPT and ThisThat registry entries use Q4_K_M; Rune uses Q3_K_M. JPT's
+non-commercial weights require their own licence review. Its Q8_0 benchmark
+files were converted locally from pinned BF16 files because the requested
+repositories publish no Q8. The book records their provenance. Other GGUF
+quantizations can be used as local paths. On dohnuts, supply a profile JSON
+such as `{"profile": "jpt", "temperature": 1.036}` for JPT 4B, or temperature
+`1.087` for JPT 9B; ThisThat uses `{"profile": "thisthat", "temperature": 1.0}`.
+`gpu=False` disables pcdServer GPU weights, computation and KV offload.
+Build current `main` with `./build.sh` for the October registry and engine updates.
+
+`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: Bosun, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 290 methods in the book, the mradermacher Rune Q5 on pcdServer matches hosted jev at 65/67 in both modes, with CPU weights at 962 ms/query; the registered Q3 scores 64/64 at 146 ms.
 
 The engine starts on the first question, on a free loopback port, and stops when Python exits. Every `Decider` in a process that names the same model, engine and device shares one engine process. `ornotto.shutdown()` stops them all now.
 

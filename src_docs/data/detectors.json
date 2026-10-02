@@ -2,19 +2,19 @@
  {
   "detector": "lingua",
   "correct": 63,
-  "mean_us": 527.437687,
-  "calls_per_s": 1895.958566
+  "mean_us": 655.875761,
+  "calls_per_s": 1524.679
  },
  {
   "detector": "papagan",
   "correct": 43,
-  "mean_us": 14.735,
-  "calls_per_s": 67865.625683
+  "mean_us": 12.577234,
+  "calls_per_s": 79508.735614
  },
  {
   "detector": "majority",
   "correct": 63,
-  "mean_us": 542.172687,
-  "calls_per_s": 1844.430796
+  "mean_us": 668.452996,
+  "calls_per_s": 1495.991501
  }
 ]

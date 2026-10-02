@@ -1,10 +1,43 @@
 # this_file: tests/test_engines.py
+import json
 from pathlib import Path
 
 import pytest
 
 from ornotto._engines import EngineNotFound, command, find_binary
 from ornotto._models import MODELS, ResolvedModel, resolve
+
+
+@pytest.mark.parametrize(
+    "name,profile,temperature",
+    [
+        ("this-that-1.2", "thisthat", 1.0),
+        ("jpt-4b", "jpt", 1.036),
+        ("jpt-9b", "jpt", 1.087),
+    ],
+)
+def test_resolve_when_profile_is_bundled_then_no_missing_hub_metadata(
+    name, profile, temperature, monkeypatch, tmp_path
+):
+    downloads = []
+
+    def download(repo, file):
+        downloads.append((repo, file))
+        return tmp_path / file
+
+    monkeypatch.setattr("ornotto._models._download", download)
+    model = resolve(name)
+    assert len(downloads) == 1, "these GGUF repositories publish weights without a dohnuts metadata file"
+    assert json.loads(model.metadata.read_text()) == {"profile": profile, "temperature": temperature}
+    assert model.head is None
+
+
+def test_resolve_when_registered_model_has_explicit_metadata_then_override_is_used(monkeypatch, tmp_path):
+    monkeypatch.setattr("ornotto._models._download", lambda repo, file: tmp_path / file)
+    override = tmp_path / "custom.json"
+    model = resolve("tev1-0.8b", metadata=override, head=tmp_path / "custom.f32")
+    assert model.metadata == override, "registered names must respect the caller's explicit metadata"
+    assert model.head == tmp_path / "custom.f32", "explicit heads override registered defaults too"
 
 
 def test_resolve_when_tev1_then_native_profile_without_pointer_head(monkeypatch, tmp_path):
@@ -57,6 +90,8 @@ def test_command_when_pcd_then_loopback_and_model(monkeypatch):
     monkeypatch.setattr("ornotto._engines.find_binary", lambda engine: Path("/bin/" + engine))
     cmd = command("pcd", ResolvedModel("q", Path("/m/q.gguf"), ("pcd",)), 9001, gpu=False)
     assert cmd[cmd.index("--bind") + 1] == "127.0.0.1" and cmd[cmd.index("--model") + 1] == "/m/q.gguf"
+    assert cmd[cmd.index("--gpu-layers") + 1] == "0", "gpu=False must keep pcd model weights on CPU"
+    assert "--cpu" in cmd, "gpu=False must disable compute and KV offload too"
 
 
 def test_registry_when_default_then_dedicated_apache_model():

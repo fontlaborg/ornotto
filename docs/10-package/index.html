@@ -1583,17 +1583,17 @@
 <tr>
 <td><code>gpu</code></td>
 <td><code>True</code> on macOS, <code>False</code> elsewhere</td>
-<td>Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects dohnuts; pcdServer offloads to Metal by itself.</td>
+<td>Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects both engines. With <code>False</code>, pcdServer disables GPU weights, computation and KV offload.</td>
 </tr>
 <tr>
 <td><code>metadata</code></td>
 <td><code>None</code></td>
-<td>The dohnuts profile JSON (<code>decider.json</code>, <code>kev.json</code>, <code>dohnuts.json</code>) for a model that is not registered. Without it, an unregistered GGUF runs on pcdServer only.</td>
+<td>Explicit dohnuts profile JSON, overriding the registered profile too. Without it, an unregistered GGUF runs on pcdServer only.</td>
 </tr>
 <tr>
 <td><code>head</code></td>
 <td><code>None</code></td>
-<td>The scorer head for kev or Dohnuts, when the model is not registered.</td>
+<td>Explicit scorer head for kev or Dohnuts, overriding the registered head too.</td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -1778,7 +1778,7 @@
 </tbody>
 </table>
 <p><code>bool(answer)</code> is <code>bool(answer.value)</code>, so <code>if ornotto.check(text, "Is it spam?"):</code> reads as it should.</p>
-<p><code>calibrated</code> says what kind of number the probabilities are. It is <code>True</code> for dohnuts, whose models divide their logits by a temperature fitted during training before the softmax, so a 0.8 should be right about 80 percent of the time, and for ollaya, which ships a calibration with every model. It is <code>False</code> for pcdServer, whose probabilities are a plain softmax over the first tokens of the allowed answers. Both are fine for picking the winner. They are not interchangeable as confidences: compare a dohnuts 0.8 only with another dohnuts 0.8. <a href="../09-confidence/">Chapter 9</a> shows how well the calibration held up on our benchmark.</p>
+<p><code>calibrated</code> identifies the readout: <code>True</code> for dohnuts and ollaya, <code>False</code> for pcdServer's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. <a href="../09-confidence/">Chapter 9</a> explains that check.</p>
 <p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
 <p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
 <div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
@@ -1850,7 +1850,7 @@
 <p>Each engine holds its model in memory for as long as it runs. Two Deciders on different models are two processes, both resident. <code>ornotto.shutdown()</code> stops them all at once.</p>
 </div>
 <h2 id="registered-models">Registered models<a class="headerlink" href="#registered-models" title="Permanent link">&para;</a></h2>
-<p><code>ornotto.MODELS</code> maps names to <code>ModelSpec</code> records. <code>ornotto models</code> prints the same list, with sizes rounded to one decimal and licence ids in lowercase.</p>
+<p>Build current <code>main</code> for the October registry and engine updates (<a href="../12-choosing/#building-from-source">source build</a>). <code>ornotto.MODELS</code> maps names to <code>ModelSpec</code> records. <code>ornotto models</code> prints the same list, with sizes rounded to one decimal and licence ids in lowercase.</p>
 <table>
 <thead>
 <tr>
@@ -1886,6 +1886,54 @@
 <td style="text-align: right;">0.81</td>
 <td>Apache-2.0</td>
 <td><a href="https://huggingface.co/DreamBlooms/kev-0.8b-GGUF">DreamBlooms/kev-0.8b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>tev1-0.8b</code></td>
+<td>dohnuts</td>
+<td>dedicated</td>
+<td style="text-align: right;">0.81</td>
+<td>unresolved</td>
+<td><a href="https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF">DreamBlooms/Tev1-0.8B-experimental-GGUF</a></td>
+</tr>
+<tr>
+<td><code>jet-4b</code></td>
+<td>dohnuts</td>
+<td>dedicated</td>
+<td style="text-align: right;">4.48</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/DreamBlooms/jet-GGUF">DreamBlooms/jet-GGUF</a></td>
+</tr>
+<tr>
+<td><code>this-that-1.2</code></td>
+<td>dohnuts</td>
+<td>dedicated</td>
+<td style="text-align: right;">1.27</td>
+<td>MIT</td>
+<td><a href="https://huggingface.co/mradermacher/this-that-model-1.2-GGUF">mradermacher/this-that-model-1.2-GGUF</a></td>
+</tr>
+<tr>
+<td><code>jpt-4b</code></td>
+<td>dohnuts, pcd</td>
+<td>dedicated</td>
+<td style="text-align: right;">2.71</td>
+<td>CC-BY-NC-4.0</td>
+<td><a href="https://huggingface.co/prithivMLmods/jpt-4b-GGUF">prithivMLmods/jpt-4b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>jpt-9b</code></td>
+<td>dohnuts, pcd</td>
+<td>dedicated</td>
+<td style="text-align: right;">5.63</td>
+<td>CC-BY-NC-4.0</td>
+<td><a href="https://huggingface.co/prithivMLmods/jpt-9b-GGUF">prithivMLmods/jpt-9b-GGUF</a></td>
+</tr>
+<tr>
+<td><code>rune-26b-a4b</code></td>
+<td>pcd</td>
+<td>dedicated</td>
+<td style="text-align: right;">13.29</td>
+<td>Apache-2.0</td>
+<td><a href="https://huggingface.co/mradermacher/rune-26b-a4b-GGUF">mradermacher/rune-26b-a4b-GGUF</a></td>
 </tr>
 <tr>
 <td><code>dohnuts-0.8b</code></td>
@@ -2025,7 +2073,7 @@
 </tr>
 </tbody>
 </table>
-<p>The registry files <code>jevk5-4b</code> and <code>openjev-35b-a3b</code> as fine-tuned pcdServer models; the benchmark tables count them as dedicated, because each has a trained letter readout of its own (<a href="../04-models/#later-dedicated-models">chapter 4</a>). The dedicated GGUF models are Q8_0; the Qwen chat models, JevK5 and APUS-OpenJev are Q4_K_M, except the 0.8B, which is Q8_0. <code>openjev-35b-a3b</code> needs about 23 GB of memory, so run it with nothing else loaded. An ollaya model is its registry tag, and its size is ollaya's download; ollaya picks the runtime and precision for each tag. On the router benchmark, <code>ollaya-winnow-12b</code> scored 64/67 and <code>ollaya-decider-0.8b</code> 61/67, while <code>ollaya-clm-8b</code>, <code>ollaya-gliclass-large</code> and <code>ollaya-nli-modernbert-large</code> scored 39, 26 and 20 (<a href="../06-results/">chapter 6</a>). Every other tag in ollaya's registry works as <code>ollaya:&lt;tag&gt;</code>. For dohnuts, a dedicated model also downloads its profile JSON, and kev and Dohnuts download a scorer head. The Dohnuts weights are for non-commercial use only. <a href="../04-models/">Chapter 4</a> explains the three families, and <a href="../12-choosing/">chapter 12</a> which to pick.</p>
+<p>The registry files <code>jevk5-4b</code> and <code>openjev-35b-a3b</code> as fine-tuned pcdServer models; the benchmark tables count them as dedicated, because each has a trained letter readout of its own (<a href="../04-models/#later-dedicated-models">chapter 4</a>). The dedicated GGUF models use Q8_0 except JPT and ThisThat (Q4_K_M), and Rune (Q3_K_M); the Qwen chat models, JevK5 and APUS-OpenJev are Q4_K_M, except the 0.8B, which is Q8_0. <code>openjev-35b-a3b</code> needs about 23 GB of memory, so run it with nothing else loaded. An ollaya model is its registry tag, and its size is ollaya's download; ollaya picks the runtime and precision for each tag. On the router benchmark, <code>ollaya-winnow-12b</code> scored 64/67 and <code>ollaya-decider-0.8b</code> 61/67, while <code>ollaya-clm-8b</code>, <code>ollaya-gliclass-large</code> and <code>ollaya-nli-modernbert-large</code> scored 39, 26 and 20 (<a href="../06-results/">chapter 6</a>). Every other tag in ollaya's registry works as <code>ollaya:&lt;tag&gt;</code>. For dohnuts, a dedicated model downloads its profile JSON or uses a bundled one (JPT 4B, JPT 9B and ThisThat), and kev and Dohnuts download a scorer head. Dohnuts and JPT weights are for non-commercial use only. The JPT Q8 benchmark files are local conversions of pinned BF16 weights, not upstream downloads. Explicit <code>metadata=</code> and <code>head=</code> overrides are honored for registered models too. <a href="../04-models/">Chapter 4</a> explains the three families, and <a href="../12-choosing/">chapter 12</a> which to pick.</p>
 <p><code>ornotto.DEFAULT_MODEL</code> is <code>"decider-0.8b"</code>.</p>
 <h2 id="ornotto-and-ollaya">ornotto and ollaya<a class="headerlink" href="#ornotto-and-ollaya" title="Permanent link">&para;</a></h2>
 <p>ollaya is the project nearest to ornotto, and it is also one of ornotto's engines. Its site describes it as "An independent open-source project, not affiliated with Ollama or TypeSafe".<sup id="fnref:ollaya-site"><a class="footnote-ref" href="#fn:ollaya-site">2</a></sup> It is one Rust binary that runs a daemon, pulls decision models from its own registry, and answers them over TypeSafe's <code>/v1/systemone</code> protocol. The site states that "The official TypeSafe Python SDK 0.7.1 works unchanged against a local server." If all you need is a local System One endpoint for code that already talks to jev, ollaya on its own may be enough.</p>

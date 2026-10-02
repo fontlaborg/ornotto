@@ -1439,7 +1439,7 @@
 <p>A System One decision asks a language model to pick, not to write. You hand it a <em>state</em> (a message, a ticket, a slice of application data) and a set of named <em>questions</em>, each with a closed set of answers. The model returns one probability for every allowed answer. It never produces free text, so there is nothing to parse, repair or retry: the answer is always one of the values you listed.</p>
 <p><img alt="A figure pointing at one of five cards" src="../img/ch01-choosing-options.png" />
 <em>A decision model points at one of the answers it was given. It does not write a new one.</em></p>
-<p>This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 264 benchmark methods, and the Python package, <code>ornotto</code>, that puts the local engines behind one API.</p>
+<p>This book is about running those decisions on your own machine. It compares the ways of reading a decision out of a model, 290 benchmark methods, and the Python package, <code>ornotto</code>, that puts the local engines behind one API.</p>
 <h2 id="what-a-decision-looks-like">What a decision looks like<a class="headerlink" href="#what-a-decision-looks-like" title="Permanent link">&para;</a></h2>
 <p>A decision request has two parts. The state is whatever the model should judge. The questions say what to judge about it:</p>
 <div class="language-json highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>

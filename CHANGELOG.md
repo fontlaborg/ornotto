@@ -4,8 +4,10 @@
 
 ## Unreleased
 
-- Issue 102, six measurements: Tev1 Q8 on dohnuts, Tev1 4-bit on MLX, Kev fp16 on Core ML, mys Kev Q4/Q8 on ggmlc, and Bosun Q5 on its native GGUF decision-token readout. The book now has 264 methods; all 258 previous result rows are unchanged. Remaining issue 102 variants are pending storage and runtime checks.
-- Register experimental `tev1-0.8b`, with its native metadata and unresolved release licence. Update bundled dohnuts to fork `f1658b9` (upstream `85a917a` plus ordered Tev1 score criteria), which includes the merged prefix cache and the Jet, JPT, Tev1 and ThisThat profiles.
+- Complete issue 102 measurements: 32 new methods over all 24 weight variants; 290 public rows, with the original 258 unchanged. JPT 4B/9B Q8 are local conversions of pinned BF16 files with public hash manifests. mys Kev Q4/Q8 use ggmlc because dohnuts rejects their architecture.
+- Register Tev1, Jet, ThisThat 1.2, JPT 4B/9B and mradermacher Rune; bundle missing native profiles and honor explicit metadata/head overrides. JPT weights are non-commercial; Tev1's release licence remains unresolved.
+- Bundle dohnuts fork `dbf48c0` with verified native JPT/Jet prompts and label mappings, and pcdServer fork `1046a00` with Jinja template fallback, BOS deduplication and CPU-only execution. `gpu=False` now controls pcdServer offload. Native temperature application is documented without claiming calibration on an unseen task.
+- Rune Q5 reaches 65/67 in both modes with CPU weights; update all book tables, the landing chart and recommendations from the final exported data. Preserve older runtime measurements.
 
 ## 0.1.2 (2026-09-30)
 

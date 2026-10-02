@@ -2,6 +2,35 @@
 
 # Work
 
+## 2026-10-02 — issue 102, complete measurement set
+
+All 24 weight variants are measured through 32 methods: 290 public rows,
+with all original 258 field-identical. Every new method has 106 distinct
+texts, no error and finite normalized five-way probabilities. JPT Q8 files
+are local conversions of the requested repositories' pinned BF16 files;
+the sanitized conversion manifests record hashes and tensor types. mys Kev
+Q4/Q8 remain incompatible with dohnuts and explicitly use ggmlc Metal.
+
+Rune Q5 on pcdServer scores 65/67 in both modes (962 ms/query, CPU weights).
+Rune Q3 scores 64/64 at 146 ms. Q4/Q5 retain Metal compute with CPU weights;
+Q8 disables GPU weights, compute and KV offload after earlier guarded loads
+exceeded disk/swap limits. Swap grew during the larger attempts; no run loaded
+a second model. All requested downloaded models and BF16 inputs are retained.
+
+The bundled engine forks are dohnuts dbf48c0 and pcdServer 1046a00. Native
+JPT prompts match the pinned source renderer byte for byte; Jet and JPT
+label mappings now follow their respective question types. pcdServer adds a
+Jinja fallback and avoids a duplicated Gemma 4 BOS. Registered metadata/head
+overrides work; three native profiles are bundled. `gpu=False` disables pcd
+GPU weights, compute and KV offload. Five further registry entries added.
+
+Validation: 55 package unit tests and all 13 real-engine integration tests (including ollaya); ruff clean; 70 pcdServer CTests passed with
+a real JPT GGUF; Gemma 4 native template/BOS test passed (9 assertions);
+dohnuts helper CTest passed; 63 private tests passed, one optional skip.
+Strict book build: 16 pages. Native wheel and sdist built; both engine binaries
+and all three profiles inspected directly. Packaged pcd Rune and dohnuts JPT binaries passed choice, yes/no and score smoke checks. Final publication and live evidence
+are recorded after deployment.
+
 ## 2026-10-02 — issue 102, native Bosun and ggmlc Kev
 
 Added three further measured rows: Bosun Q5_K_M (55/67 in both modes, 130.8 ms),

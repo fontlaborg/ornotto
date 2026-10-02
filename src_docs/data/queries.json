@@ -4,9 +4,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.795,
+  "translated_share": 0.81,
   "jev_translated": "docs",
-  "direct_share": 0.795,
+  "direct_share": 0.81,
   "jev_direct": "docs"
  },
  {
@@ -14,9 +14,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.837,
+  "translated_share": 0.845,
   "jev_translated": "docs",
-  "direct_share": 0.837,
+  "direct_share": 0.845,
   "jev_direct": "docs"
  },
  {
@@ -24,9 +24,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.784,
+  "translated_share": 0.8,
   "jev_translated": "docs",
-  "direct_share": 0.784,
+  "direct_share": 0.8,
   "jev_direct": "docs"
  },
  {
@@ -34,9 +34,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.761,
+  "translated_share": 0.776,
   "jev_translated": "docs",
-  "direct_share": 0.761,
+  "direct_share": 0.776,
   "jev_direct": "docs"
  },
  {
@@ -44,9 +44,9 @@
   "lang": "en",
   "task": "python",
   "english": null,
-  "translated_share": 0.932,
+  "translated_share": 0.938,
   "jev_translated": "python",
-  "direct_share": 0.932,
+  "direct_share": 0.938,
   "jev_direct": "python"
  },
  {
@@ -54,9 +54,9 @@
   "lang": "en",
   "task": "python",
   "english": null,
-  "translated_share": 0.879,
+  "translated_share": 0.883,
   "jev_translated": "python",
-  "direct_share": 0.879,
+  "direct_share": 0.883,
   "jev_direct": "python"
  },
  {
@@ -64,9 +64,9 @@
   "lang": "en",
   "task": "python",
   "english": null,
-  "translated_share": 0.587,
+  "translated_share": 0.61,
   "jev_translated": "python",
-  "direct_share": 0.587,
+  "direct_share": 0.61,
   "jev_direct": "python"
  },
  {
@@ -74,9 +74,9 @@
   "lang": "en",
   "task": "python",
   "english": null,
-  "translated_share": 0.436,
+  "translated_share": 0.466,
   "jev_translated": "python",
-  "direct_share": 0.436,
+  "direct_share": 0.466,
   "jev_direct": "python"
  },
  {
@@ -84,9 +84,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.788,
+  "translated_share": 0.807,
   "jev_translated": "fea",
-  "direct_share": 0.788,
+  "direct_share": 0.807,
   "jev_direct": "fea"
  },
  {
@@ -94,9 +94,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.811,
+  "translated_share": 0.824,
   "jev_translated": "fea",
-  "direct_share": 0.811,
+  "direct_share": 0.824,
   "jev_direct": "fea"
  },
  {
@@ -104,9 +104,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.583,
+  "translated_share": 0.617,
   "jev_translated": "fea",
-  "direct_share": 0.583,
+  "direct_share": 0.617,
   "jev_direct": "fea"
  },
  {
@@ -114,9 +114,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.538,
+  "translated_share": 0.569,
   "jev_translated": "fea",
-  "direct_share": 0.538,
+  "direct_share": 0.569,
   "jev_direct": "fea"
  },
  {
@@ -124,9 +124,9 @@
   "lang": "en",
   "task": "vfj",
   "english": null,
-  "translated_share": 0.943,
+  "translated_share": 0.948,
   "jev_translated": "vfj",
-  "direct_share": 0.943,
+  "direct_share": 0.948,
   "jev_direct": "vfj"
  },
  {
@@ -134,9 +134,9 @@
   "lang": "en",
   "task": "vfj",
   "english": null,
-  "translated_share": 0.898,
+  "translated_share": 0.907,
   "jev_translated": "vfj",
-  "direct_share": 0.898,
+  "direct_share": 0.907,
   "jev_direct": "vfj"
  },
  {
@@ -144,9 +144,9 @@
   "lang": "en",
   "task": "vfj",
   "english": null,
-  "translated_share": 0.716,
+  "translated_share": 0.741,
   "jev_translated": "vfj",
-  "direct_share": 0.716,
+  "direct_share": 0.741,
   "jev_direct": "vfj"
  },
  {
@@ -154,9 +154,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.913,
+  "translated_share": 0.921,
   "jev_translated": "sample",
-  "direct_share": 0.913,
+  "direct_share": 0.921,
   "jev_direct": "sample"
  },
  {
@@ -164,9 +164,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.682,
+  "translated_share": 0.707,
   "jev_translated": "sample",
-  "direct_share": 0.682,
+  "direct_share": 0.707,
   "jev_direct": "sample"
  },
  {
@@ -174,9 +174,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.769,
+  "translated_share": 0.786,
   "jev_translated": "sample",
-  "direct_share": 0.769,
+  "direct_share": 0.786,
   "jev_direct": "sample"
  },
  {
@@ -184,9 +184,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.239,
+  "translated_share": 0.224,
   "jev_translated": "sample",
-  "direct_share": 0.239,
+  "direct_share": 0.224,
   "jev_direct": "sample"
  },
  {
@@ -194,9 +194,9 @@
   "lang": "pl",
   "task": "docs",
   "english": "How can I change the italic angle in FontLab?",
-  "translated_share": 0.784,
+  "translated_share": 0.8,
   "jev_translated": "docs",
-  "direct_share": 0.685,
+  "direct_share": 0.704,
   "jev_direct": "docs"
  },
  {
@@ -204,9 +204,9 @@
   "lang": "pl",
   "task": "python",
   "english": "Write a Python script that changes the names of all glyphs from .sc to .smcp",
-  "translated_share": 0.913,
+  "translated_share": 0.921,
   "jev_translated": "python",
-  "direct_share": 0.854,
+  "direct_share": 0.864,
   "jev_direct": "python"
  },
  {
@@ -214,9 +214,9 @@
   "lang": "de",
   "task": "fea",
   "english": "Write me a kern feature for the letters A V W T",
-  "translated_share": 0.792,
+  "translated_share": 0.807,
   "jev_translated": "fea",
-  "direct_share": 0.709,
+  "direct_share": 0.732,
   "jev_direct": "fea"
  },
  {
@@ -224,9 +224,9 @@
   "lang": "de",
   "task": "docs",
   "english": "Where do I set the vertical metrics?",
-  "translated_share": 0.803,
+  "translated_share": 0.817,
   "jev_translated": "docs",
-  "direct_share": 0.756,
+  "direct_share": 0.768,
   "jev_direct": "docs"
  },
  {
@@ -234,9 +234,9 @@
   "lang": "it",
   "task": "docs",
   "english": "How can I export the font to OTF?",
-  "translated_share": 0.64,
+  "translated_share": 0.669,
   "jev_translated": "docs",
-  "direct_share": 0.689,
+  "direct_share": 0.714,
   "jev_direct": "docs"
  },
  {
@@ -244,9 +244,9 @@
   "lang": "it",
   "task": "vfj",
   "english": "Write me the VFJ definition for a square glyph with a width of 500",
-  "translated_share": 0.951,
+  "translated_share": 0.955,
   "jev_translated": "vfj",
-  "direct_share": 0.929,
+  "direct_share": 0.936,
   "jev_direct": "vfj"
  },
  {
@@ -254,9 +254,9 @@
   "lang": "fr",
   "task": "fea",
   "english": "Write a liga functionality for fi and fl",
-  "translated_share": 0.754,
+  "translated_share": 0.776,
   "jev_translated": "fea",
-  "direct_share": 0.748,
+  "direct_share": 0.768,
   "jev_direct": "fea"
  },
  {
@@ -264,9 +264,9 @@
   "lang": "fr",
   "task": "sample",
   "english": "Give me a French pangram to test my accents",
-  "translated_share": 0.617,
+  "translated_share": 0.648,
   "jev_translated": "sample",
-  "direct_share": 0.622,
+  "direct_share": 0.654,
   "jev_direct": "sample"
  },
  {
@@ -274,9 +274,9 @@
   "lang": "es",
   "task": "sample",
   "english": "Give me a sample text with many round letters",
-  "translated_share": 0.909,
+  "translated_share": 0.917,
   "jev_translated": "sample",
-  "direct_share": 0.886,
+  "direct_share": 0.896,
   "jev_direct": "sample"
  },
  {
@@ -284,9 +284,9 @@
   "lang": "es",
   "task": "python",
   "english": "Write a Python script that removes glifos without Unicode.",
-  "translated_share": 0.924,
+  "translated_share": 0.917,
   "jev_translated": "python",
-  "direct_share": 0.941,
+  "direct_share": 0.943,
   "jev_direct": "python"
  },
  {
@@ -294,9 +294,9 @@
   "lang": "cs",
   "task": "docs",
   "english": "How to export a font as OTF?",
-  "translated_share": 0.731,
+  "translated_share": 0.752,
   "jev_translated": "docs",
-  "direct_share": 0.61,
+  "direct_share": 0.639,
   "jev_direct": "docs"
  },
  {
@@ -304,9 +304,9 @@
   "lang": "pt",
   "task": "fea",
   "english": "Write the code for the smcp feature for Versaletes",
-  "translated_share": 0.742,
+  "translated_share": 0.762,
   "jev_translated": "fea",
-  "direct_share": 0.76,
+  "direct_share": 0.782,
   "jev_direct": "fea"
  },
  {
@@ -314,9 +314,9 @@
   "lang": "nl",
   "task": "docs",
   "english": "How do I add a new font style to a variable font?",
-  "translated_share": 0.723,
+  "translated_share": 0.741,
   "jev_translated": "docs",
-  "direct_share": 0.669,
+  "direct_share": 0.682,
   "jev_direct": "docs"
  },
  {
@@ -324,9 +324,9 @@
   "lang": "tr",
   "task": "python",
   "english": "A Python script that shifts all glyphs 50 units to the right",
-  "translated_share": 0.928,
+  "translated_share": 0.931,
   "jev_translated": "python",
-  "direct_share": 0.921,
+  "direct_share": 0.929,
   "jev_direct": "python"
  },
  {
@@ -334,9 +334,9 @@
   "lang": "hu",
   "task": "fea",
   "english": "Write a kern feature between the letters A and V",
-  "translated_share": 0.788,
+  "translated_share": 0.803,
   "jev_translated": "fea",
-  "direct_share": 0.772,
+  "direct_share": 0.789,
   "jev_direct": "fea"
  },
  {
@@ -344,9 +344,9 @@
   "lang": "fi",
   "task": "sample",
   "english": "An example text with many A and O letters",
-  "translated_share": 0.731,
+  "translated_share": 0.752,
   "jev_translated": "sample",
-  "direct_share": 0.677,
+  "direct_share": 0.704,
   "jev_direct": "sample"
  },
  {
@@ -354,9 +354,9 @@
   "lang": "vi",
   "task": "vfj",
   "english": "Write the VFJ definition for the wide 300-width horizontal glyph",
-  "translated_share": 0.852,
+  "translated_share": 0.866,
   "jev_translated": "vfj",
-  "direct_share": 0.886,
+  "direct_share": 0.896,
   "jev_direct": "vfj"
  },
  {
@@ -364,9 +364,9 @@
   "lang": "sv",
   "task": "sample",
   "english": "Give me a pangram in Swedish to test the font",
-  "translated_share": 0.674,
+  "translated_share": 0.7,
   "jev_translated": "sample",
-  "direct_share": 0.685,
+  "direct_share": 0.711,
   "jev_direct": "sample"
  },
  {
@@ -374,9 +374,9 @@
   "lang": "ru",
   "task": "sample",
   "english": "Give me a text sample with Cyrillic characters for the Glyph window",
-  "translated_share": 0.898,
+  "translated_share": 0.903,
   "jev_translated": "sample",
-  "direct_share": 0.831,
+  "direct_share": 0.843,
   "jev_direct": "sample"
  },
  {
@@ -384,7 +384,7 @@
   "lang": "ru",
   "task": "python",
   "english": "Write a Python script that removes all leading spaces",
-  "translated_share": 0.92,
+  "translated_share": 0.928,
   "jev_translated": "python",
   "direct_share": 0.886,
   "jev_direct": "python"
@@ -394,9 +394,9 @@
   "lang": "uk",
   "task": "docs",
   "english": "How do I change the family name of a font?",
-  "translated_share": 0.727,
+  "translated_share": 0.745,
   "jev_translated": "docs",
-  "direct_share": 0.685,
+  "direct_share": 0.7,
   "jev_direct": "docs"
  },
  {
@@ -404,9 +404,9 @@
   "lang": "bg",
   "task": "vfj",
   "english": "Write the VFJ description for the glyph “dot” with Unicode 002E",
-  "translated_share": 0.92,
+  "translated_share": 0.924,
   "jev_translated": "vfj",
-  "direct_share": 0.894,
+  "direct_share": 0.904,
   "jev_direct": "vfj"
  },
  {
@@ -414,9 +414,9 @@
   "lang": "el",
   "task": "docs",
   "english": "How do I change the angle of the horizontal lines in FontLab?",
-  "translated_share": 0.788,
+  "translated_share": 0.803,
   "jev_translated": "docs",
-  "direct_share": 0.697,
+  "direct_share": 0.718,
   "jev_direct": "docs"
  },
  {
@@ -424,9 +424,9 @@
   "lang": "hy",
   "task": "fea",
   "english": "Griir kern feature A and V for spacing",
-  "translated_share": 0.761,
+  "translated_share": 0.783,
   "jev_translated": "fea",
-  "direct_share": 0.764,
+  "direct_share": 0.782,
   "jev_direct": "fea"
  },
  {
@@ -434,9 +434,9 @@
   "lang": "ka",
   "task": "python",
   "english": "Write the Python script, which contains many glyphs",
-  "translated_share": 0.89,
+  "translated_share": 0.866,
   "jev_translated": "python",
-  "direct_share": 0.917,
+  "direct_share": 0.921,
   "jev_direct": "python"
  },
  {
@@ -444,9 +444,9 @@
   "lang": "ar",
   "task": "fea",
   "english": "Write a feature code to connect the letters f and i",
-  "translated_share": 0.803,
+  "translated_share": 0.821,
   "jev_translated": "fea",
-  "direct_share": 0.819,
+  "direct_share": 0.832,
   "jev_direct": "fea"
  },
  {
@@ -454,9 +454,9 @@
   "lang": "fa",
   "task": "docs",
   "english": "How can I export the font as an OTF file?",
-  "translated_share": 0.701,
+  "translated_share": 0.724,
   "jev_translated": "docs",
-  "direct_share": 0.598,
+  "direct_share": 0.629,
   "jev_direct": "docs"
  },
  {
@@ -464,9 +464,9 @@
   "lang": "he",
   "task": "sample",
   "english": "Give me a Hebrew text example so I can check the kerning",
-  "translated_share": 0.644,
+  "translated_share": 0.672,
   "jev_translated": "sample",
-  "direct_share": 0.72,
+  "direct_share": 0.743,
   "jev_direct": "sample"
  },
  {
@@ -474,9 +474,9 @@
   "lang": "ur",
   "task": "python",
   "english": "Write the font script so that all glyphs have a width of 600.",
-  "translated_share": 0.625,
+  "translated_share": 0.617,
   "jev_translated": "python",
-  "direct_share": 0.661,
+  "direct_share": 0.682,
   "jev_direct": "python"
  },
  {
@@ -484,9 +484,9 @@
   "lang": "hi",
   "task": "docs",
   "english": "Where is the kerning panel in FontLab?",
-  "translated_share": 0.822,
+  "translated_share": 0.831,
   "jev_translated": "docs",
-  "direct_share": 0.803,
+  "direct_share": 0.818,
   "jev_direct": "docs"
  },
  {
@@ -494,9 +494,9 @@
   "lang": "bn",
   "task": "vfj",
   "english": "Write a VFJ glyph definition named period with a width of 250.",
-  "translated_share": 0.928,
+  "translated_share": 0.934,
   "jev_translated": "vfj",
-  "direct_share": 0.866,
+  "direct_share": 0.879,
   "jev_direct": "vfj"
  },
  {
@@ -504,9 +504,9 @@
   "lang": "th",
   "task": "python",
   "english": "Write a Python script that changes the name of all glyphs to lowercase.",
-  "translated_share": 0.932,
+  "translated_share": 0.928,
   "jev_translated": "python",
-  "direct_share": 0.874,
+  "direct_share": 0.882,
   "jev_direct": "python"
  },
  {
@@ -514,9 +514,9 @@
   "lang": "ja",
   "task": "docs",
   "english": "How to change the italic angle in FontLab?",
-  "translated_share": 0.792,
+  "translated_share": 0.807,
   "jev_translated": "docs",
-  "direct_share": 0.72,
+  "direct_share": 0.743,
   "jev_direct": "docs"
  },
  {
@@ -524,9 +524,9 @@
   "lang": "ja",
   "task": "fea",
   "english": "Please write the features of fi and fl liga.",
-  "translated_share": 0.667,
+  "translated_share": 0.683,
   "jev_translated": "fea",
-  "direct_share": 0.772,
+  "direct_share": 0.789,
   "jev_direct": "fea"
  },
  {
@@ -534,9 +534,9 @@
   "lang": "zh",
   "task": "sample",
   "english": "Give me an example text containing all phonetic letters to check the font.",
-  "translated_share": 0.845,
+  "translated_share": 0.855,
   "jev_translated": "sample",
-  "direct_share": 0.835,
+  "direct_share": 0.846,
   "jev_direct": "sample"
  },
  {
@@ -544,9 +544,9 @@
   "lang": "zh",
   "task": "python",
   "english": "Write a Python script to set the width of all glyphs to 600.",
-  "translated_share": 0.898,
+  "translated_share": 0.897,
   "jev_translated": "python",
-  "direct_share": 0.906,
+  "direct_share": 0.914,
   "jev_direct": "python"
  },
  {
@@ -554,9 +554,9 @@
   "lang": "ko",
   "task": "fea",
   "english": "Write the kerning feature code between A and V",
-  "translated_share": 0.826,
+  "translated_share": 0.838,
   "jev_translated": "fea",
-  "direct_share": 0.787,
+  "direct_share": 0.804,
   "jev_direct": "fea"
  },
  {
@@ -564,9 +564,9 @@
   "lang": "ko",
   "task": "vfj",
   "english": "The FontLab file has a hyphen name and a glyph definition with a width of 300.",
-  "translated_share": 0.348,
+  "translated_share": 0.369,
   "jev_translated": "vfj",
-  "direct_share": 0.894,
+  "direct_share": 0.904,
   "jev_direct": "vfj"
  },
  {
@@ -574,9 +574,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.087,
+  "translated_share": 0.1,
   "jev_translated": "fea",
-  "direct_share": 0.087,
+  "direct_share": 0.1,
   "jev_direct": "fea"
  },
  {
@@ -584,9 +584,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.75,
+  "translated_share": 0.772,
   "jev_translated": "fea",
-  "direct_share": 0.75,
+  "direct_share": 0.772,
   "jev_direct": "fea"
  },
  {
@@ -594,9 +594,9 @@
   "lang": "en",
   "task": "fea",
   "english": null,
-  "translated_share": 0.583,
+  "translated_share": 0.603,
   "jev_translated": "fea",
-  "direct_share": 0.583,
+  "direct_share": 0.603,
   "jev_direct": "fea"
  },
  {
@@ -604,9 +604,9 @@
   "lang": "en",
   "task": "vfj",
   "english": null,
-  "translated_share": 0.773,
+  "translated_share": 0.79,
   "jev_translated": "vfj",
-  "direct_share": 0.773,
+  "direct_share": 0.79,
   "jev_direct": "vfj"
  },
  {
@@ -614,9 +614,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.322,
+  "translated_share": 0.355,
   "jev_translated": "sample",
-  "direct_share": 0.322,
+  "direct_share": 0.355,
   "jev_direct": "sample"
  },
  {
@@ -624,9 +624,9 @@
   "lang": "en",
   "task": "docs",
   "english": "Can FontLab batch rename glyphs?",
-  "translated_share": 0.591,
+  "translated_share": 0.6,
   "jev_translated": "docs",
-  "direct_share": 0.591,
+  "direct_share": 0.6,
   "jev_direct": "docs"
  },
  {
@@ -634,9 +634,9 @@
   "lang": "en",
   "task": "python",
   "english": null,
-  "translated_share": 0.481,
+  "translated_share": 0.51,
   "jev_translated": "python",
-  "direct_share": 0.481,
+  "direct_share": 0.51,
   "jev_direct": "python"
  },
  {
@@ -644,9 +644,9 @@
   "lang": "en",
   "task": "docs",
   "english": null,
-  "translated_share": 0.28,
+  "translated_share": 0.262,
   "jev_translated": "vfj",
-  "direct_share": 0.28,
+  "direct_share": 0.262,
   "jev_direct": "vfj"
  },
  {
@@ -654,9 +654,9 @@
   "lang": "en",
   "task": "sample",
   "english": null,
-  "translated_share": 0.807,
+  "translated_share": 0.821,
   "jev_translated": "sample",
-  "direct_share": 0.807,
+  "direct_share": 0.821,
   "jev_direct": "sample"
  },
  {
@@ -664,9 +664,9 @@
   "lang": "pl",
   "task": "sample",
   "english": "Write something in the Glyph window to check the ligatures fi fl",
-  "translated_share": 0.678,
+  "translated_share": 0.703,
   "jev_translated": "sample",
-  "direct_share": 0.63,
+  "direct_share": 0.661,
   "jev_direct": "sample"
  }
 ]

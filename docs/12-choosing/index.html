@@ -1444,14 +1444,19 @@
 <td>62/67 at 52 ms per query on Metal, 0.81 GB, calibrated probabilities. On CPU the same model takes 275 ms.</td>
 </tr>
 <tr>
-<td>The most accurate answer in <code>ornotto</code>, in both modes</td>
+<td>The most accurate answer near 90 ms in <code>ornotto</code>, in both modes</td>
 <td><code>qwen3.5-4b-hmm</code> on pcdServer</td>
 <td>64/67 translated and 65/67 direct, at 88 to 93 ms, 2.7 GB at Q4_K_M.</td>
 </tr>
 <tr>
+<td>Match jev in both modes, with more memory and latency</td>
+<td><code>rune-26b-a4b</code> Q5_K_M on pcdServer</td>
+<td>65/67 translated and direct, 962 ms, 19.13 GB. CPU weights with Metal computation; this quantization needs an explicit GGUF path rather than the registry default Q3.</td>
+</tr>
+<tr>
 <td>The most accurate local answer on translated text, on a 48 GB Mac</td>
 <td>rune-26b-a4b version 1 at Q3_K_M on llama-server</td>
-<td>65/67 translated, the same as jev, at 367 ms from 13.5 GB. It drops to 57/67 on the original text, so keep the translator. ornotto does not run it: pcdServer rejects Gemma 4 files.</td>
+<td>65/67 translated, the same as jev, at 367 ms from 13.5 GB. It drops to 57/67 on the original text, so keep the translator. That row measures the earlier surogate conversion through its native readout. The October package registers the separate mradermacher Q3 conversion on pcdServer: 64/67 in both modes, 146 ms, 13.29 GB.</td>
 </tr>
 <tr>
 <td>The best small dedicated model</td>
@@ -1501,7 +1506,7 @@
 <tr>
 <td>Any chat GGUF</td>
 <td>pcdServer</td>
-<td>dohnuts runs only the decider, kev and Dohnuts profiles. pcdServer scores the allowed tokens of any model with a chat template.</td>
+<td>dohnuts needs a native profile: decider, kev, Dohnuts, Jet, JPT, Tev1 or ThisThat. pcdServer scores the allowed tokens of any model with a chat template.</td>
 </tr>
 <tr>
 <td>A confidence to gate on</td>
@@ -1576,12 +1581,12 @@ flowchart TD
 <tbody>
 <tr>
 <td><code>engines/dohnuts.cpp</code></td>
-<td><a href="https://github.com/fontlaborg/dohnuts.cpp">fontlaborg/dohnuts.cpp</a>, branch <code>side-prefix-cache</code></td>
+<td><a href="https://github.com/fontlaborg/dohnuts.cpp">fontlaborg/dohnuts.cpp</a>, branch <code>issue102-models</code></td>
 <td>as a nested submodule</td>
 </tr>
 <tr>
 <td><code>engines/pcdServer</code></td>
-<td><a href="https://github.com/stephanj/pcdServer">stephanj/pcdServer</a></td>
+<td><a href="https://github.com/fontlaborg/pcdServer">fontlaborg/pcdServer</a>, branch <code>issue102-jinja-fallback</code></td>
 <td>fetched by CMake at configure time</td>
 </tr>
 </tbody>
@@ -1710,7 +1715,7 @@ flowchart TD
     C --&gt;|"only confidences&lt;br&gt;differ"| T["check the temperature&lt;br&gt;in the profile JSON"]
     C --&gt;|"same"| OK["parity holds"]</code></pre>
 <p>We have not rerun our own checks this way yet. The prefix cache in <a href="../08-speed/#prefix-caching-in-dohnuts">chapter 8</a> was checked against dohnuts' own comparison script and the f32 PyTorch model, as described under <a href="#contributing-upstream">contributing upstream</a>.</p>
-<p>Two later <code>decider-ai</code> releases change what a comparison has to account for. 1.7.0 added decider-12b, built on Gemma-4-12B-it; pcdServer rejects Gemma 4 files, and we have not tried the new model on dohnuts. 1.8.0 added <code>temperature_by_options</code>, a temperature that depends on the number of options, T(n) = max(min, a + b ln n). A reference that scales by option count and an engine that reads one fixed temperature from the profile will agree on the answer and disagree on its confidence. Read the profile JSON of a new checkpoint before you blame the engine.</p>
+<p>Two later <code>decider-ai</code> releases change what a comparison has to account for. 1.7.0 added decider-12b, built on Gemma-4-12B-it; the October pcdServer fork renders Gemma 4 templates, but decider-12b itself has not been measured on either engine. 1.8.0 added <code>temperature_by_options</code>, a temperature that depends on the number of options, T(n) = max(min, a + b ln n). A reference that scales by option count and an engine that reads one fixed temperature from the profile will agree on the answer and disagree on its confidence. Read the profile JSON of a new checkpoint before you blame the engine.</p>
 <h2 id="wheels-and-releases">Wheels and releases<a class="headerlink" href="#wheels-and-releases" title="Permanent link">&para;</a></h2>
 <p>The workflow in <code>.github/workflows/wheels.yml</code> builds one wheel per platform, plus the sdist:</p>
 <table>
@@ -1772,10 +1777,10 @@ flowchart TD
 <li>Measure before and after, on both backends, and check accuracy against the project's own reference: here the upstream <code>scripts/compare/compare.sh</code> (8/8) and the f32 PyTorch decider on longer states.</li>
 <li>Open the pull request with the numbers: <a href="https://github.com/DreamBlooms/dohnuts.cpp/pull/1">DreamBlooms/dohnuts.cpp#1</a>.</li>
 </ol>
-<p>ornotto's <code>engines/dohnuts.cpp</code> submodule follows the fork's branch until the change is merged, then goes back to upstream. pcdServer is used unmodified.</p>
+<p>The October package carries fixes in both engine forks: native JPT/Jet prompts and label mappings in dohnuts, and Jinja chat-template rendering in pcdServer.</p>
 <p>The pull request was opened on 2026-09-23 at 22:34 UTC and merged by mili-tan on 2026-09-24 at 04:44 UTC, with one comment, "lgtm, thank you very much.", and a heart.<sup id="fnref:pr1"><a class="footnote-ref" href="#fn:pr1">3</a></sup> Eight minutes after the merge the maintainer pushed a commit of their own, "Cache decoded state prefixes across calls", which extends the idea from the rows of one request to later requests: a bounded cache of 256 MiB, keyed by the exact prefix tokens and shared with the side models.<sup id="fnref:dohnuts-commits"><a class="footnote-ref" href="#fn:dohnuts-commits">4</a></sup></p>
-<p>So the merge happened, but the switch back has not. On 2026-09-30 ornotto's <code>.gitmodules</code> still names <code>fontlaborg/dohnuts.cpp</code>, branch <code>side-prefix-cache</code>, and the wheels still build dohnuts from it. Pointing the submodule at upstream is the next step. It brings in the upstream work that followed the merge: the cross-call cache, the Linnaeus-0.1.0-2B profile, and a <code>--flash-attn</code> option that defaults to <code>auto</code>. Two of those touch speed, so the dohnuts figures in <a href="../08-speed/">chapter 8</a> need measuring again after the switch.</p>
-<p>pcdServer is a different case. Its only release, v0.1.0, and all its commits date from 2026-09-18, and it had no issues or pull requests by 2026-09-30.<sup id="fnref:pcdserver"><a class="footnote-ref" href="#fn:pcdserver">5</a></sup> It rejects Gemma 4 GGUFs, which is one reason rune is not in ornotto. If ornotto needs a fix there, it will have to be offered upstream to a quiet repository, or carried as a patch in ornotto's own build.</p>
+<p>The October dohnuts gitlink is <code>dbf48c0</code> on <code>issue102-models</code>. It includes upstream <code>85a917a</code>, the merged prefix cache, cross-call cache, Linnaeus profile and automatic flash attention, plus the verified JPT/Jet prompt and answer-token fixes. Earlier benchmark rows keep their original engine measurements; the October rows measure this new build.</p>
+<p>The pcdServer fork<sup id="fnref:pcdserver"><a class="footnote-ref" href="#fn:pcdserver">5</a></sup> gitlink is <code>1046a00</code> on <code>issue102-jinja-fallback</code>. It retains the legacy renderer where that succeeds and falls back to llama.cpp's Jinja renderer otherwise. It avoids a duplicated automatic BOS token and accepts <code>--gpu-layers</code>; the larger Rune runs keep weights on CPU. Both forks retain their existing llama.cpp pins.</p>
 <div class="admonition quote">
 <p class="admonition-title">How it looked from the outside</p>
 <p>The two engines ornotto bundles are younger than jev's public launch on 2026-09-15: pcdServer's repository was created on 2026-09-18 and dohnuts.cpp's on 2026-09-21. A pull request to a project that young is a conversation with one or two people, not a process. Ours got a one-line approval, and the maintainer answered it by building the next step themselves the same morning.</p>
@@ -1822,7 +1827,7 @@ flowchart TD
 <ul>
 <li><strong>dohnuts</strong> merged our pull request and added a cross-call prefix cache, Linnaeus-0.1.0-2B and <code>--flash-attn</code>. ornotto still builds from the fork (<a href="#contributing-upstream">above</a>).</li>
 <li><strong>decider-ai</strong> can read GGUF, which makes <a href="#parity-checks-against-the-reference">parity checks</a> cheaper, and fits temperatures per option count.</li>
-<li><strong>pcdServer</strong> has not changed since its first day.</li>
+<li><strong>pcdServer upstream</strong> had not changed by the September snapshot; the October bundled fork carries the rendering fixes.</li>
 <li><strong>ollaya</strong> reached v0.7.5 with a GPU path on Apple silicon (<a href="../10-package/#ornotto-and-ollaya">chapter 10</a>).</li>
 <li><strong>pydantic-ai</strong> put <code>TypeSafeModel</code> under a new <code>DecisionModel</code> base; ornotto's lock stays on 2.48.0 (<a href="../11-typed/#what-changed-in-september-2026">chapter 11</a>).</li>
 </ul>

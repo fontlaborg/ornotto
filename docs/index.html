@@ -1435,9 +1435,9 @@
 </figure>
 </div>
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">264</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">290</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
-<div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">rune-26b-a4b q3, level with hosted jev</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
 </div>
 
@@ -1474,18 +1474,18 @@
 </div>
 <div class="ornotto-band ornotto-band--tint">
 <h2 id="what-we-measured">What we measured<a class="headerlink" href="#what-we-measured" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 891 ms. <a href="results/details/">All 264 rows and every table</a> are on the results page.</p>
+<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 962 ms. <a href="results/details/">All 290 rows and every table</a> are on the results page.</p>
 <figure class="ornotto-bars">
 <figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
 <ol>
-<li class="is-ref"><span class="ornotto-bars__name">jev<small>TypeSafe, hosted reference</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
-<li><span class="ornotto-bars__name">rune-26b-a4b q3<small>llama-server, slot</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
+<li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted)</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
+<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
+<li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server)</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
 <li><span class="ornotto-bars__name">winnow-12b q8_0<small>ollaya</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">891 ms</span></li>
-<li><span class="ornotto-bars__name">decider-35b-a3b q4<small>dohnuts, Metal</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">266 ms</span></li>
-<li><span class="ornotto-bars__name">neohorse-4b q8<small>System One server</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">273 ms</span></li>
+<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q3<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">146 ms</span></li>
 </ol>
 </figure>
 <details class="ornotto-more">
@@ -1501,6 +1501,16 @@
 <td></td>
 <td class="num"></td>
 <td class="num" data-sort="466.104478">466.1</td>
+<td class="num score" data-sort="65">65/67</td>
+<td class="num score" data-sort="65">65/67</td>
+</tr>
+<tr>
+<td>pcdServer</td>
+<td>rune-mradermacher-26b-a4b</td>
+<td>dedicated</td>
+<td>q5</td>
+<td class="num" data-sort="19.13">19.13</td>
+<td class="num" data-sort="962.283582">962.3</td>
 <td class="num score" data-sort="65">65/67</td>
 <td class="num score" data-sort="65">65/67</td>
 </tr>
@@ -1555,6 +1565,16 @@
 <td class="num score" data-sort="65">65/67</td>
 </tr>
 <tr>
+<td>pcdServer</td>
+<td>rune-mradermacher-26b-a4b</td>
+<td>dedicated</td>
+<td>q3</td>
+<td class="num" data-sort="13.29">13.29</td>
+<td class="num" data-sort="146.055224">146.1</td>
+<td class="num score" data-sort="64">64/67</td>
+<td class="num score" data-sort="64">64/67</td>
+</tr>
+<tr>
 <td>dohnuts (Metal)</td>
 <td>decider-35b-a3b</td>
 <td>dedicated</td>
@@ -1585,6 +1605,26 @@
 <td class="num score" data-sort="64">64/67</td>
 </tr>
 <tr>
+<td>dohnuts (Metal)</td>
+<td>jpt-4b</td>
+<td>dedicated</td>
+<td>q8</td>
+<td class="num" data-sort="4.48">4.48</td>
+<td class="num" data-sort="335.591045">335.6</td>
+<td class="num score" data-sort="64">64/67</td>
+<td class="num score" data-sort="64">64/67</td>
+</tr>
+<tr>
+<td>pcdServer</td>
+<td>rune-mradermacher-26b-a4b</td>
+<td>dedicated</td>
+<td>q8</td>
+<td class="num" data-sort="26.86">26.86</td>
+<td class="num" data-sort="758.122388">758.1</td>
+<td class="num score" data-sort="64">64/67</td>
+<td class="num score" data-sort="64">64/67</td>
+</tr>
+<tr>
 <td>llama.cpp embeddings + head</td>
 <td>jev-omni</td>
 <td>dedicated</td>
@@ -1603,46 +1643,6 @@
 <td class="num" data-sort="335.29403">335.3</td>
 <td class="num score" data-sort="64">64/67</td>
 <td class="num score" data-sort="55">55/67</td>
-</tr>
-<tr>
-<td>PyTorch</td>
-<td>decider-4b</td>
-<td>dedicated</td>
-<td>bf16</td>
-<td class="num"></td>
-<td class="num" data-sort="348.210448">348.2</td>
-<td class="num score" data-sort="63">63/67</td>
-<td class="num score" data-sort="65">65/67</td>
-</tr>
-<tr>
-<td>pcdServer</td>
-<td>qwen3.5-4b-unsloth</td>
-<td>vanilla</td>
-<td>q8</td>
-<td class="num" data-sort="4.48">4.48</td>
-<td class="num" data-sort="84.956716">85.0</td>
-<td class="num score" data-sort="63">63/67</td>
-<td class="num score" data-sort="64">64/67</td>
-</tr>
-<tr>
-<td>pcdServer</td>
-<td>qwen3.5-4b-unsloth</td>
-<td>vanilla</td>
-<td>q5</td>
-<td class="num" data-sort="3.14">3.14</td>
-<td class="num" data-sort="94.458209">94.5</td>
-<td class="num score" data-sort="63">63/67</td>
-<td class="num score" data-sort="64">64/67</td>
-</tr>
-<tr>
-<td>pcdServer</td>
-<td>openjev-35b-a3b</td>
-<td>dedicated</td>
-<td>q4</td>
-<td class="num" data-sort="21.17">21.17</td>
-<td class="num" data-sort="296.758209">296.8</td>
-<td class="num score" data-sort="63">63/67</td>
-<td class="num score" data-sort="64">64/67</td>
 </tr>
 </tbody>
 </table>
@@ -1699,7 +1699,7 @@
 <p class="ornotto-chapters__group">Benchmarks</p>
 <ol>
 <li><a href="05-method/">How we measured</a> One router question, 67 queries, labels fixed before the run.</li>
-<li><a href="06-results/">Results</a> All 264 methods against jev, the hosted reference.</li>
+<li><a href="06-results/">Results</a> All 290 methods against jev, the hosted reference.</li>
 <li><a href="07-quantization/">Quantization and size</a> What precision changes: file size, memory and the answers that survive.</li>
 <li><a href="08-speed/">Speed, memory and caching</a> One forward pass per decision, and what an engine avoids prefilling twice.</li>
 <li><a href="09-confidence/">Confidence and fallback</a> Whether the probabilities mean what they say, and what a fallback buys.</li>

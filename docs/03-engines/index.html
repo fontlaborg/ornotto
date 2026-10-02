@@ -1691,7 +1691,7 @@ flowchart TD
     D -- "yes" --&gt; E["Expand the winning group&lt;br&gt;by one more token"]
     E --&gt; L</code></pre>
 <p>This is the <em>constrained first-token</em> family, and pcdServer is its only member in the benchmark. It needs no training because the model is doing what it was trained for, writing the next token of a JSON answer, and the server only restricts which tokens count. <a href="../08-speed/#the-schema-cache-in-pcdserver">Chapter 8</a> draws the same decode from the timing side, with the schema checkpoint in it.</p>
-<p>Not everyone agrees that restricting tokens is a good way to ask a model. On jev's launch thread, Almeida wrote that "constrained decoding (OpenAI-style structured outputs) make models dumber unfortunately", and that "if ever a model was assigning probability to an invalid token, the model is by definition confused."<sup id="fnref2:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">2</a></sup> pcdServer throws that probability away and renormalises over the valid tokens, so a confused model can still return a confident answer. The benchmark offers some evidence on both sides. The same decider-0.8b weights scored 62 through their trained slot and 55 through pcdServer. A chat model tuned for decisions, Qwen3.5-4B-Hmm, scored 64 and 65 through pcdServer, the best local result, and fewer through its own letter readout (<a href="../06-results/">chapter 6</a>).</p>
+<p>Not everyone agrees that restricting tokens is a good way to ask a model. On jev's launch thread, Almeida wrote that "constrained decoding (OpenAI-style structured outputs) make models dumber unfortunately", and that "if ever a model was assigning probability to an invalid token, the model is by definition confused."<sup id="fnref2:hn-launch"><a class="footnote-ref" href="#fn:hn-launch">2</a></sup> pcdServer throws that probability away and renormalises over the valid tokens, so a confused model can still return a confident answer. The benchmark offers some evidence on both sides. The same decider-0.8b weights scored 62 through their trained slot and 55 through pcdServer. A chat model tuned for decisions, Qwen3.5-4B-Hmm, scored 64 and 65 through pcdServer, the best result near 90 ms, and fewer through its own letter readout (<a href="../06-results/">chapter 6</a>).</p>
 <h3 id="the-collision-tree">The collision tree<a class="headerlink" href="#the-collision-tree" title="Permanent link">&para;</a></h3>
 <p>Two allowed values can start with the same token, such as <code>kern pair</code> and <code>kern class</code>. pcdServer then resolves them level by level: the winning group of the first token stays live and is expanded with its next token, until every live candidate differs. <code>levels</code> in the reply reports how many levels were needed, and each level costs another forward pass. In one of our FontLab examples, the choices <code>kern pair</code>, <code>kern class</code>, <code>kerning panel settings</code> and <code>class definition</code> needed 3 levels and 5 forward passes.</p>
 <p>Only the winning group is expanded. A losing group's probability is split <strong>equally</strong> among its members, so two losing options that share a first token always report the same probability, whatever the model thought of them. In a 14-option panel example, "Font Info" and "Font Audit" both came back at 0.0105. If the probability of an alternative matters to you, give it a distinct first word.</p>
@@ -1714,7 +1714,7 @@ flowchart TD
 </ul>
 <p>A letter that falls outside the top 100 tokens gets probability 0, and the harness counts it as a miss.</p>
 <p>slot depends on one feature of llama-server, the <code>n_probs</code> list of top candidates, and on nothing that is specific to decision models. That makes it the easiest readout to keep running as llama.cpp changes. None of the llama.cpp releases between 2026-09-09 and 2026-09-30 touched the log-probability output or <code>n_probs</code>, so the slot rows stay valid for newer servers as far as the readout is concerned.<sup id="fnref:llamacpp-releases"><a class="footnote-ref" href="#fn:llamacpp-releases">4</a></sup></p>
-<p>Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. pcdServer could not serve the Gemma 4 files at all: it answered every request with HTTP 422, so rune has no pcdServer rows.</p>
+<p>Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. The earlier pcdServer build answered the surogate Gemma 4 files with HTTP 422. The October fork adds a Jinja fallback and serves the separately pinned mradermacher Rune conversions (<a href="../06-results/#issue-102-october-additions">October results</a>).</p>
 <p>slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text (<a href="../06-results/#one-set-of-weights-three-scores">chapter 6</a>), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.</p>
 <h2 id="laya">laya<a class="headerlink" href="#laya" title="Permanent link">&para;</a></h2>
 <p>laya (<a href="https://huggingface.co/convaiinnovations/laya-multilingual">convaiinnovations/laya</a>) is not a language model. It is a multilingual encoder, mmBERT-base, with a decision head trained for System One questions. Its input is one sequence:</p>
@@ -1886,7 +1886,7 @@ flowchart TD
 <tr>
 <td>Models</td>
 <td>jev</td>
-<td>decider, kev, Dohnuts</td>
+<td>decider, kev, Dohnuts, Jet, JPT, Tev1, ThisThat</td>
 <td>any chat GGUF</td>
 <td>decider, Hmm, rune, JevK5, APUS-OpenJev</td>
 <td>laya checkpoints</td>
@@ -1910,7 +1910,7 @@ flowchart TD
 <tr>
 <td>Calibrated</td>
 <td>yes</td>
-<td>yes, temperature from metadata</td>
+<td>native temperature from metadata; validate on your task</td>
 <td>no</td>
 <td>decider readout: yes, temperature applied by the client; Hmm readout: no</td>
 <td>yes, by bucket</td>
@@ -2013,7 +2013,7 @@ flowchart TD
 <li><strong>llama.cpp moved on.</strong> v0.5.0 followed on 2026-09-23, and build b11236 on 2026-09-28 migrated the server, speculative decoding and multimodal code to <code>llama_batch_ext</code>.<sup id="fnref:llamacpp-batch"><a class="footnote-ref" href="#fn:llamacpp-batch">12</a></sup> Code that builds a <code>llama_batch</code> by hand will probably need porting past that point. Whether dohnuts and pcdServer do has not been tried.</li>
 <li><strong>Nothing touched the log-probabilities.</strong> No release in the month changed the log-probability output or <code>n_probs</code>, so the slot readout is unaffected.<sup id="fnref2:llamacpp-releases"><a class="footnote-ref" href="#fn:llamacpp-releases">4</a></sup></li>
 <li><strong>New server options.</strong> Build b11223 on 2026-09-27 added RANK pooling for causal rerankers, and b11240 on 2026-09-28 accepted images at <code>/v1/embeddings</code>. Neither is used here, but both are new ways to run a head on a hidden state from a stock llama-server, as the Jev-Omni and laya rows do.</li>
-<li><strong>pcdServer has been quiet.</strong> Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.<sup id="fnref2:pcdserver-repo"><a class="footnote-ref" href="#fn:pcdserver-repo">11</a></sup> It still cannot serve the Gemma 4 files. Fixes for it would be ours to carry or to send upstream.</li>
+<li><strong>pcdServer has been quiet.</strong> Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.<sup id="fnref2:pcdserver-repo"><a class="footnote-ref" href="#fn:pcdserver-repo">11</a></sup> The October ornotto build carries a <a href="https://github.com/fontlaborg/pcdServer/tree/issue102-jinja-fallback">fork</a> with a Jinja chat-template fallback, automatic-BOS deduplication and a CPU-weight option; the new Rune runs verify that path. The upstream activity statement describes the September snapshot.</li>
 <li><strong>dohnuts kept moving.</strong> Upstream aligned its System One replies with TypeSafe's on 2026-09-23, merged our prefix-reuse change on 2026-09-24, added its own cache of decoded prefixes across calls eight minutes after the merge, and added a new Dohnuts-family model and a flash-attention switch on 2026-09-29.<sup id="fnref2:dohnuts-repo"><a class="footnote-ref" href="#fn:dohnuts-repo">10</a></sup> <a href="../08-speed/#prefix-caching-in-dohnuts">Chapter 8</a> covers the caches, <a href="../04-models/">chapter 4</a> the models, and <a href="../12-choosing/#contributing-upstream">chapter 12</a> the state of our fork.</li>
 </ul>
 <div class="footnote">

@@ -10,7 +10,7 @@ Scores count correct answers out of 67. **Translated** means the 39 non-English 
 
 Most tables sort when you click a column header; click again to reverse the order.
 
-## All 264 methods
+## All 290 methods
 
 A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Five more failed and are left out; [chapter 6](../06-results.md#every-method) says why.
 

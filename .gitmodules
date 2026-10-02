@@ -4,4 +4,5 @@
 	branch = issue102-models
 [submodule "engines/pcdServer"]
 	path = engines/pcdServer
-	url = https://github.com/stephanj/pcdServer
+	url = https://github.com/fontlaborg/pcdServer
+	branch = issue102-jinja-fallback

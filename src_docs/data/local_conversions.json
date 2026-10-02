@@ -1,0 +1,50 @@
+[
+ {
+  "source_repo": "prithivMLmods/jpt-4b-GGUF",
+  "revision": "26e839b52ae8250c22fe4648289dff350ead4a09",
+  "source_file": "jpt-4b.BF16.gguf",
+  "source_sha256": "532570ac597d30131a301501a6a420b65150ddd6b2c963d1c347f629d138c322",
+  "converter": "llama-quantize",
+  "converter_sha256": "59741cd3a7842cdb8dab1206b3e51624e19707f41f2f777dd02ad7fc96bddf9c",
+  "arguments": [
+   "--max-buffer-size",
+   "512",
+   "INPUT",
+   "OUTPUT",
+   "Q8_0",
+   "4"
+  ],
+  "output_file": "jpt-4b.Q8_0.gguf",
+  "output_sha256": "a633eb3d502eb059da11f4b3c4706814ae879ea79a4e76d6a2c07b61c29dc1a4",
+  "output_bytes": 4482403232,
+  "tensor_types": {
+   "F32": 177,
+   "Q8_0": 249
+  },
+  "provenance": "local BF16 to Q8_0 conversion; Q8 is not published by the source repository"
+ },
+ {
+  "source_repo": "prithivMLmods/jpt-9b-GGUF",
+  "revision": "1604bd30469247cdd80e27803360217cdc736c58",
+  "source_file": "jpt-9b.BF16.gguf",
+  "source_sha256": "461fe89b750d03ba2127630ee9330e323b737f72547c5d426c8ecf2f0cc400c8",
+  "converter": "llama-quantize",
+  "converter_sha256": "59741cd3a7842cdb8dab1206b3e51624e19707f41f2f777dd02ad7fc96bddf9c",
+  "arguments": [
+   "--max-buffer-size",
+   "512",
+   "INPUT",
+   "OUTPUT",
+   "Q8_0",
+   "4"
+  ],
+  "output_file": "jpt-9b.Q8_0.gguf",
+  "output_sha256": "290e61207d4d43a24316e6c06f315675996372890a511eaa8fffe75a6ce14fa7",
+  "output_bytes": 9527501760,
+  "tensor_types": {
+   "Q8_0": 250,
+   "F32": 177
+  },
+  "provenance": "local BF16 to Q8_0 conversion; Q8 is not published by the source repository"
+ }
+]

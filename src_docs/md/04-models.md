@@ -76,7 +76,7 @@ Three things stand out.
 
 **Qwen3.5 is the common ancestor.** Most decoder models in the benchmark start from it, at every size from 0.8B to the 35B-A3B mixture of experts. That is why pcdServer, dohnuts and slot can run so many of them with the same llama.cpp code: the architecture is one they already know. NeoHorse-Jev-4B is a two-step descendant. Its base, NeoHorse-1-4B, is a general agentic and coding model, not a decision model, and its GGUF header reports the Qwen3.5 architecture. Only the NeoHorse-Jev build answers System One questions.[^neohorse]
 
-**Gemma 4 arrived late and went far.** rune, winnow, Jev-Omni and decider-12b are all Gemma 4 fine-tunes, and all of them appeared in the second half of September. Two of the dotted edges are Gemma 4 models used with no training at all. pcdServer cannot serve Gemma 4 GGUFs yet, so rune ran through slot and winnow through ollaya ([chapter 3](03-engines.md#ollaya)).
+**Gemma 4 arrived late and went far.** rune, winnow, Jev-Omni and decider-12b are all Gemma 4 fine-tunes, and all of them appeared in the second half of September. Two of the dotted edges are Gemma 4 models used with no training at all. The September pcdServer build could not render the Gemma 4 template, so that round ran rune through slot and winnow through ollaya. The October fork serves the mradermacher Rune conversions on pcdServer ([chapter 3](03-engines.md#ollaya)).
 
 **The encoders come from three families.** laya and Julia-1 are mmBERT, the base and the small size. GLiNER2.5-Decide and GLiClass are DeBERTa-v3-large. von, Pulse and the NLI model are ModernBERT. decima-small starts from multilingual-e5-small. Lumma-fev is the only model here trained from scratch.
 
@@ -161,7 +161,7 @@ Like decider, kev states its provenance: "No Jev outputs were used for training.
 !!! warning "Non-commercial weights"
     The Dohnuts weights are licensed CC-BY-NC-SA-4.0. The engine is Apache-2.0, the weights are not. Dohnuts was not benchmarked here and is not the `ornotto` default.
 
-On 2026-09-29 the dohnuts.cpp authors added a second model to the family: [Linnaeus-0.1.0-2B](https://huggingface.co/DreamBlooms/Linnaeus-0.1.0-2B-GGUF), Qwen3.5-2B with a rank-8 LoRA, published as F16, Q8_0 and Q4_K_M GGUF files with an `mmproj` projector and its own profile, `linnaeus.json`.[^linnaeus] It arrived after our benchmark runs, so it is not in the tables and not registered in `ornotto`. Upstream dohnuts.cpp gained its Linnaeus support in the same week. The dohnuts that `ornotto` bundles was built from an earlier commit, so check the engine version before you try it ([chapter 12](12-choosing.md#contributing-upstream)).
+On 2026-09-29 the dohnuts.cpp authors added a second model to the family: [Linnaeus-0.1.0-2B](https://huggingface.co/DreamBlooms/Linnaeus-0.1.0-2B-GGUF), Qwen3.5-2B with a rank-8 LoRA, published as F16, Q8_0 and Q4_K_M GGUF files with an `mmproj` projector and its own profile, `linnaeus.json`.[^linnaeus] It arrived after our benchmark runs, so it is not in the tables and not registered in `ornotto`. Upstream dohnuts.cpp gained its Linnaeus support in the same week. The October bundled dohnuts includes the upstream Linnaeus profile; this model remains unmeasured and unregistered ([chapter 12](12-choosing.md#contributing-upstream)).
 
 ### laya-multilingual
 
@@ -251,7 +251,7 @@ The models we did run say where their labels came from when their READMEs addres
 
 These are chat models tuned by third parties. None of them has a trained answer slot, so every one ran on pcdServer, which scores the first token of each allowed value under the model's chat template.
 
-[n4ze3m/Qwen3.5-4B-Hmm](https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm) (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result in the benchmark, at 88 to 95 ms per query. Read through its own letter readout on llama-server (the `slot` rows), the same weights scored 62/67 and 63/67 and took three times as long.
+[n4ze3m/Qwen3.5-4B-Hmm](https://huggingface.co/n4ze3m/Qwen3.5-4B-Hmm) (Apache-2.0) is the exception worth knowing: it was tuned for this kind of pick-one decision. On pcdServer it scored 64/67 translated and 65/67 direct at every quantization from Q4 to BF16, the best local result near 90 ms. October Rune Q5 matches jev at 65/67 in both modes, but takes 962 ms with CPU weights. Read through its own letter readout on llama-server (the `slot` rows), the same weights scored 62/67 and 63/67 and took three times as long.
 
 The rest spread from close to the top to the bottom of the table:
 
@@ -341,7 +341,7 @@ jev itself did not change: 1.13.0 was the only version all month.
 
 - If you want calibrated probabilities you can threshold, use a dedicated model on dohnuts. Only the dedicated readouts divide by a fitted temperature.
 - If you want the most accurate local answer and can spend about 90 ms and 2.7 GB, use Qwen3.5-4B-Hmm on pcdServer.
-- If you want the best local score and have the memory, rune-26b-a4b at Q3_K_M (13.5 GB) matched jev on translated text. NeoHorse-Jev-4B at Q8_0 (5.2 GB) scored 64/67 in both modes.
+- If you want the best local score and have the memory and latency budget, the mradermacher Rune Q5_K_M (19.13 GB) on pcdServer matches jev at 65/67 in both modes, at 962 ms with CPU weights. Its registered Q3 scores 64/64 at 146 ms.
 - If you have a model already, or need one that no one has tuned, a vanilla Qwen3.5 on pcdServer works with no training at all. Qwen3.5-2B at Q3 is the smallest vanilla model that stays within one answer of the dedicated 0.8B model.
 
 [Chapter 7](07-quantization.md) shows how far each family can be quantized, and [chapter 12](12-choosing.md) turns these results into a choice.

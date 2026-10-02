@@ -4,22 +4,48 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. One local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Across both modes, the best local model is still Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 264 methods finished; five failed and are left out.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 290 methods finished; five failed and are left out.
 
 The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every number in this chapter comes from our own run on one Mac, on one 67-query question. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
 ## Issue 102: October additions
 
-The six additions were measured on 2 October 2026. They use the same 67 queries and recorded translation choices as the earlier round. Each model ran alone. The 258 earlier result rows are unchanged.
+The 32 additions were measured on 2 October 2026. They use the same 67 queries and recorded translation choices as the earlier round. Each model ran alone. The 258 earlier result rows are unchanged.
 
 | method | translated | direct | ms/query | weights GB |
 |---|---:|---:|---:|---:|
-| `mlx@tev1-0.8b-4bit` | 60/67 | 59/67 | 64.8 | 0.42 |
+| `pcdserver@rune-mradermacher-26b-a4b-q5` | 65/67 | 65/67 | 962.3 | 19.13 |
+| `pcdserver@rune-mradermacher-26b-a4b-q3` | 64/67 | 64/67 | 146.1 | 13.29 |
+| `dohnuts-metal@jpt-4b-q8` | 64/67 | 64/67 | 335.6 | 4.48 |
+| `pcdserver@rune-mradermacher-26b-a4b-q8` | 64/67 | 64/67 | 758.1 | 26.86 |
+| `pcdserver@jpt-4b-q8` | 63/67 | 64/67 | 86.3 | 4.48 |
+| `pcdserver@jpt-4b-q4` | 63/67 | 64/67 | 93.0 | 2.71 |
+| `pcdserver@jpt-9b-q5` | 63/67 | 64/67 | 155.2 | 6.47 |
+| `dohnuts-metal@jpt-4b-q5` | 63/67 | 64/67 | 367.0 | 3.07 |
+| `pcdserver@rune-mradermacher-26b-a4b-q4` | 63/67 | 64/67 | 487.1 | 16.80 |
+| `dohnuts-metal@jpt-9b-q5` | 63/67 | 64/67 | 619.6 | 6.47 |
+| `dohnuts-metal@jpt-9b-q4` | 63/67 | 64/67 | 619.8 | 5.63 |
+| `dohnuts-metal@jpt-9b-q8` | 63/67 | 64/67 | 624.7 | 9.53 |
+| `pcdserver@jpt-4b-q5` | 62/67 | 63/67 | 99.4 | 3.07 |
+| `dohnuts-metal@jet-4b-q8` | 62/67 | 63/67 | 281.4 | 4.48 |
+| `dohnuts-metal@jpt-4b-q4` | 62/67 | 62/67 | 290.6 | 2.71 |
+| `dohnuts-metal@jpt-9b-q3` | 61/67 | 64/67 | 636.7 | 4.62 |
+| `pcdserver@jpt-9b-q4` | 61/67 | 63/67 | 137.3 | 5.63 |
+| `pcdserver@jpt-9b-q8` | 61/67 | 63/67 | 141.8 | 9.53 |
+| `dohnuts-metal@jpt-4b-q3` | 61/67 | 63/67 | 315.0 | 2.26 |
 | `coreml@kev-0.8b-fp16-l512` | 60/67 | 62/67 | 121.3 | 1.51 |
+| `pcdserver@jpt-9b-q3` | 60/67 | 62/67 | 139.2 | 4.62 |
+| `pcdserver@jpt-4b-q3` | 60/67 | 60/67 | 93.7 | 2.26 |
+| `mlx@tev1-0.8b-4bit` | 60/67 | 59/67 | 64.8 | 0.42 |
 | `dohnuts-metal@tev1-0.8b-q8` | 59/67 | 62/67 | 61.5 | 0.81 |
+| `dohnuts-metal@this-that-model-1.2-q3` | 57/67 | 56/67 | 113.1 | 1.10 |
 | `systemone@kev-ggmlc-0.8b-q8` | 57/67 | 45/67 | 199.8 | 0.83 |
 | `systemone@bosun-1.7b-q5` | 55/67 | 55/67 | 130.8 | 1.26 |
+| `dohnuts-metal@this-that-model-1.2-q5` | 54/67 | 57/67 | 117.4 | 1.41 |
 | `systemone@kev-ggmlc-0.8b-q4` | 54/67 | 43/67 | 207.2 | 0.96 |
+| `dohnuts-metal@this-that-model-1.2-q8` | 53/67 | 57/67 | 107.8 | 2.01 |
+| `dohnuts-metal@this-that-model-1.2-q4` | 51/67 | 51/67 | 110.5 | 1.27 |
+| `dohnuts-metal@this-that-model-1.2-q2` | 21/67 | 18/67 | 112.2 | 0.97 |
 
 Kev uses the [FluidInference Core ML export](https://huggingface.co/FluidInference/kev-0.8b-coreml), the L512/K16 single-question row on CPU and GPU. This is not the fused multi-question path. Its fitted temperature is already in the graph. Tev1 uses the native decision prompt with thinking disabled and a single forward pass over option-letter logits, on [dohnuts Q8](https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF) and [MLX 4-bit](https://huggingface.co/SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit). Its release licence is unresolved, and temperature 1.0 does not establish calibration.
 
@@ -27,7 +53,13 @@ Kev uses the [FluidInference Core ML export](https://huggingface.co/FluidInferen
 
 The [mys Kev Q4 and Q8 files](https://huggingface.co/mys/kev-0.8b-GGUF) ran on ggmlc with Metal. Both fail to load in current dohnuts with `unknown model architecture: 'ggmlc'`. This is an observed runtime incompatibility, so the two measurements use the compiler's own runtime. The Q4 file is larger than Q8 because its dynamic quantization preserves additional tensors at higher precision.
 
-Issue 102 remains in progress. Rune (the mradermacher conversions), Jet, ThisThat and JPT are pending storage capacity and runtime checks. The requested JPT repositories publish Q3, Q4 and Q5 but no Q8 files. No pending variant is counted as a measurement.
+[Rune's mradermacher conversions](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. Q4 and Q5 keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. Their latency is not a fair comparison with the Q3 GPU run. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.
+
+[JPT 4B](https://huggingface.co/prithivMLmods/jpt-4b-GGUF) and [JPT 9B](https://huggingface.co/prithivMLmods/jpt-9b-GGUF) ran at Q3, Q4, Q5 and Q8 on both requested engines. The repositories publish no Q8: we converted their pinned BF16 files locally with llama-quantize Q8_0. The [conversion manifests](https://github.com/fontlaborg/ornotto/blob/main/src_docs/data/local_conversions.json) record source revisions, input/output hashes, converter hash, sizes and tensor types. JPT is CC BY-NC 4.0. Native dohnuts uses source-matched chat prompts, contextual answer tokens and the affirmative yes/no label; its temperatures are 1.036 (4B) and 1.087 (9B). The 4B Q8 native readout scores 64/67 in both modes; pcdServer is faster but scores 63/64.
+
+[Jet Q8](https://huggingface.co/DreamBlooms/jet-GGUF) scores 62/67 translated and 63/67 direct on dohnuts, in 281 ms. Its score questions read digit logits and yes/no questions read the corresponding word logits. [ThisThat 1.2](https://huggingface.co/mradermacher/this-that-model-1.2-GGUF) ran on dohnuts at every requested precision. Q3 scores 57/56, while Q2 falls to 21/18. Their native prompts and label mappings are part of the updated bundled engine, and response checks cover choice, yes/no and score in addition to the router benchmark.
+
+All 24 requested weight variants are covered by these 32 measurements. The two mys Kev measurements use the documented ggmlc alternative, and the four JPT Q8 engine measurements use the documented local conversions. The earlier 258 exported rows remain field-identical.
 
 ## The top of the table
 
@@ -35,7 +67,7 @@ The fifteen best methods, ordered by translated accuracy, then direct accuracy, 
 
 --8<-- "tables/top.html"
 
-Five findings stand out from the first round of 208 methods, and three more from the 50 that followed.
+Five findings stand out from the first round of 208 methods, three more from the next 50, and the October additions bring Rune Q5 to 65/67 in both modes.
 
 - **A small, dedicated model gets within three queries of jev.** decider-0.8b answers 62 of 67 through its own readout, from a file a fifth the size of the Hmm model's Q8 build. decider-0.8b's `Q8_0` conversions are the fastest methods to score 62 or more (51 ms for mradermacher's, 52 ms for DreamBlooms'), and its probabilities are calibrated.
 - **A tuned 4B chat model on pcdServer matches the 35B decider.** Qwen3.5-4B-Hmm ties decider-35b-a3b on dohnuts on translated text (64 each) and beats it by one answer on direct text (65 against 64). Its 2.7 GB Q4 build is an eighth the size of the 35B file and runs three times faster. Its accuracy does not move from Q4 to BF16.
@@ -48,7 +80,7 @@ Five findings stand out from the first round of 208 methods, and three more from
 
 ## Every method
 
-All 264 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 290 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -58,19 +90,19 @@ Some reading notes:
 - **Translation helps weak multilingual models and costs strong ones nothing.** kev-0.8b scored 57 translated and 45 direct, Qwen2.5-3B at Q8 62 and 57, laya 52 and 49. The Hmm model scored one answer better without translation, 65 against 64, and so did the Qwen3.5-4B builds.
 - **Load times differ by three orders of magnitude.** A GGUF on pcdServer or llama-server loaded in 40 ms to 1.8 seconds. Core ML models compiled for the Neural Engine took 20 seconds, decider-4b in PyTorch 17 seconds, and the fixed-shape Core ML package of GLiNER2.5-Decide 82 seconds. The authors' System One servers were started before the timed run, so their load is not measured.
 - **Quantization is flat until it falls off a cliff.** Q4 to Q8 barely changes a score. Below Q3 scores drop fast: decider-0.8b at Q2 answered 17 or 18 of 67 on every engine, and Qwen3-4B at IQ1_S answered 13. [Chapter 7](07-quantization.md) has the full sweeps.
-- **Five methods failed.** A Core ML laya export fixed at 64 tokens and four options could not take a five-way question. The BF16 build of unsloth's Qwen3.5-4B was not on disk when its turn came. pcdServer answered every request for the two rune files, which are Gemma 4 models, with HTTP 422. The Q5_K_M file of jeb-35b-a3b took the machine's free memory below the benchmark's safety limit while it loaded, and the run was stopped. None of the five appears in the tables.
+- **Five methods failed.** A Core ML laya export fixed at 64 tokens and four options could not take a five-way question. The BF16 build of unsloth's Qwen3.5-4B was not on disk when its turn came. The earlier pcdServer build answered every request for the two surogate Rune files with HTTP 422; the October fork separately measures mradermacher Rune through its Jinja fallback. The Q5_K_M file of jeb-35b-a3b took the machine's free memory below the benchmark's safety limit while it loaded, and the run was stopped. None of the five appears in the tables.
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 159 of the 264. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 171 of the 290. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query |
 |---|---:|---|---|---:|
 | jev (hosted) | 1 | `jev` | 65 / 65 | 466 |
 | slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 367 |
-| pcdServer | 159 | `pcdserver@qwen3.5-4b-hmm-q8` | 64 / 65 | 88 |
+| pcdServer | 171 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962 |
 | ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891 |
-| dohnuts (Metal) | 13 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266 |
+| dohnuts (Metal) | 27 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266 |
 | System One server | 11 | `systemone@neohorse-4b-q8` | 64 / 64 | 273 |
 | llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222 |
 | PyTorch | 4 | `torch@decider-4b-bf16` | 63 / 65 | 348 |
@@ -88,9 +120,9 @@ Most methods run on pcdServer, because it takes any chat GGUF: 159 of the 264. T
 
 A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on English only.
 
-If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms.
+If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms; Rune Q5 reaches 65 in both modes at 962 ms with CPU weights.
 
-The table also shows where the choice of engine is a choice of model. pcdServer ran 159 methods because it takes any chat GGUF, but it could not run the two Gemma 4 files at all, so rune appears only on slot. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
+The table also shows where the choice of engine is a choice of model. pcdServer ran 171 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
 
 ## The second round, model by model
 

@@ -39,6 +39,8 @@ class ModelSpec:
     note: str = ""
     tag: str | None = None
     """ollaya only: the registry tag, which replaces `repo` and `file`."""
+    bundled_metadata: str | None = None
+    """Profile JSON shipped with the package when the weight repository has none."""
 
 
 def _ollaya(name: str, tag: str, size_gb: float, note: str) -> ModelSpec:
@@ -106,6 +108,50 @@ MODELS: dict[str, ModelSpec] = {
             "temperature 1.0 does not establish calibration.",
         ),
         ModelSpec(
+            "jet-4b",
+            "DreamBlooms/jet-GGUF",
+            "jet-4b-Q8_0.gguf",
+            ("dohnuts",),
+            "dedicated",
+            "apache-2.0",
+            4.48,
+            metadata="jet.json",
+            note="Jet v6.2 Q8_0, per-question-type temperatures inherited from v6.1.",
+        ),
+        ModelSpec(
+            "this-that-1.2",
+            "mradermacher/this-that-model-1.2-GGUF",
+            "this-that-model-1.2.Q4_K_M.gguf",
+            ("dohnuts",),
+            "dedicated",
+            "mit",
+            1.27,
+            bundled_metadata="thisthat.json",
+            note="ThisThat 1.2 Q4_K_M; probability temperature 1.0.",
+        ),
+        ModelSpec(
+            "jpt-4b",
+            "prithivMLmods/jpt-4b-GGUF",
+            "jpt-4b.Q4_K_M.gguf",
+            ("dohnuts", "pcd"),
+            "dedicated",
+            "cc-by-nc-4.0",
+            2.71,
+            bundled_metadata="jpt-4b.json",
+            note="JPT 4B Q4_K_M, author temperature 1.036 on dohnuts. Non-commercial weights.",
+        ),
+        ModelSpec(
+            "jpt-9b",
+            "prithivMLmods/jpt-9b-GGUF",
+            "jpt-9b.Q4_K_M.gguf",
+            ("dohnuts", "pcd"),
+            "dedicated",
+            "cc-by-nc-4.0",
+            5.63,
+            bundled_metadata="jpt-9b.json",
+            note="JPT 9B Q4_K_M, author temperature 1.087 on dohnuts. Non-commercial weights.",
+        ),
+        ModelSpec(
             "dohnuts-0.8b",
             "DreamBlooms/Dohnuts-0.1.0-0.8B-GGUF",
             "Dohnuts-0.1.0-0.8B-Q8_0.gguf",
@@ -126,6 +172,16 @@ MODELS: dict[str, ModelSpec] = {
             "apache-2.0",
             0.83,
             note="Stock Qwen3.5-0.8B, pcdServer's default model.",
+        ),
+        ModelSpec(
+            "rune-26b-a4b",
+            "mradermacher/rune-26b-a4b-GGUF",
+            "rune-26b-a4b.Q3_K_M.gguf",
+            ("pcd",),
+            "dedicated",
+            "apache-2.0",
+            13.29,
+            note="mradermacher Rune Q3_K_M. Requires pcdServer's Jinja fallback for Gemma 4.",
         ),
         ModelSpec(
             "qwen3.5-2b",
@@ -226,12 +282,24 @@ def resolve(
     if spec := MODELS.get(model):
         if spec.tag:
             return ResolvedModel(spec.name, None, spec.engines, tag=spec.tag)
+        gguf = _download(spec.repo, spec.file)
+        profile = (
+            Path(metadata).expanduser()
+            if metadata
+            else (
+                Path(__file__).parent / "data" / spec.bundled_metadata
+                if spec.bundled_metadata
+                else _download(spec.repo, spec.metadata)
+                if spec.metadata
+                else None
+            )
+        )
         return ResolvedModel(
             spec.name,
-            _download(spec.repo, spec.file),
+            gguf,
             spec.engines,
-            _download(spec.repo, spec.metadata) if spec.metadata else None,
-            _download(spec.repo, spec.head) if spec.head else None,
+            profile,
+            Path(head).expanduser() if head else _download(spec.repo, spec.head) if spec.head else None,
         )
     if model.startswith("hf:"):
         owner, repo, file = model[3:].split("/", 2)

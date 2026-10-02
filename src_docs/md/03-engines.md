@@ -159,7 +159,7 @@ flowchart TD
 
 This is the *constrained first-token* family, and pcdServer is its only member in the benchmark. It needs no training because the model is doing what it was trained for, writing the next token of a JSON answer, and the server only restricts which tokens count. [Chapter 8](08-speed.md#the-schema-cache-in-pcdserver) draws the same decode from the timing side, with the schema checkpoint in it.
 
-Not everyone agrees that restricting tokens is a good way to ask a model. On jev's launch thread, Almeida wrote that "constrained decoding (OpenAI-style structured outputs) make models dumber unfortunately", and that "if ever a model was assigning probability to an invalid token, the model is by definition confused."[^hn-launch] pcdServer throws that probability away and renormalises over the valid tokens, so a confused model can still return a confident answer. The benchmark offers some evidence on both sides. The same decider-0.8b weights scored 62 through their trained slot and 55 through pcdServer. A chat model tuned for decisions, Qwen3.5-4B-Hmm, scored 64 and 65 through pcdServer, the best local result, and fewer through its own letter readout ([chapter 6](06-results.md)).
+Not everyone agrees that restricting tokens is a good way to ask a model. On jev's launch thread, Almeida wrote that "constrained decoding (OpenAI-style structured outputs) make models dumber unfortunately", and that "if ever a model was assigning probability to an invalid token, the model is by definition confused."[^hn-launch] pcdServer throws that probability away and renormalises over the valid tokens, so a confused model can still return a confident answer. The benchmark offers some evidence on both sides. The same decider-0.8b weights scored 62 through their trained slot and 55 through pcdServer. A chat model tuned for decisions, Qwen3.5-4B-Hmm, scored 64 and 65 through pcdServer, the best result near 90 ms, and fewer through its own letter readout ([chapter 6](06-results.md)).
 
 ### The collision tree
 
@@ -192,7 +192,7 @@ A letter that falls outside the top 100 tokens gets probability 0, and the harne
 
 slot depends on one feature of llama-server, the `n_probs` list of top candidates, and on nothing that is specific to decision models. That makes it the easiest readout to keep running as llama.cpp changes. None of the llama.cpp releases between 2026-09-09 and 2026-09-30 touched the log-probability output or `n_probs`, so the slot rows stay valid for newer servers as far as the readout is concerned.[^llamacpp-releases]
 
-Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. pcdServer could not serve the Gemma 4 files at all: it answered every request with HTTP 422, so rune has no pcdServer rows.
+Rune's Q3_K_M file is the only local method that matched jev on translated text, 65/67, at 367 ms. On the original text it scored 57/67. The earlier pcdServer build answered the surogate Gemma 4 files with HTTP 422. The October fork adds a Jinja fallback and serves the separately pinned mradermacher Rune conversions ([October results](06-results.md#issue-102-october-additions)).
 
 slot is the control for dohnuts: both read decider at the same slot, and they agree to within 0.0004 on every text ([chapter 6](06-results.md#one-set-of-weights-three-scores)), so dohnuts reproduces decider's own readout. slot pays for its generality with a round trip to tokenize and one to complete, and answers the router question in 65 ms with the DreamBlooms decider-0.8b Q8_0 file, against 52 ms for dohnuts.
 
@@ -376,10 +376,10 @@ On the router set the same three dedicated models came in a different order (kev
 | | jev | dohnuts | pcdServer | slot | laya |
 |---|---|---|---|---|---|
 | Runtime | hosted | llama.cpp, Metal or CPU | llama.cpp, Metal or CPU | llama.cpp, in a stock llama-server | MLX, Core ML, Core AI, ONNX Runtime, llama.cpp |
-| Models | jev | decider, kev, Dohnuts | any chat GGUF | decider, Hmm, rune, JevK5, APUS-OpenJev | laya checkpoints |
+| Models | jev | decider, kev, Dohnuts, Jet, JPT, Tev1, ThisThat | any chat GGUF | decider, Hmm, rune, JevK5, APUS-OpenJev | laya checkpoints |
 | Prompt | not public | the model's trained layout | chat template and JSON schema | the model's trained layout | encoder sequence with `[MASK]` markers |
 | Scored | not public | option letters at `Answer: (` | first tokens of allowed values | option letters in the top 100 | hidden state at each `[MASK]` |
-| Calibrated | yes | yes, temperature from metadata | no | decider readout: yes, temperature applied by the client; Hmm readout: no | yes, by bucket |
+| Calibrated | yes | native temperature from metadata; validate on your task | no | decider readout: yes, temperature applied by the client; Hmm readout: no | yes, by bucket |
 | Extra questions cost | not public | a full row each | a short suffix each | a full request each | a full pass each |
 | Reuse across requests | not public | the state prefix of multi-row requests (our fork) | schema prefix checkpoints (LRU) | none (`cache_prompt: false`) | none |
 | Router accuracy, best row | 65/67 | 64/67 (decider-35b-a3b) | 64/67 (Qwen3.5-4B-Hmm) | 65/67 (rune-26b-a4b) | 54/67 (laya-neutron) |
@@ -406,7 +406,7 @@ Both engines that `ornotto` bundles were written in September 2026, and both sti
 - **llama.cpp moved on.** v0.5.0 followed on 2026-09-23, and build b11236 on 2026-09-28 migrated the server, speculative decoding and multimodal code to `llama_batch_ext`.[^llamacpp-batch] Code that builds a `llama_batch` by hand will probably need porting past that point. Whether dohnuts and pcdServer do has not been tried.
 - **Nothing touched the log-probabilities.** No release in the month changed the log-probability output or `n_probs`, so the slot readout is unaffected.[^llamacpp-releases]
 - **New server options.** Build b11223 on 2026-09-27 added RANK pooling for causal rerankers, and b11240 on 2026-09-28 accepted images at `/v1/embeddings`. Neither is used here, but both are new ways to run a head on a hidden state from a stock llama-server, as the Jev-Omni and laya rows do.
-- **pcdServer has been quiet.** Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.[^pcdserver-repo] It still cannot serve the Gemma 4 files. Fixes for it would be ours to carry or to send upstream.
+- **pcdServer has been quiet.** Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.[^pcdserver-repo] The October ornotto build carries a [fork](https://github.com/fontlaborg/pcdServer/tree/issue102-jinja-fallback) with a Jinja chat-template fallback, automatic-BOS deduplication and a CPU-weight option; the new Rune runs verify that path. The upstream activity statement describes the September snapshot.
 - **dohnuts kept moving.** Upstream aligned its System One replies with TypeSafe's on 2026-09-23, merged our prefix-reuse change on 2026-09-24, added its own cache of decoded prefixes across calls eight minutes after the merge, and added a new Dohnuts-family model and a flash-attention switch on 2026-09-29.[^dohnuts-repo] [Chapter 8](08-speed.md#prefix-caching-in-dohnuts) covers the caches, [chapter 4](04-models.md) the models, and [chapter 12](12-choosing.md#contributing-upstream) the state of our fork.
 
 [^jev-launch]: Diogo Almeida, TypeSafe, "Introducing System One Models & Jev", 2026-09-15. <https://typesafe.ai/blog/introducing-system-one-models-and-jev>
