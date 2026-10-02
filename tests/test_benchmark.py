@@ -1,6 +1,7 @@
 # this_file: tests/test_benchmark.py
 """Check diagram inputs, portable output, and the actual browser-side Pareto math."""
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -46,3 +47,15 @@ def test_frontier_and_filters_when_node_available_then_browser_math_passes():
     if not node:
         pytest.skip("Node is needed to verify the browser math")
     subprocess.run([node, "--test", "tests/benchmark.test.cjs"], cwd=ROOT, check=True, capture_output=True)
+
+
+def test_book_assets_when_versioned_then_urls_match_content_and_are_idempotent(tmp_path):
+    config = tmp_path / "properdocs.yml"
+    config.write_text((ROOT / "src_docs/properdocs.yml").read_text())
+    diagrams.version_assets(config)
+    first = config.read_text()
+    for asset in ("css/benchmark.css", "js/benchmark-math.js", "js/benchmark.js"):
+        digest = hashlib.sha256((diagrams.MD / asset).read_bytes()).hexdigest()[:12]
+        assert f"  - {asset}?v={digest}" in first, "Every benchmark asset needs its matching content version"
+    diagrams.version_assets(config)
+    assert config.read_text() == first, "Repeated builds must retain identical asset URLs"

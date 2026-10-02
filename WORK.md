@@ -24,11 +24,15 @@ URLs, CSV and SVG exports, and a self-contained offline HTML. Weight size is
 explicitly distinguished from RAM; the Jev Decision Index suite is described
 without mixing its scores or timings with this routing test.
 
-Validation: 60 package tests (13 engine tests deselected), four Node math
+Validation: 61 package tests (13 engine tests deselected), four Node math
 tests, strict 18-page build, fresh desktop/mobile/dark browser checks, URL
 reload, CSV, SVG and completely offline report passed. Historical evidence
 was audited from recorded launches and runtime settings, not GPU utilization
-traces. Publication and live acceptance pending.
+traces. Initial publication exposed a CDN cache mismatch: new HTML requested
+old unversioned JavaScript, which still expected the reserved search field.
+The docs build now derives benchmark CSS/JS URL versions from content hashes;
+a regression test checks the versions and build idempotence. Local browser
+acceptance passed after the fix. Final deployed acceptance pending.
 
 ## 2026-10-02 — issue 102, complete measurement set
 

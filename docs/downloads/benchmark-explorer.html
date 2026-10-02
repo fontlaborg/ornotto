@@ -108,7 +108,7 @@ return Plotly;
   const fmt = v => v == null ? '—' : Number(v).toFixed(1);
   const keys = ['mode', 'device', 'engine', 'family', 'minScore', 'maxMs', 'search', 'scale', 'frontOnly'];
   // The shared site's native search owns the field name "search".
-  const field = (form, key) => form.elements[key === 'search' ? 'benchSearch' : key];
+  const field = (form, key) => form.elements.namedItem(key === 'search' ? 'benchSearch' : key);
   const config = {responsive: true, displaylogo: false, toImageButtonOptions: {format: 'svg', filename: 'ornotto-benchmark'}, modeBarButtonsToRemove: ['select2d', 'lasso2d']};
   let plotlyPromise;
   function loadPlotly(widget) {
@@ -232,7 +232,9 @@ return Plotly;
     new ResizeObserver(() => {if (widget.clientWidth !== width) {width = widget.clientWidth; update();}}).observe(widget);
     update();
   }
-  function setUp() {document.querySelectorAll('.benchmark-explorer').forEach(init);}
+  function setUp() {document.querySelectorAll('.benchmark-explorer').forEach(widget => {
+    init(widget).catch(error => {widget.querySelector('.be-status').textContent = 'Charts could not initialize: ' + error.message + '. Use the offline HTML download.';});
+  });}
   if (typeof document$ !== 'undefined') document$.subscribe(setUp);
   else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setUp);
   else setUp();

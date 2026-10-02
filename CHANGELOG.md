@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Version benchmark CSS and JavaScript URLs by content during the docs build so CDN caches cannot mix old scripts with new explorer markup. Report initialization failures visibly instead of leaving the loading message.
+
 - Add a separately cached Rune Q4 Metal run: 124.8 ms/query, 63/67 translated and 64/67 direct, versus 487.1 ms with CPU weights. Retain all 290 earlier measurements; 291 runs are now published.
 - Label every benchmark configuration with CPU/GPU execution and evidence, including mixed, Neural Engine, automatic and remote cases. Identify 19 CPU-only and 19 mixed CPU/GPU runs.
 - Add a reproducible interactive diagram tool, speed and weight-size Pareto frontiers, adjustable accuracy floors, mode-specific timings, shared filter URLs, CSV/SVG exports and an offline HTML download.

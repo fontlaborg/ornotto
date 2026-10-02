@@ -91,10 +91,10 @@ extra_css:
   - https://i.fontlab.com/fltheme26/1.0.0/components.css
   - https://i.fontlab.com/fltheme26/1.0.0/theme.css
   - css/site.css
-  - css/benchmark.css
+  - css/benchmark.css?v=13b021a7aaa8
 extra_javascript:
   - https://i.fontlab.com/fltheme26/1.0.0/basecoat.js
   - https://i.fontlab.com/fltheme26/1.0.0/theme.js
   - js/tables.js
-  - js/benchmark-math.js
-  - js/benchmark.js
+  - js/benchmark-math.js?v=da51227706b3
+  - js/benchmark.js?v=e0c1a4155a7f

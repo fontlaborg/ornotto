@@ -10,14 +10,25 @@ No Python plotting dependencies or network access are required.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import math
+import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MD = HERE / "md"
 DEVICES = {"C", "G", "C+G", "C+N", "A", "R", "?"}
+
+
+def version_assets(config: Path) -> None:
+    """Bind published asset URLs to their bytes so CDN caches cannot mix releases."""
+    text = config.read_text()
+    for asset in ("css/benchmark.css", "js/benchmark-math.js", "js/benchmark.js"):
+        digest = hashlib.sha256((MD / asset).read_bytes()).hexdigest()[:12]
+        text = re.sub(r"(?m)(  - " + re.escape(asset) + r")(?:\?v=[^\s]+)?$", rf"\1?v={digest}", text)
+    config.write_text(text)
 
 
 def read_runs(path: Path) -> list[dict]:
@@ -112,5 +123,8 @@ if __name__ == "__main__":
     parser.add_argument("--data", type=Path, default=HERE / "data" / "classifiers.json")
     parser.add_argument("--out", type=Path, default=MD / "downloads" / "benchmark-explorer.html")
     parser.add_argument("--snippet", type=Path, help="Optional book include; custom exports leave it untouched")
+    parser.add_argument("--version-assets", action="store_true", help="Version the book's CSS/JS URLs by content")
     args = parser.parse_args()
+    if args.version_assets:
+        version_assets(HERE / "properdocs.yml")
     generate(args.data, args.out, args.snippet)

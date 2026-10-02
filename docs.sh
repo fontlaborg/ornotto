@@ -7,7 +7,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 python3 src_docs/gen_tables.py
-python3 src_docs/gen_diagrams.py --snippet src_docs/md/tables/explorer.html
+python3 src_docs/gen_diagrams.py --snippet src_docs/md/tables/explorer.html --version-assets
 uv sync -q --group docs
 cd src_docs   # pymdownx.snippets resolves its base_path (md) from the working directory
 if [[ ${1:-} == serve ]]; then
