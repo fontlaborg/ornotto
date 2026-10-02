@@ -1090,6 +1090,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#october-remote-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        October remote measurements
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1638,6 +1649,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#october-remote-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        October remote measurements
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1744,9 +1766,9 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
-<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="519.484949" class="num">519.5</td><td data-sort="1924.983586" class="num">1,925</td></tr>
-<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="11.640951" class="num">11.6</td><td data-sort="85903.636446" class="num">85,904</td></tr>
-<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="531.1259" class="num">531.1</td><td data-sort="1882.792762" class="num">1,883</td></tr>
+<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="675.676791" class="num">675.7</td><td data-sort="1479.997558" class="num">1,480</td></tr>
+<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.351456" class="num">12.4</td><td data-sort="80962.116172" class="num">80,962</td></tr>
+<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="688.028247" class="num">688.0</td><td data-sort="1453.4287" class="num">1,453</td></tr>
 </tbody></table>
 </div>
 
@@ -2092,6 +2114,9 @@ flowchart TD
 <p>Every board in this section was created in the second half of September, after jev's launch on 2026-09-15: typed-decisions on 2026-09-16, JevBench v1.2 on 2026-09-19, jev-bench on 2026-09-20, the Decision 1.0 benchmark on 2026-09-21 and the Decision Index kit on 2026-09-22. Our own runs took place on 2026-09-22 and 2026-09-23, and on 2026-09-29 and 2026-09-30. When this chapter was written, none of the public boards had been running for more than two weeks, and JevBench had already changed its method several times. Treat their rankings, and ours, as snapshots with dates.</p>
 <h2 id="interactive-comparisons">Interactive comparisons<a class="headerlink" href="#interactive-comparisons" title="Permanent link">&para;</a></h2>
 <p>The <a href="../results/explorer/">benchmark explorer</a> recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 290 earlier timings and answers are preserved.</p>
+<h2 id="october-remote-measurements">October remote measurements<a class="headerlink" href="#october-remote-measurements" title="Permanent link">&para;</a></h2>
+<p>The nine OpenRouter endpoints were measured on 3 October 2026 against the same 67 queries and frozen translation choices. Six accept a native five-way choice. Respan's three endpoints accept only noul: each request asks five independent yes/no questions, using each task's full description after “Is this the single best description of what the user is asking?” The selected route is the largest P(true); normalized values support the common routing report but do not establish exclusive-choice calibration. The explorer and remote table identify this readout as <strong>noul OVR</strong>.</p>
+<p>There are 106 distinct original/translated inputs per endpoint, each measured once. Reusing identical inputs between modes avoids duplicate requests. Requests run sequentially; free endpoints are paced to respect the provider's rate limit. Pacing and rate-limit waits are outside the measured request time. A failed request is excluded; completed responses are checkpointed. Remote latency includes connection setup, network travel and provider processing. Requested IDs, resolved model IDs, providers, response IDs and reported usage are retained with the measurements. <strong>R</strong> indicates undisclosed remote hardware; weight size and precision remain blank.</p>
 <div class="footnote">
 <hr />
 <ol>
@@ -2219,7 +2244,7 @@ flowchart TD
       
         <script src="../js/benchmark-math.da51227706b3.js"></script>
       
-        <script src="../js/benchmark.e0c1a4155a7f.js"></script>
+        <script src="../js/benchmark.040f05193bf1.js"></script>
       
     
   </body>

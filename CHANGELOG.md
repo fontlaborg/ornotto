@@ -4,6 +4,12 @@
 
 ## Unreleased
 
+- Add full translated/direct benchmarks for all nine OpenRouter endpoints: 954 successful unique-input requests, 300 public runs, and all 291 earlier rows unchanged. Add the OpenRouter API engine filter, explicit native-choice/noul OVR readouts, resolved versions, remote timing tables and CSV fields. Generate the homepage ranking from benchmark data.
+
+- Verify all nine remote endpoints with authenticated requests. Record and enforce Respan's noul-only capability, including its pydantic-ai boolean bridge; unsupported choice/score calls fail before HTTP.
+
+- Add nine registered OpenRouter decision models and arbitrary decision IDs through `engine="openrouter"`. Support sync/async questions, typed extraction, CLI discovery and pydantic-ai without local weights or server processes. Authenticate with `OPENROUTER_API_KEY` or an explicit key; retain usage/cost, provider and resolved model, reject malformed answers and report network/API failures without automatic retries. Remote calibration remains unrecorded.
+
 - Generate benchmark CSS and JavaScript filenames from content hashes during the docs build so CDN caches cannot mix old scripts with new explorer markup. Report initialization failures visibly instead of leaving the loading message. Verified the deployed charts, filters, downloads and mobile layout.
 
 - Add a separately cached Rune Q4 Metal run: 124.8 ms/query, 63/67 translated and 64/67 direct, versus 487.1 ms with CPU weights. Retain all 290 earlier measurements; 291 runs are now published.

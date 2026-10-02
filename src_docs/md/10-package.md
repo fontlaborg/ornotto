@@ -86,6 +86,40 @@ A `Decider` has four methods, plus an async one. Each takes the `state` you ask 
 
 The `url` property returns the engine's base URL, starting the engine if needed. Use it when you want to call the engine's HTTP API directly.
 
+## Remote OpenRouter models
+
+Use current `main` for remote support ([source build](12-choosing.md#building-from-source)).
+
+Set `OPENROUTER_API_KEY`, then use an exact model ID:
+
+```python
+remote = ornotto.Decider("liquid/d1")
+answer = remote.choose("Build a kern feature", ["docs", "python", "fea"])
+```
+
+All nine IDs are listed by `ornotto models` and `ornotto.OPENROUTER_MODELS`:
+`liquid/d1`, `togethercomputer/tev1-4b-experimental`, `inception/mercury-decide:free`,
+`upstage/solar-decide`, `respan/span-01`, `respan/span-01-lite`,
+`respan/span-01-lite:free`, `jaredpalmer/kev-4b`, `typesafe/jev-1.13`.
+The three Respan variants support only yes/no (`noul`) questions. Use `check()`
+or `decide()` with `yes_no()`; choice and score are rejected locally before
+sending a request. `OPENROUTER_KINDS` and `ornotto models` expose the supported
+question kinds. A pydantic-ai schema for Respan must contain boolean fields.
+
+Other decision IDs use `Decider("owner/model", engine="openrouter")` or the
+`openrouter:owner/model` prefix. An explicit `api_key=...` overrides the environment.
+CLI example: `ornotto choose "Build a kern feature" docs python fea --model=liquid/d1`.
+
+`adecide`, `extract`, `ornotto.use` and `pydantic_ai.model` work with these models.
+Nothing downloads or starts locally. `gpu`, `metadata`, `head`, `pull` and `serve`
+are local settings/operations and are rejected for remote models. Remote calls
+use the [System One API](https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request)
+with a timeout and no automatic retry. A returned `Decision` retains `usage`
+(including reported USD `cost`), `resolved_model`, `provider` and `response_id`.
+`calibrated=False` means the provider's temperature recipe is unrecorded.
+Remote timings include network latency; benchmark device **R** means CPU/GPU undisclosed.
+Availability and access are controlled by OpenRouter, including `:free` models.
+
 ## Module functions
 
 The module functions use one shared `Decider`, created on first use from the arguments of the last `ornotto.use()` call.

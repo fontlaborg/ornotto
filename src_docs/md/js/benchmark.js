@@ -76,7 +76,7 @@
     history.replaceState(null, '', url);
   }
   function csv(rows) {
-    const fields = ['method', 'mode', 'device', 'device_detail', 'device_evidence', 'engine', 'family', 'score', 'latency', 'gb'];
+    const fields = ['method', 'mode', 'device', 'device_detail', 'device_evidence', 'engine', 'family', 'readout', 'score', 'latency', 'gb'];
     const quote = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
     return [fields.join(','), ...rows.map(r => fields.map(k => quote(r[k])).join(','))].join('\r\n');
   }
@@ -98,7 +98,7 @@
       current = state.frontOnly ? rows.filter(r => speedIds.has(r.method)) : rows;
       const best = rows[0];
       status.textContent = `${rows.length} of ${all.length} runs qualify. ${best ? `Fastest: ${best.method} (${best.device}), ${best.score}/67 at ${fmt(best.latency)} ms.` : 'No runs match these filters.'} Speed frontier: ${speed.front.length}; size frontier: ${size.front.length}. ${size.omitted} runs have no measured weight size.`;
-      widget.querySelector('tbody').innerHTML = current.map(r => `<tr><td><button type="button" data-method="${esc(r.method)}">${esc(r.method)}</button></td><td title="${esc(r.device_detail)}">${esc(r.device)}</td><td>${r.score}/67</td><td>${fmt(r.latency)}</td><td>${r.gb ?? '—'}</td><td>${[speedIds.has(r.method) ? 'Speed' : '', sizeIds.has(r.method) ? 'Size' : ''].filter(Boolean).join(', ') || '—'}</td></tr>`).join('');
+      widget.querySelector('tbody').innerHTML = current.map(r => `<tr><td><button type="button" data-method="${esc(r.method)}">${esc(r.method)}</button></td><td title="${esc(r.device_detail)}">${esc(r.device)}</td><td>${r.score}/67</td><td>${fmt(r.latency)}</td><td>${r.gb ?? '—'}</td><td>${[speedIds.has(r.method) ? 'Speed' : '', sizeIds.has(r.method) ? 'Size' : ''].filter(Boolean).join(', ') || '—'}</td><td>${esc(r.readout || '—')}</td></tr>`).join('');
       widget.querySelectorAll('tbody button').forEach(b => b.onclick = () => showDetail(widget, rows.find(r => r.method === b.dataset.method)));
       widget.querySelector('.be-detail').textContent = 'Hover a point for its exact run. Click a point or a table row for execution evidence.';
       const fastest = current.slice(0, 15).reverse();

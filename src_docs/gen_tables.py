@@ -178,7 +178,45 @@ def main() -> None:
         "or does not apply (the direct score of a model trained on English only).",
         sorted_by="Translated",
     )
+    remote = [r for r in rows if r["method"].startswith("openrouter@")]
+    table(
+        "remote",
+        ["Model", "Resolved version", "C/G", "Readout", "Translated", "Direct", "Translated ms", "Direct ms"],
+        [
+            "".join(
+                [
+                    cell(r["model"], title=r.get("note", "")),
+                    cell(", ".join(r["resolved_models"]), title=", ".join(r["providers"])),
+                    device_cell(r),
+                    cell(r["readout"]),
+                    score(r["translated"]),
+                    score(r["direct"]),
+                    num(r["ms"], 1),
+                    num(r["ms_direct"], 1),
+                ]
+            )
+            for r in remote
+        ],
+        caption=(
+            "Full 67-query runs in each mode; network and provider processing included. "
+            "R: undisclosed remote CPU/GPU."
+        ),
+    )
     top = sorted(rows, key=lambda r: (high_first(r["translated"]), high_first(r["direct"]), r["ms"]))[:15]
+    bars = "".join(
+        "<li" + (' class="is-ref"' if r["device"] == "R" else "") + ">"
+        f'<span class="ornotto-bars__name">{html.escape(r["model"])} {html.escape(r["quant"])}'
+        f"<small>{html.escape(r['engine'])} · {r['device']}"
+        f"{' · ' + html.escape(r['readout']) if r.get('readout') else ''}</small></span>"
+        f'<span class="ornotto-bars__track"><span style="--v:{r["translated"]}"></span></span>'
+        f'<span class="ornotto-bars__score">{r["translated"]}</span>'
+        f'<span class="ornotto-bars__ms">{r["ms"]:.0f} ms</span></li>'
+        for r in top[:8]
+    )
+    (OUT / "landing-bars.html").write_text(
+        '<figure class="ornotto-bars"><figcaption>Correct answers out of 67, translated queries. '
+        "Bars start at zero.</figcaption><ol>" + bars + "</ol></figure>\n"
+    )
     table(
         "top",
         CLASSIFIER_HEADERS[1:10],

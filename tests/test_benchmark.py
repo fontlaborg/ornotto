@@ -66,3 +66,11 @@ def test_book_assets_when_versioned_then_urls_match_content_and_are_idempotent(t
         assert (tmp_path / versioned).read_bytes() == (tmp_path / asset).read_bytes()
     diagrams.version_assets(config, tmp_path)
     assert config.read_text() == first, "Repeated builds must retain identical asset URLs"
+
+
+def test_remote_widget_when_generated_then_api_engine_and_readout_are_explicit():
+    row = json.loads((ROOT / "src_docs/data/classifiers.json").read_text())[0]
+    row.update(method="openrouter@respan/span-01", engine="OpenRouter API", device="R", readout="noul OVR")
+    widget = diagrams.widget([row])
+    assert '<option value="OpenRouter API">OpenRouter API</option>' in widget
+    assert "<th>Readout</th>" in widget, "Remote readout must be visible beside its benchmark run"

@@ -90,7 +90,7 @@ def widget(rows: list[dict]) -> str:
 <div class="be-chart" data-chart="size" role="img" aria-label="Accuracy versus weight file size, with Pareto frontier"></div>
 <div class="be-chart be-bars" data-chart="fastest" role="img" aria-label="Fastest qualifying benchmark runs"></div>
 <p class="be-detail" tabindex="0">Hover a point for its exact run. Click a point or a table row for execution evidence.</p>
-<div class="be-table"><table><caption>Filtered runs, fastest first. Pareto membership is calculated within the current filters.</caption><thead><tr><th>Run</th><th>C/G</th><th>Correct / 67</th><th>ms/query</th><th>Weight GB</th><th>Pareto</th></tr></thead><tbody></tbody></table></div>
+<div class="be-table"><table><caption>Filtered runs, fastest first. Pareto membership is calculated within the current filters.</caption><thead><tr><th>Run</th><th>C/G</th><th>Correct / 67</th><th>ms/query</th><th>Weight GB</th><th>Pareto</th><th>Readout</th></tr></thead><tbody></tbody></table></div>
 <noscript>Enable JavaScript for the diagrams. The full report tables remain readable without it.</noscript>
 </section>"""
 

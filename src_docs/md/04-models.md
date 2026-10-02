@@ -173,7 +173,7 @@ The weights live on Hugging Face under `convaiinnovations`, but that name does n
 
 ### jev
 
-jev is TypeSafe's hosted System One model and the best result in the benchmark ([chapter 3](03-engines.md#jev)). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine ([chapter 11](11-typed.md)).
+jev is TypeSafe's hosted System One model and our benchmark reference ([chapter 3](03-engines.md#jev)). Its internals are not public, so the benchmark treats it as the reference, not as a design to copy. dohnuts answers the same request shape, which is why pydantic-ai's TypeSafe model can drive a local engine ([chapter 11](11-typed.md)).
 
 There was only one jev in September. TypeSafe's model list on 2026-09-30 shows `jev-1.13.0` as the only model, with both `jev-latest` and `jev-preview` pointing to it.[^tsmodels] Every public board that ranked jev during the month names the same version. Our harness called `jev-latest` and did not record the version it resolved to. Our jev rows almost certainly measure 1.13.0, but that is an inference from the boards and the docs, not a logged fact.
 

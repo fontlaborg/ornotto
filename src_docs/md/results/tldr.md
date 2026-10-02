@@ -4,9 +4,11 @@ this_file: src_docs/md/results/tldr.md
 
 # Results: the short version
 
-We asked 291 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.
+We asked 300 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small local dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.
 
-The separate Rune Q4 Metal rerun scores 63/64 at 124.8 ms, against 487.1 ms with CPU weights. Every row now carries a C/G execution label. [Explore the Pareto diagrams](explorer.md) with your own accuracy floor: laya on MLX reaches 52/67 translated in 6.9 ms.
+The separate Rune Q4 Metal rerun scores 63/67 translated and 64/67 direct at 124.8 ms, against 487.1 ms with CPU weights. Every row now carries a C/G execution label. [Explore the Pareto diagrams](explorer.md) with your own accuracy floor: laya on MLX reaches 52/67 translated in 6.9 ms.
+
+Fresh OpenRouter Jev scores **65/67 in both modes** at **364.4 ms translated and 375.1 ms direct**. Tev1 reaches **65/67 direct at 335.1 ms**; Kev reaches **65/67 in both modes** but takes over 1.5 seconds per query. All nine endpoints appear under **OpenRouter API** in the explorer.
 
 ## The top fifteen
 
@@ -17,7 +19,7 @@ The separate Rune Q4 Metal rerun scores 63/64 at 124.8 ms, against 487.1 ms with
 Scores read translated / direct, out of 67. A dash means the model reads English only.
 
 - **dohnuts (Metal)**: decider-35b-a3b at Q4, 64 / 64 in 266 ms from 21 GB. The small decider-0.8b that `ornotto` registers scores 62 / 61 in 52 ms from 0.81 GB.
-- **pcdServer**: Qwen3.5-4B-Hmm at Q8, 64 / 65 in 88 ms. The 2.7 GB Q4_K_M file scores the same in 93 ms.
+- **pcdServer**: Rune Q5 scores 65 / 65 in 962 ms with CPU weights and Metal computation (C+G). Qwen3.5-4B-Hmm at Q8 scores 64 / 65 in 88 ms on GPU; its 2.7 GB Q4_K_M file scores the same in 93 ms.
 - **slot (llama-server)**: rune-26b-a4b at Q3, 65 / 57 in 367 ms from 13.5 GB. pcdServer rejects its Gemma 4 files, so it runs only here.
 - **ollaya**: winnow-12b, 64 / 65 in 891 ms from 12.7 GB.
 - **Encoders**: GLiNER2.5-Decide on Core AI, 61 / – in 26.9 ms. laya is the only method under 10 ms with a useful score: 52/67 in 7 ms on MLX.
@@ -27,14 +29,14 @@ The full list, one row per engine and runtime, is in [chapter 6](../06-results.m
 ## What to pick
 
 - **A good default**: decider-0.8b on dohnuts. It scores 62/67 in 52 ms from 0.81 GB, and its probabilities are calibrated.
-- **The most accurate answer in `ornotto`**: Qwen3.5-4B-Hmm on pcdServer, 64/67 translated and 65/67 on the original text, from 2.7 GB at Q4_K_M. It needs no translator.
-- **The best accuracy, if the text may leave the machine**: jev, hosted, 65/67 in 466 ms per call. `ornotto` does not call it; pydantic-ai's `TypeSafeModel` does.
+- **Accurate local routing around 90 ms**: Qwen3.5-4B-Hmm on pcdServer, 64/67 translated and 65/67 on the original text, from 2.7 GB at Q4_K_M. It needs no translator.
+- **Remote decisions**: `ornotto` now supports all nine measured OpenRouter endpoints through its native API. Compare their scores and network-inclusive latency in the [remote results table](details.md#openrouter-nine-remote-models), or choose **Engine: OpenRouter API** in the [explorer](explorer.md). Respan uses a separately labelled noul OVR readout.
 
 [Chapter 12](../12-choosing.md#which-engine-and-model) covers the other cases, from graded answers to several questions about one message.
 
 ## Where to read more
 
-- [Results: every table](details.md) has all 291 rows, filterable and sortable, and every other table the benchmark produced.
+- [Results: every table](details.md) has all 300 rows, filterable and sortable, and every other table the benchmark produced.
 - [Chapter 5](../05-method.md) explains how we measured and what each column means.
 - [Chapter 6](../06-results.md) reads the results model by model.
 - [Chapter 7](../07-quantization.md) covers quantization and file size.

@@ -18,16 +18,18 @@ Needs `pip install "ornotto[pydantic-ai]"`.
 from __future__ import annotations
 
 import json
+import time
 from typing import Any
 
 import httpx2
 from pydantic_ai.models.typesafe import TypeSafeModel
 from pydantic_ai.providers.typesafe import TypeSafeProvider
-from typesafe_sdk import AsyncTypeSafeClient
+from typesafe_sdk import AsyncTypeSafeClient, RetryPolicy
 
 from ._decider import Decider
 from ._models import DEFAULT_MODEL, Engine
 from ._protocol import as_question
+from ._remote import OPENROUTER_KINDS
 
 __all__ = ["model", "provider"]
 
@@ -37,8 +39,17 @@ LOCAL_KEY = "ornotto-local"
 
 def provider(decider: Decider) -> TypeSafeProvider:
     """A TypeSafe provider whose requests go to `decider`'s engine."""
-    if decider.adapter.native:  # dohnuts and ollaya speak TypeSafe's wire format
-        return TypeSafeProvider(api_key=LOCAL_KEY, base_url=decider.url)
+    binary_remote = decider.engine == "openrouter" and OPENROUTER_KINDS.get(decider.model_name) == ("noul",)
+    if decider.engine == "openrouter" and not binary_remote:
+        client = AsyncTypeSafeClient(
+            api_key=decider._api_key,
+            base_url=decider.url,
+            timeout=decider.timeout,
+            retry=RetryPolicy(max_retries=0),
+        )
+        return TypeSafeProvider(typesafe_client=client)
+    if decider.adapter.native and not binary_remote:  # local native engines
+        return TypeSafeProvider(api_key=decider._api_key or LOCAL_KEY, base_url=decider.url)
 
     async def handle(request: httpx2.Request) -> httpx2.Response:
         if request.method == "GET" and request.url.path.endswith("/v1/models"):
@@ -54,7 +65,7 @@ def provider(decider: Decider) -> TypeSafeProvider:
             json={
                 "model": decider.model_name,
                 "answers": answers,
-                "usage": {"input_tokens": 0, "output_tokens": 0},
+                "usage": decider._decision(raw, time.perf_counter()).usage,
             },
         )
 

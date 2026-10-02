@@ -107,7 +107,8 @@ class Answer:
     """choice: per option; score: per level ("0", "1", …); noul: {"false": p, "true": p}."""
     calibrated: bool
     """True when probabilities are temperature-scaled by the model's recipe (decider, kev, Dohnuts);
-    False for pcdServer's raw softmax over the allowed tokens. Compare confidences only within one kind."""
+    False for pcdServer's raw softmax and remote providers whose calibration recipe is unrecorded.
+    Compare confidences only within one kind."""
     raw: dict[str, JSON] = field(default_factory=dict, repr=False)
 
     @property
@@ -142,6 +143,9 @@ class Decision(Mapping[str, Answer]):
     engine: str
     usage: dict[str, JSON] = field(default_factory=dict)
     ms: float = 0.0
+    resolved_model: str | None = None
+    provider: str | None = None
+    response_id: str | None = None
 
     def __getitem__(self, key: str) -> Answer:
         return self.answers[key]

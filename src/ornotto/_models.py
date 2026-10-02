@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-Engine = Literal["dohnuts", "pcd", "ollaya"]
+Engine = Literal["dohnuts", "pcd", "ollaya", "openrouter"]
 Family = Literal["dedicated", "fine-tuned", "vanilla"]
 
 

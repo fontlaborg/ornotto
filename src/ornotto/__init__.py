@@ -18,6 +18,7 @@ from ._decider import Decider, DecisionError
 from ._engines import EngineNotFound, Server
 from ._models import DEFAULT_MODEL, MODELS, ModelSpec
 from ._protocol import Answer, Decision, Question, choice, score, yes_no
+from ._remote import OPENROUTER_KINDS, OPENROUTER_MODELS
 from ._typed import aextract, classify, decision, default, extract, questions_for, use
 
 try:
@@ -28,6 +29,8 @@ except ImportError:  # running from a source tree without a build
 __all__ = [
     "DEFAULT_MODEL",
     "MODELS",
+    "OPENROUTER_MODELS",
+    "OPENROUTER_KINDS",
     "Answer",
     "Decider",
     "Decision",

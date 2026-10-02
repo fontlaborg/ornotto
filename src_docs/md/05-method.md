@@ -252,3 +252,10 @@ Every board in this section was created in the second half of September, after j
 ## Interactive comparisons
 
 The [benchmark explorer](results/explorer.md) recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 290 earlier timings and answers are preserved.
+
+
+## October remote measurements
+
+The nine OpenRouter endpoints were measured on 3 October 2026 against the same 67 queries and frozen translation choices. Six accept a native five-way choice. Respan's three endpoints accept only noul: each request asks five independent yes/no questions, using each task's full description after “Is this the single best description of what the user is asking?” The selected route is the largest P(true); normalized values support the common routing report but do not establish exclusive-choice calibration. The explorer and remote table identify this readout as **noul OVR**.
+
+There are 106 distinct original/translated inputs per endpoint, each measured once. Reusing identical inputs between modes avoids duplicate requests. Requests run sequentially; free endpoints are paced to respect the provider's rate limit. Pacing and rate-limit waits are outside the measured request time. A failed request is excluded; completed responses are checkpointed. Remote latency includes connection setup, network travel and provider processing. Requested IDs, resolved model IDs, providers, response IDs and reported usage are retained with the measurements. **R** indicates undisclosed remote hardware; weight size and precision remain blank.

@@ -2,6 +2,63 @@
 
 # Work
 
+## 2026-10-03 — full remote benchmarks and report rebuild
+
+Completed all nine requested endpoints on 106 distinct inputs each: 954
+successful requests, evaluated on 67 translated and 67 direct queries.
+Frozen translations and all 30,880 prior query records are unchanged; after
+export, all fields of the 291 prior classifier rows are identical. The report
+now has 300 configurations: 246 G, 19 C, 19 C+G, two C+N, four A and ten R.
+Remote hardware and precision remain undisclosed. Six endpoints use native
+choice; Respan's three use five noul questions, argmax P(true), and normalized
+weights, explicitly labelled noul OVR without a calibration claim. Record
+resolved versions and providers. Pacing and transient-error waits are outside
+request latency; successful responses resume from durable checkpoints.
+
+Fresh OpenRouter Jev scores 65/67 in both modes at 364.4/375.1 ms translated/
+direct. Tev1 scores 64/65 at 339.3/335.1 ms; Kev scores 65/65 at 1653.0/1525.0 ms.
+All three Respan variants score 56/60. The existing hosted Jev row is retained.
+Rebuilt the private report, exported all public aggregates, and added a remote
+results table. The explorer groups all nine under OpenRouter API and shows
+readout labels in its table and CSV; the homepage ranking now uses the same
+JSON. Validation: 98 package tests pass (13 local-engine tests deselected),
+81 private tests pass (one optional skipped), Ruff passes, and the strict
+18-page build succeeds. Fresh local browser checks pass all three plots,
+all nine API rows and readouts, filter reload, remote CSV, Pareto changes,
+Rune Q4 comparison, direct timing, mobile/dark layouts, SVG, offline HTML
+and homepage navigation with zero JavaScript errors. Live verification
+follows deployment.
+
+## 2026-10-03 — remote decision models
+
+Added nine OpenRouter IDs and explicit arbitrary decision IDs, authenticated
+sync/async native System One requests, typed extraction, CLI discovery, and
+the actual TypeSafe SDK transport for pydantic-ai. Calls never download or
+launch local weights. Record requested/resolved model, provider, response ID
+and reported usage/cost; mark calibration as unrecorded. Handle malformed
+probabilities, missing answers, auth/credit/rate-limit/provider errors and
+timeouts without retries. Remote keys are not sent to local engines.
+
+The private harness accepts an explicit OPENROUTER_MODELS list; exports mark
+remote rows as R rather than inventing CPU/GPU placement. Existing benchmark
+results are untouched. Initial verification checked only the process environment;
+the user pointed out the existing credential in ~/.env. Loading it through the
+same python-dotenv path as the harness enabled authenticated inference. Six
+models passed native choice/noul/score. All three Respan variants passed noul
+but rejected choice/score; OPENROUTER_KINDS now records this and unsupported
+calls fail locally before inference. The TypeSafe integration converts Respan
+questions to plain strings and enforces the same capabilities. Initial and
+corrected smoke responses, provider/model IDs, usage/cost and timings are
+retained outside the public repository. They are protocol smoke checks,
+not accuracy benchmarks. OpenRouter model pages and OpenAPI were consulted.
+Validation: 97 package tests pass (13 local-engine tests deselected), including
+actual TypeSafe and pydantic-ai transports and the Respan boolean bridge.
+Authenticated pydantic-ai Agents also pass on Liquid and Respan Lite free.
+The strict 18-page docs build, fresh source distribution and private suite
+(81 passed, one optional skipped) also pass. All 291 benchmark rows remain
+unchanged; protocol checks have not been presented as accuracy measurements. No package
+release was performed.
+
 ## 2026-10-02 — Metal rerun and benchmark explorer
 
 Rune mradermacher Q4 completed alone on Metal (`--gpu-layers -1`, MTL0),

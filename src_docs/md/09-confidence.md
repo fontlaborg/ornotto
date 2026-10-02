@@ -144,7 +144,7 @@ If you run the two models as a pydantic-ai chain instead, [chapter 11](11-typed.
 
 ## The hardest queries
 
-Some queries defeat most of the 291 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.
+Some queries defeat most of the 300 classifiers, and they are worth reading because they show where the task definition, not the model, is weak. The table lists every query with the share of classifiers that got it right, translated and direct, and jev's answer on the translated text. It opens with the hardest.
 
 --8<-- "tables/queries.html"
 

@@ -2,15 +2,16 @@
 
 # ornotto
 
-ornotto asks a local language model to decide, not to write. You describe a decision (pick one of these options, answer yes or no, place this on a rubric) and get back an answer with a probability for every alternative. Nothing is generated, so nothing has to be parsed, repaired or retried.
+ornotto asks a language model to decide, not to write. You describe a decision (pick one of these options, answer yes or no, place this on a rubric) and get back an answer with a probability for every alternative. Nothing is generated, so nothing has to be parsed, repaired or retried.
 
-It gives three open-source engines one Python API:
+It gives local engines and hosted decision models one Python API:
 
 - **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts, Tev1, Jet, JPT and ThisThat) and reads their answer at a trained slot. Its probabilities follow each model's temperature recipe.
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
+- **OpenRouter** serves native choice, yes/no and score questions remotely, using the same `Decider` methods.
 
-The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 291 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
+The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 300 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
 
 The [interactive explorer](https://fontlab.org/ornotto/results/explorer/) filters by accuracy floor, engine and CPU/GPU execution, with speed and weight-size Pareto frontiers. Run `python3 src_docs/gen_diagrams.py --out explorer.html` to produce an offline report from the public JSON. Rune Q4 now has a separate Metal run: 63/64 at 124.8 ms, against 487.1 ms with CPU weights.
 
@@ -100,11 +101,17 @@ such as `{"profile": "jpt", "temperature": 1.036}` for JPT 4B, or temperature
 `gpu=False` disables pcdServer GPU weights, computation and KV offload.
 Build current `main` with `./build.sh` for the October registry and engine updates.
 
-`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: Bosun, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 291 methods in the book, the mradermacher Rune Q5 on pcdServer matches hosted jev at 65/67 in both modes, with CPU weights at 962 ms/query; the registered Q3 scores 64/64 at 146 ms.
+`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: Bosun, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 300 methods in the book, the mradermacher Rune Q5 on pcdServer matches hosted jev at 65/67 in both modes, with CPU weights at 962 ms/query; the registered Q3 scores 64/67 in both modes at 146 ms.
 
 The engine starts on the first question, on a free loopback port, and stops when Python exits. Every `Decider` in a process that names the same model, engine and device shares one engine process. `ornotto.shutdown()` stops them all now.
 
 An ollaya engine is a private `ollaya serve` on its own port. It holds one model, pulls the tag if the store lacks it, and loads it before the first question. It never touches a daemon you run on ollaya's default port. A state longer than the model's context raises `DecisionError` instead of being cut; `ollaya-laya-en` reads only 512 tokens.
+
+## Remote decision models
+
+Use current `main` for remote support. Set `OPENROUTER_API_KEY`, then call `ornotto.Decider("liquid/d1").choose(state, options)`.
+All nine requested IDs appear in `ornotto models` and `ornotto.OPENROUTER_MODELS`; other decision IDs use `engine="openrouter"` or the `openrouter:owner/model` prefix.
+Sync/async calls, typed extraction and pydantic-ai work without local models; the three Respan variants accept yes/no only. See [remote configuration, usage/cost and execution labels](src_docs/md/10-package.md#remote-openrouter-models).
 
 ## Typed decisions
 

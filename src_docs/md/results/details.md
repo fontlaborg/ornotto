@@ -14,7 +14,15 @@ Scores count correct answers out of 67. **Translated** means the 39 non-English 
 
 Most tables sort when you click a column header; click again to reverse the order.
 
-## All 291 methods
+## OpenRouter: nine remote models
+
+All nine requested endpoints were measured on the same 67 queries, in translated and direct modes, on 3 October 2026. Translations and local results are retained from the earlier runs. Each endpoint received 106 distinct inputs, sequentially, with duplicate inputs reused across modes. Latency includes the network trip and provider processing; **R** means the provider did not disclose CPU/GPU placement or weight precision.
+
+Six endpoints use a native five-way **choice**. Respan's three endpoints support **noul** only: each request contains five independent yes/no questions using the same task descriptions. We choose the largest P(true), then normalize the five values for the routing report. This **noul OVR** readout is labelled separately; its values are not calibrated exclusive-choice probabilities. Choose **OpenRouter API** in the explorer's engine filter to select all nine endpoints. Its table shows the readout for each run.
+
+--8<-- "tables/remote.html"
+
+## All 300 methods
 
 A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Five more failed and are left out; [chapter 6](../06-results.md#every-method) says why.
 

@@ -1278,27 +1278,28 @@
 
 
 <h1 id="results-the-short-version">Results: the short version<a class="headerlink" href="#results-the-short-version" title="Permanent link">&para;</a></h1>
-<p>We asked 291 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.</p>
-<p>The separate Rune Q4 Metal rerun scores 63/64 at 124.8 ms, against 487.1 ms with CPU weights. Every row now carries a C/G execution label. <a href="../explorer/">Explore the Pareto diagrams</a> with your own accuracy floor: laya on MLX reaches 52/67 translated in 6.9 ms.</p>
+<p>We asked 300 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small local dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.</p>
+<p>The separate Rune Q4 Metal rerun scores 63/67 translated and 64/67 direct at 124.8 ms, against 487.1 ms with CPU weights. Every row now carries a C/G execution label. <a href="../explorer/">Explore the Pareto diagrams</a> with your own accuracy floor: laya on MLX reaches 52/67 translated in 6.9 ms.</p>
+<p>Fresh OpenRouter Jev scores <strong>65/67 in both modes</strong> at <strong>364.4 ms translated and 375.1 ms direct</strong>. Tev1 reaches <strong>65/67 direct at 335.1 ms</strong>; Kev reaches <strong>65/67 in both modes</strong> but takes over 1.5 seconds per query. All nine endpoints appear under <strong>OpenRouter API</strong> in the explorer.</p>
 <h2 id="the-top-fifteen">The top fifteen<a class="headerlink" href="#the-top-fifteen" title="Permanent link">&para;</a></h2>
 <div class="bench" markdown="0">
 <table class="sortable" id="top"><caption>The 15 best methods by translated score, then direct score, then speed. Click to sort.</caption><thead><tr><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th></tr></thead>
 <tbody>
+<tr><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>typesafe/jev-1.13</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>jev (hosted)</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>jev</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="466.104478" class="num">466.1</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>pcdServer</td><td title="CPU weights (--gpu-layers 0); Metal computation and KV offload enabled (configured)">C+G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q5</td><td data-sort="19.13" class="num">19.13</td><td data-sort="962.283582" class="num">962.3</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
+<tr><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>jaredpalmer/kev-4b</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="1653.031343" class="num">1,653.0</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td></tr>
 <tr><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>q8</td><td data-sort="4.48" class="num">4.48</td><td data-sort="87.559701" class="num">87.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>q4</td><td data-sort="2.71" class="num">2.71</td><td data-sort="92.625373" class="num">92.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>bf16</td><td data-sort="8.42" class="num">8.42</td><td data-sort="94.831343" class="num">94.8</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
+<tr><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>togethercomputer/tev1-4b-experimental</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="339.256716" class="num">339.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>ollaya</td><td title="ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe (configured)">G</td><td>winnow-12b</td><td>dedicated</td><td>q8_0</td><td data-sort="12.67" class="num">12.67</td><td data-sort="891.125373" class="num">891.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.29" class="num">13.29</td><td data-sort="146.055224" class="num">146.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>neohorse-4b</td><td>dedicated</td><td>q8</td><td data-sort="5.17" class="num">5.17</td><td data-sort="273.114925" class="num">273.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="299.141791" class="num">299.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>jpt-4b</td><td>dedicated</td><td>q8</td><td data-sort="4.48" class="num">4.48</td><td data-sort="335.591045" class="num">335.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>pcdServer</td><td title="CPU only (--gpu-layers 0 --cpu); compute and KV offload disabled (configured)">C</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q8</td><td data-sort="26.86" class="num">26.86</td><td data-sort="758.122388" class="num">758.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>llama.cpp embeddings + head</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td>jev-omni</td><td>dedicated</td><td>q3</td><td data-sort="6.09" class="num">6.09</td><td data-sort="1222.338806" class="num">1,222.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-26b-a4b</td><td>dedicated</td><td>q4</td><td data-sort="17.03" class="num">17.03</td><td data-sort="335.29403" class="num">335.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="55" class="num score">55/67</td></tr>
 </tbody></table>
 </div>
 
@@ -1306,7 +1307,7 @@
 <p>Scores read translated / direct, out of 67. A dash means the model reads English only.</p>
 <ul>
 <li><strong>dohnuts (Metal)</strong>: decider-35b-a3b at Q4, 64 / 64 in 266 ms from 21 GB. The small decider-0.8b that <code>ornotto</code> registers scores 62 / 61 in 52 ms from 0.81 GB.</li>
-<li><strong>pcdServer</strong>: Qwen3.5-4B-Hmm at Q8, 64 / 65 in 88 ms. The 2.7 GB Q4_K_M file scores the same in 93 ms.</li>
+<li><strong>pcdServer</strong>: Rune Q5 scores 65 / 65 in 962 ms with CPU weights and Metal computation (C+G). Qwen3.5-4B-Hmm at Q8 scores 64 / 65 in 88 ms on GPU; its 2.7 GB Q4_K_M file scores the same in 93 ms.</li>
 <li><strong>slot (llama-server)</strong>: rune-26b-a4b at Q3, 65 / 57 in 367 ms from 13.5 GB. pcdServer rejects its Gemma 4 files, so it runs only here.</li>
 <li><strong>ollaya</strong>: winnow-12b, 64 / 65 in 891 ms from 12.7 GB.</li>
 <li><strong>Encoders</strong>: GLiNER2.5-Decide on Core AI, 61 / – in 26.9 ms. laya is the only method under 10 ms with a useful score: 52/67 in 7 ms on MLX.</li>
@@ -1315,13 +1316,13 @@
 <h2 id="what-to-pick">What to pick<a class="headerlink" href="#what-to-pick" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>A good default</strong>: decider-0.8b on dohnuts. It scores 62/67 in 52 ms from 0.81 GB, and its probabilities are calibrated.</li>
-<li><strong>The most accurate answer in <code>ornotto</code></strong>: Qwen3.5-4B-Hmm on pcdServer, 64/67 translated and 65/67 on the original text, from 2.7 GB at Q4_K_M. It needs no translator.</li>
-<li><strong>The best accuracy, if the text may leave the machine</strong>: jev, hosted, 65/67 in 466 ms per call. <code>ornotto</code> does not call it; pydantic-ai's <code>TypeSafeModel</code> does.</li>
+<li><strong>Accurate local routing around 90 ms</strong>: Qwen3.5-4B-Hmm on pcdServer, 64/67 translated and 65/67 on the original text, from 2.7 GB at Q4_K_M. It needs no translator.</li>
+<li><strong>Remote decisions</strong>: <code>ornotto</code> now supports all nine measured OpenRouter endpoints through its native API. Compare their scores and network-inclusive latency in the <a href="../details/#openrouter-nine-remote-models">remote results table</a>, or choose <strong>Engine: OpenRouter API</strong> in the <a href="../explorer/">explorer</a>. Respan uses a separately labelled noul OVR readout.</li>
 </ul>
 <p><a href="../../12-choosing/#which-engine-and-model">Chapter 12</a> covers the other cases, from graded answers to several questions about one message.</p>
 <h2 id="where-to-read-more">Where to read more<a class="headerlink" href="#where-to-read-more" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../details/">Results: every table</a> has all 291 rows, filterable and sortable, and every other table the benchmark produced.</li>
+<li><a href="../details/">Results: every table</a> has all 300 rows, filterable and sortable, and every other table the benchmark produced.</li>
 <li><a href="../../05-method/">Chapter 5</a> explains how we measured and what each column means.</li>
 <li><a href="../../06-results/">Chapter 6</a> reads the results model by model.</li>
 <li><a href="../../07-quantization/">Chapter 7</a> covers quantization and file size.</li>
@@ -1421,7 +1422,7 @@
       
         <script src="../../js/benchmark-math.da51227706b3.js"></script>
       
-        <script src="../../js/benchmark.e0c1a4155a7f.js"></script>
+        <script src="../../js/benchmark.040f05193bf1.js"></script>
       
     
   </body>

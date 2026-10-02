@@ -4,9 +4,19 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 291 methods finished; five failed and are left out.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 300 methods finished; five failed and are left out.
 
-The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every number in this chapter comes from our own run on one Mac, on one 67-query question. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
+The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
+
+## OpenRouter: nine remote models
+
+The fresh `typesafe/jev-1.13` run scored **65/67 in both modes**, at **364.4 ms translated and 375.1 ms direct**. Together Tev1 scored **64/67 translated at 339.3 ms** and **65/67 direct at 335.1 ms**. Kev 4B also scored **65/67 in both**, at **1,653.0 ms translated and 1,525.0 ms direct**. The earlier hosted Jev measurement is retained; differences in end-to-end timing across dates are not a controlled model-speed comparison.
+
+All nine requested endpoints were measured on the same 67 queries, in translated and direct modes, on 3 October 2026. Translations and local results are retained from the earlier runs. Each endpoint received 106 distinct inputs, sequentially, with duplicate inputs reused across modes. Latency includes the network trip and provider processing; **R** means the provider did not disclose CPU/GPU placement or weight precision.
+
+Six endpoints use a native five-way **choice**. Respan's three endpoints support **noul** only: each request contains five independent yes/no questions using the same task descriptions. We choose the largest P(true), then normalize the five values for the routing report. This **noul OVR** readout is labelled separately; its values are not calibrated exclusive-choice probabilities. Choose **OpenRouter API** in the explorer's engine filter to select all nine endpoints. Its table shows the readout for each run.
+
+--8<-- "tables/remote.html"
 
 ## Issue 102: October additions
 
@@ -81,7 +91,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 291 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 300 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -95,7 +105,7 @@ Some reading notes:
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 172 of the 291. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 172 of the 300. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query | C/G |
 |---|---:|---|---|---:|---|

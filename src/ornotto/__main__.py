@@ -17,7 +17,7 @@ import time
 
 import fire
 
-from . import MODELS, Decider, __version__
+from . import MODELS, OPENROUTER_KINDS, OPENROUTER_MODELS, Decider, __version__
 from ._engines import Server, gpu_available
 from ._models import Engine, resolve
 
@@ -30,15 +30,22 @@ class Cli:
 
     def models(self) -> str:
         """List registered models."""
-        width = max(map(len, MODELS))
+        width = max(map(len, [*MODELS, *OPENROUTER_MODELS]))
         rows = [f"{'name':{width}} {'engines':13} {'family':11} {'GB':>4}  licence"]
         for m in MODELS.values():
             engines = ",".join(m.engines)
             rows.append(f"{m.name:{width}} {engines:13} {m.family:11} {m.size_gb:4.1f}  {m.license}")
+        rows += [
+            f"{name:{width}} {'openrouter':13} {'dedicated':11} {'—':>4}  remote (R); "
+            f"{','.join(OPENROUTER_KINDS[name])}"
+            for name in OPENROUTER_MODELS
+        ]
         return "\n".join(rows)
 
     def pull(self, model: str) -> str:
         """Download a model (and its metadata) into the Hugging Face cache; an ollaya tag into its store."""
+        if model in OPENROUTER_MODELS or model.startswith("openrouter:"):
+            raise ValueError("Remote models have no local weights to pull")
         resolved = resolve(model)
         if resolved.gguf is not None:
             return str(resolved.gguf)
@@ -67,6 +74,8 @@ class Cli:
 
     def serve(self, model: str = "decider-0.8b", engine: Engine | None = None) -> None:
         """Start an engine and keep it running until Ctrl-C."""
+        if engine == "openrouter" or model in OPENROUTER_MODELS or model.startswith("openrouter:"):
+            raise ValueError("Remote models are already hosted; use choose/check instead of serve")
         decider = Decider(model, engine=engine)
         print(f"{decider.engine} serving {decider.model_name} at {decider.url}", flush=True)
         try:

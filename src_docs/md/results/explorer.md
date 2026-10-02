@@ -6,9 +6,17 @@ this_file: src_docs/md/results/explorer.md
 
 An extra correct answer can cost hundreds of milliseconds. Choose the score you need, then compare the runs that meet it. The default floor is **50 correct answers out of 67**. Laya on MLX clears it at **52/67 in 6.9 ms** on translated text; a model does not have to top the accuracy table to be useful.
 
-These are 291 recorded configurations, not 291 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
+These are 300 recorded configurations, not 300 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
 
 --8<-- "tables/explorer.html"
+
+## OpenRouter: nine remote models
+
+All nine requested endpoints were measured on the same 67 queries, in translated and direct modes, on 3 October 2026. Translations and local results are retained from the earlier runs. Each endpoint received 106 distinct inputs, sequentially, with duplicate inputs reused across modes. Latency includes the network trip and provider processing; **R** means the provider did not disclose CPU/GPU placement or weight precision.
+
+Six endpoints use a native five-way **choice**. Respan's three endpoints support **noul** only: each request contains five independent yes/no questions using the same task descriptions. We choose the largest P(true), then normalize the five values for the routing report. This **noul OVR** readout is labelled separately; its values are not calibrated exclusive-choice probabilities. Choose **OpenRouter API** in the explorer's engine filter to select all nine endpoints. Its table shows the readout for each run.
+
+--8<-- "tables/remote.html"
 
 ## Read the frontier
 

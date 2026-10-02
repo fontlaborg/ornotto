@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -13,6 +14,7 @@ import httpx
 from ._engines import Adapter, Server, gpu_available
 from ._models import DEFAULT_MODEL, MODELS, Engine, resolve
 from ._protocol import JSON, Answer, Decision, Question, as_question, choice, parse_answer, score, yes_no
+from ._remote import OPENROUTER_MODELS, OPENROUTER_URL
 
 QuestionLike = Question | Mapping[str, JSON]
 
@@ -35,11 +37,12 @@ class Decider:
     Args:
         model: a registered name (see `ornotto.MODELS`), a local .gguf path, `hf:owner/repo/file.gguf`, or an
             ollaya tag (`ollaya:kev:4b`, or plain `kev:4b` with engine="ollaya").
-        engine: "dohnuts", "pcd" or "ollaya". Defaults to the first engine the model supports.
+        engine: "dohnuts", "pcd", "ollaya" or "openrouter". Registered remote IDs infer OpenRouter.
         url: talk to an engine that is already running instead of starting one.
         gpu: offload to the GPU (Metal on macOS). Defaults to on where the bundled build has a GPU backend.
         metadata, head: dohnuts profile JSON and scorer head, for a model that is not registered.
         timeout: seconds to wait for one answer.
+        api_key: OpenRouter key; defaults to OPENROUTER_API_KEY. Only sent to remote models.
 
     The engine starts on the first question, not here, and is shared by every Decider in the process
     that uses the same model, engine and device.
@@ -55,12 +58,37 @@ class Decider:
         metadata: str | Path | None = None,
         head: str | Path | None = None,
         timeout: float = 60.0,
+        api_key: str | None = None,
     ):
         self.gpu = gpu_available() if gpu is None else gpu
         self.timeout = timeout
         self._url = url.rstrip("/") if url else None
         wire = model
-        if url:
+        self._api_key = None
+        remote = engine == "openrouter" or model in OPENROUTER_MODELS or model.startswith("openrouter:")
+        if remote:
+            if (
+                engine not in (None, "openrouter")
+                or gpu is not None
+                or metadata is not None
+                or head is not None
+            ):
+                raise ValueError(
+                    "remote models use engine='openrouter' and have no local GPU/metadata/head settings"
+                )
+            wire = model.removeprefix("openrouter:")
+            if not wire or "/" not in wire:
+                raise ValueError("remote model must be an OpenRouter owner/model ID")
+            self._api_key = (
+                api_key if api_key is not None else os.environ.get("OPENROUTER_API_KEY", "")
+            ).strip()
+            if not self._api_key:
+                raise ValueError("Set OPENROUTER_API_KEY or pass api_key=... for remote models")
+            self.model_name, self.engine, self._resolved = wire, "openrouter", None
+            self._url = (url or OPENROUTER_URL).rstrip("/")
+        elif api_key is not None:
+            raise ValueError("api_key is only supported for remote OpenRouter models")
+        elif url:
             self.model_name, self.engine, self._resolved = model, engine or "dohnuts", None
             spec = MODELS.get(model)
             wire = spec.tag if spec and spec.tag else model.removeprefix("ollaya:")
@@ -116,15 +144,33 @@ class Decider:
 
     def _post(self, post: Any, state: JSON, qs: Mapping[str, Question]) -> dict[str, JSON]:
         path, body = self.adapter.request(state, qs)
-        return self._check(post(self.url + path, json=body), qs)
+        try:
+            return self._check(post(self.url + path, json=body, **self._auth()), qs)
+        except httpx.RequestError as error:
+            if self.engine != "openrouter":
+                raise
+            raise DecisionError(
+                f"openrouter request failed ({type(error).__name__}); no retry sent"
+            ) from None
 
     async def _apost(self, post: Any, state: JSON, qs: Mapping[str, Question]) -> dict[str, JSON]:
         path, body = self.adapter.request(state, qs)
-        return self._check(await post(self.url + path, json=body), qs)
+        try:
+            return self._check(await post(self.url + path, json=body, **self._auth()), qs)
+        except httpx.RequestError as error:
+            if self.engine != "openrouter":
+                raise
+            raise DecisionError(
+                f"openrouter request failed ({type(error).__name__}); no retry sent"
+            ) from None
+
+    def _auth(self) -> dict[str, Any]:
+        return {"headers": {"Authorization": f"Bearer {self._api_key}"}} if self._api_key else {}
 
     def _check(self, response: httpx.Response, qs: Mapping[str, Question]) -> dict[str, JSON]:
         if response.status_code != 200:
-            reply = f"{self.engine} answered {response.status_code}: {response.text[:500]}"
+            text = response.text.replace(self._api_key, "[redacted]") if self._api_key else response.text
+            reply = f"{self.engine} answered {response.status_code}: {text[:500]}"
             if STATE_TRUNCATED in response.text:
                 hint = (
                     f"the state is longer than {self.adapter.model_name}'s context; "
@@ -132,7 +178,12 @@ class Decider:
                 )
                 raise DecisionError(f"{hint} ({reply})")
             raise DecisionError(reply)
-        return self.adapter.response(response.json(), qs)
+        try:
+            return self.adapter.response(response.json(), qs)
+        except (ValueError, KeyError, TypeError, AttributeError) as error:
+            if self.engine != "openrouter":
+                raise
+            raise DecisionError("openrouter returned an invalid decision response") from error
 
     def _decision(self, raw: list[dict[str, JSON]], start: float) -> Decision:
         answers = {
@@ -143,7 +194,16 @@ class Decider:
             for key, value in (r.get("usage") or {}).items():
                 if isinstance(value, (int, float)):
                     usage[key] = usage.get(key, 0) + value
-        return Decision(answers, self.model_name, self.engine, usage, (time.perf_counter() - start) * 1000)
+        return Decision(
+            answers,
+            self.model_name,
+            self.engine,
+            usage,
+            (time.perf_counter() - start) * 1000,
+            resolved_model=raw[0].get("model"),
+            provider=raw[0].get("provider"),
+            response_id=raw[0].get("id"),
+        )
 
     # -- one question at a time ------------------------------------------------------------------------------
 

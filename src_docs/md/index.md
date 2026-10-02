@@ -30,7 +30,7 @@ Send a message and a closed list of answers. The model returns one of them and a
 </div>
 
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">291</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">300</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
@@ -79,24 +79,12 @@ Almeida asked this on jev's launch thread, when the discussion turned to whether
 
 ## What we measured
 
-One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 962 ms. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 291 rows and every table](results/details.md) are on the results page.
+One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 300 rows and every table](results/details.md).
 { .ornotto-section-lead }
 
 For a fast first pass, laya on MLX scores **52/67 in 6.9 ms** on translated text. [Set your own accuracy floor and compare Pareto frontiers](results/explorer.md). Rune Q4 now measures **124.8 ms** on GPU, against **487.1 ms** with CPU weights. **C** = CPU, **G** = GPU, **C+G** = mixed, **R** = remote; all other device codes are explained in the full report.
 
-<figure class="ornotto-bars">
-<figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
-<ol>
-<li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted) · R</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
-<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer · C+G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
-<li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server) · G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
-<li><span class="ornotto-bars__name">winnow-12b q8_0<small>ollaya · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">891 ms</span></li>
-<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q3<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">146 ms</span></li>
-</ol>
-</figure>
+--8<-- "tables/landing-bars.html"
 
 <details class="ornotto-more" markdown="1">
 <summary><span class="ornotto-more__sign" aria-hidden="true">+</span>Show the full top 15</summary>
@@ -109,9 +97,9 @@ Each row is one method, ranked by translated score, then direct score, then spee
 
 </div>
 
-## Three engines, one API
+## Local engines and remote models, one API
 
-The package runs two open-source C++ engines on llama.cpp behind one Python API, and drives a third if you install it. [Chapter 3](03-engines.md) explains how each one reads an answer.
+The package runs two open-source C++ engines on llama.cpp behind one Python API, drives ollaya if you install it, and calls the nine measured OpenRouter endpoints remotely. [Chapter 3](03-engines.md) explains how each one reads an answer.
 { .ornotto-section-lead }
 
 <div class="ornotto-features" markdown="1">
@@ -196,7 +184,7 @@ Benchmarks
 { .ornotto-chapters__group }
 
 5. [How we measured](05-method.md) One router question, 67 queries, labels fixed before the run.
-6. [Results](06-results.md) All 291 methods against jev, the hosted reference.
+6. [Results](06-results.md) All 300 methods against jev, the hosted reference.
 7. [Quantization and size](07-quantization.md) What precision changes: file size, memory and the answers that survive.
 8. [Speed, memory and caching](08-speed.md) One forward pass per decision, and what an engine avoids prefilling twice.
 9. [Confidence and fallback](09-confidence.md) Whether the probabilities mean what they say, and what a fallback buys.

@@ -31,7 +31,7 @@ Start from what your decision needs, not from the model list. The numbers in the
 | Any chat GGUF | pcdServer | dohnuts needs a native profile: decider, kev, Dohnuts, Jet, JPT, Tev1 or ThisThat. pcdServer scores the allowed tokens of any model with a chat template. |
 | A confidence to gate on | dohnuts | Temperature-scaled probabilities. [Chapter 9](09-confidence.md) shows how a gate at 0.7 to Qwen3.5-4B-Hmm moved 61/67 to 63/67 on untranslated text. |
 | Many different question sets in rotation | dohnuts, or pcdServer with a larger cache | pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache. |
-| The best accuracy, cost no object | jev (hosted) | 65/67 at 466 ms, over the network, per call. ornotto does not call it; pydantic-ai's `TypeSafeModel` does. |
+| Remote decisions | OpenRouter API | Nine measured endpoints through `ornotto`; compare [remote scores and network-inclusive timings](results/details.md#openrouter-nine-remote-models). Respan uses noul OVR. |
 
 Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in the wheel: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)). Through ollaya, `ollaya-laya-multilingual` answers in 12.3 ms with the same 52/67.
 

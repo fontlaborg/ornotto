@@ -2,6 +2,11 @@
 
 # TODO
 
+- [ ] Complete all nine remote benchmarks, rebuild all reports, publish and verify the OpenRouter API filter live.
+
+- [x] Add OpenRouter native remote support, all nine IDs, tests and benchmark execution labels.
+- [x] Run authenticated smokes for all nine remote models; record Respan as noul-only and enforce its capabilities.
+
 - [x] Publish and verify the 291-run Metal/device audit and interactive benchmark explorer.
 
 - [x] Complete issue 102: all variants measured, models integrated, 290-method report rebuilt and final publication verified live.

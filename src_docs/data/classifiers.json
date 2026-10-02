@@ -1,5 +1,35 @@
 [
  {
+  "method": "openrouter@typesafe/jev-1.13",
+  "engine": "OpenRouter API",
+  "model": "typesafe/jev-1.13",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:08:25.325796+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 364.440299,
+  "translated": 65,
+  "direct": 65,
+  "translated_en": 26,
+  "translated_other": 39,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "typesafe/jev-1.13-20260917"
+  ],
+  "providers": [
+   "TypeSafe"
+  ],
+  "request_count": 106,
+  "ms_direct": 375.0567164179104
+ },
+ {
   "method": "slot@rune-26b-a4b-q3",
   "engine": "slot (llama-server)",
   "model": "rune-26b-a4b",
@@ -59,6 +89,36 @@
   "direct_other": 39,
   "note": "mradermacher Rune conversion, Jinja chat-template fallback. CPU weights to respect RAM limits; Metal compute offload remains enabled. Latency is not a comparison with the GPU-weight Q3 run.",
   "ms_direct": 655.5731343283583
+ },
+ {
+  "method": "openrouter@jaredpalmer/kev-4b",
+  "engine": "OpenRouter API",
+  "model": "jaredpalmer/kev-4b",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:05:27.833210+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 1653.031343,
+  "translated": 65,
+  "direct": 65,
+  "translated_en": 26,
+  "translated_other": 39,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "jaredpalmer/kev-4b-20260924"
+  ],
+  "providers": [
+   "SiliconFlow"
+  ],
+  "request_count": 106,
+  "ms_direct": 1525.0194029850747
  },
  {
   "method": "pcdserver@qwen3.5-4b-hmm-q8",
@@ -240,6 +300,96 @@
   "direct_other": 39,
   "note": "Local Q8_0 conversion of the pinned BF16 file from prithivMLmods/jpt-4b-GGUF; upstream publishes no Q8. CC BY-NC 4.0 (non-commercial).",
   "ms_direct": 348.6298507462687
+ },
+ {
+  "method": "openrouter@togethercomputer/tev1-4b-experimental",
+  "engine": "OpenRouter API",
+  "model": "togethercomputer/tev1-4b-experimental",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224297+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 339.256716,
+  "translated": 64,
+  "direct": 65,
+  "translated_en": 26,
+  "translated_other": 38,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "togethercomputer/tev1-4b-experimental-20260923"
+  ],
+  "providers": [
+   "Together"
+  ],
+  "request_count": 106,
+  "ms_direct": 335.10895522388057
+ },
+ {
+  "method": "openrouter@inception/mercury-decide:free",
+  "engine": "OpenRouter API",
+  "model": "inception/mercury-decide:free",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224343+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 408.268657,
+  "translated": 64,
+  "direct": 64,
+  "translated_en": 25,
+  "translated_other": 39,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "inception/mercury-decide-20260930"
+  ],
+  "providers": [
+   "Inception"
+  ],
+  "request_count": 106,
+  "ms_direct": 404.51940298507463
+ },
+ {
+  "method": "openrouter@liquid/d1",
+  "engine": "OpenRouter API",
+  "model": "liquid/d1",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224097+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 566.179104,
+  "translated": 64,
+  "direct": 64,
+  "translated_en": 25,
+  "translated_other": 39,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "liquid/d1-20260930"
+  ],
+  "providers": [
+   "Liquid"
+  ],
+  "request_count": 106,
+  "ms_direct": 583.6388059701493
  },
  {
   "method": "pcdserver@rune-mradermacher-26b-a4b-q8",
@@ -1276,6 +1426,36 @@
   "translated_other": 38,
   "direct_other": 31,
   "ms_direct": 1091.983582089552
+ },
+ {
+  "method": "openrouter@upstage/solar-decide",
+  "engine": "OpenRouter API",
+  "model": "upstage/solar-decide",
+  "quant": "",
+  "readout": "native choice",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224383+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 1253.347761,
+  "translated": 62,
+  "direct": 63,
+  "translated_en": 24,
+  "translated_other": 38,
+  "direct_other": 39,
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "resolved_models": [
+   "upstage/solar-decide-20260928"
+  ],
+  "providers": [
+   "Upstage"
+  ],
+  "request_count": 106,
+  "ms_direct": 1292.34776119403
  },
  {
   "method": "coreai@gliner25-decide",
@@ -2986,6 +3166,96 @@
   "translated_other": 33,
   "direct_other": 35,
   "ms_direct": 128.27014925373135
+ },
+ {
+  "method": "openrouter@respan/span-01-lite:free",
+  "engine": "OpenRouter API",
+  "model": "respan/span-01-lite:free",
+  "quant": "",
+  "readout": "noul OVR",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224498+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 435.980597,
+  "translated": 56,
+  "direct": 60,
+  "translated_en": 21,
+  "translated_other": 35,
+  "direct_other": 39,
+  "note": "Respan supports noul only. Five independent yes/no questions per request; route = argmax P(true); displayed weights normalize those five probabilities. This is a one-vs-rest readout, not a native exclusive choice or evidence of calibration. Network latency included; remote CPU/GPU undisclosed.",
+  "resolved_models": [
+   "respan/span-01-lite-20260925"
+  ],
+  "providers": [
+   "Respan"
+  ],
+  "request_count": 106,
+  "ms_direct": 474.5656716417911
+ },
+ {
+  "method": "openrouter@respan/span-01-lite",
+  "engine": "OpenRouter API",
+  "model": "respan/span-01-lite",
+  "quant": "",
+  "readout": "noul OVR",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224462+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 447.510448,
+  "translated": 56,
+  "direct": 60,
+  "translated_en": 21,
+  "translated_other": 35,
+  "direct_other": 39,
+  "note": "Respan supports noul only. Five independent yes/no questions per request; route = argmax P(true); displayed weights normalize those five probabilities. This is a one-vs-rest readout, not a native exclusive choice or evidence of calibration. Network latency included; remote CPU/GPU undisclosed.",
+  "resolved_models": [
+   "respan/span-01-lite-20260925"
+  ],
+  "providers": [
+   "Respan"
+  ],
+  "request_count": 106,
+  "ms_direct": 462.57611940298506
+ },
+ {
+  "method": "openrouter@respan/span-01",
+  "engine": "OpenRouter API",
+  "model": "respan/span-01",
+  "quant": "",
+  "readout": "noul OVR",
+  "family": "dedicated",
+  "device": "R",
+  "device_detail": "Remote hosted service; CPU/GPU undisclosed",
+  "device_evidence": "remote",
+  "measured_at": "2026-10-02T23:00:01.224427+00:00",
+  "source": null,
+  "gb": null,
+  "load_ms": null,
+  "ms": 487.386567,
+  "translated": 56,
+  "direct": 60,
+  "translated_en": 21,
+  "translated_other": 35,
+  "direct_other": 39,
+  "note": "Respan supports noul only. Five independent yes/no questions per request; route = argmax P(true); displayed weights normalize those five probabilities. This is a one-vs-rest readout, not a native exclusive choice or evidence of calibration. Network latency included; remote CPU/GPU undisclosed.",
+  "resolved_models": [
+   "respan/span-01-20260925"
+  ],
+  "providers": [
+   "Respan"
+  ],
+  "request_count": 106,
+  "ms_direct": 566.3417910447762
  },
  {
   "method": "pcdserver@decider-0.8b-dreamblooms-q8",

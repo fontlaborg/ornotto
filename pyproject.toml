@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ornotto"
 dynamic = ["version"]
-description = "Local typed decisions: one Python API over the dohnuts and pcdServer inference engines"
+description = "Typed decisions: one Python API over local inference engines and OpenRouter decision models"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"

@@ -8,6 +8,13 @@ Package, development and documentation dependencies are declared in
 [`pyproject.toml`](pyproject.toml) and pinned in `uv.lock`.
 Native engine dependencies are the pinned submodules in `engines/`.
 
+OpenRouter support reuses the existing **httpx** dependency for authenticated
+sync/async System One requests; no OpenRouter SDK is needed. The optional
+pydantic-ai integration reuses its existing TypeSafe SDK and HTTPX2 transport.
+Request and response contracts were checked against OpenRouter's
+[System One reference](https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request)
+and current OpenAPI schema on 2026-10-03.
+
 The benchmark explorer uses **Plotly.js basic 3.1.0** (MIT), vendored in
 `src_docs/md/js/vendor/` together with its licence. It supplies scatter plots,
 bars, zoom, hover, reactive updates and SVG exports. It is loaded only on pages

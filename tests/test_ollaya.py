@@ -291,9 +291,10 @@ def test_cli_pull_when_ollaya_model_then_private_server_started_without_preload_
 
 def test_cli_models_when_listed_then_column_fits_longest_name():
     rows = Cli().models().splitlines()
-    width = max(map(len, MODELS))
-    assert len(rows) == len(MODELS) + 1
+    names = [*MODELS, *ornotto.OPENROUTER_MODELS]
+    width = max(map(len, names))
+    assert len(rows) == len(names) + 1
     assert rows[0].startswith("name".ljust(width) + " engines"), "header aligns with the longest name"
-    assert all(row.startswith(name.ljust(width) + " ") for row, name in zip(rows[1:], MODELS, strict=True)), (
+    assert all(row.startswith(name.ljust(width) + " ") for row, name in zip(rows[1:], names, strict=True)), (
         "every name is padded to the same width"
     )

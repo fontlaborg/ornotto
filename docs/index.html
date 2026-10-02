@@ -448,15 +448,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#three-engines-one-api" class="md-nav__link">
+  <a href="#local-engines-and-remote-models-one-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Three engines, one API
+        Local engines and remote models, one API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Three engines, one API">
+    <nav class="md-nav" aria-label="Local engines and remote models, one API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1334,15 +1334,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#three-engines-one-api" class="md-nav__link">
+  <a href="#local-engines-and-remote-models-one-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Three engines, one API
+        Local engines and remote models, one API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Three engines, one API">
+    <nav class="md-nav" aria-label="Local engines and remote models, one API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1465,7 +1465,7 @@
 </figure>
 </div>
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">291</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">300</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
@@ -1504,19 +1504,19 @@
 </div>
 <div class="ornotto-band ornotto-band--tint">
 <h2 id="what-we-measured">What we measured<a class="headerlink" href="#what-we-measured" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 962 ms. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 291 rows and every table</a> are on the results page.</p>
+<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 300 rows and every table</a>.</p>
 <p>For a fast first pass, laya on MLX scores <strong>52/67 in 6.9 ms</strong> on translated text. <a href="results/explorer/">Set your own accuracy floor and compare Pareto frontiers</a>. Rune Q4 now measures <strong>124.8 ms</strong> on GPU, against <strong>487.1 ms</strong> with CPU weights. <strong>C</strong> = CPU, <strong>G</strong> = GPU, <strong>C+G</strong> = mixed, <strong>R</strong> = remote; all other device codes are explained in the full report.</p>
 <figure class="ornotto-bars">
 <figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
 <ol>
+<li class="is-ref"><span class="ornotto-bars__name">typesafe/jev-1.13 <small>OpenRouter API · R · native choice</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">364 ms</span></li>
 <li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted) · R</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
 <li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer · C+G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
+<li class="is-ref"><span class="ornotto-bars__name">jaredpalmer/kev-4b <small>OpenRouter API · R · native choice</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">1653 ms</span></li>
 <li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server) · G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
-<li><span class="ornotto-bars__name">winnow-12b q8_0<small>ollaya · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">891 ms</span></li>
-<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q3<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">146 ms</span></li>
 </ol>
 </figure>
 <details class="ornotto-more">
@@ -1525,6 +1525,17 @@
 <div class="bench">
 <table class="sortable" id="top"><caption>The 15 best methods by translated score, then direct score, then speed. Click to sort.</caption><thead><tr><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th></tr></thead>
 <tbody>
+<tr>
+<td>OpenRouter API</td>
+<td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
+<td>typesafe/jev-1.13</td>
+<td>dedicated</td>
+<td></td>
+<td class="num"></td>
+<td class="num" data-sort="364.440299">364.4</td>
+<td class="num score" data-sort="65">65/67</td>
+<td class="num score" data-sort="65">65/67</td>
+</tr>
 <tr>
 <td>jev (hosted)</td>
 <td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
@@ -1544,6 +1555,17 @@
 <td>q5</td>
 <td class="num" data-sort="19.13">19.13</td>
 <td class="num" data-sort="962.283582">962.3</td>
+<td class="num score" data-sort="65">65/67</td>
+<td class="num score" data-sort="65">65/67</td>
+</tr>
+<tr>
+<td>OpenRouter API</td>
+<td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
+<td>jaredpalmer/kev-4b</td>
+<td>dedicated</td>
+<td></td>
+<td class="num"></td>
+<td class="num" data-sort="1653.031343">1,653.0</td>
 <td class="num score" data-sort="65">65/67</td>
 <td class="num score" data-sort="65">65/67</td>
 </tr>
@@ -1588,6 +1610,17 @@
 <td>bf16</td>
 <td class="num" data-sort="8.42">8.42</td>
 <td class="num" data-sort="94.831343">94.8</td>
+<td class="num score" data-sort="64">64/67</td>
+<td class="num score" data-sort="65">65/67</td>
+</tr>
+<tr>
+<td>OpenRouter API</td>
+<td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
+<td>togethercomputer/tev1-4b-experimental</td>
+<td>dedicated</td>
+<td></td>
+<td class="num"></td>
+<td class="num" data-sort="339.256716">339.3</td>
 <td class="num score" data-sort="64">64/67</td>
 <td class="num score" data-sort="65">65/67</td>
 </tr>
@@ -1657,46 +1690,13 @@
 <td class="num score" data-sort="64">64/67</td>
 <td class="num score" data-sort="64">64/67</td>
 </tr>
-<tr>
-<td>pcdServer</td>
-<td title="CPU only (--gpu-layers 0 --cpu); compute and KV offload disabled (configured)">C</td>
-<td>rune-mradermacher-26b-a4b</td>
-<td>dedicated</td>
-<td>q8</td>
-<td class="num" data-sort="26.86">26.86</td>
-<td class="num" data-sort="758.122388">758.1</td>
-<td class="num score" data-sort="64">64/67</td>
-<td class="num score" data-sort="64">64/67</td>
-</tr>
-<tr>
-<td>llama.cpp embeddings + head</td>
-<td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td>
-<td>jev-omni</td>
-<td>dedicated</td>
-<td>q3</td>
-<td class="num" data-sort="6.09">6.09</td>
-<td class="num" data-sort="1222.338806">1,222.3</td>
-<td class="num score" data-sort="64">64/67</td>
-<td class="num score" data-sort="64">64/67</td>
-</tr>
-<tr>
-<td>slot (llama-server)</td>
-<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
-<td>rune-26b-a4b</td>
-<td>dedicated</td>
-<td>q4</td>
-<td class="num" data-sort="17.03">17.03</td>
-<td class="num" data-sort="335.29403">335.3</td>
-<td class="num score" data-sort="64">64/67</td>
-<td class="num score" data-sort="55">55/67</td>
-</tr>
 </tbody>
 </table>
 </div>
 </details>
 </div>
-<h2 id="three-engines-one-api">Three engines, one API<a class="headerlink" href="#three-engines-one-api" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">The package runs two open-source C++ engines on llama.cpp behind one Python API, and drives a third if you install it. <a href="03-engines/">Chapter 3</a> explains how each one reads an answer.</p>
+<h2 id="local-engines-and-remote-models-one-api">Local engines and remote models, one API<a class="headerlink" href="#local-engines-and-remote-models-one-api" title="Permanent link">&para;</a></h2>
+<p class="ornotto-section-lead">The package runs two open-source C++ engines on llama.cpp behind one Python API, drives ollaya if you install it, and calls the nine measured OpenRouter endpoints remotely. <a href="03-engines/">Chapter 3</a> explains how each one reads an answer.</p>
 <div class="ornotto-features">
 <div class="ornotto-feature">
 <div class="ornotto-feature__text">
@@ -1745,7 +1745,7 @@
 <p class="ornotto-chapters__group">Benchmarks</p>
 <ol>
 <li><a href="05-method/">How we measured</a> One router question, 67 queries, labels fixed before the run.</li>
-<li><a href="06-results/">Results</a> All 291 methods against jev, the hosted reference.</li>
+<li><a href="06-results/">Results</a> All 300 methods against jev, the hosted reference.</li>
 <li><a href="07-quantization/">Quantization and size</a> What precision changes: file size, memory and the answers that survive.</li>
 <li><a href="08-speed/">Speed, memory and caching</a> One forward pass per decision, and what an engine avoids prefilling twice.</li>
 <li><a href="09-confidence/">Confidence and fallback</a> Whether the probabilities mean what they say, and what a fallback buys.</li>
@@ -1874,7 +1874,7 @@
       
         <script src="js/benchmark-math.da51227706b3.js"></script>
       
-        <script src="js/benchmark.e0c1a4155a7f.js"></script>
+        <script src="js/benchmark.040f05193bf1.js"></script>
       
     
   </body>

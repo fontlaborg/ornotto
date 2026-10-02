@@ -28,6 +28,7 @@ import httpx
 
 from ._models import Engine, ResolvedModel
 from ._protocol import Question, from_pcd, to_pcd
+from ._remote import check_questions, validate_response
 
 BINARIES: dict[Engine, str] = {"dohnuts": "dohnuts-cli", "pcd": "pcd_server", "ollaya": "ollaya"}
 ENV: dict[Engine, str] = {
@@ -276,19 +277,25 @@ class Adapter:
     @property
     def native(self) -> bool:
         """dohnuts and ollaya speak System One (`/v1/systemone`) themselves; pcdServer needs translating."""
-        return self.engine in ("dohnuts", "ollaya")
+        return self.engine in ("dohnuts", "ollaya", "openrouter")
 
     @property
     def calibrated(self) -> bool:
-        return self.native  # dohnuts scales by temperature; ollaya ships a calibration per model
+        return self.engine in ("dohnuts", "ollaya")  # remote calibration recipes are unrecorded
 
     @property
     def max_questions(self) -> int:
+        if self.engine == "openrouter":
+            return sys.maxsize  # the documented API specifies no fixed client-side question limit
         return {"dohnuts": DOHNUTS_MAX_QUESTIONS, "ollaya": OLLAYA_MAX_QUESTIONS}.get(self.engine, 63)
 
     def request(self, state: Any, questions: Mapping[str, Question]) -> tuple[str, dict[str, Any]]:
         """(path, JSON body) for one request."""
         if self.native:
+            if self.engine == "openrouter":
+                check_questions(self.model_name, questions)
+            if self.engine == "openrouter" and not isinstance(state, (str, dict, list)):
+                raise ValueError("OpenRouter state must be text, a JSON object or a JSON array")
             body = {
                 "state": state,
                 "model": self.model_name,
@@ -299,4 +306,6 @@ class Adapter:
 
     def response(self, body: dict[str, Any], questions: Mapping[str, Question]) -> dict[str, Any]:
         """The engine's reply -> a System One response."""
+        if self.engine == "openrouter":
+            return validate_response(body, questions)
         return body if self.native else from_pcd(body, questions)
