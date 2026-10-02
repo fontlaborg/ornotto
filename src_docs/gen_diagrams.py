@@ -22,12 +22,17 @@ MD = HERE / "md"
 DEVICES = {"C", "G", "C+G", "C+N", "A", "R", "?"}
 
 
-def version_assets(config: Path) -> None:
+def version_assets(config: Path, asset_root: Path = MD) -> None:
     """Bind published asset URLs to their bytes so CDN caches cannot mix releases."""
     text = config.read_text()
     for asset in ("css/benchmark.css", "js/benchmark-math.js", "js/benchmark.js"):
-        digest = hashlib.sha256((MD / asset).read_bytes()).hexdigest()[:12]
-        text = re.sub(r"(?m)(  - " + re.escape(asset) + r")(?:\?v=[^\s]+)?$", rf"\1?v={digest}", text)
+        source = asset_root / asset
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
+        versioned = source.with_name(f"{source.stem}.{digest}{source.suffix}")
+        versioned.write_bytes(source.read_bytes())
+        stem, suffix = asset.rsplit(".", 1)
+        pattern = r"(?m)  - " + re.escape(stem) + r"(?:\.[a-f0-9]{12})?\." + suffix + r"(?:\?v=[^\s]+)?$"
+        text = re.sub(pattern, f"  - {stem}.{digest}.{suffix}", text)
     config.write_text(text)
 
 

@@ -52,10 +52,17 @@ def test_frontier_and_filters_when_node_available_then_browser_math_passes():
 def test_book_assets_when_versioned_then_urls_match_content_and_are_idempotent(tmp_path):
     config = tmp_path / "properdocs.yml"
     config.write_text((ROOT / "src_docs/properdocs.yml").read_text())
-    diagrams.version_assets(config)
+    for asset in ("css/benchmark.css", "js/benchmark-math.js", "js/benchmark.js"):
+        target = tmp_path / asset
+        target.parent.mkdir(exist_ok=True)
+        target.write_bytes((diagrams.MD / asset).read_bytes())
+    diagrams.version_assets(config, tmp_path)
     first = config.read_text()
     for asset in ("css/benchmark.css", "js/benchmark-math.js", "js/benchmark.js"):
         digest = hashlib.sha256((diagrams.MD / asset).read_bytes()).hexdigest()[:12]
-        assert f"  - {asset}?v={digest}" in first, "Every benchmark asset needs its matching content version"
-    diagrams.version_assets(config)
+        stem, suffix = asset.rsplit(".", 1)
+        versioned = f"{stem}.{digest}.{suffix}"
+        assert f"  - {versioned}" in first, "Every benchmark asset needs its matching content version"
+        assert (tmp_path / versioned).read_bytes() == (tmp_path / asset).read_bytes()
+    diagrams.version_assets(config, tmp_path)
     assert config.read_text() == first, "Repeated builds must retain identical asset URLs"
