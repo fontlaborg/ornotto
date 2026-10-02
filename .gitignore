@@ -12,6 +12,12 @@ build/
 develop-eggs/
 dist/
 downloads/
+!/src_docs/md/downloads/
+/src_docs/md/downloads/*
+!/src_docs/md/downloads/benchmark-explorer.html
+!/docs/downloads/
+/docs/downloads/*
+!/docs/downloads/benchmark-explorer.html
 eggs/
 .eggs/
 lib/

@@ -71,6 +71,11 @@
         <changefreq>daily</changefreq>
     </url>
     <url>
+        <loc>https://fontlab.org/ornotto/results/explorer/</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
         <loc>https://fontlab.org/ornotto/results/tldr/</loc>
         <lastmod>2026-10-02</lastmod>
         <changefreq>daily</changefreq>

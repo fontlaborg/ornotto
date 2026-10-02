@@ -116,6 +116,11 @@ def method_cell(r: dict) -> str:
     return cell(f"{r['method']} †", cls="method", title=note) if note else cell(r["method"], cls="method")
 
 
+def device_cell(r: dict) -> str:
+    """Device code with audited configuration and evidence in its tooltip."""
+    return cell(r["device"], title=r["device_detail"] + " (" + r["device_evidence"] + ")")
+
+
 def classifier_rows(rows: list[dict]) -> list[str]:
     out = []
     for r in rows:
@@ -124,6 +129,7 @@ def classifier_rows(rows: list[dict]) -> list[str]:
                 [
                     method_cell(r),
                     cell(r["engine"]),
+                    device_cell(r),
                     cell(r["model"]),
                     cell(r["family"]),
                     cell(r["quant"]),
@@ -144,6 +150,7 @@ def classifier_rows(rows: list[dict]) -> list[str]:
 CLASSIFIER_HEADERS = [
     "Method",
     "Engine",
+    "C/G",
     "Model",
     "Family",
     "Quant",
@@ -167,18 +174,19 @@ def main() -> None:
         CLASSIFIER_HEADERS,
         classifier_rows(rows),
         filterable=True,
-        caption=f"All {len(rows)} methods, best first. Click a header to sort; an empty cell was not measured, "
+        caption=f"All {len(rows)} methods, best first. Click to sort; an empty cell was not measured, "
         "or does not apply (the direct score of a model trained on English only).",
         sorted_by="Translated",
     )
     top = sorted(rows, key=lambda r: (high_first(r["translated"]), high_first(r["direct"]), r["ms"]))[:15]
     table(
         "top",
-        CLASSIFIER_HEADERS[1:9],
+        CLASSIFIER_HEADERS[1:10],
         [
             "".join(
                 [
                     cell(r["engine"]),
+                    device_cell(r),
                     cell(r["model"]),
                     cell(r["family"]),
                     cell(r["quant"]),
@@ -211,13 +219,14 @@ def main() -> None:
     same.sort(key=lambda r: (r["model"], r["quant"], r["ms"]))
     table(
         "engines-same-model",
-        ["Model", "Quant", "Engine", "ms/query", "Translated", "Direct"],
+        ["Model", "Quant", "Engine", "C/G", "ms/query", "Translated", "Direct"],
         [
             "".join(
                 [
                     cell(r["model"]),
                     cell(r["quant"]),
                     cell(r["engine"]),
+                    device_cell(r),
                     num(r["ms"], 1),
                     score(r["translated"]),
                     score(r["direct"]),
@@ -239,13 +248,14 @@ def main() -> None:
     fam = sorted(best.values(), key=lambda r: (r["family"], -r["translated"], r["ms"]))
     table(
         "families",
-        ["Family", "Model", "Engine", "GB", "ms/query", "Translated", "Direct", "Best method"],
+        ["Family", "Model", "Engine", "C/G", "GB", "ms/query", "Translated", "Direct", "Best method"],
         [
             "".join(
                 [
                     cell(r["family"]),
                     cell(r["model"]),
                     cell(r["engine"]),
+                    device_cell(r),
                     num(r["gb"], 2),
                     num(r["ms"], 1),
                     score(r["translated"]),
@@ -259,15 +269,15 @@ def main() -> None:
     )
 
     # Quantization sweeps: models with four or more quantizations on one engine, as a model x quant grid.
-    grid: dict[tuple[str, str], dict[str, dict]] = defaultdict(dict)
+    grid: dict[tuple[str, str, str], dict[str, dict]] = defaultdict(dict)
     for r in rows:
         if r["quant"]:
-            grid[(r["model"], r["engine"])][r["quant"]] = r
+            grid[(r["model"], r["engine"], r["device"])][r["quant"]] = r
     sweeps = {k: v for k, v in grid.items() if len(v) >= 4}
     quants = [q for q in QUANT_ORDER if any(q in v for v in sweeps.values())]
     sweep_rows = []
-    for (model, engine), by_q in sorted(sweeps.items()):
-        cells = [cell(model), cell(engine)]
+    for (model, engine, device), by_q in sorted(sweeps.items()):
+        cells = [cell(model), cell(engine), cell(device)]
         for q in quants:
             r = by_q.get(q)
             cells.append(
@@ -278,10 +288,28 @@ def main() -> None:
         sweep_rows.append("".join(cells))
     table(
         "quant-sweeps",
-        ["Model", "Engine", *quants],
+        ["Model", "Engine", "C/G", *quants],
         sweep_rows,
         filterable=True,
-        caption="Translated score out of 67 and mean ms per query, per quantization",
+        caption="Translated score out of 67 and mean ms per query; separated by CPU/GPU configuration",
+    )
+
+    cpu_rows = [r for r in rows if r["device"] in {"C", "C+G"}]
+    table(
+        "cpu-runs",
+        ["Method", "C/G", "Execution", "Evidence", "ms/query", "Translated", "Direct"],
+        [
+            method_cell(r)
+            + device_cell(r)
+            + cell(r["device_detail"])
+            + cell(r["device_evidence"])
+            + num(r["ms"], 1)
+            + score(r["translated"])
+            + score(r["direct"])
+            for r in cpu_rows
+        ],
+        filterable=True,
+        caption="CPU-only runs and pipelines with an explicit CPU model/head component.",
     )
 
     queries = load("queries")

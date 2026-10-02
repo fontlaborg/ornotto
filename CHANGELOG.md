@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Add a separately cached Rune Q4 Metal run: 124.8 ms/query, 63/67 translated and 64/67 direct, versus 487.1 ms with CPU weights. Retain all 290 earlier measurements; 291 runs are now published.
+- Label every benchmark configuration with CPU/GPU execution and evidence, including mixed, Neural Engine, automatic and remote cases. Identify 19 CPU-only and 19 mixed CPU/GPU runs.
+- Add a reproducible interactive diagram tool, speed and weight-size Pareto frontiers, adjustable accuracy floors, mode-specific timings, shared filter URLs, CSV/SVG exports and an offline HTML download.
+
 - Complete issue 102 measurements: 32 new methods over all 24 weight variants; 290 public rows, with the original 258 unchanged. JPT 4B/9B Q8 are local conversions of pinned BF16 files with public hash manifests. mys Kev Q4/Q8 use ggmlc because dohnuts rejects their architecture.
 - Register Tev1, Jet, ThisThat 1.2, JPT 4B/9B and mradermacher Rune; bundle missing native profiles and honor explicit metadata/head overrides. JPT weights are non-commercial; Tev1's release licence remains unresolved.
 - Bundle dohnuts fork `dbf48c0` with verified native JPT/Jet prompts and label mappings, and pcdServer fork `1046a00` with Jinja template fallback, BOS deduplication and CPU-only execution. `gpu=False` now controls pcdServer offload. Native temperature application is documented without claiming calibration on an unseen task.

@@ -17,7 +17,7 @@
       
       
       
-        <link rel="next" href="results/tldr/">
+        <link rel="next" href="results/explorer/">
       
       
         
@@ -61,6 +61,8 @@
       <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
     
       <link rel="stylesheet" href="css/site.css">
+    
+      <link rel="stylesheet" href="css/benchmark.css">
     
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -208,7 +210,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="results/tldr/" class="md-tabs__link">
+        <a href="results/explorer/" class="md-tabs__link">
           
   
   
@@ -576,6 +578,34 @@
 
           </label>
           <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="results/explorer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explore speed and accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1435,7 +1465,7 @@
 </figure>
 </div>
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">290</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">291</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model file, read one way on one engine</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
@@ -1474,28 +1504,30 @@
 </div>
 <div class="ornotto-band ornotto-band--tint">
 <h2 id="what-we-measured">What we measured<a class="headerlink" href="#what-we-measured" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 962 ms. <a href="results/details/">All 290 rows and every table</a> are on the results page.</p>
+<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The best eight agree to within one query of 67. Their speed per query runs from 88 ms to 962 ms. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 291 rows and every table</a> are on the results page.</p>
+<p>For a fast first pass, laya on MLX scores <strong>52/67 in 6.9 ms</strong> on translated text. <a href="results/explorer/">Set your own accuracy floor and compare Pareto frontiers</a>. Rune Q4 now measures <strong>124.8 ms</strong> on GPU, against <strong>487.1 ms</strong> with CPU weights. <strong>C</strong> = CPU, <strong>G</strong> = GPU, <strong>C+G</strong> = mixed, <strong>R</strong> = remote; all other device codes are explained in the full report.</p>
 <figure class="ornotto-bars">
 <figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
 <ol>
-<li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted)</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
-<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
-<li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server)</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
-<li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
-<li><span class="ornotto-bars__name">winnow-12b q8_0<small>ollaya</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">891 ms</span></li>
-<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q3<small>pcdServer</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">146 ms</span></li>
+<li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted) · R</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
+<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer · C+G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
+<li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server) · G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
+<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
+<li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
+<li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
+<li><span class="ornotto-bars__name">winnow-12b q8_0<small>ollaya · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">891 ms</span></li>
+<li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q3<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">146 ms</span></li>
 </ol>
 </figure>
 <details class="ornotto-more">
 <summary><span class="ornotto-more__sign" aria-hidden="true">+</span>Show the full top 15</summary>
 <p>Each row is one method, ranked by translated score, then direct score, then speed. Click a column header to sort.</p>
 <div class="bench">
-<table class="sortable" id="top"><caption>The 15 best methods by translated score, then direct score, then speed. Click to sort.</caption><thead><tr><th>Engine</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th></tr></thead>
+<table class="sortable" id="top"><caption>The 15 best methods by translated score, then direct score, then speed. Click to sort.</caption><thead><tr><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th></tr></thead>
 <tbody>
 <tr>
 <td>jev (hosted)</td>
+<td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
 <td>jev</td>
 <td>dedicated</td>
 <td></td>
@@ -1506,6 +1538,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="CPU weights (--gpu-layers 0); Metal computation and KV offload enabled (configured)">C+G</td>
 <td>rune-mradermacher-26b-a4b</td>
 <td>dedicated</td>
 <td>q5</td>
@@ -1516,6 +1549,7 @@
 </tr>
 <tr>
 <td>slot (llama-server)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>rune-26b-a4b</td>
 <td>dedicated</td>
 <td>q3</td>
@@ -1526,6 +1560,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>qwen3.5-4b-hmm</td>
 <td>fine-tuned</td>
 <td>q8</td>
@@ -1536,6 +1571,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>qwen3.5-4b-hmm</td>
 <td>fine-tuned</td>
 <td>q4</td>
@@ -1546,6 +1582,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>qwen3.5-4b-hmm</td>
 <td>fine-tuned</td>
 <td>bf16</td>
@@ -1556,6 +1593,7 @@
 </tr>
 <tr>
 <td>ollaya</td>
+<td title="ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe (configured)">G</td>
 <td>winnow-12b</td>
 <td>dedicated</td>
 <td>q8_0</td>
@@ -1566,6 +1604,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>rune-mradermacher-26b-a4b</td>
 <td>dedicated</td>
 <td>q3</td>
@@ -1576,6 +1615,7 @@
 </tr>
 <tr>
 <td>dohnuts (Metal)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>decider-35b-a3b</td>
 <td>dedicated</td>
 <td>q4</td>
@@ -1586,6 +1626,7 @@
 </tr>
 <tr>
 <td>System One server</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>neohorse-4b</td>
 <td>dedicated</td>
 <td>q8</td>
@@ -1596,6 +1637,7 @@
 </tr>
 <tr>
 <td>slot (llama-server)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>decider-35b-a3b</td>
 <td>dedicated</td>
 <td>q4</td>
@@ -1606,6 +1648,7 @@
 </tr>
 <tr>
 <td>dohnuts (Metal)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>jpt-4b</td>
 <td>dedicated</td>
 <td>q8</td>
@@ -1616,6 +1659,7 @@
 </tr>
 <tr>
 <td>pcdServer</td>
+<td title="CPU only (--gpu-layers 0 --cpu); compute and KV offload disabled (configured)">C</td>
 <td>rune-mradermacher-26b-a4b</td>
 <td>dedicated</td>
 <td>q8</td>
@@ -1626,6 +1670,7 @@
 </tr>
 <tr>
 <td>llama.cpp embeddings + head</td>
+<td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td>
 <td>jev-omni</td>
 <td>dedicated</td>
 <td>q3</td>
@@ -1636,6 +1681,7 @@
 </tr>
 <tr>
 <td>slot (llama-server)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
 <td>rune-26b-a4b</td>
 <td>dedicated</td>
 <td>q4</td>
@@ -1699,7 +1745,7 @@
 <p class="ornotto-chapters__group">Benchmarks</p>
 <ol>
 <li><a href="05-method/">How we measured</a> One router question, 67 queries, labels fixed before the run.</li>
-<li><a href="06-results/">Results</a> All 290 methods against jev, the hosted reference.</li>
+<li><a href="06-results/">Results</a> All 291 methods against jev, the hosted reference.</li>
 <li><a href="07-quantization/">Quantization and size</a> What precision changes: file size, memory and the answers that survive.</li>
 <li><a href="08-speed/">Speed, memory and caching</a> One forward pass per decision, and what an engine avoids prefilling twice.</li>
 <li><a href="09-confidence/">Confidence and fallback</a> Whether the probabilities mean what they say, and what a fallback buys.</li>
@@ -1786,7 +1832,7 @@
     <nav aria-label="Chapters">
       
       
-      <a href="results/tldr/" rel="next">Results: the short version →</a>
+      <a href="results/explorer/" rel="next">Explore speed and accuracy →</a>
       
     </nav>
     
@@ -1825,6 +1871,10 @@
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
       
         <script src="js/tables.js"></script>
+      
+        <script src="js/benchmark-math.js"></script>
+      
+        <script src="js/benchmark.js"></script>
       
     
   </body>

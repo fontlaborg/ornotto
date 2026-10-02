@@ -8,9 +8,13 @@ This page collects every table the benchmark produced, with enough context to re
 
 Scores count correct answers out of 67. **Translated** means the 39 non-English queries were first translated into English; **direct** means the classifier got the original text. **ms/query** is the mean wall-clock time per query, without model loading. [Chapter 5](../05-method.md#what-the-numbers-mean) defines every column.
 
+[Explore the interactive Pareto diagrams](explorer.md) to find the fastest model above your own accuracy floor.
+
+**C/G** labels every classifier run: C = CPU, G = GPU, C+G = mixed CPU/GPU, C+N = CPU/Neural Engine, A = automatic CPU/GPU/Neural Engine placement, R = remote. Hover over the code for execution settings and evidence.
+
 Most tables sort when you click a column header; click again to reverse the order.
 
-## All 290 methods
+## All 291 methods
 
 A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Five more failed and are left out; [chapter 6](../06-results.md#every-method) says why.
 
@@ -18,10 +22,16 @@ Type in the box to keep only the rows that contain every word you type: `pcdServ
 
 !!! note "How to read this table"
     - **An empty direct cell** means the model was trained on English only and received the translated text alone. An empty GB or load cell means the value was not measured or does not apply, for example the size of a hosted model.
-    - **†** after a method marks a licence note. Hover over the method to read it.
+    - **†** after a method marks an execution or licence note. Hover over the method to read it.
     - **English** counts the 28 English queries in translated mode. **Other, translated** and **other, direct** count the 39 non-English queries in each mode.
 
 --8<-- "tables/classifiers.html"
+
+## CPU and mixed runs
+
+The audit found 19 CPU-only runs and 19 runs with an explicit CPU/GPU split. This table identifies them all. It excludes CPU/Neural Engine and automatic-placement runs; those have their own codes in the full table. Historical labels describe recorded configurations, rather than a per-operation utilization trace.
+
+--8<-- "tables/cpu-runs.html"
 
 ## One set of weights on several engines
 

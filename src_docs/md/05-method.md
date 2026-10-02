@@ -123,6 +123,7 @@ One model at a time also makes the timings fair: no model competes with another 
 
 - **Translated** and **direct** count correct answers out of 67. A correct answer is one whose most likely option is the labelled task.
 - The **English** column counts the 28 English queries in translated mode. **Other, translated** and **other, direct** count the 39 non-English queries in each mode.
+- **C/G** identifies CPU (C), GPU (G), explicit CPU/GPU pipelines (C+G), CPU/Neural Engine (C+N), automatic CPU/GPU/Neural Engine placement (A), or remote hardware (R). Tooltip evidence distinguishes recorded configuration from observed runtime output; automatic placement is not guessed from speed.
 - **ms/query** is the mean wall-clock time from the moment the harness sends a query to the moment it has the probabilities. For server engines it includes the HTTP round trip and JSON parsing on loopback. For jev it includes the network trip to OpenRouter. It excludes model loading and a warm-up call made before timing starts.
 - **Load ms** is the time to load the model and answer the warm-up call, for runtimes that load in-process or that the harness started itself. It is blank where a server was started outside the timed step.
 - **GB** is the size of the GGUF file as published on Hugging Face. For other formats it is the size of the weight files the method loads; for the adapters lev, imajev and leo it includes the base model they load; for an ollaya model it is the tag's download. Tokenizers and configuration files are left out.
@@ -247,3 +248,7 @@ Every board in this section was created in the second half of September, after j
 [^decision1]: vLLM Semantic Router, "Decision-1.0-Eos-0.8B" model card, 2026-09-21. Read 2026-09-30. <https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B>
 [^laya]: NandhaKishorM, "laya" README. Read 2026-09-30. <https://github.com/NandhaKishorM/laya>
 [^audit]: Lijuan Tang and Yuemeng Zheng, "Typed Decision Models: An Early Evidence Audit and Evaluation Checklist", arXiv 2609.32160, 2026-09-26. <https://arxiv.org/abs/2609.32160>
+
+## Interactive comparisons
+
+The [benchmark explorer](results/explorer.md) recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 290 earlier timings and answers are preserved.

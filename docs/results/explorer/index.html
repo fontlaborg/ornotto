@@ -1,0 +1,1434 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
+      
+      
+        <meta name="author" content="Fontlab Ltd.">
+      
+      
+        <link rel="canonical" href="https://fontlab.org/ornotto/results/explorer/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../tldr/">
+      
+      
+        
+      
+      
+      
+      
+        
+        
+        
+          <link rel="icon" href="../../assets/images/favicon.png">
+        
+      
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
+    
+    
+      
+        <title>Explore speed and accuracy - ornotto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.d7aee198.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a45159b5.min.css">
+      
+    
+    
+
+    
+
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
+    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+    
+      <link rel="stylesheet" href="../../css/site.css">
+    
+      <link rel="stylesheet" href="../../css/benchmark.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+
+  <link rel="stylesheet" href="https://use.typekit.net/gav0zux.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=REM:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/marketing-vendor.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vexy-hrefc@1.0.7/dist/hrefc.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-materialx.css">
+  <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-layout.css">
+
+  <!-- Restore persisted subtheme + collapsed TOC before paint (avoids flash). -->
+  <script>
+  (function () {
+    var map = { "material-light":"light","material-dark":"dark","miller":"light","retro":"retro","lines":"light" };
+    var d = document.documentElement;
+    try {
+      var t = localStorage.getItem("fontlab-docs-subtheme");
+      if (t && map[t]) { d.dataset.theme = map[t]; d.dataset.flSubtheme = t; }
+      else { d.dataset.theme = "light"; d.dataset.flSubtheme = "material-light"; t = "material-light"; }
+      var menuMap = { "material-light":"dark","material-dark":"flat-dark","miller":"light","retro":"light","lines":"light" };
+      d.dataset.flMenu = menuMap[t] || "dark";
+      if (localStorage.getItem("fontlab-docs-toc") !== "open") d.classList.add("fl-toc-collapsed");
+    } catch (e) { d.dataset.theme = "light"; d.dataset.flSubtheme = "material-light"; d.classList.add("fl-toc-collapsed"); }
+  })();
+  </script>
+
+  <script src="https://i.fontlab.com/menu/fontlab.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vexy-hrefc@1.0.7/dist/hrefc.global.min.js" defer></script>
+  <script src="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.js" defer></script>
+
+  </head>
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__toc"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#find-the-fastest-useful-answer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+  
+  <header class="md-header" data-md-component="header" aria-hidden="true">
+    <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0">
+        <div class="md-search-result md-search-result--pagefind" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </header>
+  <fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Results
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../01-deciding/" class="md-tabs__link">
+          
+  
+  
+  Book
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../10-package/" class="md-tabs__link">
+          
+  
+  
+  Use ornotto
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+  
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ornotto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    fontlaborg/ornotto
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Results
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Results
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explore speed and accuracy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explore speed and accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#read-the-frontier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read the frontier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rune-q4-the-device-changed-the-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rune Q4: the device changed the result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#devices-and-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Devices and evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-or-regenerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download or regenerate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-compares-with-the-decision-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this compares with the Decision Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tldr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Results: the short version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Results: every table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Book
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-deciding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Deciding, not generating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. The shape of a decision
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-engines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Ways to read an answer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Dedicated, fine-tuned and vanilla models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Method and analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Method and analysis
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-method/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. How we measured
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-quantization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Quantization and size
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../08-speed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Speed, memory and caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../09-confidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Confidence and fallback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use ornotto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Use ornotto
+  
+
+          </label>
+          <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. The ornotto package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../11-typed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Typed decisions and pydantic-ai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../12-choosing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Choosing, building and contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc">
+      
+        <li class="md-nav__item">
+  <a href="#read-the-frontier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read the frontier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rune-q4-the-device-changed-the-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rune Q4: the device changed the result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#devices-and-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Devices and evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-or-regenerate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download or regenerate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-compares-with-the-decision-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How this compares with the Decision Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+  <!-- Subtheme switcher: injected into the tabs nav (div[4]/nav) by fontlab-theme.js -->
+  <template id="fl-theme-menu-template">
+    <div class="fl-theme" data-fl-theme>
+      <button class="fl-theme__btn" type="button" aria-expanded="false" aria-controls="fl-theme-options" aria-label="Change subtheme" title="Subtheme">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.66 0 1.5-2 2.5-2.5s2.5.5 2.5-1.5c0-2-2-2-2-3.5s2-1.5 2-3S16 3 12 3z"/>
+        </svg>
+      </button>
+      <div class="fl-theme__pop" id="fl-theme-options" aria-label="Subtheme choices" hidden>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="material-light">Light</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="material-dark">Dark</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="miller">Miller · newspaper</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="retro">Retro · warm</button>
+        <button class="fl-theme__opt" type="button" aria-pressed="false" data-theme="lines">Vexy Lines · vivid</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Right TOC expand/collapse handle: injected into the secondary sidebar by fontlab-theme.js -->
+  <template id="fl-toc-toggle-template">
+    <button class="fl-toc-toggle" type="button" aria-expanded="false" aria-label="Toggle on-page contents" data-fl-toc-toggle>
+      <span class="fl-toc-toggle__icon" aria-hidden="true"></span>
+    </button>
+  </template>
+
+          
+            <div class="md-content" data-md-component="content">
+              
+              
+              
+              <article class="md-content__inner md-typeset" data-pagefind-body>
+                
+<!--email_off-->
+
+                  
+  
+  
+
+
+<h1 id="find-the-fastest-useful-answer">Find the fastest useful answer<a class="headerlink" href="#find-the-fastest-useful-answer" title="Permanent link">&para;</a></h1>
+<p>An extra correct answer can cost hundreds of milliseconds. Choose the score you need, then compare the runs that meet it. The default floor is <strong>50 correct answers out of 67</strong>. Laya on MLX clears it at <strong>52/67 in 6.9 ms</strong> on translated text; a model does not have to top the accuracy table to be useful.</p>
+<p>These are 291 recorded configurations, not 291 different models. Each point names its engine, quantization and execution device. Set <strong>Direct</strong> to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.</p>
+<section class="benchmark-explorer" data-plotly="../../js/vendor/plotly-basic-3.1.0.min.js" aria-label="Interactive benchmark explorer">
+<script type="application/json" class="be-data">[{"method": "slot@rune-26b-a4b-q3", "engine": "slot (llama-server)", "model": "rune-26b-a4b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "surogate/rune-26b-a4b-GGUF", "gb": 13.52, "load_ms": 608.070417, "ms": 366.592537, "translated": 65, "direct": 57, "translated_en": 26, "translated_other": 39, "direct_other": 31, "ms_direct": 413.9343283582089}, {"method": "jev", "engine": "jev (hosted)", "model": "jev", "quant": "", "family": "dedicated", "device": "R", "device_detail": "Remote hosted service; CPU/GPU undisclosed", "device_evidence": "remote", "source": null, "gb": null, "load_ms": null, "ms": 466.104478, "translated": 65, "direct": 65, "translated_en": 26, "translated_other": 39, "direct_other": 39, "ms_direct": 455.2119402985075}, {"method": "pcdserver@rune-mradermacher-26b-a4b-q5", "engine": "pcdServer", "model": "rune-mradermacher-26b-a4b", "quant": "q5", "family": "dedicated", "device": "C+G", "device_detail": "CPU weights (--gpu-layers 0); Metal computation and KV offload enabled", "device_evidence": "configured", "source": "mradermacher/rune-26b-a4b-GGUF", "gb": 19.13, "load_ms": 4324.48875, "ms": 962.283582, "translated": 65, "direct": 65, "translated_en": 26, "translated_other": 39, "direct_other": 39, "note": "mradermacher Rune conversion, Jinja chat-template fallback. CPU weights to respect RAM limits; Metal compute offload remains enabled. Latency is not a comparison with the GPU-weight Q3 run.", "ms_direct": 655.5731343283583}, {"method": "pcdserver@qwen3.5-4b-hmm-q8", "engine": "pcdServer", "model": "qwen3.5-4b-hmm", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 4.48, "load_ms": 462.084708, "ms": 87.559701, "translated": 64, "direct": 65, "translated_en": 26, "translated_other": 38, "direct_other": 39, "ms_direct": 88.0}, {"method": "pcdserver@qwen3.5-4b-hmm-q4", "engine": "pcdServer", "model": "qwen3.5-4b-hmm", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 2.71, "load_ms": 295.528125, "ms": 92.625373, "translated": 64, "direct": 65, "translated_en": 26, "translated_other": 38, "direct_other": 39, "ms_direct": 94.46567164179105}, {"method": "pcdserver@qwen3.5-4b-hmm-bf16", "engine": "pcdServer", "model": "qwen3.5-4b-hmm", "quant": "bf16", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 8.42, "load_ms": 341.305334, "ms": 94.831343, "translated": 64, "direct": 65, "translated_en": 26, "translated_other": 38, "direct_other": 39, "ms_direct": 96.9820895522388}, {"method": "pcdserver@rune-mradermacher-26b-a4b-q3", "engine": "pcdServer", "model": "rune-mradermacher-26b-a4b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/rune-26b-a4b-GGUF", "gb": 13.29, "load_ms": 354.109542, "ms": 146.055224, "translated": 64, "direct": 64, "translated_en": 25, "translated_other": 39, "direct_other": 39, "ms_direct": 143.4134328358209}, {"method": "dohnuts-metal@decider-35b-a3b-q4", "engine": "dohnuts (Metal)", "model": "decider-35b-a3b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-35b-a3b-GGUF", "gb": 21.17, "load_ms": null, "ms": 266.304478, "translated": 64, "direct": 64, "translated_en": 26, "translated_other": 38, "direct_other": 38, "ms_direct": 267.94776119402985}, {"method": "systemone@neohorse-4b-q8", "engine": "System One server", "model": "neohorse-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "TokenRhythm/NeoHorse-Jev-4B-GGUF", "gb": 5.17, "load_ms": null, "ms": 273.114925, "translated": 64, "direct": 64, "translated_en": 25, "translated_other": 39, "direct_other": 39, "ms_direct": 292.53432835820894}, {"method": "slot@decider-35b-a3b-q4", "engine": "slot (llama-server)", "model": "decider-35b-a3b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-35b-a3b-GGUF", "gb": 21.17, "load_ms": 375.170416, "ms": 299.141791, "translated": 64, "direct": 64, "translated_en": 26, "translated_other": 38, "direct_other": 38, "ms_direct": 316.3134328358209}, {"method": "slot@rune-26b-a4b-q4", "engine": "slot (llama-server)", "model": "rune-26b-a4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "surogate/rune-26b-a4b-GGUF", "gb": 17.03, "load_ms": 439.192708, "ms": 335.29403, "translated": 64, "direct": 55, "translated_en": 26, "translated_other": 38, "direct_other": 29, "ms_direct": 396.8388059701493}, {"method": "dohnuts-metal@jpt-4b-q8", "engine": "dohnuts (Metal)", "model": "jpt-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 4.48, "load_ms": null, "ms": 335.591045, "translated": 64, "direct": 64, "translated_en": 25, "translated_other": 39, "direct_other": 39, "note": "Local Q8_0 conversion of the pinned BF16 file from prithivMLmods/jpt-4b-GGUF; upstream publishes no Q8. CC BY-NC 4.0 (non-commercial).", "ms_direct": 348.6298507462687}, {"method": "pcdserver@rune-mradermacher-26b-a4b-q8", "engine": "pcdServer", "model": "rune-mradermacher-26b-a4b", "quant": "q8", "family": "dedicated", "device": "C", "device_detail": "CPU only (--gpu-layers 0 --cpu); compute and KV offload disabled", "device_evidence": "configured", "source": "mradermacher/rune-26b-a4b-GGUF", "gb": 26.86, "load_ms": 9856.357584, "ms": 758.122388, "translated": 64, "direct": 64, "translated_en": 25, "translated_other": 39, "direct_other": 39, "note": "mradermacher Rune conversion, Jinja chat-template fallback. CPU-only inference; GPU weights, compute and KV offload disabled to respect memory limits. Latency is not a comparison with the GPU-weight Q3 run.", "ms_direct": 453.5223880597015}, {"method": "ollaya@winnow-12b", "engine": "ollaya", "model": "winnow-12b", "quant": "q8_0", "family": "dedicated", "device": "G", "device_detail": "ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe", "device_evidence": "configured", "source": "ollaya winnow:12b", "gb": 12.67, "load_ms": 36487.707875, "ms": 891.125373, "translated": 64, "direct": 65, "translated_en": 26, "translated_other": 38, "direct_other": 39, "ms_direct": 883.276119402985}, {"method": "gguf-head@jev-omni-q3", "engine": "llama.cpp embeddings + head", "model": "jev-omni", "quant": "q3", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": "ngquocvinh/Jev-Omni-GGUF", "gb": 6.09, "load_ms": 1410.887708, "ms": 1222.338806, "translated": 64, "direct": 64, "translated_en": 26, "translated_other": 38, "direct_other": 38, "ms_direct": 1211.1164179104478}, {"method": "pcdserver@qwen3.5-4b-unsloth-q8", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 4.48, "load_ms": 345.821542, "ms": 84.956716, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "ms_direct": 86.23432835820896}, {"method": "pcdserver@jpt-4b-q8", "engine": "pcdServer", "model": "jpt-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 4.48, "load_ms": 284.180875, "ms": 86.271642, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "Local Q8_0 conversion of the pinned BF16 file from prithivMLmods/jpt-4b-GGUF; upstream publishes no Q8. CC BY-NC 4.0 (non-commercial).", "ms_direct": 87.53432835820895}, {"method": "pcdserver@jpt-4b-q4", "engine": "pcdServer", "model": "jpt-4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 2.71, "load_ms": 317.977125, "ms": 92.980597, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 94.56716417910448}, {"method": "pcdserver@qwen3.5-4b-unsloth-q5", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 3.14, "load_ms": 354.436083, "ms": 94.458209, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "ms_direct": 95.5134328358209}, {"method": "pcdserver@rune-mradermacher-26b-a4b-q4-metal", "engine": "pcdServer", "model": "rune-mradermacher-26b-a4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal; all layers requested (--gpu-layers -1); server reports MTL0", "device_evidence": "observed", "measured_at": "2026-10-02T22:35:02+02:00", "gpu_layers": -1, "cpu_only": false, "hardware": "Apple M4 Max, 48 GiB unified memory", "source": "mradermacher/rune-26b-a4b-GGUF", "gb": 16.8, "load_ms": 332.358166, "ms": 124.78209, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "Fresh Metal rerun, 2026-10-02; --gpu-layers -1; server reports MTL0. The earlier Q4 CPU-weight run is retained separately. Same weights and frozen translations.", "ms_direct": 125.13880597014925}, {"method": "pcdserver@jpt-9b-q5", "engine": "pcdServer", "model": "jpt-9b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 6.47, "load_ms": 494.51775, "ms": 155.186567, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 154.72537313432835}, {"method": "mlx@openjev-35b-a3b-4bit", "engine": "MLX", "model": "openjev-35b-a3b", "quant": "4bit", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "apus-ailab/APUS-OpenJev-v1-35B-A3B-MLX-4bit", "gb": 20.99, "load_ms": 27425.705292, "ms": 250.031343, "translated": 63, "direct": 62, "translated_en": 24, "translated_other": 39, "direct_other": 38, "ms_direct": 268.7761194029851}, {"method": "systemone@neohorse-4b-q3", "engine": "System One server", "model": "neohorse-4b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "TokenRhythm/NeoHorse-Jev-4B-GGUF", "gb": 2.95, "load_ms": null, "ms": 296.122388, "translated": 63, "direct": 63, "translated_en": 24, "translated_other": 39, "direct_other": 39, "ms_direct": 306.8462686567164}, {"method": "pcdserver@openjev-35b-a3b-q4", "engine": "pcdServer", "model": "openjev-35b-a3b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF", "gb": 21.17, "load_ms": 338.353167, "ms": 296.758209, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "ms_direct": 301.47313432835824}, {"method": "pcdserver@decider-35b-a3b-q4", "engine": "pcdServer", "model": "decider-35b-a3b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-35b-a3b-GGUF", "gb": 21.17, "load_ms": 798.803333, "ms": 296.844776, "translated": 63, "direct": 63, "translated_en": 24, "translated_other": 39, "direct_other": 39, "ms_direct": 311.7238805970149}, {"method": "slot@openjev-35b-a3b-q4", "engine": "slot (llama-server)", "model": "openjev-35b-a3b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "apus-ailab/APUS-OpenJev-v1-35B-A3B-GGUF", "gb": 21.17, "load_ms": 388.138083, "ms": 311.331343, "translated": 63, "direct": 62, "translated_en": 24, "translated_other": 39, "direct_other": 38, "ms_direct": 320.0641791044776}, {"method": "systemone@jeb-35b-a3b-q3", "engine": "System One server", "model": "jeb-35b-a3b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/jeb-35b-a3b-GGUF", "gb": 17.17, "load_ms": null, "ms": 333.186567, "translated": 63, "direct": 63, "translated_en": 24, "translated_other": 39, "direct_other": 39, "ms_direct": 338.7179104477612}, {"method": "torch@decider-4b-bf16", "engine": "PyTorch", "model": "decider-4b", "quant": "bf16", "family": "dedicated", "device": "G", "device_detail": "PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 16801.550042, "ms": 348.210448, "translated": 63, "direct": 65, "translated_en": 26, "translated_other": 37, "direct_other": 39, "ms_direct": 344.47313432835824}, {"method": "dohnuts-metal@jpt-4b-q5", "engine": "dohnuts (Metal)", "model": "jpt-4b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 3.07, "load_ms": null, "ms": 367.01194, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 373.59402985074627}, {"method": "pcdserver@rune-mradermacher-26b-a4b-q4", "engine": "pcdServer", "model": "rune-mradermacher-26b-a4b", "quant": "q4", "family": "dedicated", "device": "C+G", "device_detail": "CPU weights (--gpu-layers 0); Metal computation and KV offload enabled", "device_evidence": "configured", "source": "mradermacher/rune-26b-a4b-GGUF", "gb": 16.8, "load_ms": 3169.745167, "ms": 487.123881, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "mradermacher Rune conversion, Jinja chat-template fallback. CPU weights to respect RAM limits; Metal compute offload remains enabled. Latency is not a comparison with the GPU-weight Q3 run.", "ms_direct": 479.2417910447761}, {"method": "dohnuts-metal@jpt-9b-q5", "engine": "dohnuts (Metal)", "model": "jpt-9b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 6.47, "load_ms": null, "ms": 619.614925, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 621.9268656716417}, {"method": "dohnuts-metal@jpt-9b-q4", "engine": "dohnuts (Metal)", "model": "jpt-9b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 5.63, "load_ms": null, "ms": 619.750746, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 634.7223880597015}, {"method": "dohnuts-metal@jpt-9b-q8", "engine": "dohnuts (Metal)", "model": "jpt-9b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 9.53, "load_ms": null, "ms": 624.673134, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "note": "Local Q8_0 conversion of the pinned BF16 file from prithivMLmods/jpt-9b-GGUF; upstream publishes no Q8. CC BY-NC 4.0 (non-commercial).", "ms_direct": 621.2567164179104}, {"method": "gguf-head@jev-omni-q8", "engine": "llama.cpp embeddings + head", "model": "jev-omni", "quant": "q8", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": "ngquocvinh/Jev-Omni-GGUF", "gb": 12.67, "load_ms": 1157.437416, "ms": 1124.116418, "translated": 63, "direct": 63, "translated_en": 25, "translated_other": 38, "direct_other": 38, "ms_direct": 1131.6059701492538}, {"method": "gguf-head@jev-omni-q5", "engine": "llama.cpp embeddings + head", "model": "jev-omni", "quant": "q5", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": "ngquocvinh/Jev-Omni-GGUF", "gb": 8.55, "load_ms": 1242.6185, "ms": 1212.729851, "translated": 63, "direct": 63, "translated_en": 25, "translated_other": 38, "direct_other": 38, "ms_direct": 1229.9328358208954}, {"method": "systemone@lev-4b", "engine": "System One server", "model": "lev-4b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "interfaze-ai/lev", "gb": 9.49, "load_ms": null, "ms": 2203.832836, "translated": 63, "direct": 64, "translated_en": 25, "translated_other": 38, "direct_other": 39, "ms_direct": 2215.3970149253732}, {"method": "dohnuts-metal@decider-0.8b-q8", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.81, "load_ms": null, "ms": 51.379104, "translated": 62, "direct": 61, "translated_en": 24, "translated_other": 38, "direct_other": 37, "ms_direct": 51.594029850746274}, {"method": "dohnuts-metal@decider-0.8b-dreamblooms-q8", "engine": "dohnuts (Metal)", "model": "decider-0.8b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-0.8b-GGUF", "gb": 0.81, "load_ms": null, "ms": 52.238806, "translated": 62, "direct": 61, "translated_en": 24, "translated_other": 38, "direct_other": 37, "ms_direct": 52.44179104477612}, {"method": "pcdserver@qwen2.5-3b-q8", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 3.29, "load_ms": 177.726334, "ms": 53.273134, "translated": 62, "direct": 57, "translated_en": 23, "translated_other": 39, "direct_other": 35, "ms_direct": 54.65970149253731}, {"method": "pcdserver@qwen2.5-3b-f16", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "f16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 6.18, "load_ms": 252.420959, "ms": 53.504478, "translated": 62, "direct": 60, "translated_en": 23, "translated_other": 39, "direct_other": 37, "ms_direct": 54.67910447761194}, {"method": "dohnuts-metal@decider-0.8b-q6", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q6", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.63, "load_ms": null, "ms": 53.541791, "translated": 62, "direct": 62, "translated_en": 24, "translated_other": 38, "direct_other": 38, "ms_direct": 53.89402985074627}, {"method": "dohnuts-metal@decider-0.8b-q5", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.58, "load_ms": null, "ms": 55.202985, "translated": 62, "direct": 60, "translated_en": 24, "translated_other": 38, "direct_other": 36, "ms_direct": 55.36268656716418}, {"method": "pcdserver@qwen2.5-3b-q4", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 1.93, "load_ms": 339.444, "ms": 59.197015, "translated": 62, "direct": 60, "translated_en": 23, "translated_other": 39, "direct_other": 37, "ms_direct": 60.4955223880597}, {"method": "pcdserver@qwen2.5-3b-q6", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 2.54, "load_ms": 213.485208, "ms": 62.016418, "translated": 62, "direct": 60, "translated_en": 23, "translated_other": 39, "direct_other": 37, "ms_direct": 63.452238805970154}, {"method": "slot@decider-0.8b-q8", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.81, "load_ms": 427.903958, "ms": 64.023881, "translated": 62, "direct": 61, "translated_en": 24, "translated_other": 38, "direct_other": 37, "ms_direct": 65.64925373134328}, {"method": "slot@decider-0.8b-dreamblooms-q8", "engine": "slot (llama-server)", "model": "decider-0.8b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-0.8b-GGUF", "gb": 0.81, "load_ms": 689.382959, "ms": 65.071642, "translated": 62, "direct": 61, "translated_en": 24, "translated_other": 38, "direct_other": 37, "ms_direct": 66.28358208955224}, {"method": "slot@decider-0.8b-q5", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.58, "load_ms": 141.592208, "ms": 67.877612, "translated": 62, "direct": 60, "translated_en": 24, "translated_other": 38, "direct_other": 36, "ms_direct": 68.3641791044776}, {"method": "slot@decider-0.8b-q6", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q6", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.63, "load_ms": 216.400583, "ms": 68.107463, "translated": 62, "direct": 62, "translated_en": 24, "translated_other": 38, "direct_other": 38, "ms_direct": 69.69850746268656}, {"method": "pcdserver@qwen3.5-4b-q4", "engine": "pcdServer", "model": "qwen3.5-4b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-4B-GGUF", "gb": 3.01, "load_ms": 310.905042, "ms": 89.750746, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 92.26119402985074}, {"method": "pcdserver@qwen3.5-4b-unsloth-q6", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 3.53, "load_ms": 290.543, "ms": 93.580597, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 94.44626865671641}, {"method": "pcdserver@qwen3.8-4b-distill-q4", "engine": "pcdServer", "model": "qwen3.8-4b-distill", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-4B-Distill-GGUF", "gb": 2.78, "load_ms": 283.812334, "ms": 93.58209, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 93.43880597014925}, {"method": "pcdserver@jpt-4b-q5", "engine": "pcdServer", "model": "jpt-4b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 3.07, "load_ms": 345.256291, "ms": 99.402985, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 106.4820895522388}, {"method": "pcdserver@qwen3.8-9b-distill-q4", "engine": "pcdServer", "model": "qwen3.8-9b-distill", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-9B-Distill-GGUF", "gb": 5.78, "load_ms": 449.054833, "ms": 137.80597, "translated": 62, "direct": 64, "translated_en": 25, "translated_other": 37, "direct_other": 39, "ms_direct": 140.8910447761194}, {"method": "dohnuts@decider-0.8b-dreamblooms-q8", "engine": "dohnuts (CPU)", "model": "decider-0.8b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "C", "device_detail": "CPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-0.8b-GGUF", "gb": 0.81, "load_ms": null, "ms": 275.165672, "translated": 62, "direct": 60, "translated_en": 24, "translated_other": 38, "direct_other": 36, "ms_direct": 270.8134328358209}, {"method": "dohnuts-metal@jet-4b-q8", "engine": "dohnuts (Metal)", "model": "jet-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/jet-GGUF", "gb": 4.48, "load_ms": null, "ms": 281.368657, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 296.09253731343284}, {"method": "slot@qwen3.5-4b-hmm-bf16", "engine": "slot (llama-server)", "model": "qwen3.5-4b-hmm", "quant": "bf16", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 8.42, "load_ms": 333.711833, "ms": 284.222388, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 301.7805970149254}, {"method": "slot@qwen3.5-4b-hmm-q8", "engine": "slot (llama-server)", "model": "qwen3.5-4b-hmm", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 4.48, "load_ms": 285.293375, "ms": 287.337313, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 303.17910447761193}, {"method": "dohnuts-metal@jpt-4b-q4", "engine": "dohnuts (Metal)", "model": "jpt-4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 2.71, "load_ms": null, "ms": 290.641791, "translated": 62, "direct": 62, "translated_en": 24, "translated_other": 38, "direct_other": 38, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 305.9313432835821}, {"method": "slot@qwen3.5-4b-hmm-q4", "engine": "slot (llama-server)", "model": "qwen3.5-4b-hmm", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "n4ze3m/Qwen3.5-4B-Hmm", "gb": 2.71, "load_ms": 292.977584, "ms": 303.091045, "translated": 62, "direct": 63, "translated_en": 25, "translated_other": 37, "direct_other": 38, "ms_direct": 307.1358208955224}, {"method": "slot@jevk5-4b-q4", "engine": "slot (llama-server)", "model": "jevk5-4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "alibiserikbay/JevK5-GGUF", "gb": 2.71, "load_ms": 429.022958, "ms": 350.51791, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 366.66567164179105}, {"method": "systemone@imajev-4b", "engine": "System One server", "model": "imajev-4b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mohit67890/imajev-4b", "gb": 9.81, "load_ms": null, "ms": 363.062687, "translated": 62, "direct": 64, "translated_en": 25, "translated_other": 37, "direct_other": 39, "ms_direct": 367.9388059701493}, {"method": "pcdserver@bonsai-27b-q1", "engine": "pcdServer", "model": "bonsai-27b", "quant": "q1", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prism-ml/Bonsai-27B-gguf", "gb": 3.8, "load_ms": 1826.799167, "ms": 513.526866, "translated": 62, "direct": 63, "translated_en": 24, "translated_other": 38, "direct_other": 39, "ms_direct": 518.5253731343283}, {"method": "kev-4b-gguf", "engine": "laya.cpp", "model": "kev-4b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "ggmlc device auto on Metal build; GPU runtime configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 1103.074627, "translated": 62, "direct": 55, "translated_en": 24, "translated_other": 38, "direct_other": 31, "ms_direct": 1091.983582089552}, {"method": "coreai@gliner25-decide", "engine": "Core AI", "model": "gliner25-decide", "quant": "fp16", "family": "dedicated", "device": "A", "device_detail": "Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded", "device_evidence": "configured", "source": "coreai-community/GLiNER2.5-Decide-CoreAI", "gb": 0.87, "load_ms": 3377.847209, "ms": 26.891045, "translated": 61, "direct": null, "translated_en": 22, "translated_other": 39, "direct_other": null, "ms_direct": null}, {"method": "pcdserver@qwen3.5-2b-q3", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 1.22, "load_ms": 202.831, "ms": 42.701493, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 43.144776119402984}, {"method": "dohnuts-metal@decider-0.8b-f16", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 1.52, "load_ms": null, "ms": 51.898507, "translated": 61, "direct": 60, "translated_en": 23, "translated_other": 38, "direct_other": 37, "ms_direct": 51.8955223880597}, {"method": "dohnuts-metal@decider-0.8b-q4", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.53, "load_ms": null, "ms": 53.283582, "translated": 61, "direct": 59, "translated_en": 23, "translated_other": 38, "direct_other": 36, "ms_direct": 53.23582089552239}, {"method": "pcdserver@qwen2.5-3b-q5", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 2.22, "load_ms": 300.240709, "ms": 61.747761, "translated": 61, "direct": 57, "translated_en": 22, "translated_other": 39, "direct_other": 36, "ms_direct": 63.12985074626865}, {"method": "slot@decider-0.8b-f16", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 1.52, "load_ms": 670.339334, "ms": 63.602985, "translated": 61, "direct": 60, "translated_en": 23, "translated_other": 38, "direct_other": 37, "ms_direct": 63.6820895522388}, {"method": "onnx@gliner25-decide-fp32", "engine": "ONNX Runtime", "model": "gliner25-decide", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "onnx-community/GLiNER2.5-Decide-ONNX", "gb": 1.74, "load_ms": 4607.366125, "ms": 67.268657, "translated": 61, "direct": null, "translated_en": 22, "translated_other": 39, "direct_other": null, "ms_direct": null}, {"method": "slot@decider-0.8b-q4", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.53, "load_ms": 231.081417, "ms": 67.362687, "translated": 61, "direct": 59, "translated_en": 23, "translated_other": 38, "direct_other": 36, "ms_direct": 67.35671641791045}, {"method": "pcdserver@qwen3-4b-unsloth-bf16", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 8.05, "load_ms": 259.010667, "ms": 71.520896, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 72.82388059701492}, {"method": "pcdserver@qwen3-4b-q4", "engine": "pcdServer", "model": "qwen3-4b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-4B-GGUF", "gb": 2.5, "load_ms": 229.668875, "ms": 75.459701, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 77.46119402985074}, {"method": "pcdserver@qwen3-4b-unsloth-q4", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 2.5, "load_ms": 246.70875, "ms": 76.435821, "translated": 61, "direct": 61, "translated_en": 23, "translated_other": 38, "direct_other": 38, "ms_direct": 77.54477611940298}, {"method": "pcdserver@qwen3.5-4b-supercoder-q4", "engine": "pcdServer", "model": "qwen3.5-4b-supercoder", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "jica98/qwen3.5-4B-super-coder", "gb": 2.61, "load_ms": 351.2005, "ms": 84.198507, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 87.08358208955224}, {"method": "pcdserver@jevk5-4b-q8", "engine": "pcdServer", "model": "jevk5-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "alibiserikbay/JevK5-GGUF", "gb": 4.48, "load_ms": 291.784208, "ms": 84.198507, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 85.0179104477612}, {"method": "executorch@decider-0.8b-fp16", "engine": "ExecuTorch (MLX)", "model": "decider-0.8b", "quant": "fp16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 89.701493, "translated": 61, "direct": 60, "translated_en": 23, "translated_other": 38, "direct_other": 37, "ms_direct": 89.66119402985075}, {"method": "pcdserver@jevk5-4b-q4", "engine": "pcdServer", "model": "jevk5-4b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "alibiserikbay/JevK5-GGUF", "gb": 2.71, "load_ms": 331.591875, "ms": 89.938806, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 91.19999999999999}, {"method": "pcdserver@qwen3.5-4b-unsloth-iq3", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "iq3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 1.95, "load_ms": 799.813375, "ms": 90.167164, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 92.82089552238806}, {"method": "pcdserver@qwen3.5-4b-unsloth-q2", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 1.94, "load_ms": 829.273958, "ms": 93.502985, "translated": 61, "direct": 61, "translated_en": 22, "translated_other": 39, "direct_other": 39, "ms_direct": 97.58358208955224}, {"method": "pcdserver@qwen3.5-4b-unsloth-q4", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 2.74, "load_ms": 296.532, "ms": 93.635821, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 95.34626865671642}, {"method": "pcdserver@qwen2.5-coder-7b-q4", "engine": "pcdServer", "model": "qwen2.5-coder-7b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF", "gb": 4.68, "load_ms": 385.961167, "ms": 108.885075, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 112.31044776119403}, {"method": "pcdserver@qwen3-8b-q4", "engine": "pcdServer", "model": "qwen3-8b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen3-8B-GGUF", "gb": 5.03, "load_ms": 367.140667, "ms": 115.99403, "translated": 61, "direct": 62, "translated_en": 23, "translated_other": 38, "direct_other": 39, "ms_direct": 120.69850746268656}, {"method": "pcdserver@qwen3.5-9b-unsloth-q4", "engine": "pcdServer", "model": "qwen3.5-9b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-9B-GGUF", "gb": 5.68, "load_ms": 451.801125, "ms": 136.938806, "translated": 61, "direct": 63, "translated_en": 24, "translated_other": 37, "direct_other": 39, "ms_direct": 139.12985074626866}, {"method": "pcdserver@jpt-9b-q4", "engine": "pcdServer", "model": "jpt-9b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 5.63, "load_ms": 478.266542, "ms": 137.334328, "translated": 61, "direct": 63, "translated_en": 24, "translated_other": 37, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 141.17611940298505}, {"method": "pcdserver@jpt-9b-q8", "engine": "pcdServer", "model": "jpt-9b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 9.53, "load_ms": 450.753917, "ms": 141.770149, "translated": 61, "direct": 63, "translated_en": 24, "translated_other": 37, "direct_other": 39, "note": "Local Q8_0 conversion of the pinned BF16 file from prithivMLmods/jpt-9b-GGUF; upstream publishes no Q8. CC BY-NC 4.0 (non-commercial).", "ms_direct": 154.2134328358209}, {"method": "ollaya@decider-0.8b", "engine": "ollaya", "model": "decider-0.8b", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya decider:0.8b", "gb": 1.53, "load_ms": 7924.144375, "ms": 284.798507, "translated": 61, "direct": 60, "translated_en": 23, "translated_other": 38, "direct_other": 37, "ms_direct": 284.9}, {"method": "dohnuts-metal@jpt-4b-q3", "engine": "dohnuts (Metal)", "model": "jpt-4b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 2.26, "load_ms": null, "ms": 315.044776, "translated": 61, "direct": 63, "translated_en": 24, "translated_other": 37, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 328.1149253731343}, {"method": "slot@jevk5-4b-q8", "engine": "slot (llama-server)", "model": "jevk5-4b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "alibiserikbay/JevK5-GGUF", "gb": 4.48, "load_ms": 371.874041, "ms": 333.883582, "translated": 61, "direct": 63, "translated_en": 24, "translated_other": 37, "direct_other": 39, "ms_direct": 342.6835820895522}, {"method": "coreml@gliner25-decide-fp16-l256", "engine": "Core ML", "model": "gliner25-decide", "quant": "fp16", "family": "dedicated", "device": "A", "device_detail": "Core ML ALL: CPU/GPU/Neural Engine automatic; exact placement unrecorded", "device_evidence": "configured", "source": "FluidInference/gliner2-5-decide-coreml", "gb": 0.93, "load_ms": 82061.620792, "ms": 349.146269, "translated": 61, "direct": null, "translated_en": 22, "translated_other": 39, "direct_other": null, "ms_direct": null}, {"method": "dohnuts-metal@jpt-9b-q3", "engine": "dohnuts (Metal)", "model": "jpt-9b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 4.62, "load_ms": null, "ms": 636.691045, "translated": 61, "direct": 64, "translated_en": 26, "translated_other": 35, "direct_other": 38, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 664.2014925373135}, {"method": "mlx@jev-omni-4bit", "engine": "MLX", "model": "jev-omni", "quant": "4bit", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Ruiruiz30/Jev-Omni-MLX-4bit", "gb": 6.81, "load_ms": null, "ms": 780.132836, "translated": 61, "direct": 61, "translated_en": 24, "translated_other": 37, "direct_other": 37, "ms_direct": 780.3134328358209}, {"method": "pcdserver@decider-2b-f16", "engine": "pcdServer", "model": "decider-2b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 3.78, "load_ms": 166.155709, "ms": 42.225373, "translated": 60, "direct": 60, "translated_en": 22, "translated_other": 38, "direct_other": 38, "ms_direct": 43.213432835820896}, {"method": "pcdserver@qwen2.5-coder-3b-q4", "engine": "pcdServer", "model": "qwen2.5-coder-3b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-Coder-3B-Instruct-GGUF", "gb": 2.1, "load_ms": 294.587833, "ms": 60.222388, "translated": 60, "direct": 59, "translated_en": 24, "translated_other": 36, "direct_other": 35, "ms_direct": 62.031343283582096}, {"method": "mlx@tev1-0.8b-4bit", "engine": "MLX", "model": "tev1-0.8b", "quant": "4bit", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit", "gb": 0.42, "load_ms": 3482.497834, "ms": 64.801493, "translated": 60, "direct": 59, "translated_en": 21, "translated_other": 39, "direct_other": 38, "note": "Experimental Together Tev1, MLX 4-bit. Release licence is unresolved.", "ms_direct": 64.58208955223881}, {"method": "pcdserver@qwen3-4b-unsloth-q8", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 4.28, "load_ms": 306.271042, "ms": 70.310448, "translated": 60, "direct": 62, "translated_en": 23, "translated_other": 37, "direct_other": 39, "ms_direct": 72.30298507462687}, {"method": "pcdserver@qwen3-4b-unsloth-q3", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 2.08, "load_ms": 706.2225, "ms": 78.316418, "translated": 60, "direct": 61, "translated_en": 22, "translated_other": 38, "direct_other": 39, "ms_direct": 80.61940298507463}, {"method": "pcdserver@qwen3-4b-unsloth-q6", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 3.31, "load_ms": 276.498666, "ms": 79.332836, "translated": 60, "direct": 61, "translated_en": 22, "translated_other": 38, "direct_other": 39, "ms_direct": 80.89402985074626}, {"method": "pcdserver@qwen3-4b-unsloth-q5", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 2.89, "load_ms": 320.793292, "ms": 79.402985, "translated": 60, "direct": 62, "translated_en": 23, "translated_other": 37, "direct_other": 39, "ms_direct": 81.6134328358209}, {"method": "pcdserver@qwen3.5-4b-unsloth-q3", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 2.29, "load_ms": 358.435625, "ms": 92.685075, "translated": 60, "direct": 61, "translated_en": 22, "translated_other": 38, "direct_other": 39, "ms_direct": 93.97164179104477}, {"method": "pcdserver@jpt-4b-q3", "engine": "pcdServer", "model": "jpt-4b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-4b-GGUF", "gb": 2.26, "load_ms": 373.70525, "ms": 93.743284, "translated": 60, "direct": 60, "translated_en": 22, "translated_other": 38, "direct_other": 38, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 97.2402985074627}, {"method": "coreml@kev-0.8b-fp16-l512", "engine": "Core ML", "model": "kev-0.8b", "quant": "fp16", "family": "dedicated", "device": "C+G", "device_detail": "Core ML CPU_AND_GPU; exact operation placement unprofiled", "device_evidence": "configured", "source": "FluidInference/kev-0.8b-coreml", "gb": 1.51, "load_ms": 11367.991208, "ms": 121.320896, "translated": 60, "direct": 62, "translated_en": 24, "translated_other": 36, "direct_other": 38, "note": "FluidInference Core ML fp16, L512 K16 row, CPU + GPU; temperature is embedded.", "ms_direct": 122.07014925373134}, {"method": "pcdserver@jpt-9b-q3", "engine": "pcdServer", "model": "jpt-9b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prithivMLmods/jpt-9b-GGUF", "gb": 4.62, "load_ms": 482.356291, "ms": 139.220896, "translated": 60, "direct": 62, "translated_en": 23, "translated_other": 37, "direct_other": 39, "note": "JPT weights use CC BY-NC 4.0 (non-commercial).", "ms_direct": 140.21492537313432}, {"method": "ollaya@kev-0.8b", "engine": "ollaya", "model": "kev-0.8b", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya kev:0.8b", "gb": 1.82, "load_ms": 4848.099, "ms": 268.238806, "translated": 60, "direct": 62, "translated_en": 24, "translated_other": 36, "direct_other": 38, "ms_direct": 272.8149253731343}, {"method": "pcdserver@decider-2b-dreamblooms-q8", "engine": "pcdServer", "model": "decider-2b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-2b-GGUF", "gb": 2.01, "load_ms": 198.432041, "ms": 40.097015, "translated": 59, "direct": 60, "translated_en": 22, "translated_other": 37, "direct_other": 38, "ms_direct": 40.7}, {"method": "dohnuts-metal@tev1-0.8b-q8", "engine": "dohnuts (Metal)", "model": "tev1-0.8b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/Tev1-0.8B-experimental-GGUF", "gb": 0.81, "load_ms": null, "ms": 61.51194, "translated": 59, "direct": 62, "translated_en": 23, "translated_other": 36, "direct_other": 39, "note": "Experimental Together Tev1. Release licence is unresolved.", "ms_direct": 61.800000000000004}, {"method": "pcdserver@qwen3-4b-unsloth-iq2", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "iq2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 1.53, "load_ms": 604.75225, "ms": 72.71194, "translated": 59, "direct": 57, "translated_en": 21, "translated_other": 38, "direct_other": 36, "ms_direct": 74.28059701492538}, {"method": "dohnuts-metal@decider-2b-f16", "engine": "dohnuts (Metal)", "model": "decider-2b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 3.78, "load_ms": null, "ms": 100.31791, "translated": 59, "direct": 62, "translated_en": 24, "translated_other": 35, "direct_other": 38, "ms_direct": 103.3731343283582}, {"method": "dohnuts-metal@decider-2b-dreamblooms-q8", "engine": "dohnuts (Metal)", "model": "decider-2b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-2b-GGUF", "gb": 2.01, "load_ms": null, "ms": 103.659701, "translated": 59, "direct": 62, "translated_en": 24, "translated_other": 35, "direct_other": 38, "ms_direct": 106.41194029850747}, {"method": "slot@decider-2b-f16", "engine": "slot (llama-server)", "model": "decider-2b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 3.78, "load_ms": 153.061042, "ms": 112.362687, "translated": 59, "direct": 62, "translated_en": 24, "translated_other": 35, "direct_other": 38, "ms_direct": 112.72835820895523}, {"method": "slot@decider-2b-dreamblooms-q8", "engine": "slot (llama-server)", "model": "decider-2b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-2b-GGUF", "gb": 2.01, "load_ms": 199.474833, "ms": 114.352239, "translated": 59, "direct": 62, "translated_en": 24, "translated_other": 35, "direct_other": 38, "ms_direct": 115.68507462686567}, {"method": "executorch@decider-2b-fp16", "engine": "ExecuTorch (MLX)", "model": "decider-2b", "quant": "fp16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 251.334328, "translated": 59, "direct": 62, "translated_en": 24, "translated_other": 35, "direct_other": 38, "ms_direct": 252.45671641791049}, {"method": "pcdserver@decider-0.8b-q5", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.58, "load_ms": 179.595333, "ms": 29.914925, "translated": 57, "direct": 57, "translated_en": 22, "translated_other": 36, "direct_other": 35, "ms_direct": 30.87313432835821}, {"method": "pcdserver@qwen3.5-2b-q8", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 2.08, "load_ms": 188.620417, "ms": 39.495522, "translated": 57, "direct": 59, "translated_en": 20, "translated_other": 38, "direct_other": 39, "ms_direct": 40.13283582089552}, {"method": "pcdserver@qwen3.5-2b-unsloth-q8", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 2.01, "load_ms": 126.398333, "ms": 39.532836, "translated": 57, "direct": 59, "translated_en": 20, "translated_other": 38, "direct_other": 39, "ms_direct": 39.994029850746266}, {"method": "pcdserver@decider-0.8b-q4", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.53, "load_ms": 583.397958, "ms": 40.21194, "translated": 57, "direct": 57, "translated_en": 22, "translated_other": 36, "direct_other": 35, "ms_direct": 37.87164179104478}, {"method": "pcdserver@decider-2b-iq4", "engine": "pcdServer", "model": "decider-2b", "quant": "iq4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 1.24, "load_ms": 166.50325, "ms": 41.370149, "translated": 57, "direct": 57, "translated_en": 21, "translated_other": 37, "direct_other": 37, "ms_direct": 42.93432835820895}, {"method": "pcdserver@qwen3.5-2b-unsloth-bf16", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 3.78, "load_ms": 328.075375, "ms": 42.2, "translated": 57, "direct": 59, "translated_en": 20, "translated_other": 38, "direct_other": 39, "ms_direct": 43.014925373134325}, {"method": "pcdserver@qwen3.5-2b-unsloth-q4", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 1.28, "load_ms": 138.736, "ms": 44.753731, "translated": 57, "direct": 57, "translated_en": 19, "translated_other": 39, "direct_other": 38, "ms_direct": 45.76865671641791}, {"method": "dohnuts-metal@decider-0.8b-q3", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.47, "load_ms": null, "ms": 54.492537, "translated": 57, "direct": 55, "translated_en": 24, "translated_other": 34, "direct_other": 31, "ms_direct": 55.276119402985074}, {"method": "pcdserver@qwen2.5-3b-q3", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 1.59, "load_ms": 672.21325, "ms": 60.601493, "translated": 57, "direct": 51, "translated_en": 20, "translated_other": 38, "direct_other": 31, "ms_direct": 61.96567164179104}, {"method": "ollaya@von-1.1", "engine": "ollaya", "model": "von-1.1", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya von:1.1", "gb": 1.59, "load_ms": 14254.359125, "ms": 62.825373, "translated": 57, "direct": null, "translated_en": 22, "translated_other": 36, "direct_other": null, "ms_direct": null}, {"method": "slot@decider-0.8b-q3", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.47, "load_ms": 100.698083, "ms": 69.691045, "translated": 57, "direct": 55, "translated_en": 24, "translated_other": 34, "direct_other": 31, "ms_direct": 69.71194029850746}, {"method": "dohnuts-metal@this-that-model-1.2-q3", "engine": "dohnuts (Metal)", "model": "this-that-model-1.2", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/this-that-model-1.2-GGUF", "gb": 1.1, "load_ms": null, "ms": 113.119403, "translated": 57, "direct": 56, "translated_en": 23, "translated_other": 35, "direct_other": 33, "ms_direct": 115.16567164179105}, {"method": "systemone@leo-1.7b", "engine": "System One server", "model": "leo-1.7b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Suparva/leo-1.7b", "gb": 3.52, "load_ms": null, "ms": 136.234328, "translated": 57, "direct": 62, "translated_en": 23, "translated_other": 35, "direct_other": 39, "ms_direct": 141.24477611940299}, {"method": "systemone@kev-ggmlc-0.8b-q8", "engine": "ggmlc (Metal)", "model": "kev-0.8b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mys/kev-0.8b-GGUF", "gb": 0.83, "load_ms": null, "ms": 199.764179, "translated": 57, "direct": 45, "translated_en": 24, "translated_other": 34, "direct_other": 21, "note": "mys GGUF contains a ggmlc program, incompatible with llama.cpp/dohnuts. ggmlc Metal execution.", "ms_direct": 203.9134328358209}, {"method": "kev-0.8b-gguf", "engine": "laya.cpp", "model": "kev-0.8b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "ggmlc device auto on Metal build; GPU runtime configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 231.504478, "translated": 57, "direct": 45, "translated_en": 24, "translated_other": 34, "direct_other": 21, "ms_direct": 235.51044776119403}, {"method": "pcdserver@qwen3.5-0.8b-q5", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 0.65, "load_ms": 284.391042, "ms": 32.09403, "translated": 57, "direct": 57, "translated_en": 21, "translated_other": 36, "direct_other": 37, "ms_direct": 33.92537313432836}, {"method": "pcdserver@qwen3-1.7b-unsloth-q8", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 1.83, "load_ms": 95.413875, "ms": 35.08209, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 35.667164179104475}, {"method": "pcdserver@qwen3-1.7b-q8", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 2.17, "load_ms": 94.208542, "ms": 35.240299, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 35.905970149253726}, {"method": "pcdserver@qwen3-1.7b-bf16", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 4.07, "load_ms": 206.318916, "ms": 36.164179, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 36.77462686567164}, {"method": "pcdserver@qwen3-1.7b-q5", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 1.47, "load_ms": 147.67125, "ms": 38.713433, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 39.37910447761194}, {"method": "pcdserver@qwen3-1.7b-unsloth-q5", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 1.26, "load_ms": 170.412292, "ms": 38.746269, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 39.60149253731343}, {"method": "pcdserver@qwen3-1.7b-unsloth-q6", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 1.42, "load_ms": 157.572833, "ms": 39.241791, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 40.37611940298507}, {"method": "pcdserver@qwen3-1.7b-q6", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 1.67, "load_ms": 149.563875, "ms": 39.270149, "translated": 57, "direct": 59, "translated_en": 21, "translated_other": 36, "direct_other": 38, "ms_direct": 40.2}, {"method": "pcdserver@qwen3.5-2b-unsloth-iq3", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "iq3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 0.93, "load_ms": 434.60425, "ms": 40.243284, "translated": 57, "direct": 57, "translated_en": 21, "translated_other": 36, "direct_other": 37, "ms_direct": 42.5}, {"method": "pcdserver@qwen3.5-2b-unsloth-q3", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 1.11, "load_ms": 165.135708, "ms": 41.938806, "translated": 57, "direct": 59, "translated_en": 20, "translated_other": 37, "direct_other": 39, "ms_direct": 43.12388059701493}, {"method": "pcdserver@qwen3.5-2b-q5", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 1.57, "load_ms": 196.441208, "ms": 42.349254, "translated": 57, "direct": 57, "translated_en": 19, "translated_other": 38, "direct_other": 39, "ms_direct": 43.22686567164179}, {"method": "pcdserver@qwen3.5-2b-q6", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 1.7, "load_ms": 134.479292, "ms": 42.552239, "translated": 57, "direct": 57, "translated_en": 19, "translated_other": 38, "direct_other": 39, "ms_direct": 42.9223880597015}, {"method": "pcdserver@qwen3.5-2b-unsloth-q5", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 1.44, "load_ms": 142.033667, "ms": 43.465672, "translated": 57, "direct": 57, "translated_en": 19, "translated_other": 38, "direct_other": 38, "ms_direct": 45.80597014925373}, {"method": "pcdserver@qwen3.5-2b-q4", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 1.4, "load_ms": 216.748209, "ms": 47.177612, "translated": 57, "direct": 57, "translated_en": 19, "translated_other": 38, "direct_other": 39, "ms_direct": 49.741791044776114}, {"method": "onnx@von-1.2", "engine": "ONNX Runtime", "model": "von-1.2", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "DanKau/von-1.2-onnx", "gb": 1.58, "load_ms": 2485.39575, "ms": 52.623881, "translated": 57, "direct": null, "translated_en": 22, "translated_other": 35, "direct_other": null, "ms_direct": null}, {"method": "ollaya@decision-eos", "engine": "ollaya", "model": "decision-eos", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya decision:eos", "gb": 1.54, "load_ms": 5638.341709, "ms": 322.902985, "translated": 57, "direct": 56, "translated_en": 23, "translated_other": 34, "direct_other": 33, "ms_direct": 322.79999999999995}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q5", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.59, "load_ms": 184.032042, "ms": 29.571642, "translated": 56, "direct": 57, "translated_en": 21, "translated_other": 35, "direct_other": 36, "ms_direct": 29.565671641791045}, {"method": "pcdserver@qwen3-1.7b-unsloth-q4", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 1.11, "load_ms": 194.426459, "ms": 40.21194, "translated": 56, "direct": 57, "translated_en": 20, "translated_other": 36, "direct_other": 38, "ms_direct": 42.17164179104478}, {"method": "pcdserver@qwen3.5-2b-unsloth-q6", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 1.57, "load_ms": 131.853375, "ms": 43.831343, "translated": 56, "direct": 57, "translated_en": 19, "translated_other": 37, "direct_other": 39, "ms_direct": 44.55223880597015}, {"method": "dohnuts-metal@decider-2b-iq4", "engine": "dohnuts (Metal)", "model": "decider-2b", "quant": "iq4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 1.24, "load_ms": null, "ms": 106.719403, "translated": 56, "direct": 57, "translated_en": 23, "translated_other": 33, "direct_other": 35, "ms_direct": 107.56567164179104}, {"method": "slot@decider-2b-iq4", "engine": "slot (llama-server)", "model": "decider-2b", "quant": "iq4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "cosetoenor/decider-2b-GGUF", "gb": 1.24, "load_ms": 719.130959, "ms": 126.813433, "translated": 56, "direct": 57, "translated_en": 23, "translated_other": 33, "direct_other": 35, "ms_direct": 128.27014925373135}, {"method": "pcdserver@decider-0.8b-dreamblooms-q8", "engine": "pcdServer", "model": "decider-0.8b-dreamblooms", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DreamBlooms/decider-0.8b-GGUF", "gb": 0.81, "load_ms": 77.833041, "ms": 28.259701, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 28.58955223880597}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q8", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.81, "load_ms": 176.822, "ms": 28.720896, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.72686567164179}, {"method": "pcdserver@qwen3.5-0.8b-q6", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 0.69, "load_ms": 449.65775, "ms": 28.976119, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.532835820895524}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q6", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.64, "load_ms": 186.414083, "ms": 29.216418, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 29.34328358208955}, {"method": "pcdserver@decider-0.8b-q6", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q6", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.63, "load_ms": 279.962833, "ms": 29.804478, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 31.807462686567163}, {"method": "pcdserver@qwen3.5-0.8b-bf16", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 1.56, "load_ms": 406.980125, "ms": 30.028358, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.202985074626863}, {"method": "pcdserver@decider-0.8b-q8", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.81, "load_ms": 207.853625, "ms": 30.219403, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.382089552238806}, {"method": "pcdserver@qwen3.5-0.8b-ggml-bf16", "engine": "pcdServer", "model": "qwen3.5-0.8b-ggml", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "ggml-org/Qwen3.5-0.8B-GGUF", "gb": 1.56, "load_ms": 337.471292, "ms": 30.316418, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.92686567164179}, {"method": "pcdserver@decider-0.8b-f16", "engine": "pcdServer", "model": "decider-0.8b", "quant": "f16", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 1.52, "load_ms": 437.972459, "ms": 30.740299, "translated": 55, "direct": 56, "translated_en": 19, "translated_other": 36, "direct_other": 37, "ms_direct": 37.44179104477612}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-bf16", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "bf16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 1.52, "load_ms": 208.480916, "ms": 30.965672, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 31.331343283582086}, {"method": "pcdserver@qwen3.5-0.8b-q8", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "ggml-org/Qwen3.5-0.8B-GGUF", "gb": 0.83, "load_ms": 252.3115, "ms": 31.18806, "translated": 55, "direct": 57, "translated_en": 20, "translated_other": 35, "direct_other": 37, "ms_direct": 30.98507462686567}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q4", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.53, "load_ms": 255.314917, "ms": 50.065672, "translated": 55, "direct": 54, "translated_en": 20, "translated_other": 35, "direct_other": 34, "ms_direct": 47.767164179104476}, {"method": "systemone@bosun-1.7b-q5", "engine": "llama-cpp-python (Metal)", "model": "bosun-1.7b", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Hanno-Labs/bosun-v3.1-1.7b-GGUF", "gb": 1.26, "load_ms": null, "ms": 130.831343, "translated": 55, "direct": 55, "translated_en": 22, "translated_other": 33, "direct_other": 33, "note": "Bosun native stable-slot prompt and decision-token logits, T=1; Apache 2.0.", "ms_direct": 134.93283582089552}, {"method": "pcdserver@pulse-0.6b-q4", "engine": "pcdServer", "model": "pulse-0.6b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "PulseOS/pulse-local-qwen3-0.6b", "gb": 0.4, "load_ms": 196.412042, "ms": 27.864179, "translated": 54, "direct": 52, "translated_en": 21, "translated_other": 33, "direct_other": 31, "ms_direct": 33.44179104477612}, {"method": "pcdserver@bonsai-1.7b-q2", "engine": "pcdServer", "model": "bonsai-1.7b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prism-ml/Ternary-Bonsai-1.7B-gguf", "gb": 0.49, "load_ms": 258.671917, "ms": 34.910448, "translated": 54, "direct": 55, "translated_en": 19, "translated_other": 35, "direct_other": 36, "ms_direct": 35.84477611940299}, {"method": "pcdserver@qwen3-1.7b-q2", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 0.88, "load_ms": 103.624417, "ms": 37.510448, "translated": 54, "direct": 50, "translated_en": 21, "translated_other": 33, "direct_other": 29, "ms_direct": 38.10597014925373}, {"method": "pcdserver@qwen3-1.7b-q4", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 1.28, "load_ms": 342.821, "ms": 40.69403, "translated": 54, "direct": 57, "translated_en": 20, "translated_other": 34, "direct_other": 38, "ms_direct": 41.4865671641791}, {"method": "gguf-head@laya-neutron-ml", "engine": "llama.cpp embeddings + head", "model": "laya-multilingual", "quant": "q4_0", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": "wigcheng5566/laya-neutron-gguf", "gb": 0.27, "load_ms": 2739.462625, "ms": 42.714925, "translated": 54, "direct": 51, "translated_en": 21, "translated_other": 33, "direct_other": 30, "ms_direct": 43.59850746268656}, {"method": "dohnuts-metal@this-that-model-1.2-q5", "engine": "dohnuts (Metal)", "model": "this-that-model-1.2", "quant": "q5", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/this-that-model-1.2-GGUF", "gb": 1.41, "load_ms": null, "ms": 117.413433, "translated": 54, "direct": 57, "translated_en": 21, "translated_other": 33, "direct_other": 37, "ms_direct": 120.66417910447761}, {"method": "systemone@kev-ggmlc-0.8b-q4", "engine": "ggmlc (Metal)", "model": "kev-0.8b", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mys/kev-0.8b-GGUF", "gb": 0.96, "load_ms": null, "ms": 207.161194, "translated": 54, "direct": 43, "translated_en": 23, "translated_other": 31, "direct_other": 20, "note": "mys GGUF contains a ggmlc program, incompatible with llama.cpp/dohnuts. ggmlc Metal execution.", "ms_direct": 211.1820895522388}, {"method": "pcdserver@qwen3-0.6b-q8", "engine": "pcdServer", "model": "qwen3-0.6b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen3-0.6B-GGUF", "gb": 0.64, "load_ms": 191.295333, "ms": 25.495522, "translated": 53, "direct": 54, "translated_en": 18, "translated_other": 35, "direct_other": 36, "ms_direct": 27.39402985074627}, {"method": "pcdserver@qwen3.5-0.8b-ggml-q4", "engine": "pcdServer", "model": "qwen3.5-0.8b-ggml", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "ggml-org/Qwen3.5-0.8B-GGUF", "gb": 0.56, "load_ms": 800.997292, "ms": 28.750746, "translated": 53, "direct": 55, "translated_en": 19, "translated_other": 34, "direct_other": 36, "ms_direct": 28.928358208955224}, {"method": "pcdserver@qwen3-1.7b-unsloth-q3", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 0.94, "load_ms": 216.366458, "ms": 37.602985, "translated": 53, "direct": 56, "translated_en": 18, "translated_other": 35, "direct_other": 38, "ms_direct": 37.9865671641791}, {"method": "pcdserver@qwen3.5-2b-unsloth-q2", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 0.97, "load_ms": 254.80525, "ms": 41.262687, "translated": 53, "direct": 48, "translated_en": 19, "translated_other": 34, "direct_other": 29, "ms_direct": 42.701492537313435}, {"method": "mlx@laya-ml-mxfp8", "engine": "MLX", "model": "laya-multilingual", "quant": "mxfp8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "sahilchachra/Laya-Multilingual-MXFP8", "gb": 0.32, "load_ms": 2639.138, "ms": 57.804478, "translated": 53, "direct": 49, "translated_en": 20, "translated_other": 33, "direct_other": 29, "note": "The MXFP weights declare no licence; the runtime (mlx-embeddings) is GPL-3.0.", "ms_direct": 60.05373134328358}, {"method": "pcdserver@qwen2.5-3b-q2", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 1.27, "load_ms": 270.949292, "ms": 58.335821, "translated": 53, "direct": 46, "translated_en": 17, "translated_other": 36, "direct_other": 29, "ms_direct": 59.810447761194034}, {"method": "dohnuts-metal@this-that-model-1.2-q8", "engine": "dohnuts (Metal)", "model": "this-that-model-1.2", "quant": "q8", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/this-that-model-1.2-GGUF", "gb": 2.01, "load_ms": null, "ms": 107.758209, "translated": 53, "direct": 57, "translated_en": 20, "translated_other": 33, "direct_other": 38, "ms_direct": 108.64925373134328}, {"method": "laya-mlx", "engine": "MLX", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "G", "device_detail": "MLX Metal GPU", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 1796.539916, "ms": 6.922388, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 6.965671641791045}, {"method": "laya-coreai", "engine": "Core AI", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "A", "device_detail": "Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 3164.4525, "ms": 10.025373, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 10.053731343283582}, {"method": "ollaya@laya-multilingual", "engine": "ollaya", "model": "laya-multilingual", "quant": "fp32", "family": "dedicated", "device": "G", "device_detail": "ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe", "device_evidence": "configured", "source": "ollaya laya:multilingual", "gb": 0.68, "load_ms": 1217.387125, "ms": 12.259701, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 12.580597014925372}, {"method": "laya-coreai-mlb", "engine": "Core AI", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "A", "device_detail": "Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2403.659791, "ms": 19.402985, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 19.54925373134328}, {"method": "laya-ml-onnx-fp32", "engine": "ONNX Runtime", "model": "laya-multilingual", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 824.984417, "ms": 23.41194, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 23.623880597014924}, {"method": "onnx@laya-ml-fp32", "engine": "ONNX Runtime", "model": "laya-multilingual", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "onnx-community/laya-multilingual-ONNX", "gb": 1.29, "load_ms": 1577.68475, "ms": 24.708955, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 26.219402985074627}, {"method": "laya-ml-onnx-int8", "engine": "ONNX Runtime", "model": "laya-multilingual", "quant": "int8", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 740.832333, "ms": 25.465672, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 25.60597014925373}, {"method": "pcdserver@decider-0.8b-q3", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q3", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.47, "load_ms": 161.362792, "ms": 29.347761, "translated": 52, "direct": 47, "translated_en": 18, "translated_other": 34, "direct_other": 29, "ms_direct": 29.964179104477612}, {"method": "pcdserver@qwen3.5-0.8b-q4", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 0.58, "load_ms": 257.93125, "ms": 30.231343, "translated": 52, "direct": 51, "translated_en": 17, "translated_other": 35, "direct_other": 34, "ms_direct": 31.03731343283582}, {"method": "laya-wd-gguf-q8", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "q8", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2337.12, "ms": 44.38209, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 44.635820895522386}, {"method": "laya-wd-gguf-f16", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "f16", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2436.836417, "ms": 44.438806, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 44.8044776119403}, {"method": "laya-ml-gguf", "engine": "laya.cpp", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "C", "device_detail": "CPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 57.574627, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 59.34626865671642}, {"method": "onnx@laya-ml-fp16", "engine": "ONNX Runtime", "model": "laya-multilingual", "quant": "fp16", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "onnx-community/laya-multilingual-ONNX", "gb": 0.65, "load_ms": 1066.991917, "ms": 57.602985, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 60.86119402985074}, {"method": "laya-ml-gguf-f16", "engine": "laya.cpp", "model": "laya-multilingual", "quant": "f16", "family": "dedicated", "device": "C", "device_detail": "CPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 61.408955, "translated": 52, "direct": 49, "translated_en": 21, "translated_other": 31, "direct_other": 28, "ms_direct": 62.69701492537313}, {"method": "pcdserver@qwen3.5-4b-unsloth-iq2", "engine": "pcdServer", "model": "qwen3.5-4b-unsloth", "quant": "iq2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-4B-GGUF", "gb": 1.52, "load_ms": 659.282084, "ms": 86.970149, "translated": 52, "direct": 54, "translated_en": 16, "translated_other": 36, "direct_other": 38, "ms_direct": 88.06567164179104}, {"method": "laya-wd-gguf-q6", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "q6", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2275.749875, "ms": 44.531343, "translated": 51, "direct": 47, "translated_en": 20, "translated_other": 31, "direct_other": 27, "ms_direct": 46.52238805970149}, {"method": "laya-ml-gguf-q4", "engine": "laya.cpp", "model": "laya-multilingual", "quant": "q4", "family": "dedicated", "device": "C", "device_detail": "CPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": null, "gb": null, "load_ms": null, "ms": 55.034328, "translated": 51, "direct": 47, "translated_en": 18, "translated_other": 33, "direct_other": 29, "ms_direct": 56.23731343283582}, {"method": "dohnuts-metal@this-that-model-1.2-q4", "engine": "dohnuts (Metal)", "model": "this-that-model-1.2", "quant": "q4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/this-that-model-1.2-GGUF", "gb": 1.27, "load_ms": null, "ms": 110.468657, "translated": 51, "direct": 51, "translated_en": 19, "translated_other": 32, "direct_other": 32, "ms_direct": 112.61492537313433}, {"method": "mlx@semif-4b-nli", "engine": "MLX", "model": "semif-4b-nli", "quant": "", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "jacksodj/semif-4b-nli-v5-mlx", "gb": 8.41, "load_ms": 13083.292667, "ms": 120.608955, "translated": 51, "direct": 49, "translated_en": 19, "translated_other": 32, "direct_other": 30, "ms_direct": 130.87164179104477}, {"method": "pcdserver@pulse-0.6b-q8", "engine": "pcdServer", "model": "pulse-0.6b", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "PulseOS/pulse-local-qwen3-0.6b", "gb": 0.64, "load_ms": 56.496375, "ms": 23.18806, "translated": 50, "direct": 47, "translated_en": 20, "translated_other": 30, "direct_other": 27, "ms_direct": 23.4}, {"method": "pcdserver@lq-decide-1.7b-q8", "engine": "pcdServer", "model": "lq-decide-1.7b", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Hanish/lq-decide-1.7b", "gb": 1.83, "load_ms": 116.048417, "ms": 35.149254, "translated": 50, "direct": 46, "translated_en": 20, "translated_other": 30, "direct_other": 26, "ms_direct": 36.014925373134325}, {"method": "pcdserver@qwen3-1.7b-q3", "engine": "pcdServer", "model": "qwen3-1.7b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3-1.7B-GGUF", "gb": 1.07, "load_ms": 109.394375, "ms": 37.740299, "translated": 50, "direct": 53, "translated_en": 16, "translated_other": 34, "direct_other": 37, "ms_direct": 38.55671641791045}, {"method": "pcdserver@qwen3.5-2b-q2", "engine": "pcdServer", "model": "qwen3.5-2b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-2B-GGUF", "gb": 1.07, "load_ms": 127.169958, "ms": 41.473134, "translated": 49, "direct": 49, "translated_en": 19, "translated_other": 30, "direct_other": 30, "ms_direct": 41.6044776119403}, {"method": "pcdserver@qwen3.8-2b-distill-q4", "engine": "pcdServer", "model": "qwen3.8-2b-distill", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-2B-Distill-GGUF", "gb": 1.31, "load_ms": 154.366292, "ms": 42.910448, "translated": 49, "direct": 51, "translated_en": 19, "translated_other": 30, "direct_other": 32, "ms_direct": 44.30298507462687}, {"method": "laya-wd-gguf-q3", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "q3", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 3283.561708, "ms": 45.343284, "translated": 49, "direct": 43, "translated_en": 17, "translated_other": 32, "direct_other": 26, "ms_direct": 45.87014925373135}, {"method": "pcdserver@qwen2.5-3b-iq2", "engine": "pcdServer", "model": "qwen2.5-3b", "quant": "iq2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen2.5-3B-Instruct-GGUF", "gb": 1.14, "load_ms": 426.630209, "ms": 55.540299, "translated": 49, "direct": 49, "translated_en": 16, "translated_other": 33, "direct_other": 33, "ms_direct": 56.90298507462686}, {"method": "laya-coreml-ane-w8-compact", "engine": "Core ML, Neural Engine", "model": "laya-multilingual", "quant": "w8", "family": "dedicated", "device": "C+N", "device_detail": "Core ML CPU_AND_NE; CPU + Neural Engine permitted, exact operation placement unprofiled", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 21051.734667, "ms": 4.541791, "translated": 48, "direct": 49, "translated_en": 17, "translated_other": 31, "direct_other": 32, "ms_direct": 4.370149253731343}, {"method": "laya-typed-decisions", "engine": "PyTorch", "model": "laya-typed-decisions", "quant": "", "family": "dedicated", "device": "G", "device_detail": "PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 4792.819625, "ms": 17.659701, "translated": 48, "direct": 43, "translated_en": 18, "translated_other": 30, "direct_other": 25, "ms_direct": 15.007462686567164}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q3", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.47, "load_ms": 186.1945, "ms": 30.11791, "translated": 48, "direct": 48, "translated_en": 17, "translated_other": 31, "direct_other": 31, "ms_direct": 31.001492537313432}, {"method": "laya-coreml-ane-compact", "engine": "Core ML, Neural Engine", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "C+N", "device_detail": "Core ML CPU_AND_NE; CPU + Neural Engine permitted, exact operation placement unprofiled", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 20130.419542, "ms": 4.162687, "translated": 47, "direct": 49, "translated_en": 17, "translated_other": 30, "direct_other": 32, "ms_direct": 4.195522388059702}, {"method": "laya-mlx-compact", "engine": "MLX", "model": "laya-multilingual", "quant": "", "family": "dedicated", "device": "G", "device_detail": "MLX Metal GPU", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 11009.994834, "ms": 7.941791, "translated": 47, "direct": 49, "translated_en": 17, "translated_other": 30, "direct_other": 32, "ms_direct": 8.050746268656717}, {"method": "pcdserver@bonsai-1.7b-q1", "engine": "pcdServer", "model": "bonsai-1.7b", "quant": "q1", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "prism-ml/Bonsai-1.7B-gguf", "gb": 0.25, "load_ms": 243.235375, "ms": 34.944776, "translated": 47, "direct": 41, "translated_en": 14, "translated_other": 33, "direct_other": 27, "ms_direct": 35.84776119402985}, {"method": "laya-wd-gguf-q5", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "q5", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2350.379417, "ms": 45.48806, "translated": 47, "direct": 43, "translated_en": 17, "translated_other": 30, "direct_other": 26, "ms_direct": 46.0}, {"method": "pcdserver@qwen3.5-0.8b-q3", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 0.52, "load_ms": 218.470167, "ms": 31.265672, "translated": 46, "direct": 40, "translated_en": 15, "translated_other": 31, "direct_other": 25, "ms_direct": 32.329850746268654}, {"method": "gguf-head@laya-neutron-en", "engine": "llama.cpp embeddings + head", "model": "laya-en", "quant": "q4_0", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": "wigcheng5566/laya-neutron-gguf", "gb": 0.29, "load_ms": 1664.353417, "ms": 62.443284, "translated": 46, "direct": null, "translated_en": 16, "translated_other": 30, "direct_other": null, "ms_direct": null}, {"method": "pcdserver@qwen3.8-2b-distill-q5", "engine": "pcdServer", "model": "qwen3.8-2b-distill", "quant": "q5", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-2B-Distill-GGUF", "gb": 1.45, "load_ms": 140.064125, "ms": 46.067164, "translated": 45, "direct": 45, "translated_en": 17, "translated_other": 28, "direct_other": 28, "ms_direct": 45.57910447761194}, {"method": "pcdserver@qwen3-1.7b-unsloth-q2", "engine": "pcdServer", "model": "qwen3-1.7b-unsloth", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-1.7B-GGUF", "gb": 0.78, "load_ms": 276.358584, "ms": 37.398507, "translated": 44, "direct": 46, "translated_en": 18, "translated_other": 26, "direct_other": 28, "ms_direct": 38.092537313432835}, {"method": "pcdserver@qwen3.8-2b-distill-q8", "engine": "pcdServer", "model": "qwen3.8-2b-distill", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-2B-Distill-GGUF", "gb": 2.08, "load_ms": 128.991458, "ms": 39.479104, "translated": 44, "direct": 45, "translated_en": 17, "translated_other": 27, "direct_other": 28, "ms_direct": 41.135820895522386}, {"method": "pcdserver@qwen3.5-2b-unsloth-iq2", "engine": "pcdServer", "model": "qwen3.5-2b-unsloth", "quant": "iq2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-2B-GGUF", "gb": 0.77, "load_ms": 128.806625, "ms": 40.774627, "translated": 44, "direct": 39, "translated_en": 15, "translated_other": 29, "direct_other": 24, "ms_direct": 44.15522388059701}, {"method": "mlx@laya-ml-mxfp4", "engine": "MLX", "model": "laya-multilingual", "quant": "mxfp4", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "sahilchachra/Laya-Multilingual-MXFP4", "gb": 0.16, "load_ms": 2438.263292, "ms": 57.858209, "translated": 44, "direct": 44, "translated_en": 16, "translated_other": 28, "direct_other": 28, "note": "The MXFP weights declare no licence; the runtime (mlx-embeddings) is GPL-3.0.", "ms_direct": 58.276119402985074}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-q2", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.42, "load_ms": 764.457667, "ms": 28.497015, "translated": 43, "direct": 42, "translated_en": 14, "translated_other": 29, "direct_other": 28, "ms_direct": 31.8044776119403}, {"method": "pcdserver@qwen3.8-2b-distill-q6", "engine": "pcdServer", "model": "qwen3.8-2b-distill", "quant": "q6", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "empero-ai/Qwen3.8-2B-Distill-GGUF", "gb": 1.61, "load_ms": 122.347833, "ms": 43.489552, "translated": 43, "direct": 43, "translated_en": 16, "translated_other": 27, "direct_other": 27, "ms_direct": 43.55074626865672}, {"method": "ollaya@laya-en", "engine": "ollaya", "model": "laya-en", "quant": "fp32", "family": "dedicated", "device": "G", "device_detail": "ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe", "device_evidence": "configured", "source": "ollaya laya:en", "gb": 0.85, "load_ms": 1803.7395, "ms": 19.420896, "translated": 42, "direct": null, "translated_en": 16, "translated_other": 26, "direct_other": null, "ms_direct": null}, {"method": "pcdserver@zerocoder-0.8b-q2", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q2", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.38, "load_ms": 338.971, "ms": 34.71791, "translated": 42, "direct": 36, "translated_en": 15, "translated_other": 27, "direct_other": 21, "ms_direct": 35.4955223880597}, {"method": "pcdserver@qwen1.5-4b-q8", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 4.2, "load_ms": 322.435625, "ms": 247.792537, "translated": 42, "direct": 43, "translated_en": 16, "translated_other": 26, "direct_other": 27, "ms_direct": 244.99701492537312}, {"method": "pcdserver@lq-decide-1.7b-q4", "engine": "pcdServer", "model": "lq-decide-1.7b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Hanish/lq-decide-1.7b", "gb": 1.11, "load_ms": 108.363375, "ms": 43.820896, "translated": 41, "direct": 42, "translated_en": 15, "translated_other": 26, "direct_other": 27, "ms_direct": 41.23134328358209}, {"method": "pcdserver@qwen1.5-4b-q4", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 2.46, "load_ms": 390.901, "ms": 232.059701, "translated": 41, "direct": 43, "translated_en": 16, "translated_other": 25, "direct_other": 27, "ms_direct": 233.1417910447761}, {"method": "pcdserver@qwen1.5-4b-q2", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 1.62, "load_ms": 444.032709, "ms": 233.035821, "translated": 41, "direct": 42, "translated_en": 16, "translated_other": 25, "direct_other": 26, "ms_direct": 234.52985074626866}, {"method": "pcdserver@qwen3-reranker-0.6b-q5", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q5", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.44, "load_ms": 58.155333, "ms": 24.728358, "translated": 40, "direct": 44, "translated_en": 15, "translated_other": 25, "direct_other": 29, "ms_direct": 24.555223880597016}, {"method": "pcdserver@qwen3.5-0.8b-q2", "engine": "pcdServer", "model": "qwen3.5-0.8b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "bartowski/Qwen_Qwen3.5-0.8B-GGUF", "gb": 0.46, "load_ms": 540.776, "ms": 32.18209, "translated": 40, "direct": 42, "translated_en": 13, "translated_other": 27, "direct_other": 29, "ms_direct": 36.56716417910448}, {"method": "pcdserver@qwen1.5-4b-q6", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 3.25, "load_ms": 308.892084, "ms": 275.685075, "translated": 40, "direct": 43, "translated_en": 16, "translated_other": 24, "direct_other": 27, "ms_direct": 276.01044776119403}, {"method": "systemone@clm-8b-q8", "engine": "System One server", "model": "clm-8b", "quant": "q8", "family": "dedicated", "device": "C+G", "device_detail": "Metal/MLX backbone; CLM decision head configured --device cpu", "device_evidence": "configured", "source": "czl/CLM-v0.1-8B-GGUF", "gb": 8.25, "load_ms": null, "ms": 107.644776, "translated": 39, "direct": 28, "translated_en": 14, "translated_other": 25, "direct_other": 15, "ms_direct": 110.27611940298507}, {"method": "pcdserver@qwen1.5-4b-q3", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 2.03, "load_ms": 440.505041, "ms": 237.225373, "translated": 39, "direct": 43, "translated_en": 16, "translated_other": 23, "direct_other": 27, "ms_direct": 240.58805970149254}, {"method": "pcdserver@qwen1.5-4b-q5", "engine": "pcdServer", "model": "qwen1.5-4b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-4B-Chat-GGUF", "gb": 2.84, "load_ms": 424.025542, "ms": 283.562687, "translated": 39, "direct": 42, "translated_en": 16, "translated_other": 23, "direct_other": 26, "ms_direct": 293.6119402985075}, {"method": "ollaya@clm-8b", "engine": "ollaya", "model": "clm-8b", "quant": "bf16", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya clm:8b", "gb": 16.5, "load_ms": 49183.959875, "ms": 1677.89403, "translated": 39, "direct": 30, "translated_en": 14, "translated_other": 25, "direct_other": 16, "ms_direct": 1667.5388059701493}, {"method": "systemone@clm-8b-mlx8", "engine": "System One server", "model": "clm-8b", "quant": "mlx8", "family": "dedicated", "device": "C+G", "device_detail": "Metal/MLX backbone; CLM decision head configured --device cpu", "device_evidence": "configured", "source": "czl/CLM-v0.1-8B-MLX-8bit", "gb": 9.29, "load_ms": null, "ms": 100.374627, "translated": 38, "direct": 31, "translated_en": 14, "translated_other": 24, "direct_other": 17, "ms_direct": 103.7820895522388}, {"method": "systemone@clm-8b-q5", "engine": "System One server", "model": "clm-8b", "quant": "q5", "family": "dedicated", "device": "C+G", "device_detail": "Metal/MLX backbone; CLM decision head configured --device cpu", "device_evidence": "configured", "source": "czl/CLM-v0.1-8B-GGUF", "gb": 5.78, "load_ms": null, "ms": 119.183582, "translated": 38, "direct": 27, "translated_en": 13, "translated_other": 25, "direct_other": 14, "ms_direct": 121.94626865671641}, {"method": "onnx@decima-small-int8", "engine": "ONNX Runtime", "model": "decima-small", "quant": "int8", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "amyrmahdy/decima-small", "gb": 0.13, "load_ms": 2289.711916, "ms": 12.380597, "translated": 37, "direct": 38, "translated_en": 13, "translated_other": 24, "direct_other": 25, "ms_direct": 12.532835820895523}, {"method": "laya-wd-gguf-q4", "engine": "llama.cpp embeddings", "model": "laya-multilingual", "quant": "q4", "family": "dedicated", "device": "C+G", "device_detail": "Metal encoder; CPU decision head (NumPy/PyTorch)", "device_evidence": "configured", "source": null, "gb": null, "load_ms": 2242.701958, "ms": 43.286567, "translated": 36, "direct": 38, "translated_en": 14, "translated_other": 22, "direct_other": 24, "ms_direct": 43.97611940298508}, {"method": "systemone@clm-8b-q4", "engine": "System One server", "model": "clm-8b", "quant": "q4", "family": "dedicated", "device": "C+G", "device_detail": "Metal/MLX backbone; CLM decision head configured --device cpu", "device_evidence": "configured", "source": "czl/CLM-v0.1-8B-GGUF", "gb": 5.03, "load_ms": null, "ms": 113.756716, "translated": 36, "direct": 28, "translated_en": 13, "translated_other": 23, "direct_other": 16, "ms_direct": 116.6776119402985}, {"method": "pcdserver@qwen1.5-0.5b-q3", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.35, "load_ms": 248.269875, "ms": 21.204478, "translated": 35, "direct": 32, "translated_en": 11, "translated_other": 24, "direct_other": 21, "ms_direct": 21.708955223880597}, {"method": "pcdserver@lyco-router-0.6b-q4", "engine": "pcdServer", "model": "lyco-router-0.6b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "lyco42/lyco-agent-qwen3-0.6b-ondevice", "gb": 0.48, "load_ms": 514.362375, "ms": 26.386567, "translated": 35, "direct": 33, "translated_en": 12, "translated_other": 23, "direct_other": 21, "ms_direct": 25.480597014925372}, {"method": "torch@pulse-decide-150m", "engine": "PyTorch", "model": "pulse-decide-150m", "quant": "", "family": "dedicated", "device": "G", "device_detail": "PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged", "device_evidence": "configured", "source": "RouterML/pulse-decide-150m", "gb": 0.6, "load_ms": 10042.665916, "ms": 17.932836, "translated": 34, "direct": null, "translated_en": 15, "translated_other": 19, "direct_other": null, "note": "Pulse Decide 150M (RouterML). Research-preview licence; its training data carries non-commercial and ToS-restricted terms. Benchmark only, not cleared for product use.", "ms_direct": null}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-iq3", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "iq3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.4, "load_ms": 246.058333, "ms": 28.153731, "translated": 34, "direct": 31, "translated_en": 12, "translated_other": 22, "direct_other": 19, "ms_direct": 29.855223880597013}, {"method": "pcdserver@qwen1.5-1.8b-q3", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 1.02, "load_ms": 510.020959, "ms": 41.825373, "translated": 34, "direct": 35, "translated_en": 15, "translated_other": 19, "direct_other": 20, "ms_direct": 44.14029850746269}, {"method": "pcdserver@qwen3-reranker-0.6b-q6", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q6", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.49, "load_ms": 60.87125, "ms": 24.540299, "translated": 33, "direct": 37, "translated_en": 13, "translated_other": 20, "direct_other": 24, "ms_direct": 24.262686567164177}, {"method": "pcdserver@qwen1.5-1.8b-q4", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 1.22, "load_ms": 343.308416, "ms": 40.029851, "translated": 33, "direct": 39, "translated_en": 15, "translated_other": 18, "direct_other": 24, "ms_direct": 41.16119402985075}, {"method": "torch@lumma-fev-0.6b", "engine": "PyTorch", "model": "lumma-fev-0.6b", "quant": "", "family": "dedicated", "device": "G", "device_detail": "PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged", "device_evidence": "configured", "source": "FrontiersMind/Lumma-fev-0.6b", "gb": 1.3, "load_ms": 6271.69725, "ms": 69.497015, "translated": 33, "direct": 28, "translated_en": 14, "translated_other": 19, "direct_other": 14, "ms_direct": 78.22686567164179}, {"method": "systemone@clm-8b-mlx4", "engine": "System One server", "model": "clm-8b", "quant": "mlx4", "family": "dedicated", "device": "C+G", "device_detail": "Metal/MLX backbone; CLM decision head configured --device cpu", "device_evidence": "configured", "source": "czl/CLM-v0.1-8B-MLX-4bit", "gb": 5.2, "load_ms": null, "ms": 89.641791, "translated": 33, "direct": 28, "translated_en": 11, "translated_other": 22, "direct_other": 18, "ms_direct": 92.55970149253731}, {"method": "pcdserver@zerocoder-0.8b-q3", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q3", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.45, "load_ms": 290.815792, "ms": 34.61194, "translated": 32, "direct": 30, "translated_en": 11, "translated_other": 21, "direct_other": 19, "ms_direct": 35.41194029850746}, {"method": "pcdserver@qwen1.5-1.8b-q8", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 1.96, "load_ms": 105.738625, "ms": 36.41791, "translated": 32, "direct": 36, "translated_en": 13, "translated_other": 19, "direct_other": 23, "ms_direct": 36.741791044776114}, {"method": "pcdserver@qwen1.5-1.8b-q5", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 1.38, "load_ms": 326.6755, "ms": 41.301493, "translated": 32, "direct": 35, "translated_en": 13, "translated_other": 19, "direct_other": 22, "ms_direct": 42.53731343283582}, {"method": "mlx@julia-1", "engine": "MLX", "model": "julia-1", "quant": "", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "zainmerchan/Julia-1-MLX", "gb": 0.58, "load_ms": 1866.320917, "ms": 6.779104, "translated": 31, "direct": 31, "translated_en": 11, "translated_other": 20, "direct_other": 20, "ms_direct": 7.743283582089552}, {"method": "onnx@julia-1", "engine": "ONNX Runtime", "model": "julia-1", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ONNX Runtime CPUExecutionProvider", "device_evidence": "configured", "source": "SupersonicLabs/Julia-1-ONNX", "gb": 0.58, "load_ms": 975.59775, "ms": 12.191045, "translated": 31, "direct": 31, "translated_en": 11, "translated_other": 20, "direct_other": 20, "ms_direct": 13.150746268656716}, {"method": "pcdserver@qwen1.5-1.8b-q6", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 1.58, "load_ms": 334.116125, "ms": 39.837313, "translated": 31, "direct": 37, "translated_en": 14, "translated_other": 17, "direct_other": 23, "ms_direct": 40.74776119402985}, {"method": "pcdserver@qwen1.5-0.5b-q6", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.51, "load_ms": 197.055875, "ms": 22.555224, "translated": 30, "direct": 28, "translated_en": 8, "translated_other": 22, "direct_other": 21, "ms_direct": 22.17313432835821}, {"method": "pcdserver@qwen3-reranker-0.6b-q8", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.64, "load_ms": 57.270917, "ms": 23.3, "translated": 30, "direct": 33, "translated_en": 12, "translated_other": 18, "direct_other": 21, "ms_direct": 23.047761194029853}, {"method": "pcdserver@qwen3-reranker-0.6b-f16", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "f16", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 1.2, "load_ms": 53.113167, "ms": 23.779104, "translated": 30, "direct": 32, "translated_en": 12, "translated_other": 18, "direct_other": 20, "ms_direct": 23.91044776119403}, {"method": "pcdserver@qwen1.5-0.5b-q8", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.66, "load_ms": 177.446375, "ms": 21.110448, "translated": 28, "direct": 28, "translated_en": 7, "translated_other": 22, "direct_other": 21, "ms_direct": 21.93134328358209}, {"method": "pcdserver@qwen1.5-0.5b-q5", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.46, "load_ms": 238.272917, "ms": 21.662687, "translated": 28, "direct": 28, "translated_en": 7, "translated_other": 22, "direct_other": 22, "ms_direct": 21.834328358208957}, {"method": "pcdserver@qwen2.5-0.5b-q4", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.49, "load_ms": 605.195291, "ms": 20.179104, "translated": 28, "direct": 26, "translated_en": 10, "translated_other": 18, "direct_other": 16, "ms_direct": 22.89701492537313}, {"method": "pcdserver@qwen3-reranker-0.6b-q4", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.4, "load_ms": 339.397667, "ms": 29.198507, "translated": 28, "direct": 34, "translated_en": 10, "translated_other": 18, "direct_other": 24, "ms_direct": 28.492537313432837}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q2", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q2", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.34, "load_ms": 333.636625, "ms": 18.073134, "translated": 27, "direct": 23, "translated_en": 9, "translated_other": 18, "direct_other": 14, "ms_direct": 18.123880597014924}, {"method": "pcdserver@zerocoder-0.8b-f16", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "f16", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 1.64, "load_ms": 288.404708, "ms": 33.047761, "translated": 27, "direct": 23, "translated_en": 12, "translated_other": 15, "direct_other": 11, "ms_direct": 33.06417910447762}, {"method": "pcdserver@zerocoder-0.8b-q4", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.53, "load_ms": 270.127292, "ms": 46.398507, "translated": 27, "direct": 24, "translated_en": 12, "translated_other": 15, "direct_other": 12, "ms_direct": 41.258208955223886}, {"method": "pcdserver@qwen2.5-0.5b-f16", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "f16", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 1.27, "load_ms": 157.565375, "ms": 17.813433, "translated": 26, "direct": 25, "translated_en": 9, "translated_other": 17, "direct_other": 16, "ms_direct": 17.670149253731346}, {"method": "pcdserver@qwen1.5-0.5b-q4", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q4", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.41, "load_ms": 217.245667, "ms": 21.58806, "translated": 26, "direct": 28, "translated_en": 8, "translated_other": 18, "direct_other": 21, "ms_direct": 22.104477611940297}, {"method": "pcdserver@qwen3.5-0.8b-unsloth-iq2", "engine": "pcdServer", "model": "qwen3.5-0.8b-unsloth", "quant": "iq2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3.5-0.8B-GGUF", "gb": 0.34, "load_ms": 312.260666, "ms": 28.204478, "translated": 26, "direct": 23, "translated_en": 9, "translated_other": 17, "direct_other": 14, "ms_direct": 30.419402985074626}, {"method": "pcdserver@qwen1.5-1.8b-q2", "engine": "pcdServer", "model": "qwen1.5-1.8b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-1.8B-Chat-GGUF", "gb": 0.86, "load_ms": 392.0855, "ms": 39.758209, "translated": 26, "direct": 36, "translated_en": 10, "translated_other": 16, "direct_other": 26, "ms_direct": 41.471641791044775}, {"method": "ollaya@gliclass-large", "engine": "ollaya", "model": "gliclass-large", "quant": "fp32", "family": "dedicated", "device": "C", "device_detail": "ollaya ONNX Runtime CPU on this Mac; recorded runtime recipe", "device_evidence": "configured", "source": "ollaya gliclass:large", "gb": 1.77, "load_ms": 3793.645333, "ms": 59.79403, "translated": 26, "direct": null, "translated_en": 9, "translated_other": 17, "direct_other": null, "ms_direct": null}, {"method": "pcdserver@qwen2.5-0.5b-q8", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q8", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.68, "load_ms": 40.25, "ms": 17.841791, "translated": 25, "direct": 24, "translated_en": 8, "translated_other": 17, "direct_other": 16, "ms_direct": 17.74776119402985}, {"method": "pcdserver@zerocoder-0.8b-q8", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.87, "load_ms": 184.007292, "ms": 34.371642, "translated": 25, "direct": 21, "translated_en": 11, "translated_other": 14, "direct_other": 10, "ms_direct": 35.14179104477612}, {"method": "pcdserver@zerocoder-0.8b-q6", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q6", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.68, "load_ms": 182.226667, "ms": 35.283582, "translated": 24, "direct": 21, "translated_en": 11, "translated_other": 13, "direct_other": 10, "ms_direct": 35.37910447761194}, {"method": "pcdserver@qwen2.5-0.5b-q6", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q6", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.65, "load_ms": 133.677375, "ms": 22.170149, "translated": 23, "direct": 24, "translated_en": 8, "translated_other": 15, "direct_other": 16, "ms_direct": 22.23283582089552}, {"method": "pcdserver@qwen2.5-0.5b-q5", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q5", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.52, "load_ms": 218.958583, "ms": 18.870149, "translated": 22, "direct": 22, "translated_en": 7, "translated_other": 15, "direct_other": 15, "ms_direct": 18.89701492537313}, {"method": "pcdserver@qwen1.5-0.5b-q2", "engine": "pcdServer", "model": "qwen1.5-0.5b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen1.5-0.5B-Chat-GGUF", "gb": 0.3, "load_ms": 246.60375, "ms": 21.077612, "translated": 21, "direct": 22, "translated_en": 8, "translated_other": 13, "direct_other": 14, "ms_direct": 21.328358208955223}, {"method": "pcdserver@qwen3-reranker-0.6b-q3", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q3", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.35, "load_ms": 89.159833, "ms": 24.174627, "translated": 21, "direct": 21, "translated_en": 8, "translated_other": 13, "direct_other": 13, "ms_direct": 24.52537313432836}, {"method": "dohnuts-metal@this-that-model-1.2-q2", "engine": "dohnuts (Metal)", "model": "this-that-model-1.2", "quant": "q2", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/this-that-model-1.2-GGUF", "gb": 0.97, "load_ms": null, "ms": 112.183582, "translated": 21, "direct": 18, "translated_en": 8, "translated_other": 13, "direct_other": 10, "ms_direct": 113.54029850746268}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q3", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q3", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.36, "load_ms": 185.13525, "ms": 17.749254, "translated": 20, "direct": 20, "translated_en": 7, "translated_other": 13, "direct_other": 13, "ms_direct": 17.955223880597014}, {"method": "ollaya@nli-modernbert-large", "engine": "ollaya", "model": "nli-modernbert-large", "quant": "fp32", "family": "dedicated", "device": "G", "device_detail": "ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe", "device_evidence": "configured", "source": "ollaya nli:modernbert-large", "gb": 0.8, "load_ms": 1200.660833, "ms": 22.726866, "translated": 20, "direct": null, "translated_en": 9, "translated_other": 11, "direct_other": null, "ms_direct": null}, {"method": "pcdserver@euaiact-0.5b-q4", "engine": "pcdServer", "model": "euaiact-0.5b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "sallani/EUAIAct-Qwen2.5-0.5B-Edge", "gb": 0.4, "load_ms": 696.612625, "ms": 23.765672, "translated": 20, "direct": 20, "translated_en": 8, "translated_other": 12, "direct_other": 12, "ms_direct": 23.361194029850747}, {"method": "pcdserver@qwen2.5-0.5b-pcb-f16", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "f16", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.99, "load_ms": 143.803833, "ms": 17.220896, "translated": 19, "direct": 20, "translated_en": 7, "translated_other": 12, "direct_other": 13, "ms_direct": 17.523880597014923}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q6", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q6", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.51, "load_ms": 78.912708, "ms": 17.450746, "translated": 19, "direct": 20, "translated_en": 7, "translated_other": 12, "direct_other": 13, "ms_direct": 17.558208955223883}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q8", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.53, "load_ms": 39.53875, "ms": 17.480597, "translated": 19, "direct": 20, "translated_en": 7, "translated_other": 12, "direct_other": 13, "ms_direct": 17.722388059701494}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q5", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q5", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.42, "load_ms": 259.255167, "ms": 17.597015, "translated": 19, "direct": 19, "translated_en": 7, "translated_other": 12, "direct_other": 12, "ms_direct": 18.001492537313432}, {"method": "pcdserver@qwen2.5-0.5b-q3", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q3", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.43, "load_ms": 316.03175, "ms": 18.408955, "translated": 18, "direct": 19, "translated_en": 5, "translated_other": 13, "direct_other": 14, "ms_direct": 18.47462686567164}, {"method": "pcdserver@zerocoder-0.8b-q5", "engine": "pcdServer", "model": "zerocoder-0.8b", "quant": "q5", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "DavidAU/Qwen3-Zero-Coder-Reasoning-V2-0.8B-NEO-EX-GGUF", "gb": 0.6, "load_ms": 215.958083, "ms": 36.234328, "translated": 18, "direct": 17, "translated_en": 8, "translated_other": 10, "direct_other": 9, "ms_direct": 36.59850746268656}, {"method": "dohnuts-metal@decider-0.8b-q2", "engine": "dohnuts (Metal)", "model": "decider-0.8b", "quant": "q2", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.42, "load_ms": null, "ms": 55.204478, "translated": 18, "direct": 17, "translated_en": 7, "translated_other": 11, "direct_other": 10, "ms_direct": 55.400000000000006}, {"method": "slot@decider-0.8b-q2", "engine": "slot (llama-server)", "model": "decider-0.8b", "quant": "q2", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.42, "load_ms": 108.348125, "ms": 64.737313, "translated": 18, "direct": 17, "translated_en": 7, "translated_other": 11, "direct_other": 10, "ms_direct": 64.9134328358209}, {"method": "pcdserver@qwen2.5-0.5b-pcb-q4", "engine": "pcdServer", "model": "qwen2.5-0.5b-pcb", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen2.5-0.5B-PCb-GGUF", "gb": 0.4, "load_ms": 360.795042, "ms": 22.883582, "translated": 17, "direct": 19, "translated_en": 6, "translated_other": 11, "direct_other": 13, "ms_direct": 23.13731343283582}, {"method": "pcdserver@decider-0.8b-q2", "engine": "pcdServer", "model": "decider-0.8b", "quant": "q2", "family": "dedicated", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/decider-0.8b-GGUF", "gb": 0.42, "load_ms": 577.498375, "ms": 29.279104, "translated": 17, "direct": 17, "translated_en": 4, "translated_other": 13, "direct_other": 13, "ms_direct": 30.47313432835821}, {"method": "pcdserver@qwen2.5-0.5b-q2", "engine": "pcdServer", "model": "qwen2.5-0.5b", "quant": "q2", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Qwen/Qwen2.5-0.5B-Instruct-GGUF", "gb": 0.42, "load_ms": 476.608167, "ms": 17.571642, "translated": 15, "direct": 16, "translated_en": 4, "translated_other": 11, "direct_other": 12, "ms_direct": 17.80597014925373}, {"method": "pcdserver@qwen3-4b-unsloth-iq1", "engine": "pcdServer", "model": "qwen3-4b-unsloth", "quant": "iq1", "family": "vanilla", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "unsloth/Qwen3-4B-GGUF", "gb": 1.08, "load_ms": 594.390542, "ms": 72.497015, "translated": 13, "direct": 14, "translated_en": 6, "translated_other": 7, "direct_other": 8, "ms_direct": 75.09253731343283}, {"method": "pcdserver@lq-decide-0.6b-q8", "engine": "pcdServer", "model": "lq-decide-0.6b", "quant": "q8", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Hanish/lq-decide-0.6b", "gb": 0.64, "load_ms": 134.653625, "ms": 23.080597, "translated": 11, "direct": 11, "translated_en": 4, "translated_other": 7, "direct_other": 7, "ms_direct": 23.441791044776117}, {"method": "pcdserver@qwen3-reranker-0.6b-q2", "engine": "pcdServer", "model": "qwen3-reranker-0.6b", "quant": "q2", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "mradermacher/Qwen3-Reranker-0.6B-GGUF", "gb": 0.3, "load_ms": 240.603, "ms": 23.934328, "translated": 10, "direct": 14, "translated_en": 5, "translated_other": 5, "direct_other": 9, "ms_direct": 24.32089552238806}, {"method": "pcdserver@lq-decide-0.6b-q4", "engine": "pcdServer", "model": "lq-decide-0.6b", "quant": "q4", "family": "fine-tuned", "device": "G", "device_detail": "Metal GPU; recorded runtime/launch configuration", "device_evidence": "configured", "source": "Hanish/lq-decide-0.6b", "gb": 0.4, "load_ms": 182.861792, "ms": 29.473134, "translated": 10, "direct": 11, "translated_en": 4, "translated_other": 6, "direct_other": 7, "ms_direct": 26.482089552238804}]</script>
+<form class="be-controls"><label>Scoring mode<select name="mode"><option value="translated">Translated</option><option value="direct">Direct</option></select></label><label>Execution device<select name="device"><option value="">All</option><option value="A">A</option><option value="C">C</option><option value="C+G">C+G</option><option value="C+N">C+N</option><option value="G">G</option><option value="R">R</option></select></label><label>Engine<select name="engine"><option value="">All</option><option value="Core AI">Core AI</option><option value="Core ML">Core ML</option><option value="Core ML, Neural Engine">Core ML, Neural Engine</option><option value="ExecuTorch (MLX)">ExecuTorch (MLX)</option><option value="MLX">MLX</option><option value="ONNX Runtime">ONNX Runtime</option><option value="PyTorch">PyTorch</option><option value="System One server">System One server</option><option value="dohnuts (CPU)">dohnuts (CPU)</option><option value="dohnuts (Metal)">dohnuts (Metal)</option><option value="ggmlc (Metal)">ggmlc (Metal)</option><option value="jev (hosted)">jev (hosted)</option><option value="laya.cpp">laya.cpp</option><option value="llama-cpp-python (Metal)">llama-cpp-python (Metal)</option><option value="llama.cpp embeddings">llama.cpp embeddings</option><option value="llama.cpp embeddings + head">llama.cpp embeddings + head</option><option value="ollaya">ollaya</option><option value="pcdServer">pcdServer</option><option value="slot (llama-server)">slot (llama-server)</option></select></label><label>Model family<select name="family"><option value="">All</option><option value="dedicated">dedicated</option><option value="fine-tuned">fine-tuned</option><option value="vanilla">vanilla</option></select></label><label>Minimum correct / 67<input name="minScore" type="number" min="0" max="67" value="50"></label><label>Maximum ms/query<input name="maxMs" type="number" min="0" step="any" placeholder="No limit"></label><label>Search runs<input name="search" type="search" placeholder="e.g. rune q4"></label><label>Horizontal scale<select name="scale"><option value="log">Logarithmic</option><option value="linear">Linear</option></select></label><label class="be-check"><input name="frontOnly" type="checkbox">Pareto frontier only</label><button type="reset">Reset filters</button><button type="button" class="be-csv">Download filtered CSV</button></form>
+<p class="be-status" role="status" aria-live="polite">Loading interactive charts…</p>
+<p class="be-legend">C = CPU · G = GPU · C+G = mixed · C+N = CPU + Neural Engine · A = automatic CPU/GPU/Neural Engine placement · R = remote · ? = CPU/GPU unrecorded. Configuration describes the run; it is not a hardware utilization trace.</p>
+<div class="be-chart" data-chart="latency" role="img" aria-label="Accuracy versus latency, with Pareto frontier"></div>
+<div class="be-chart" data-chart="size" role="img" aria-label="Accuracy versus weight file size, with Pareto frontier"></div>
+<div class="be-chart be-bars" data-chart="fastest" role="img" aria-label="Fastest qualifying benchmark runs"></div>
+<p class="be-detail" tabindex="0">Hover a point for its exact run. Click a point or a table row for execution evidence.</p>
+<div class="be-table"><table><caption>Filtered runs, fastest first. Pareto membership is calculated within the current filters.</caption><thead><tr><th>Run</th><th>C/G</th><th>Correct / 67</th><th>ms/query</th><th>Weight GB</th><th>Pareto</th></tr></thead><tbody></tbody></table></div>
+<noscript>Enable JavaScript for the diagrams. The full report tables remain readable without it.</noscript>
+</section>
+
+<h2 id="read-the-frontier">Read the frontier<a class="headerlink" href="#read-the-frontier" title="Permanent link">&para;</a></h2>
+<p>A run is on the <strong>Pareto frontier</strong> when no other visible run is both at least as accurate and at least as fast (or small), with a strict improvement in one. Equal points remain tied. Change a filter and the frontier is recalculated within that subset. It is a description of these measurements, not statistical evidence that one model is better.</p>
+<ul>
+<li><strong>Speed frontier</strong> compares accuracy with mean classification latency. A hosted point includes its network trip; local points include their runtime and loopback overhead. Device filters let you compare CPU runs with CPU runs, or GPU runs with GPU runs.</li>
+<li><strong>Size frontier</strong> compares accuracy with downloaded weight size in decimal GB. It excludes runs with no recorded size, including hosted Jev. It does not measure peak memory, KV cache or computation buffers.</li>
+<li><strong>Fastest qualifying runs</strong> sorts the current selection by latency. With “Pareto frontier only” checked, that bar chart, the table and the CSV show the speed frontier; the size plot shows its own frontier.</li>
+</ul>
+<p>Hover to inspect a point, click for execution evidence, drag to zoom, and double-click to reset the chart. The camera control exports an SVG. Filter settings are stored in the URL so you can share a view. A blank direct score means an English-only run and is excluded from Direct mode.</p>
+<h2 id="rune-q4-the-device-changed-the-result">Rune Q4: the device changed the result<a class="headerlink" href="#rune-q4-the-device-changed-the-result" title="Permanent link">&para;</a></h2>
+<p>The fresh full-Metal Q4 run requested all layers with <code>--gpu-layers -1</code>; the server reported <code>MTL0</code>. It measured <strong>124.8 ms/query</strong>, with <strong>63/67 translated and 64/67 direct</strong>, against <strong>487.1 ms/query</strong> for the earlier CPU-weight/Metal-compute configuration. That is <strong>3.9× faster</strong> with the same answers. Both rows are retained: search <code>rune q4</code> and lower the minimum score if necessary.</p>
+<p>Q3 and the new Q4 are GPU runs. Q5 still uses CPU weights with Metal computation and KV offload (<strong>C+G</strong>). Q8 is CPU-only (<strong>C</strong>). Their timings must not be read as a pure quantization comparison. See the <a href="../details/#cpu-and-mixed-runs">CPU audit</a> for the other CPU and mixed pipelines.</p>
+<h2 id="devices-and-evidence">Devices and evidence<a class="headerlink" href="#devices-and-evidence" title="Permanent link">&para;</a></h2>
+<p><strong>C</strong> means CPU inference; <strong>G</strong> means GPU inference on Metal, MLX or PyTorch MPS. <strong>C+G</strong> identifies an explicit CPU model/head component plus GPU work, and <strong>C+N</strong> permits CPU and Neural Engine. Routine CPU tokenization and orchestration do not turn every GPU run into C+G. <strong>A</strong> means automatic CPU/GPU/Neural Engine placement whose exact assignment was not recorded. <strong>R</strong> means a remote service whose hardware is undisclosed; <strong>?</strong> is reserved for missing CPU/GPU evidence.</p>
+<p>Most historical labels are reconstructed from recorded launch settings and runtime recipes and marked <strong>configured</strong>. The fresh Rune Q4 label is <strong>observed</strong> from its Metal server log. These labels do not claim that every operation was profiled. Four automatic-placement runs cannot honestly be labelled CPU-only or GPU-only.</p>
+<h2 id="download-or-regenerate">Download or regenerate<a class="headerlink" href="#download-or-regenerate" title="Permanent link">&para;</a></h2>
+<p><a href="../../downloads/benchmark-explorer.html">Download the self-contained explorer</a>. Save the HTML file and open it locally: its results, chart library and controls are embedded, so it works offline. The CSV button exports the currently selected runs with their device descriptions and evidence.</p>
+<p>The tool is <a href="https://github.com/fontlaborg/ornotto/blob/main/src_docs/gen_diagrams.py"><code>src_docs/gen_diagrams.py</code></a>. Run <code>python3 src_docs/gen_diagrams.py --data src_docs/data/classifiers.json --out explorer.html</code> from the repository. <code>./docs.sh</code> regenerates the book's explorer and offline download automatically. Plotly.js 3.1.0 is bundled under its MIT licence.</p>
+<h2 id="how-this-compares-with-the-decision-index">How this compares with the Decision Index<a class="headerlink" href="#how-this-compares-with-the-decision-index" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://huggingface.co/spaces/multimodalart/jev-decision-index">Jev Decision Index</a> uses a broad, chance-corrected benchmark panel. This report measures one five-way FontLab routing task, with 67 queries in 30 languages. Its <strong>52/67</strong> is a count of correct routing answers, not 52 Decision Index points. The suites, metrics and latency protocols differ, so their scores and timings cannot be ranked together.</p>
+<p>Our contribution is a detailed comparison of local runtimes, quantizations and devices, with the hosted Jev reference measured on the same routing inputs. For the prompts, timing boundaries and limitations, read <a href="../../05-method/">How we measured</a>. A difference of one or two answers on this small set needs a larger, held-out test before it guides a close choice.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+<!--/email_off-->
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+          <div class="md-top" data-md-component="top" hidden>
+  <div class="md-top__center">
+    <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+      <span>Back to top</span>
+    </button>
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+      </label>
+    
+    
+      
+      
+      <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
+      </label>
+    
+  </div>
+</div>
+      </main>
+      
+  <div class="ornotto-book-footer">
+    <nav aria-label="Chapters">
+      
+      <a href="../.." rel="prev">← Home</a>
+      
+      
+      <a href="../tldr/" rel="next">Results: the short version →</a>
+      
+    </nav>
+    
+    <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
+    
+  </div>
+  <fontlab-footer mode="dark"></fontlab-footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+          
+          
+        
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "code": null, "features": ["navigation.tabs", "navigation.top", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "../..", "bundleUrl": "../../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.44453a05.min.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
+      
+        <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
+      
+        <script src="../../js/tables.js"></script>
+      
+        <script src="../../js/benchmark-math.js"></script>
+      
+        <script src="../../js/benchmark.js"></script>
+      
+    
+  </body>
+</html>

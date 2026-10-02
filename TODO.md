@@ -2,6 +2,8 @@
 
 # TODO
 
+- [ ] Publish and verify the 291-run Metal/device audit and interactive benchmark explorer.
+
 - [x] Complete issue 102: all variants measured, models integrated, 290-method report rebuilt and final publication verified live.
 
 - [x] Run the ollaya engine test (`pytest -m engine tests/test_ollaya.py`) with kev:0.8b in `OLLAYA_MODELS`.

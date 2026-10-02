@@ -2,6 +2,34 @@
 
 # Work
 
+## 2026-10-02 — Metal rerun and benchmark explorer
+
+Rune mradermacher Q4 completed alone on Metal (`--gpu-layers -1`, MTL0),
+with 106 finite normalized results and three question-type smokes. Mean
+classification latency is 124.782090 ms translated and 125.138806 ms direct;
+scores remain 63/67 and 64/67. All 106 task answers match the earlier CPU-weight
+run. All original cache records and all fields of the 290 earlier classifier
+rows are preserved; the new run has a distinct ID. No other models rerun.
+
+Every classifier now has execution configuration and evidence: 246 G, 19 C,
+19 C+G, two C+N, four A and one R. Automatic placement remains unprofiled.
+CPU labels appear in private reports, public tables, quantization grids,
+landing bars, charts, tooltips and downloadable data. CPU audit lists all C
+and C+G runs. Direct-mode charts use original-text timings.
+
+Added standard-library diagram generator and vendored Plotly basic 3.1.0/MIT.
+The explorer provides threshold/device/engine/family/search filters, live
+Pareto frontiers for speed and file size, fastest qualifying bars, shareable
+URLs, CSV and SVG exports, and a self-contained offline HTML. Weight size is
+explicitly distinguished from RAM; the Jev Decision Index suite is described
+without mixing its scores or timings with this routing test.
+
+Validation: 60 package tests (13 engine tests deselected), four Node math
+tests, strict 18-page build, fresh desktop/mobile/dark browser checks, URL
+reload, CSV, SVG and completely offline report passed. Historical evidence
+was audited from recorded launches and runtime settings, not GPU utilization
+traces. Publication and live acceptance pending.
+
 ## 2026-10-02 — issue 102, complete measurement set
 
 All 24 weight variants are measured through 32 methods: 290 public rows,

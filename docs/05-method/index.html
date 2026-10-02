@@ -64,6 +64,8 @@
     
       <link rel="stylesheet" href="../css/site.css">
     
+      <link rel="stylesheet" href="../css/benchmark.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -208,7 +210,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../results/tldr/" class="md-tabs__link">
+        <a href="../results/explorer/" class="md-tabs__link">
           
   
   
@@ -398,6 +400,34 @@
 
           </label>
           <ul class="md-nav__list">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/explorer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Explore speed and accuracy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1049,6 +1079,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#interactive-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1586,6 +1627,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#interactive-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive comparisons
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1692,9 +1744,9 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
-<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="655.875761" class="num">655.9</td><td data-sort="1524.679" class="num">1,525</td></tr>
-<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="12.577234" class="num">12.6</td><td data-sort="79508.735614" class="num">79,509</td></tr>
-<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="668.452996" class="num">668.5</td><td data-sort="1495.991501" class="num">1,496</td></tr>
+<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="519.484949" class="num">519.5</td><td data-sort="1924.983586" class="num">1,925</td></tr>
+<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="11.640951" class="num">11.6</td><td data-sort="85903.636446" class="num">85,904</td></tr>
+<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="531.1259" class="num">531.1</td><td data-sort="1882.792762" class="num">1,883</td></tr>
 </tbody></table>
 </div>
 
@@ -1832,6 +1884,7 @@ flowchart TD
 <ul>
 <li><strong>Translated</strong> and <strong>direct</strong> count correct answers out of 67. A correct answer is one whose most likely option is the labelled task.</li>
 <li>The <strong>English</strong> column counts the 28 English queries in translated mode. <strong>Other, translated</strong> and <strong>other, direct</strong> count the 39 non-English queries in each mode.</li>
+<li><strong>C/G</strong> identifies CPU (C), GPU (G), explicit CPU/GPU pipelines (C+G), CPU/Neural Engine (C+N), automatic CPU/GPU/Neural Engine placement (A), or remote hardware (R). Tooltip evidence distinguishes recorded configuration from observed runtime output; automatic placement is not guessed from speed.</li>
 <li><strong>ms/query</strong> is the mean wall-clock time from the moment the harness sends a query to the moment it has the probabilities. For server engines it includes the HTTP round trip and JSON parsing on loopback. For jev it includes the network trip to OpenRouter. It excludes model loading and a warm-up call made before timing starts.</li>
 <li><strong>Load ms</strong> is the time to load the model and answer the warm-up call, for runtimes that load in-process or that the harness started itself. It is blank where a server was started outside the timed step.</li>
 <li><strong>GB</strong> is the size of the GGUF file as published on Hugging Face. For other formats it is the size of the weight files the method loads; for the adapters lev, imajev and leo it includes the base model they load; for an ollaya model it is the tag's download. Tokenizers and configuration files are left out.</li>
@@ -2037,6 +2090,8 @@ flowchart TD
 <p>An evidence audit posted on 2026-09-26, which reviewed 28 early papers on typed decision models, ends with a 14-item checklist for exactly this kind of reading.<sup id="fnref:audit"><a class="footnote-ref" href="#fn:audit">10</a></sup></p>
 <h2 id="what-changed-in-september-2026">What changed in September 2026<a class="headerlink" href="#what-changed-in-september-2026" title="Permanent link">&para;</a></h2>
 <p>Every board in this section was created in the second half of September, after jev's launch on 2026-09-15: typed-decisions on 2026-09-16, JevBench v1.2 on 2026-09-19, jev-bench on 2026-09-20, the Decision 1.0 benchmark on 2026-09-21 and the Decision Index kit on 2026-09-22. Our own runs took place on 2026-09-22 and 2026-09-23, and on 2026-09-29 and 2026-09-30. When this chapter was written, none of the public boards had been running for more than two weeks, and JevBench had already changed its method several times. Treat their rankings, and ours, as snapshots with dates.</p>
+<h2 id="interactive-comparisons">Interactive comparisons<a class="headerlink" href="#interactive-comparisons" title="Permanent link">&para;</a></h2>
+<p>The <a href="../results/explorer/">benchmark explorer</a> recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 290 earlier timings and answers are preserved.</p>
 <div class="footnote">
 <hr />
 <ol>
@@ -2161,6 +2216,10 @@ flowchart TD
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
       
         <script src="../js/tables.js"></script>
+      
+        <script src="../js/benchmark-math.js"></script>
+      
+        <script src="../js/benchmark.js"></script>
       
     
   </body>

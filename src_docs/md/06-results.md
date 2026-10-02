@@ -4,7 +4,7 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 290 methods finished; five failed and are left out.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 291 methods finished; five failed and are left out.
 
 The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every number in this chapter comes from our own run on one Mac, on one 67-query question. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
@@ -12,40 +12,41 @@ The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version
 
 The 32 additions were measured on 2 October 2026. They use the same 67 queries and recorded translation choices as the earlier round. Each model ran alone. The 258 earlier result rows are unchanged.
 
-| method | translated | direct | ms/query | weights GB |
-|---|---:|---:|---:|---:|
-| `pcdserver@rune-mradermacher-26b-a4b-q5` | 65/67 | 65/67 | 962.3 | 19.13 |
-| `pcdserver@rune-mradermacher-26b-a4b-q3` | 64/67 | 64/67 | 146.1 | 13.29 |
-| `dohnuts-metal@jpt-4b-q8` | 64/67 | 64/67 | 335.6 | 4.48 |
-| `pcdserver@rune-mradermacher-26b-a4b-q8` | 64/67 | 64/67 | 758.1 | 26.86 |
-| `pcdserver@jpt-4b-q8` | 63/67 | 64/67 | 86.3 | 4.48 |
-| `pcdserver@jpt-4b-q4` | 63/67 | 64/67 | 93.0 | 2.71 |
-| `pcdserver@jpt-9b-q5` | 63/67 | 64/67 | 155.2 | 6.47 |
-| `dohnuts-metal@jpt-4b-q5` | 63/67 | 64/67 | 367.0 | 3.07 |
-| `pcdserver@rune-mradermacher-26b-a4b-q4` | 63/67 | 64/67 | 487.1 | 16.80 |
-| `dohnuts-metal@jpt-9b-q5` | 63/67 | 64/67 | 619.6 | 6.47 |
-| `dohnuts-metal@jpt-9b-q4` | 63/67 | 64/67 | 619.8 | 5.63 |
-| `dohnuts-metal@jpt-9b-q8` | 63/67 | 64/67 | 624.7 | 9.53 |
-| `pcdserver@jpt-4b-q5` | 62/67 | 63/67 | 99.4 | 3.07 |
-| `dohnuts-metal@jet-4b-q8` | 62/67 | 63/67 | 281.4 | 4.48 |
-| `dohnuts-metal@jpt-4b-q4` | 62/67 | 62/67 | 290.6 | 2.71 |
-| `dohnuts-metal@jpt-9b-q3` | 61/67 | 64/67 | 636.7 | 4.62 |
-| `pcdserver@jpt-9b-q4` | 61/67 | 63/67 | 137.3 | 5.63 |
-| `pcdserver@jpt-9b-q8` | 61/67 | 63/67 | 141.8 | 9.53 |
-| `dohnuts-metal@jpt-4b-q3` | 61/67 | 63/67 | 315.0 | 2.26 |
-| `coreml@kev-0.8b-fp16-l512` | 60/67 | 62/67 | 121.3 | 1.51 |
-| `pcdserver@jpt-9b-q3` | 60/67 | 62/67 | 139.2 | 4.62 |
-| `pcdserver@jpt-4b-q3` | 60/67 | 60/67 | 93.7 | 2.26 |
-| `mlx@tev1-0.8b-4bit` | 60/67 | 59/67 | 64.8 | 0.42 |
-| `dohnuts-metal@tev1-0.8b-q8` | 59/67 | 62/67 | 61.5 | 0.81 |
-| `dohnuts-metal@this-that-model-1.2-q3` | 57/67 | 56/67 | 113.1 | 1.10 |
-| `systemone@kev-ggmlc-0.8b-q8` | 57/67 | 45/67 | 199.8 | 0.83 |
-| `systemone@bosun-1.7b-q5` | 55/67 | 55/67 | 130.8 | 1.26 |
-| `dohnuts-metal@this-that-model-1.2-q5` | 54/67 | 57/67 | 117.4 | 1.41 |
-| `systemone@kev-ggmlc-0.8b-q4` | 54/67 | 43/67 | 207.2 | 0.96 |
-| `dohnuts-metal@this-that-model-1.2-q8` | 53/67 | 57/67 | 107.8 | 2.01 |
-| `dohnuts-metal@this-that-model-1.2-q4` | 51/67 | 51/67 | 110.5 | 1.27 |
-| `dohnuts-metal@this-that-model-1.2-q2` | 21/67 | 18/67 | 112.2 | 0.97 |
+| method | translated | direct | ms/query | weights GB | C/G |
+|---|---:|---:|---:|---:|---|
+| `pcdserver@rune-mradermacher-26b-a4b-q5` | 65/67 | 65/67 | 962.3 | 19.13 | C+G |
+| `pcdserver@rune-mradermacher-26b-a4b-q3` | 64/67 | 64/67 | 146.1 | 13.29 | G |
+| `dohnuts-metal@jpt-4b-q8` | 64/67 | 64/67 | 335.6 | 4.48 | G |
+| `pcdserver@rune-mradermacher-26b-a4b-q8` | 64/67 | 64/67 | 758.1 | 26.86 | C |
+| `pcdserver@jpt-4b-q8` | 63/67 | 64/67 | 86.3 | 4.48 | G |
+| `pcdserver@jpt-4b-q4` | 63/67 | 64/67 | 93.0 | 2.71 | G |
+| `pcdserver@jpt-9b-q5` | 63/67 | 64/67 | 155.2 | 6.47 | G |
+| `dohnuts-metal@jpt-4b-q5` | 63/67 | 64/67 | 367.0 | 3.07 | G |
+| `pcdserver@rune-mradermacher-26b-a4b-q4-metal` | 63/67 | 64/67 | 124.8 | 16.80 | G |
+| `pcdserver@rune-mradermacher-26b-a4b-q4` | 63/67 | 64/67 | 487.1 | 16.80 | C+G |
+| `dohnuts-metal@jpt-9b-q5` | 63/67 | 64/67 | 619.6 | 6.47 | G |
+| `dohnuts-metal@jpt-9b-q4` | 63/67 | 64/67 | 619.8 | 5.63 | G |
+| `dohnuts-metal@jpt-9b-q8` | 63/67 | 64/67 | 624.7 | 9.53 | G |
+| `pcdserver@jpt-4b-q5` | 62/67 | 63/67 | 99.4 | 3.07 | G |
+| `dohnuts-metal@jet-4b-q8` | 62/67 | 63/67 | 281.4 | 4.48 | G |
+| `dohnuts-metal@jpt-4b-q4` | 62/67 | 62/67 | 290.6 | 2.71 | G |
+| `dohnuts-metal@jpt-9b-q3` | 61/67 | 64/67 | 636.7 | 4.62 | G |
+| `pcdserver@jpt-9b-q4` | 61/67 | 63/67 | 137.3 | 5.63 | G |
+| `pcdserver@jpt-9b-q8` | 61/67 | 63/67 | 141.8 | 9.53 | G |
+| `dohnuts-metal@jpt-4b-q3` | 61/67 | 63/67 | 315.0 | 2.26 | G |
+| `coreml@kev-0.8b-fp16-l512` | 60/67 | 62/67 | 121.3 | 1.51 | C+G |
+| `pcdserver@jpt-9b-q3` | 60/67 | 62/67 | 139.2 | 4.62 | G |
+| `pcdserver@jpt-4b-q3` | 60/67 | 60/67 | 93.7 | 2.26 | G |
+| `mlx@tev1-0.8b-4bit` | 60/67 | 59/67 | 64.8 | 0.42 | G |
+| `dohnuts-metal@tev1-0.8b-q8` | 59/67 | 62/67 | 61.5 | 0.81 | G |
+| `dohnuts-metal@this-that-model-1.2-q3` | 57/67 | 56/67 | 113.1 | 1.10 | G |
+| `systemone@kev-ggmlc-0.8b-q8` | 57/67 | 45/67 | 199.8 | 0.83 | G |
+| `systemone@bosun-1.7b-q5` | 55/67 | 55/67 | 130.8 | 1.26 | G |
+| `dohnuts-metal@this-that-model-1.2-q5` | 54/67 | 57/67 | 117.4 | 1.41 | G |
+| `systemone@kev-ggmlc-0.8b-q4` | 54/67 | 43/67 | 207.2 | 0.96 | G |
+| `dohnuts-metal@this-that-model-1.2-q8` | 53/67 | 57/67 | 107.8 | 2.01 | G |
+| `dohnuts-metal@this-that-model-1.2-q4` | 51/67 | 51/67 | 110.5 | 1.27 | G |
+| `dohnuts-metal@this-that-model-1.2-q2` | 21/67 | 18/67 | 112.2 | 0.97 | G |
 
 Kev uses the [FluidInference Core ML export](https://huggingface.co/FluidInference/kev-0.8b-coreml), the L512/K16 single-question row on CPU and GPU. This is not the fused multi-question path. Its fitted temperature is already in the graph. Tev1 uses the native decision prompt with thinking disabled and a single forward pass over option-letter logits, on [dohnuts Q8](https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF) and [MLX 4-bit](https://huggingface.co/SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit). Its release licence is unresolved, and temperature 1.0 does not establish calibration.
 
@@ -53,7 +54,7 @@ Kev uses the [FluidInference Core ML export](https://huggingface.co/FluidInferen
 
 The [mys Kev Q4 and Q8 files](https://huggingface.co/mys/kev-0.8b-GGUF) ran on ggmlc with Metal. Both fail to load in current dohnuts with `unknown model architecture: 'ggmlc'`. This is an observed runtime incompatibility, so the two measurements use the compiler's own runtime. The Q4 file is larger than Q8 because its dynamic quantization preserves additional tensors at higher precision.
 
-[Rune's mradermacher conversions](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. Q4 and Q5 keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. Their latency is not a fair comparison with the Q3 GPU run. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.
+[Rune's mradermacher conversions](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. The original Q4 and Q5 runs keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. The fresh Q4 full-Metal rerun scores 63/64 at 124.8 ms (3.9× faster than the earlier Q4 at 487.1 ms), and is retained as a separate row. Q5 and Q8 latency is not a fair comparison with the Q3 or new Q4 GPU runs. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.
 
 [JPT 4B](https://huggingface.co/prithivMLmods/jpt-4b-GGUF) and [JPT 9B](https://huggingface.co/prithivMLmods/jpt-9b-GGUF) ran at Q3, Q4, Q5 and Q8 on both requested engines. The repositories publish no Q8: we converted their pinned BF16 files locally with llama-quantize Q8_0. The [conversion manifests](https://github.com/fontlaborg/ornotto/blob/main/src_docs/data/local_conversions.json) record source revisions, input/output hashes, converter hash, sizes and tensor types. JPT is CC BY-NC 4.0. Native dohnuts uses source-matched chat prompts, contextual answer tokens and the affirmative yes/no label; its temperatures are 1.036 (4B) and 1.087 (9B). The 4B Q8 native readout scores 64/67 in both modes; pcdServer is faster but scores 63/64.
 
@@ -80,7 +81,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 290 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 291 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -94,29 +95,29 @@ Some reading notes:
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 171 of the 290. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 172 of the 291. The other engines and runtimes ran only the models they were built for. The best method on each:
 
-| engine or runtime | methods | best method | translated / direct | ms/query |
-|---|---:|---|---|---:|
-| jev (hosted) | 1 | `jev` | 65 / 65 | 466 |
-| slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 367 |
-| pcdServer | 171 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962 |
-| ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891 |
-| dohnuts (Metal) | 27 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266 |
-| System One server | 11 | `systemone@neohorse-4b-q8` | 64 / 64 | 273 |
-| llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222 |
-| PyTorch | 4 | `torch@decider-4b-bf16` | 63 / 65 | 348 |
-| MLX | 9 | `mlx@openjev-35b-a3b-4bit` | 63 / 62 | 250 |
-| dohnuts (CPU) | 1 | `dohnuts@decider-0.8b-dreamblooms-q8` | 62 / 60 | 275 |
-| laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103 |
-| ExecuTorch (MLX) | 2 | `executorch@decider-0.8b-fp16` | 61 / 60 | 90 |
-| Core AI | 3 | `coreai@gliner25-decide` | 61 / – | 27 |
-| ONNX Runtime | 8 | `onnx@gliner25-decide-fp32` | 61 / – | 67 |
-| Core ML | 2 | `coreml@gliner25-decide-fp16-l256` | 61 / – | 349 |
-| ggmlc (Metal) | 2 | `systemone@kev-ggmlc-0.8b-q8` | 57 / 45 | 200 |
-| llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 131 |
-| llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44 |
-| Core ML, Neural Engine | 2 | `laya-coreml-ane-w8-compact` | 48 / 49 | 5 |
+| engine or runtime | methods | best method | translated / direct | ms/query | C/G |
+|---|---:|---|---|---:|---|
+| jev (hosted) | 1 | `jev` | 65 / 65 | 466 | R |
+| slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 367 | G |
+| pcdServer | 172 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962 | C+G |
+| ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891 | G |
+| dohnuts (Metal) | 27 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266 | G |
+| System One server | 11 | `systemone@neohorse-4b-q8` | 64 / 64 | 273 | G |
+| llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222 | C+G |
+| PyTorch | 4 | `torch@decider-4b-bf16` | 63 / 65 | 348 | G |
+| MLX | 9 | `mlx@openjev-35b-a3b-4bit` | 63 / 62 | 250 | G |
+| dohnuts (CPU) | 1 | `dohnuts@decider-0.8b-dreamblooms-q8` | 62 / 60 | 275 | C |
+| laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103 | G |
+| ExecuTorch (MLX) | 2 | `executorch@decider-0.8b-fp16` | 61 / 60 | 90 | G |
+| Core AI | 3 | `coreai@gliner25-decide` | 61 / – | 27 | A |
+| ONNX Runtime | 8 | `onnx@gliner25-decide-fp32` | 61 / – | 67 | C |
+| Core ML | 2 | `coreml@gliner25-decide-fp16-l256` | 61 / – | 349 | A |
+| ggmlc (Metal) | 2 | `systemone@kev-ggmlc-0.8b-q8` | 57 / 45 | 200 | G |
+| llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 131 | G |
+| llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44 | C+G |
+| Core ML, Neural Engine | 2 | `laya-coreml-ane-w8-compact` | 48 / 49 | 5 | C+N |
 
 A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on English only.
 

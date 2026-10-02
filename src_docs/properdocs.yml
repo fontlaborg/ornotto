@@ -35,6 +35,7 @@ theme:
 nav:
   - Home: index.md
   - Results:
+      - "Explore speed and accuracy": results/explorer.md
       - "Results: the short version": results/tldr.md
       - "Results: every table": results/details.md
   - Book:
@@ -90,7 +91,10 @@ extra_css:
   - https://i.fontlab.com/fltheme26/1.0.0/components.css
   - https://i.fontlab.com/fltheme26/1.0.0/theme.css
   - css/site.css
+  - css/benchmark.css
 extra_javascript:
   - https://i.fontlab.com/fltheme26/1.0.0/basecoat.js
   - https://i.fontlab.com/fltheme26/1.0.0/theme.js
   - js/tables.js
+  - js/benchmark-math.js
+  - js/benchmark.js

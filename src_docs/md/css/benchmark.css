@@ -1,0 +1,23 @@
+/* this_file: src_docs/md/css/benchmark.css */
+.benchmark-explorer { --be-ink: var(--md-default-fg-color, #222); --be-paper: var(--md-default-bg-color, #fff); color: var(--be-ink); }
+.benchmark-explorer .be-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .8rem; margin: 1.5rem 0; }
+.benchmark-explorer label { display: flex; flex-direction: column; gap: .3rem; font-size: .85rem; min-width: 0; }
+.benchmark-explorer select { width: 100%; box-sizing: border-box; }
+.benchmark-explorer input, .benchmark-explorer select, .benchmark-explorer button { font: inherit; color: inherit; background: var(--be-paper); border: 1px solid #8888; border-radius: 4px; padding: .45rem .6rem; min-height: 2.5rem; min-width: 0; }
+.benchmark-explorer button { cursor: pointer; align-self: end; }
+.benchmark-explorer .be-check { flex-direction: row; align-items: center; }
+.benchmark-explorer .be-check input { min-height: auto; }
+.benchmark-explorer .be-chart { width: 100%; height: 430px; margin: 1rem 0 2rem; }
+.benchmark-explorer .be-bars { height: 540px; }
+.benchmark-explorer .be-legend { font-size: .8rem; opacity: .8; }
+.benchmark-explorer .be-status { font-weight: 600; }
+.benchmark-explorer .be-detail { overflow-wrap: anywhere; font-size: .9rem; padding: .7rem 0; }
+.benchmark-explorer .be-table { overflow: auto; max-height: 28rem; }
+.benchmark-explorer table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.benchmark-explorer td, .benchmark-explorer th { padding: .5rem; text-align: left; border-bottom: 1px solid #8884; }
+.benchmark-explorer th { position: sticky; top: 0; z-index: 1; background: var(--be-paper); }
+.benchmark-explorer td:first-child { overflow-wrap: anywhere; min-width: 180px; }
+.benchmark-explorer td button { border: 0; padding: 0; min-height: auto; text-align: left; font-size: inherit; }
+.benchmark-explorer :focus-visible { outline: 2px solid #e53935; outline-offset: 3px; }
+.benchmark-explorer caption { text-align: left; margin-bottom: .7rem; }
+@media(max-width: 600px) { .benchmark-explorer .be-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } .benchmark-explorer .be-chart { height: 370px; } .benchmark-explorer .be-bars { height: 540px; } }
