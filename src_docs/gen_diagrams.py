@@ -59,7 +59,7 @@ def widget(rows: list[dict]) -> str:
         '<label>Minimum correct / 67<input name="minScore" type="number" min="0" max="67" value="50"></label>'
     )
     controls += '<label>Maximum ms/query<input name="maxMs" type="number" min="0" step="any" placeholder="No limit"></label>'
-    controls += '<label>Search runs<input name="search" type="search" placeholder="e.g. rune q4"></label>'
+    controls += '<label>Search runs<input name="benchSearch" type="search" placeholder="e.g. rune q4"></label>'
     controls += select(
         "scale", "Horizontal scale", ["log", "linear"], {"log": "Logarithmic", "linear": "Linear"}
     )

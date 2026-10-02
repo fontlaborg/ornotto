@@ -5,6 +5,8 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   const fmt = v => v == null ? '—' : Number(v).toFixed(1);
   const keys = ['mode', 'device', 'engine', 'family', 'minScore', 'maxMs', 'search', 'scale', 'frontOnly'];
+  // The shared site's native search owns the field name "search".
+  const field = (form, key) => form.elements[key === 'search' ? 'benchSearch' : key];
   const config = {responsive: true, displaylogo: false, toImageButtonOptions: {format: 'svg', filename: 'ornotto-benchmark'}, modeBarButtonsToRemove: ['select2d', 'lasso2d']};
   let plotlyPromise;
   function loadPlotly(widget) {
@@ -54,7 +56,7 @@
     widget.querySelector('.be-detail').textContent = `${row.method} — ${row.device}: ${row.device_detail}. Evidence: ${row.device_evidence}. ${row.score}/67, ${fmt(row.latency)} ms/query; ${row.gb ?? 'unknown'} weight GB. ${row.note || ''}`;
   }
   function stateOf(form) {
-    const state = Object.fromEntries(keys.map(k => [k, form.elements[k].type === 'checkbox' ? form.elements[k].checked : form.elements[k].value]));
+    const state = Object.fromEntries(keys.map(k => [k, field(form, k).type === 'checkbox' ? field(form, k).checked : field(form, k).value]));
     state.minScore = Math.max(0, Math.min(67, Number(state.minScore)));
     state.maxMs = Math.max(0, Number(state.maxMs));
     return state;
@@ -63,7 +65,7 @@
     form.reset();
     const params = new URL(location.href).searchParams;
     keys.forEach(k => {if (params.has('bench_' + k)) {
-      const input = form.elements[k], value = params.get('bench_' + k);
+      const input = field(form, k), value = params.get('bench_' + k);
       if (input.type === 'checkbox') input.checked = value === 'true';
       else input.value = value;
     }});

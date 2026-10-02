@@ -37,6 +37,8 @@ def test_diagram_when_generated_then_offline_assets_and_safe_payload_are_embedde
     assert "plotly.js (basic - minified) v3.1.0" in text, "Offline report must embed Plotly"
     assert "\\u003c/script>" in text, "JSON must not terminate the script tag"
     assert "<script>alert(1)</script>" not in text, "Method IDs are data, never script"
+    assert 'name="benchSearch"' in diagrams.widget([row]), "Explorer search needs its own field name"
+    assert 'name="search"' not in diagrams.widget([row]), "Native site search owns this reserved name"
 
 
 def test_frontier_and_filters_when_node_available_then_browser_math_passes():
