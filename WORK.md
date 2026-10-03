@@ -18,7 +18,9 @@ Validation: package lint/format and 126 tests pass (13 engine tests deselected);
 private suite 114 passed, one optional skipped. Strict 18-page build and local
 browser checks pass 308 rows, new head filters/reload/CSV, GLiNER old/new
 comparison, all existing native/API/Splash controls, Pareto and mobile/offline
-checks with zero page errors. Publication/live verification pending. Existing
+checks with zero page errors. Source commit 1f73394; Pages 37087960172 succeeded.
+All 23 live HTML/assets match the build and fresh HTTPS browser acceptance
+passes, including the fastest 60-answer-floor selection. Existing
 heavy-load exclusions and the unfinished GPU audit remain explicit.
 
 ## 2026-10-03 — native encoder integrations
