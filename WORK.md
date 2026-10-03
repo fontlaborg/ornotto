@@ -20,7 +20,9 @@ All 24 live artifacts match the build, and live explorer/PII browser checks
 pass with zero page errors. PyPI 0.1.3 is published: macOS arm64, Linux arm64/x86_64 and sdist.
 All four PyPI hashes match CI artifacts; clean PyPI installation imports
 version 0.1.3 and CoreAIExtractor, finds both bundled engines, and each engine
-executes --help successfully. The optional Windows build failed in bundled
+prints its usage successfully (dohnuts exit 2, pcd exit 0).
+Dohnuts GPU device enumeration timed out after 15 seconds; no fresh wheel
+inference was attempted. The optional Windows build failed in bundled
 dohnuts sys.cpp:99 under MSVC; this release has no Windows wheel.
 
 ## 2026-10-03 — native Core AI additions, benchmark finalized
