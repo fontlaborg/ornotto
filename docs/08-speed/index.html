@@ -1797,6 +1797,12 @@ flowchart TD
 <td>61/67</td>
 </tr>
 <tr>
+<td>GLiNER2.5-Decide, Core ML CPU/GPU (fixed 256 tokens)</td>
+<td>13,151</td>
+<td>21.9</td>
+<td>61/67</td>
+</tr>
+<tr>
 <td>Julia-1, MLX</td>
 <td>1,866</td>
 <td>6.8</td>
@@ -1804,7 +1810,7 @@ flowchart TD
 </tr>
 </tbody>
 </table>
-<p>The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes (<a href="../03-engines/#laya">chapter 3</a>). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. Julia-1, a smaller multilingual encoder, is as fast as laya on MLX and scores 31. GLiNER2.5-Decide on Core AI is the exception in the middle: 61/67 on translated text in 26.9 ms, but it reads English only. The hosted jev takes 466 ms per query, the round trip to its API included.</p>
+<p>The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes (<a href="../03-engines/#laya">chapter 3</a>). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. Julia-1, a smaller multilingual encoder, is as fast as laya on MLX and scores 31. GLiNER2.5-Decide on Core ML CPU/GPU is the exception in the middle: 61/67 on translated text in 21.9 ms, but it reads English only. The hosted jev takes 466 ms per query, the round trip to its API included.</p>
 <h2 id="the-later-engines-and-runtimes">The later engines and runtimes<a class="headerlink" href="#the-later-engines-and-runtimes" title="Permanent link">&para;</a></h2>
 <p>The second benchmark round brought runtimes that the first did not have, and the same weights again cost very different amounts of time depending on where they run. Times are ms per translated query, load excluded; the load column is the separate load or preload time.</p>
 <table>
@@ -1837,6 +1843,13 @@ flowchart TD
 <td>GLiNER2.5-Decide, fp16, 256 tokens</td>
 <td style="text-align: right;">349.1</td>
 <td style="text-align: right;">82,062</td>
+<td>61/67</td>
+</tr>
+<tr>
+<td>Core ML CPU/GPU</td>
+<td>GLiNER2.5-Decide, fp16, 256 tokens</td>
+<td style="text-align: right;">21.9</td>
+<td style="text-align: right;">13,151</td>
 <td>61/67</td>
 </tr>
 <tr>
@@ -2079,6 +2092,7 @@ flowchart TD
 </ul>
 <h2 id="saved-device-comparisons-in-october">Saved device comparisons in October<a class="headerlink" href="#saved-device-comparisons-in-october" title="Permanent link">&para;</a></h2>
 <p>The same Rune Q5 file measures 962.3 ms translated with CPU weights and Metal computation, and 153.3 ms with all layers requested on Metal: 6.3× faster. It changes one answer in each mode and scores 64/64 rather than 65/65. The Q4 comparison is 487.1 versus 124.8 ms, with unchanged answers. Ornith Splash measures 322.4/328.5 ms translated/direct through native choice logits; those are decision-request latencies, not generated tokens per second. Package bytes and a Metal cap are not measurements of total resident RAM. <a href="../results/explorer/#rune-q5-and-splash-two-completed-october-runs">Compare the retained runs and exclusions</a>.</p>
+<p>The October provider/head comparison retains the automatic Core ML run and adds explicit CPU/GPU at 21.9 ms with the same 61 answers. Jev-Omni pooled/MLX improves to 908.4 ms; Neutron MPS regresses to 50.3 ms. <a href="../results/explorer/#three-gpu-provider-and-head-comparisons">Scores, probability agreement and failed ONNX alternatives</a> explain why a GPU flag alone is insufficient.</p>
 <div class="footnote">
 <hr />
 <ol>

@@ -22,7 +22,7 @@ Six endpoints use a native five-way **choice**. Respan's three endpoints support
 
 --8<-- "tables/remote.html"
 
-## All 305 methods
+## All 308 methods
 
 A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Incomplete and failed attempts are left out; [the latest exclusions](explorer.md#runs-excluded-from-the-charts) complement the earlier failures; [chapter 6](../06-results.md#every-method) says why.
 

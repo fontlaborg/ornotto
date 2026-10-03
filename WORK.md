@@ -2,6 +2,25 @@
 
 # Work
 
+## 2026-10-03 — GPU provider and head comparisons
+
+Added three complete configurations, bringing the report to 308. All 305
+earlier rows and cached results/translations are unchanged. GLiNER Core ML
+CPU/GPU: 61/67 at 21.9 ms, 15.9x faster than automatic placement, no changed
+answers and maximum probability difference .0038. Jev-Omni Q3 pooled/MLX:
+64/64 at 908.4/904.4 ms, identical saved probabilities. Neutron MPS: 54/51 at
+50.3/49.4 ms, identical probabilities but slower than the retained mixed run.
+
+ONNX/CoreML von execution-plan and GLiNER/Laya axis failures remain excluded.
+The compute-plan diagnostic timeout and unrun alternatives are distinct from
+successful measurements; placement is configured, not an operation trace.
+Validation: package lint/format and 126 tests pass (13 engine tests deselected);
+private suite 114 passed, one optional skipped. Strict 18-page build and local
+browser checks pass 308 rows, new head filters/reload/CSV, GLiNER old/new
+comparison, all existing native/API/Splash controls, Pareto and mobile/offline
+checks with zero page errors. Publication/live verification pending. Existing
+heavy-load exclusions and the unfinished GPU audit remain explicit.
+
 ## 2026-10-03 — native encoder integrations
 
 Added optional Laya MLX and xDecision runtimes with three registered artifacts,

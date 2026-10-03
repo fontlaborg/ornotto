@@ -6,7 +6,7 @@ this_file: src_docs/md/results/explorer.md
 
 An extra correct answer can cost hundreds of milliseconds. Choose the score you need, then compare the runs that meet it. The default floor is **50 correct answers out of 67**. Laya on MLX clears it at **52/67 in 6.9 ms** on translated text; a model does not have to top the accuracy table to be useful.
 
-These are 305 recorded configurations, not 305 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
+These are 308 recorded configurations, not 308 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
 
 --8<-- "tables/explorer.html"
 
@@ -46,7 +46,36 @@ Each new method has 106 successful distinct-input records, reused to evaluate al
 
 Qwen3.6 Splash was refused before loading: 33 GiB available versus the unchanged conservative 40 GiB requirement. Swift Splash loading coincided with a host kernel panic involving the storage stack; its root cause remains unresolved. Dense Qwen3.8 Splash and Rune Q8 full-Metal remain untried and excluded. Laya Q8 on ggmlc Metal loaded but aborted on its first question with unsupported operation `MAP_CUSTOM2`; no successful benchmark records were saved. The F16 and Q4 alternatives are deferred because they use the same runtime path. None is a zero-score chart point or a completed run.
 
-The GPU audit retains existing faster native alternatives for CPU dohnuts and Laya. ONNX CPU rows remain labelled CPU: a Core ML provider setting would permit fallback and needs a separately verified run. Automatic Core ML/Core AI placement stays A. Jev-Omni and Neutron retain GPU encoders with CPU heads; pooled embeddings or GPU heads need probability agreement checks before measurement. Lower-scoring CLM pipelines are not priority retries. GPU preference follows measured score and latency, not a launch flag.
+The GPU audit retains existing faster native alternatives for CPU dohnuts and Laya. ONNX CPU rows remain labelled CPU: a Core ML provider setting would permit fallback and needs a separately verified run. Automatic Core ML/Core AI placement stays A. Jev-Omni and Neutron now have separately measured GPU-head alternatives with probability agreement checks; their historical CPU-head rows remain. Lower-scoring CLM pipelines are not priority retries. GPU preference follows measured score and latency, not a launch flag.
+
+
+## Three GPU provider and head comparisons
+
+All three completed configurations preserve every earlier result. Timings below
+exclude translation; the same frozen texts were used.
+
+| Configuration | Translated / direct correct | ms/query translated / direct | Retained comparison |
+| --- | --- | --- | --- |
+| GLiNER2.5-Decide, Core ML CPU/GPU | 61 / – | 21.9 / – | Automatic placement: 61 / – at 349.1 ms |
+| Jev-Omni Q3, last-token pooling and MLX head | 64 / 64 | 908.4 / 904.4 | GPU encoder, CPU head: 64 / 64 at 1222.3 ms translated |
+| Neutron multilingual Q4, MPS head | 54 / 51 | 50.3 / 49.4 | GPU encoder, CPU head: 54 / 51 at 42.7 ms translated |
+
+GLiNER is 15.9 times faster on this run with no changed answers; its largest
+probability difference is 0.0038. The compiled package permits CPU and GPU and
+disables the Neural Engine; operations were not individually traced. Jev-Omni
+is 1.35 times faster with identical saved four-decimal probabilities. Pooling
+and head placement changed together, so the gain cannot be assigned to the
+head alone. Neutron also preserves those probabilities but is 18% slower;
+retain the mixed configuration when latency matters. MLX/MPS GPU labels refer
+to the configured encoder/head computation; HTTP and tokenization still use CPU.
+These benchmark head adapters are separate from the package's native encoder integrations.
+
+Direct ONNX-to-CoreML attempts produced no completed runs. The von model failed
+to build a Core ML execution plan; enabling its compute-plan diagnostic first
+stalled until the guarded timeout. GLiNER and Laya exports failed with an axis
+error; disabling subgraph offload and graph optimization did not fix GLiNER.
+Their original CPU rows remain. These failures provide no GPU accuracy or speed
+measurement, and do not establish the cause of the earlier host kernel panic.
 
 ## Devices and evidence
 

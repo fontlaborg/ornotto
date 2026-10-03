@@ -33,7 +33,7 @@ Start from what your decision needs, not from the model list. The numbers in the
 | Many different question sets in rotation | dohnuts, or pcdServer with a larger cache | pcdServer caches one checkpoint per question set: about 22 MB on a 0.8B model and 56 to 63 MB on a 4B one. ornotto starts it with a 512 MiB cache. |
 | Remote decisions | OpenRouter API | Nine measured endpoints through `ornotto`; compare [remote scores and network-inclusive timings](results/details.md#openrouter-nine-remote-models). Respan uses noul OVR. |
 
-Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), are not in the wheel: laya is a different kind of model, on runtimes the package does not bundle ([chapter 3](03-engines.md)). Through ollaya, `ollaya-laya-multilingual` answers in 12.3 ms with the same 52/67.
+Two catches in the registry. `qwen3.5-2b` in ornotto is the Q4_K_M file, which scored 57/67; the Q3_K_M file of the same model scored 61/67 at 43 ms ([chapter 7](07-quantization.md)). If a small vanilla model is what you want, pass that file as `hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q3_K_M.gguf`. And the fastest methods in the benchmark, laya-multilingual on the Neural Engine (4.2 ms, 47/67) and on MLX (6.9 ms, 52/67), use runtimes the wheel does not bundle: the optional native `laya-mlx` engine now exposes the multilingual checkpoint through the package API ([chapter 3](03-engines.md)). Through ollaya, `ollaya-laya-multilingual` answers in 12.3 ms with the same 52/67.
 
 ## Choosing by memory on a Mac
 
@@ -254,3 +254,5 @@ Each of these can change a row in the table at the top of this chapter. The book
 ## Choose a measured GPU configuration
 
 Rune Q5 full Metal scores 64/67 in both modes at 153.3 ms translated and 152.8 ms direct. The retained mixed run scores 65/67 at 962.3 ms: choose whether that extra answer on this small set merits the latency. Ornith Splash scores 62/63 at 322.4/328.5 ms and does not improve the fastest useful frontier. A failed or refused load provides no accuracy result. [The explorer keeps every completed configuration and explains exclusions](results/explorer.md#rune-q5-and-splash-two-completed-october-runs).
+
+For English routing at a 60-answer floor, the new Core ML CPU/GPU GLiNER run leads at 61/67 and 21.9 ms. Jev-Omni last-token/MLX preserves 64/64 at about 908 ms; Neutron MPS is slower than its retained mixed run. These are benchmark-only provider/head adapters. [Compare the complete runs and exclusions](results/explorer.md#three-gpu-provider-and-head-comparisons).

@@ -1465,10 +1465,10 @@
 </figure>
 </div>
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">305</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">308</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
-<div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">21.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core ML CPU/GPU, 61/67</span></div>
 </div>
 
 <div class="ornotto-band ornotto-band--tint">
@@ -1504,7 +1504,7 @@
 </div>
 <div class="ornotto-band ornotto-band--tint">
 <h2 id="what-we-measured">What we measured<a class="headerlink" href="#what-we-measured" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 305 rows and every table</a>.</p>
+<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 308 rows and every table</a>.</p>
 <p>For a fast first pass, laya on MLX scores <strong>52/67 in 6.9 ms</strong> on translated text. <a href="results/explorer/">Set your own accuracy floor and compare Pareto frontiers</a>. Rune Q4 now measures <strong>124.8 ms</strong> on GPU, against <strong>487.1 ms</strong> with CPU weights. Rune Q5 full Metal adds <strong>64/64 at 153.3 ms</strong>, 6.3× faster with one fewer correct answer in each mode than its mixed run. Ornith Splash scores <strong>62/63 at 322.4/328.5 ms</strong>. <strong>C</strong> = CPU, <strong>G</strong> = GPU, <strong>C+G</strong> = mixed, <strong>R</strong> = remote; all other device codes are explained in the full report.</p>
 <figure class="ornotto-bars">
 <figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
@@ -1745,7 +1745,7 @@
 <p class="ornotto-chapters__group">Benchmarks</p>
 <ol>
 <li><a href="05-method/">How we measured</a> One router question, 67 queries, labels fixed before the run.</li>
-<li><a href="06-results/">Results</a> All 305 methods against jev, the hosted reference.</li>
+<li><a href="06-results/">Results</a> All 308 methods against jev, the hosted reference.</li>
 <li><a href="07-quantization/">Quantization and size</a> What precision changes: file size, memory and the answers that survive.</li>
 <li><a href="08-speed/">Speed, memory and caching</a> One forward pass per decision, and what an engine avoids prefilling twice.</li>
 <li><a href="09-confidence/">Confidence and fallback</a> Whether the probabilities mean what they say, and what a fallback buys.</li>

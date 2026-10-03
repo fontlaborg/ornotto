@@ -34,3 +34,5 @@ All 302 previous configurations remain identical; 305 are built and local
 browser acceptance passes. Source/built docs are published; Pages 37084662597 and actual
 HTTPS artifact/browser checks pass. Heavy exclusions and provider/head GPU optimization remain
 unfinished; package release remains separate through publish.sh.
+
+- [ ] Publish and verify the 308-configuration GPU provider/head comparison.

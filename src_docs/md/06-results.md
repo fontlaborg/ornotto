@@ -4,7 +4,7 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 305 methods finished; five failed and are left out.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 21.9 ms on Core ML CPU/GPU, and laya 52/67 in 7 ms. 308 configurations finished; failed and refused alternatives are excluded from the result tables.
 
 The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
@@ -115,7 +115,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 305 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 308 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -131,14 +131,15 @@ The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 305. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 308. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query | C/G |
 |---|---:|---|---|---:|---|
 | Core AI | 3 | `coreai@gliner25-decide` | 61 / – | 26.9 | A |
-| Core ML | 2 | `coreml@gliner25-decide-fp16-l256` | 61 / – | 349.1 | A |
+| Core ML | 3 | `coreml@gliner25-decide-fp16-l256-cpu-gpu` | 61 / – | 21.9 | C+G |
 | Core ML, Neural Engine | 2 | `laya-coreml-ane-w8-compact` | 48 / 49 | 4.5 | C+N |
 | ExecuTorch (MLX) | 2 | `executorch@decider-0.8b-fp16` | 61 / 60 | 89.7 | G |
+| Laya MLX (native) | 1 | `systemone@laya-mlx-package-fp16` | 52 / 49 | 11.4 | G |
 | MLX | 9 | `mlx@openjev-35b-a3b-4bit` | 63 / 62 | 250.0 | G |
 | ONNX Runtime | 8 | `onnx@gliner25-decide-fp32` | 61 / – | 67.3 | C |
 | OpenRouter API | 9 | `openrouter@typesafe/jev-1.13` | 65 / 65 | 364.4 | R |
@@ -151,15 +152,18 @@ Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 305. T
 | jev (hosted) | 1 | `jev` | 65 / 65 | 466.1 | R |
 | laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103.1 | G |
 | llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 130.8 | G |
+| llama.cpp + MLX head | 1 | `gguf-head@jev-omni-q3-last-mlx` | 64 / 64 | 908.4 | G |
+| llama.cpp + MPS head | 1 | `gguf-head@laya-neutron-ml-mps` | 54 / 51 | 50.3 | G |
 | llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44.4 | C+G |
 | llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222.3 | C+G |
 | ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891.1 | G |
 | pcdServer | 173 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962.3 | C+G |
 | slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 366.6 | G |
+| xDecision (MLX) | 2 | `systemone@xdecision-q8-mlx` | 45 / 43 | 14.3 | G |
 
 A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on English only.
 
-If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms; Rune Q5 reaches 65 in both modes at 962 ms with CPU weights.
+If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core ML CPU/GPU in 21.9 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms; Rune Q5 reaches 65 in both modes at 962 ms with CPU weights.
 
 The table also shows where the choice of engine is a choice of model. pcdServer ran 173 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
 

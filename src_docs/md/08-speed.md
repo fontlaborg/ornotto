@@ -152,9 +152,10 @@ Load time is paid once per process, but it decides whether an engine suits a com
 | decider-4b, PyTorch | 16,802 | 348.2 | 63/67 |
 | GLiNER2.5-Decide, Core AI | 3,378 | 26.9 | 61/67 |
 | GLiNER2.5-Decide, Core ML (fixed 256 tokens) | 82,062 | 349.1 | 61/67 |
+| GLiNER2.5-Decide, Core ML CPU/GPU (fixed 256 tokens) | 13,151 | 21.9 | 61/67 |
 | Julia-1, MLX | 1,866 | 6.8 | 31/67 |
 
-The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes ([chapter 3](03-engines.md#laya)). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. Julia-1, a smaller multilingual encoder, is as fast as laya on MLX and scores 31. GLiNER2.5-Decide on Core AI is the exception in the middle: 61/67 on translated text in 26.9 ms, but it reads English only. The hosted jev takes 466 ms per query, the round trip to its API included.
+The laya rows are the latency floor of this benchmark. laya-multilingual reads its input in one encoder pass and never decodes ([chapter 3](03-engines.md#laya)). On MLX it answers in 6.9 ms; exported to Core ML for the Neural Engine it answers in 4.2 ms, with a 96-token budget that forced a compact prompt and cost five answers. Both land at 47 to 52 of 67, 10 to 15 answers below decider-0.8b's 62. If you need a decision per keystroke, that is the trade; for anything slower than that, the decoder models are better value. Julia-1, a smaller multilingual encoder, is as fast as laya on MLX and scores 31. GLiNER2.5-Decide on Core ML CPU/GPU is the exception in the middle: 61/67 on translated text in 21.9 ms, but it reads English only. The hosted jev takes 466 ms per query, the round trip to its API included.
 
 ## The later engines and runtimes
 
@@ -165,6 +166,7 @@ The second benchmark round brought runtimes that the first did not have, and the
 | Core AI | GLiNER2.5-Decide, fp16 | 26.9 | 3,378 | 61/67 |
 | ONNX Runtime, CPU | GLiNER2.5-Decide, fp32 | 67.3 | 4,607 | 61/67 |
 | Core ML | GLiNER2.5-Decide, fp16, 256 tokens | 349.1 | 82,062 | 61/67 |
+| Core ML CPU/GPU | GLiNER2.5-Decide, fp16, 256 tokens | 21.9 | 13,151 | 61/67 |
 | ONNX Runtime, CPU | laya-multilingual, fp32 | 24.7 | 1,578 | 52/67 |
 | ONNX Runtime, CPU | laya-multilingual, fp16 | 57.6 | 1,067 | 52/67 |
 | ollaya (MLX) | `laya:multilingual` | 12.3 | 1,217 | 52/67 |
@@ -276,3 +278,5 @@ The `ornotto` package applies the same discipline to itself. Each `Decider` shar
 ## Saved device comparisons in October
 
 The same Rune Q5 file measures 962.3 ms translated with CPU weights and Metal computation, and 153.3 ms with all layers requested on Metal: 6.3× faster. It changes one answer in each mode and scores 64/64 rather than 65/65. The Q4 comparison is 487.1 versus 124.8 ms, with unchanged answers. Ornith Splash measures 322.4/328.5 ms translated/direct through native choice logits; those are decision-request latencies, not generated tokens per second. Package bytes and a Metal cap are not measurements of total resident RAM. [Compare the retained runs and exclusions](results/explorer.md#rune-q5-and-splash-two-completed-october-runs).
+
+The October provider/head comparison retains the automatic Core ML run and adds explicit CPU/GPU at 21.9 ms with the same 61 answers. Jev-Omni pooled/MLX improves to 908.4 ms; Neutron MPS regresses to 50.3 ms. [Scores, probability agreement and failed ONNX alternatives](results/explorer.md#three-gpu-provider-and-head-comparisons) explain why a GPU flag alone is insufficient.

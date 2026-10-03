@@ -27,3 +27,5 @@
 - [x] Add and verify the public Laya MLX native integration and a separate current-runtime benchmark.
 - [x] Integrate and verify native xDecision F16/Q8 with package tests and full benchmarks.
 - [x] Publish and verify the 305-configuration native encoder explorer on HTTPS.
+
+- [ ] Publish and verify the 308-configuration GPU provider/head comparison.
