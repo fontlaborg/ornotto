@@ -10,6 +10,7 @@ It gives local engines and hosted decision models one Python API:
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
 - **Clef and CLM** add fourteen GGUF/MLX quantizations with native joint-schema or contrastive heads. See [runtime installation and limits](src_docs/md/10-package.md#clef-and-clm-quantizations).
+- **Native Core AI** adds optional Clef-Flash FP16/int8mix joint decisions and `CoreAIExtractor` for GLiNER2 PII spans/redaction on macOS 27. Build the separate [Swift bridge](src_docs/md/10-package.md#native-core-ai-clef-flash-and-pii). Clef inference remains unmeasured after the RAM preflight refused it.
 - **Additional System One models** include Rune native llama-server, Raz NLI, OOMU/Bosun, Lite, mpuig MLX, Gemma, ONNX/CoreAI scorers and explicit NLI fallbacks. See the [runtime and availability reference](src_docs/md/10-package.md#additional-system-one-models).
 - **Laya MLX and xDecision** use their native encoder heads through optional Python runtimes. They support choice, yes/no and score without generated text.
 - **OpenRouter** serves native choice, yes/no and score questions remotely, using the same `Decider` methods.
@@ -34,7 +35,7 @@ uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4
 
 For xDecision CPU, omit `[apple]` and use `gpu=False`. These runtimes are not bundled. xDecision Q8 is smaller on disk, but MLX expands it to FP16 in memory. See the [native encoder reference](src_docs/md/10-package.md#native-encoders) for source installation and limits.
 
-Models download from Hugging Face on first use; `HF_HUB_CACHE` moves the cache. CoreAI uses its external CLI’s store.
+Models download from Hugging Face on first use; `HF_HUB_CACHE` moves the cache. The older CoreAI scalar scorer uses its external CLI’s store; the Clef/PII bridge uses pinned Hugging Face downloads.
 
 ornotto never bundles ollaya. Install it with `curl -fsSL https://ollaya.dev/install.sh | OLLAYA_INSTALL_DIR=$HOME/.local sh`; ornotto looks on `PATH`, then in `~/.local/bin`, or at `ORNOTTO_OLLAYA_BIN`. ollaya pulls its models into its own store, `OLLAYA_MODELS` (default `~/.ollaya/models`), not the Hugging Face cache.
 

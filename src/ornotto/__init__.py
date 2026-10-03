@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ._coreai import CoreAIExtractor
 from ._decider import Decider, DecisionError
 from ._engines import EngineNotFound, Server
 from ._models import DEFAULT_MODEL, MODELS, ModelSpec
@@ -32,6 +33,7 @@ __all__ = [
     "OPENROUTER_MODELS",
     "OPENROUTER_KINDS",
     "Answer",
+    "CoreAIExtractor",
     "Decider",
     "Decision",
     "DecisionError",

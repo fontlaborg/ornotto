@@ -311,3 +311,31 @@ RSS with 2 GB swap growth; no score is published. FluidInference's Gemma
 repository has no trained weights or Core ML artifact, and Nev Lite's custom
 runtime link is unavailable. The [package reference](10-package.md#additional-system-one-models)
 records installation, readout differences and these remaining limitations.
+
+## Native Core AI extraction
+
+On 3 October, the GLiNER2 PII Core AI conversion completed a separate
+20-text synthetic entity-extraction suite on this Mac. Eight labels were
+supplied per call, with threshold 0.5. Four texts reproduce the upstream demo;
+sixteen add independent examples, three negative texts, four European-language
+texts and an emoji-prefixed text. One warm-up preceded the timed calls.
+
+--8<-- "tables/coreai-pii.md"
+
+The task counts exact `(label, matched text)` pairs, ignoring entity order.
+It is a small smoke benchmark, not a general privacy evaluation. It cannot
+be compared with the 67-query router accuracy or used to claim that PII
+redaction is complete for arbitrary documents. CPU handles tokenization and
+span decoding; the Core AI graph is configured for GPU. Per-operation device
+placement was not profiled. Both word- and token-budget rejection probes
+passed, and the managed native process exited after the run. The
+[measured responses and expected entity sets](downloads/coreai-pii.json)
+include timings, native spans and redactions.
+
+Clef-Flash Core AI FP16 and int8mix are registered with their native
+joint-schema head, but the unchanged preflight refused both on this host:
+36 and 30 GiB available RAM required, respectively; 22 GiB available at the
+check. No new Core AI Clef accuracy or timing enters the router rankings.
+All 329 existing router configurations and cached results are retained.
+[The package chapter](10-package.md#native-core-ai-clef-flash-and-pii)
+explains how to run both integrations.

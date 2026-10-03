@@ -358,7 +358,9 @@ class Adapter:
 
     @property
     def max_questions(self) -> int:
-        if self.engine == "clef-mlx" or self.engine == "llama" and self.model_name.startswith("clef"):
+        if self.engine in ("clef-mlx", "clef-coreai") or (
+            self.engine == "llama" and self.model_name.startswith("clef")
+        ):
             return sys.maxsize  # Clef fields must stay joint; the full prompt context is the limit.
         if self.engine == "openrouter":
             return sys.maxsize  # the documented API specifies no fixed client-side question limit

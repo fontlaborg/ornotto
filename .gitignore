@@ -14,9 +14,11 @@ dist/
 downloads/
 !/src_docs/md/downloads/
 /src_docs/md/downloads/*
+!/src_docs/md/downloads/coreai-pii.json
 !/src_docs/md/downloads/benchmark-explorer.html
 !/docs/downloads/
 /docs/downloads/*
+!/docs/downloads/coreai-pii.json
 !/docs/downloads/benchmark-explorer.html
 eggs/
 .eggs/

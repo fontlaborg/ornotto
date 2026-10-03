@@ -81,3 +81,16 @@ Engine handles exact reference rendering, projection and probability recipes;
 the adapter supplies a local GGUF or the pinned author MLX encoder. The
 reference projection checkpoint is pinned to e939398d4556fcd9400c76fa8c5a513202f42b0a.
 These CLM heads explicitly run on CPU; the model encoder uses Metal or MLX.
+
+## Optional native Core AI bridge
+
+`runtimes/coreai/build.py` fetches ClefFlash from
+[john-rocky/coreai-model-zoo 2d214b3](https://github.com/john-rocky/coreai-model-zoo/tree/2d214b3d20cdd66c9a45b57e591df407b8a0147d/apps/ClefFlash)
+and InformationExtractor from
+[coreai-kit 7bdcc46](https://github.com/john-rocky/coreai-kit/tree/7bdcc466204bf45fc4e994994215b2c317fb5672).
+SwiftPM resolves their tokenizer/graph dependencies; `Package.resolved` records
+exact versions. CoreAI is the system framework on macOS 27. The only local
+upstream modification makes the PII collator throw at its word/token limits.
+The bridge and Python subprocess adapter retain native readouts; no extra
+Python inference package is required. Source downloads stay in ignored
+`.upstream/`; the bridge is built separately from the wheels.

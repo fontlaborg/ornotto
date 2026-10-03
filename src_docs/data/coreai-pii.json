@@ -1,0 +1,661 @@
+{
+  "repo": "mlboydaisuke/GLiNER2-PII-CoreAI",
+  "revision": "74fb5c19e7eba2d4ebad95f90eeb6d996432575d",
+  "suite": "20 synthetic texts, first four upstream demo fixtures; 0.5 threshold, eight labels; not the 67-query router",
+  "device": "Core AI GPU preferred; CPU tokenization/span decoding; operator placement unprofiled",
+  "load_ms": 3045.4424580020714,
+  "exact": 20,
+  "total": 20,
+  "tp": 27,
+  "fp": 0,
+  "fn": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "mean_ms": 12.504741700104205,
+  "median_ms": 11.915646002307767,
+  "rejections": [
+    "bundleLayout(\"STATE_TRUNCATED: text exceeds word budget\")",
+    "bundleLayout(\"STATE_TRUNCATED: text exceeds token budget\")"
+  ],
+  "records": [
+    {
+      "text": "Contact Dr. Sarah Johnson at sarah.j@acme.com or +1-415-555-0142.",
+      "expected": {
+        "person": [
+          "Sarah Johnson"
+        ],
+        "email": [
+          "sarah.j@acme.com"
+        ],
+        "phone number": [
+          "+1-415-555-0142"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Contact Dr. [PERSON] at [EMAIL] or [PHONE NUMBER].",
+        "spans": [
+          {
+            "confidence": 0.9599609375,
+            "end": 25,
+            "label": "person",
+            "start": 12,
+            "text": "Sarah Johnson"
+          },
+          {
+            "confidence": 1,
+            "end": 45,
+            "label": "email",
+            "start": 29,
+            "text": "sarah.j@acme.com"
+          },
+          {
+            "confidence": 1,
+            "end": 64,
+            "label": "phone number",
+            "start": 49,
+            "text": "+1-415-555-0142"
+          }
+        ],
+        "entities": {
+          "person": [
+            "Sarah Johnson"
+          ],
+          "email": [
+            "sarah.j@acme.com"
+          ],
+          "phone number": [
+            "+1-415-555-0142"
+          ]
+        }
+      },
+      "ms": 23.675790995184798,
+      "exact": true
+    },
+    {
+      "text": "Wire to account holder James Lee, SSN 123-45-6789, card 4111 1111 1111 1111.",
+      "expected": {
+        "person": [
+          "James Lee"
+        ],
+        "social security number": [
+          "123-45-6789"
+        ],
+        "credit card number": [
+          "4111 1111 1111 1111"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Wire to account holder [PERSON], SSN [SOCIAL SECURITY NUMBER], card [CREDIT CARD NUMBER].",
+        "spans": [
+          {
+            "confidence": 0.9990234375,
+            "end": 32,
+            "label": "person",
+            "start": 23,
+            "text": "James Lee"
+          },
+          {
+            "confidence": 0.98974609375,
+            "end": 75,
+            "label": "credit card number",
+            "start": 56,
+            "text": "4111 1111 1111 1111"
+          },
+          {
+            "confidence": 0.962890625,
+            "end": 49,
+            "label": "social security number",
+            "start": 38,
+            "text": "123-45-6789"
+          }
+        ],
+        "entities": {
+          "person": [
+            "James Lee"
+          ],
+          "credit card number": [
+            "4111 1111 1111 1111"
+          ],
+          "social security number": [
+            "123-45-6789"
+          ]
+        }
+      },
+      "ms": 12.10933400579961,
+      "exact": true
+    },
+    {
+      "text": "Send the invoice to 500 Market St, San Francisco and cc maria@corp.io.",
+      "expected": {
+        "email": [
+          "maria@corp.io"
+        ],
+        "address": [
+          "500 Market St, San Francisco"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Send the invoice to [ADDRESS] and cc [EMAIL].",
+        "spans": [
+          {
+            "confidence": 1,
+            "end": 69,
+            "label": "email",
+            "start": 56,
+            "text": "maria@corp.io"
+          },
+          {
+            "confidence": 0.8671875,
+            "end": 48,
+            "label": "address",
+            "start": 20,
+            "text": "500 Market St, San Francisco"
+          }
+        ],
+        "entities": {
+          "email": [
+            "maria@corp.io"
+          ],
+          "address": [
+            "500 Market St, San Francisco"
+          ]
+        }
+      },
+      "ms": 12.156542004959192,
+      "exact": true
+    },
+    {
+      "text": "Patient DOB 1985-07-14, treated at Mercy General Hospital by nurse Alan Poe.",
+      "expected": {
+        "person": [
+          "Alan Poe"
+        ],
+        "date of birth": [
+          "1985-07-14"
+        ],
+        "organization": [
+          "Mercy General Hospital"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Patient DOB [DATE OF BIRTH], treated at [ORGANIZATION] by nurse [PERSON].",
+        "spans": [
+          {
+            "confidence": 0.994140625,
+            "end": 75,
+            "label": "person",
+            "start": 67,
+            "text": "Alan Poe"
+          },
+          {
+            "confidence": 1,
+            "end": 22,
+            "label": "date of birth",
+            "start": 12,
+            "text": "1985-07-14"
+          },
+          {
+            "confidence": 0.998046875,
+            "end": 57,
+            "label": "organization",
+            "start": 35,
+            "text": "Mercy General Hospital"
+          }
+        ],
+        "entities": {
+          "person": [
+            "Alan Poe"
+          ],
+          "date of birth": [
+            "1985-07-14"
+          ],
+          "organization": [
+            "Mercy General Hospital"
+          ]
+        }
+      },
+      "ms": 12.176042000646703,
+      "exact": true
+    },
+    {
+      "text": "Please email alice@example.org.",
+      "expected": {
+        "email": [
+          "alice@example.org"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Please email [EMAIL].",
+        "spans": [
+          {
+            "confidence": 1,
+            "end": 30,
+            "label": "email",
+            "start": 13,
+            "text": "alice@example.org"
+          }
+        ],
+        "entities": {
+          "email": [
+            "alice@example.org"
+          ]
+        }
+      },
+      "ms": 11.804499998106621,
+      "exact": true
+    },
+    {
+      "text": "Reply to bob@example.net and support@example.org.",
+      "expected": {
+        "email": [
+          "bob@example.net",
+          "support@example.org"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Reply to [EMAIL] and [EMAIL].",
+        "spans": [
+          {
+            "confidence": 1,
+            "end": 24,
+            "label": "email",
+            "start": 9,
+            "text": "bob@example.net"
+          },
+          {
+            "confidence": 1,
+            "end": 48,
+            "label": "email",
+            "start": 29,
+            "text": "support@example.org"
+          }
+        ],
+        "entities": {
+          "email": [
+            "bob@example.net",
+            "support@example.org"
+          ]
+        }
+      },
+      "ms": 11.807584000052884,
+      "exact": true
+    },
+    {
+      "text": "The contact is Nora Finch.",
+      "expected": {
+        "person": [
+          "Nora Finch"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "The contact is [PERSON].",
+        "spans": [
+          {
+            "confidence": 0.99853515625,
+            "end": 25,
+            "label": "person",
+            "start": 15,
+            "text": "Nora Finch"
+          }
+        ],
+        "entities": {
+          "person": [
+            "Nora Finch"
+          ]
+        }
+      },
+      "ms": 11.85520899889525,
+      "exact": true
+    },
+    {
+      "text": "My social security number is 987-65-4321.",
+      "expected": {
+        "social security number": [
+          "987-65-4321"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "My social security number is [SOCIAL SECURITY NUMBER].",
+        "spans": [
+          {
+            "confidence": 0.99951171875,
+            "end": 40,
+            "label": "social security number",
+            "start": 29,
+            "text": "987-65-4321"
+          }
+        ],
+        "entities": {
+          "social security number": [
+            "987-65-4321"
+          ]
+        }
+      },
+      "ms": 11.681999996653758,
+      "exact": true
+    },
+    {
+      "text": "My credit card number is 5555 5555 5555 4444.",
+      "expected": {
+        "credit card number": [
+          "5555 5555 5555 4444"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "My credit card number is [CREDIT CARD NUMBER].",
+        "spans": [
+          {
+            "confidence": 0.99853515625,
+            "end": 44,
+            "label": "credit card number",
+            "start": 25,
+            "text": "5555 5555 5555 4444"
+          }
+        ],
+        "entities": {
+          "credit card number": [
+            "5555 5555 5555 4444"
+          ]
+        }
+      },
+      "ms": 11.987791003775783,
+      "exact": true
+    },
+    {
+      "text": "Her date of birth is 1991-03-22.",
+      "expected": {
+        "date of birth": [
+          "1991-03-22"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Her date of birth is [DATE OF BIRTH].",
+        "spans": [
+          {
+            "confidence": 1,
+            "end": 31,
+            "label": "date of birth",
+            "start": 21,
+            "text": "1991-03-22"
+          }
+        ],
+        "entities": {
+          "date of birth": [
+            "1991-03-22"
+          ]
+        }
+      },
+      "ms": 11.750999998184852,
+      "exact": true
+    },
+    {
+      "text": "Call +1-202-555-0199 tomorrow.",
+      "expected": {
+        "phone number": [
+          "+1-202-555-0199"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Call [PHONE NUMBER] tomorrow.",
+        "spans": [
+          {
+            "confidence": 1,
+            "end": 20,
+            "label": "phone number",
+            "start": 5,
+            "text": "+1-202-555-0199"
+          }
+        ],
+        "entities": {
+          "phone number": [
+            "+1-202-555-0199"
+          ]
+        }
+      },
+      "ms": 11.825333000160754,
+      "exact": true
+    },
+    {
+      "text": "The meeting starts tomorrow morning.",
+      "expected": {},
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "The meeting starts tomorrow morning.",
+        "spans": [],
+        "entities": {}
+      },
+      "ms": 11.812917000497691,
+      "exact": true
+    },
+    {
+      "text": "The font contains 750 glyphs and 12 masters.",
+      "expected": {},
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "The font contains 750 glyphs and 12 masters.",
+        "spans": [],
+        "entities": {}
+      },
+      "ms": 11.930915999982972,
+      "exact": true
+    },
+    {
+      "text": "No personal data is included in this paragraph.",
+      "expected": {},
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "No personal data is included in this paragraph.",
+        "spans": [],
+        "entities": {}
+      },
+      "ms": 11.938083000131883,
+      "exact": true
+    },
+    {
+      "text": "Napisz do anna@example.pl.",
+      "expected": {
+        "email": [
+          "anna@example.pl"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Napisz do [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.99951171875,
+            "end": 25,
+            "label": "email",
+            "start": 10,
+            "text": "anna@example.pl"
+          }
+        ],
+        "entities": {
+          "email": [
+            "anna@example.pl"
+          ]
+        }
+      },
+      "ms": 11.827332993561868,
+      "exact": true
+    },
+    {
+      "text": "Kontakt: Jan Kowalski, jan.kowalski@example.pl.",
+      "expected": {
+        "person": [
+          "Jan Kowalski"
+        ],
+        "email": [
+          "jan.kowalski@example.pl"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Kontakt: [PERSON], [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.990234375,
+            "end": 21,
+            "label": "person",
+            "start": 9,
+            "text": "Jan Kowalski"
+          },
+          {
+            "confidence": 1,
+            "end": 46,
+            "label": "email",
+            "start": 23,
+            "text": "jan.kowalski@example.pl"
+          }
+        ],
+        "entities": {
+          "person": [
+            "Jan Kowalski"
+          ],
+          "email": [
+            "jan.kowalski@example.pl"
+          ]
+        }
+      },
+      "ms": 11.95000000006985,
+      "exact": true
+    },
+    {
+      "text": "Schreiben Sie an lena@example.de.",
+      "expected": {
+        "email": [
+          "lena@example.de"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Schreiben Sie an [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.99951171875,
+            "end": 32,
+            "label": "email",
+            "start": 17,
+            "text": "lena@example.de"
+          }
+        ],
+        "entities": {
+          "email": [
+            "lena@example.de"
+          ]
+        }
+      },
+      "ms": 11.911875000805594,
+      "exact": true
+    },
+    {
+      "text": "Envoyez un message à camille@example.fr.",
+      "expected": {
+        "email": [
+          "camille@example.fr"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Envoyez un message à [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.99951171875,
+            "end": 39,
+            "label": "email",
+            "start": 21,
+            "text": "camille@example.fr"
+          }
+        ],
+        "entities": {
+          "email": [
+            "camille@example.fr"
+          ]
+        }
+      },
+      "ms": 11.91941700380994,
+      "exact": true
+    },
+    {
+      "text": "Contact: user+tag@example.com.",
+      "expected": {
+        "email": [
+          "user+tag@example.com"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "Contact: [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.99951171875,
+            "end": 29,
+            "label": "email",
+            "start": 9,
+            "text": "user+tag@example.com"
+          }
+        ],
+        "entities": {
+          "email": [
+            "user+tag@example.com"
+          ]
+        }
+      },
+      "ms": 11.847417001263238,
+      "exact": true
+    },
+    {
+      "text": "🙂 Contact Alice Morgan at alice@example.com.",
+      "expected": {
+        "person": [
+          "Alice Morgan"
+        ],
+        "email": [
+          "alice@example.com"
+        ]
+      },
+      "response": {
+        "offset_unit": "utf16",
+        "redacted": "🙂 Contact [PERSON] at [EMAIL].",
+        "spans": [
+          {
+            "confidence": 0.99462890625,
+            "end": 23,
+            "label": "person",
+            "start": 11,
+            "text": "Alice Morgan"
+          },
+          {
+            "confidence": 1,
+            "end": 44,
+            "label": "email",
+            "start": 27,
+            "text": "alice@example.com"
+          }
+        ],
+        "entities": {
+          "person": [
+            "Alice Morgan"
+          ],
+          "email": [
+            "alice@example.com"
+          ]
+        }
+      },
+      "ms": 12.125749999540858,
+      "exact": true
+    }
+  ]
+}

@@ -1106,6 +1106,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#native-core-ai-clef-flash-and-pii" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Core AI: Clef-Flash and PII
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#decider" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1410,6 +1421,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-core-ai-clef-flash-and-pii" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Core AI: Clef-Flash and PII
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1877,17 +1899,59 @@ cannot establish that every input token was retained. Keep inputs within its
 context (1,024 tokens for this Laya checkpoint), including questions/options.
 ornotto starts one serial loopback HTTP process per model/engine/device and
 stops it through the existing lifecycle.</p>
+<h2 id="native-core-ai-clef-flash-and-pii">Native Core AI: Clef-Flash and PII<a class="headerlink" href="#native-core-ai-clef-flash-and-pii" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://huggingface.co/mlboydaisuke/clef-flash-CoreAI">Clef-Flash conversion</a>
+uses its native Core AI decoder, joint-schema head and FP16 lexical table.
+<code>clef-flash-coreai-fp16</code> and <code>clef-flash-coreai-int8mix</code> download immutable
+revision <code>220ac149ed1136465f7d9dac93aaf0dfc55d6b73</code>. They accept text and JSON
+states through <code>Decider</code>; the adapter does not expose the conversion's image
+input. Questions share one prefill and the native head. Full inputs that exceed
+4096 tokens are rejected. These optional engines require Apple silicon,
+macOS 27, an Xcode toolchain with CoreAI, and the separately built Swift bridge:</p>
+<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/fontlaborg/ornotto
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">cd</span><span class="w"> </span>ornotto
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>python3<span class="w"> </span>runtimes/coreai/build.py
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ORNOTTO_COREAI_BRIDGE_BIN</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/runtimes/coreai/.build/release/ornotto-coreai"</span>
+</code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ornotto</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decider</span><span class="p">,</span> <span class="n">CoreAIExtractor</span><span class="p">,</span> <span class="n">shutdown</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">decider</span> <span class="o">=</span> <span class="n">Decider</span><span class="p">(</span><span class="s2">"clef-flash-coreai-int8mix"</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">answer</span> <span class="o">=</span> <span class="n">decider</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"The payment failed"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"billing"</span><span class="p">,</span> <span class="s2">"technical"</span><span class="p">])</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="k">finally</span><span class="p">:</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">shutdown</span><span class="p">()</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">with</span> <span class="n">CoreAIExtractor</span><span class="p">()</span> <span class="k">as</span> <span class="n">extractor</span><span class="p">:</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"Email alice@example.org"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"email"</span><span class="p">])</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"entities"</span><span class="p">])</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"redacted"</span><span class="p">])</span>
+</code></pre></div>
+<p><code>CoreAIExtractor</code> runs the <a href="https://huggingface.co/mlboydaisuke/GLiNER2-PII-CoreAI">GLiNER2 PII conversion</a>
+at revision <code>74fb5c19e7eba2d4ebad95f90eeb6d996432575d</code>. It returns native
+entity labels, matched strings, confidence scores, UTF-16 span offsets and
+redacted text. Use <code>await extractor.aextract(...)</code> for asynchronous calls.
+Labels are supplied at each call: 1–16 unique nonempty strings, threshold
+0–1 (default 0.5). Its static graph accepts at most 96 text words and 256
+combined schema/text tokens. The pinned runtime patch rejects either overflow
+before inference, rather than silently dropping trailing words. Entity spans
+are limited to eight words. Native confidence scores are not calibrated
+routing probabilities. Closing the context stops the resident native process.</p>
+<p>Downloads use the configured Hugging Face cache. Set <code>HF_HUB_CACHE</code> to your
+model volume before first use; these bundles are not included in Python wheels.
+The bridge serializes requests and loads one selected native model per process.
+<a href="../06-results/#native-core-ai-extraction">Chapter 6</a> records the PII measurement
+and Clef's memory refusals.</p>
 <h2 id="decider">Decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h2>
 <p>A <code>Decider</code> is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1977,8 +2041,8 @@ stops it through the existing lifecycle.</p>
 <h2 id="remote-openrouter-models">Remote OpenRouter models<a class="headerlink" href="#remote-openrouter-models" title="Permanent link">&para;</a></h2>
 <p>Use current <code>main</code> for remote support (<a href="../12-choosing/#building-from-source">source build</a>).</p>
 <p>Set <code>OPENROUTER_API_KEY</code>, then use an exact model ID:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
 </code></pre></div>
 <p>All nine IDs are listed by <code>ornotto models</code> and <code>ornotto.OPENROUTER_MODELS</code>:
 <code>liquid/d1</code>, <code>togethercomputer/tev1-4b-experimental</code>, <code>inception/mercury-decide:free</code>,
@@ -2040,16 +2104,16 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
 <p><code>decide</code> takes a mapping from question name to question. The name you choose comes back as the key of the answer. Build questions with three functions:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
 </code></pre></div>
 <table>
 <thead>
@@ -2140,11 +2204,11 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 <p><code>calibrated</code> identifies the readout: <code>True</code> for dohnuts and ollaya, <code>False</code> for pcdServer and the native encoders's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. <a href="../09-confidence/">Chapter 9</a> explains that check.</p>
 <p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
 <p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">})</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">})</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </code></pre></div>
 <table>
 <thead>
@@ -2182,15 +2246,15 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </table>
 <h2 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h2>
 <p><code>adecide</code> is <code>decide</code> for asyncio. It uses <code>httpx.AsyncClient</code>, so many decisions can be in flight at once. The first call may block briefly while the engine starts: starting a process and waiting for it to load a model is not asynchronous.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <p><code>ornotto.aextract</code> is the async form of <code>extract</code> (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="engine-lifecycle">Engine lifecycle<a class="headerlink" href="#engine-lifecycle" title="Permanent link">&para;</a></h2>
@@ -2563,10 +2627,10 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
 </code></pre></div>
 <p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts or ollaya.</p>
 <div class="footnote">

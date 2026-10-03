@@ -503,6 +503,46 @@
         "clm_mlx/*.py"
       ],
       "note": "Pinned upstream native MLX joint-schema head; Apple silicon, text only. Calibration on this task is unverified."
+    },
+    {
+      "name": "clef-flash-coreai-fp16",
+      "repo": "mlboydaisuke/clef-flash-CoreAI",
+      "file": "",
+      "engines": [
+        "clef-coreai"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 18.1784966,
+      "revision": "220ac149ed1136465f7d9dac93aaf0dfc55d6b73",
+      "snapshot": [
+        "gpu-pipelined/clef_flash_decode_fp16_pf64/*",
+        "gpu-pipelined/clef_flash_head_bucket_fp16w32/*",
+        "host/*",
+        "LICENSE",
+        "SHA256SUMS"
+      ],
+      "note": "macOS 27, native Core AI GPU decoder and joint-schema head, host FP16 lexical table. Text/JSON states; optional Swift bridge required. Experimental: native inference remains unmeasured after the guarded host RAM preflight refused startup. No calibration on the router task is claimed."
+    },
+    {
+      "name": "clef-flash-coreai-int8mix",
+      "repo": "mlboydaisuke/clef-flash-CoreAI",
+      "file": "",
+      "engines": [
+        "clef-coreai"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 14.1247684,
+      "revision": "220ac149ed1136465f7d9dac93aaf0dfc55d6b73",
+      "snapshot": [
+        "gpu-pipelined/clef_flash_decode_int8mix_pf64/*",
+        "gpu-pipelined/clef_flash_head_bucket_fp16w32/*",
+        "host/*",
+        "LICENSE",
+        "SHA256SUMS"
+      ],
+      "note": "macOS 27, native Core AI GPU decoder and joint-schema head, host FP16 lexical table. Text/JSON states; optional Swift bridge required. Experimental: native inference remains unmeasured after the guarded host RAM preflight refused startup. No calibration on the router task is claimed."
     }
   ]
 }

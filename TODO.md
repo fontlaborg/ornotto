@@ -49,3 +49,11 @@
 - [x] Preserve all 320 earlier rows and publishable low-scoring CLM measurements after weight pruning.
 - [x] Publish the 329-configuration build and verify the actual HTTPS artifacts and explorer.
 - [ ] Measure Clef Q3/Q4/Q5, Clef MLX 4-bit and Clef-Flash MLX 8-bit when the unchanged memory preflight permits.
+
+## Native Core AI additions
+
+- [x] Build the pinned native bridge and expose PII spans/redaction with explicit full-input rejection.
+- [x] Register Clef-Flash Core AI FP16/int8mix with pinned decoder, head and lexical table.
+- [x] Run and verify the separate 20-text PII benchmark while retaining every router measurement.
+- [ ] Measure both Clef Core AI variants once the unchanged RAM preflight permits (30/36 GiB available).
+- [ ] Publish the Core AI source/docs update and verify live PII evidence and retained router explorer.

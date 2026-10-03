@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- Add the optional native macOS 27 Core AI bridge for pinned Clef-Flash FP16/int8mix joint-schema decisions and GLiNER2 PII entity spans/redaction. Preserve native heads and confidence, serialize persistent requests, bound pipe waits and reject PII word/token overflow.
+- Publish the separate 20-text PII smoke benchmark: 20 exact entity sets, 27 true positives, no false positives/negatives, 12.5 ms mean warm latency. Retain all 329 router configurations and the full cache unchanged. Clef Core AI inference remains unmeasured: FP16/int8mix preflight requires 36/30 GiB available against 22 GiB at check.
+
 - Add fourteen pinned Clef, Clef-Flash and CLM GGUF/MLX configurations with native joint-schema or contrastive heads, managed lifecycle, full-input rejection and optional runtime installs. Attach official Clef heads to backbone-only GGUFs without changing quantized tensor bytes; keep joint questions in one prefill.
 - Publish nine complete new configurations (329 total), preserving all 320 earlier rows. Clef-Flash Q3 scores 62/64 translated/direct; Q4/Q5/Q6 each 63/64; MLX 4-bit 63/63. The four CLM variants score 36/38/38/39 translated. Five larger configurations have support and pinned downloads but no measurement after the unchanged RAM preflight refused them.
 - Remove failed-only downloads and downloaded weights whose best completed score is below 50/67, including the four newly measured CLM variants. Retain low-scoring benchmark rows, cached probabilities, translations and shared weights used by stronger configurations; keep failed/refused executions out of rankings.

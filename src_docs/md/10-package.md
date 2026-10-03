@@ -181,6 +181,56 @@ context (1,024 tokens for this Laya checkpoint), including questions/options.
 ornotto starts one serial loopback HTTP process per model/engine/device and
 stops it through the existing lifecycle.
 
+## Native Core AI: Clef-Flash and PII
+
+The [Clef-Flash conversion](https://huggingface.co/mlboydaisuke/clef-flash-CoreAI)
+uses its native Core AI decoder, joint-schema head and FP16 lexical table.
+`clef-flash-coreai-fp16` and `clef-flash-coreai-int8mix` download immutable
+revision `220ac149ed1136465f7d9dac93aaf0dfc55d6b73`. They accept text and JSON
+states through `Decider`; the adapter does not expose the conversion's image
+input. Questions share one prefill and the native head. Full inputs that exceed
+4096 tokens are rejected. These optional engines require Apple silicon,
+macOS 27, an Xcode toolchain with CoreAI, and the separately built Swift bridge:
+
+```bash
+git clone --recursive https://github.com/fontlaborg/ornotto
+cd ornotto
+python3 runtimes/coreai/build.py
+export ORNOTTO_COREAI_BRIDGE_BIN="$PWD/runtimes/coreai/.build/release/ornotto-coreai"
+```
+
+```python
+from ornotto import Decider, CoreAIExtractor, shutdown
+
+try:
+    decider = Decider("clef-flash-coreai-int8mix")
+    answer = decider.choose("The payment failed", ["billing", "technical"])
+finally:
+    shutdown()
+
+with CoreAIExtractor() as extractor:
+    result = extractor.extract("Email alice@example.org", ["email"])
+    print(result["entities"])
+    print(result["redacted"])
+```
+
+`CoreAIExtractor` runs the [GLiNER2 PII conversion](https://huggingface.co/mlboydaisuke/GLiNER2-PII-CoreAI)
+at revision `74fb5c19e7eba2d4ebad95f90eeb6d996432575d`. It returns native
+entity labels, matched strings, confidence scores, UTF-16 span offsets and
+redacted text. Use `await extractor.aextract(...)` for asynchronous calls.
+Labels are supplied at each call: 1–16 unique nonempty strings, threshold
+0–1 (default 0.5). Its static graph accepts at most 96 text words and 256
+combined schema/text tokens. The pinned runtime patch rejects either overflow
+before inference, rather than silently dropping trailing words. Entity spans
+are limited to eight words. Native confidence scores are not calibrated
+routing probabilities. Closing the context stops the resident native process.
+
+Downloads use the configured Hugging Face cache. Set `HF_HUB_CACHE` to your
+model volume before first use; these bundles are not included in Python wheels.
+The bridge serializes requests and loads one selected native model per process.
+[Chapter 6](06-results.md#native-core-ai-extraction) records the PII measurement
+and Clef's memory refusals.
+
 ## Decider
 
 A `Decider` is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.

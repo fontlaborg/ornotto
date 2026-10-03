@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import importlib
 import json
+import signal
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
@@ -27,13 +28,19 @@ DEFAULT_INSTRUCTIONS = {
 XDECISION_INSTALL = "uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'"
 
 
-def load(engine: str, path: str, device: str, adapter: str | None = None, head: str | None = None) -> Any:
+def load(
+    engine: str, path: str, device: str, adapter: str | None = None, head: str | None = None, name: str = ""
+) -> Any:
     """Load the upstream implementation, never interpret its weights as llama.cpp."""
     if sys.version_info < (3, 11):
         raise RuntimeError("Native encoder runtimes require Python 3.11 or newer")
     if engine not in PYTHON_ENGINES:
         raise ValueError(f"Unknown encoder engine {engine!r}")
     try:
+        if engine == "clef-coreai":
+            from ._coreai import CoreAIDecider
+
+            return CoreAIDecider(path, device, "int8mix" if name.endswith("int8mix") else "fp16")
         if engine in ("raz-nli", "transformers-nli", "transformers-slot"):
             from ._transformers_decision import TorchDecision
 
@@ -161,7 +168,9 @@ def main() -> None:
     parser.add_argument("--port", type=int, required=True)
     parser.add_argument("--device", choices=("cpu", "gpu"), required=True)
     args = parser.parse_args()
-    runtime = load(args.engine, args.model, args.device, args.adapter, args.head)
+    if args.engine == "clef-coreai":
+        signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
+    runtime = load(args.engine, args.model, args.device, args.adapter, args.head, args.name)
     try:
         with make_server(runtime, args.name, args.port) as server:
             server.serve_forever()

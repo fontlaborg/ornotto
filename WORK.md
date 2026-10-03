@@ -2,6 +2,22 @@
 
 # Work
 
+## 2026-10-03 — native Core AI additions, in progress
+
+Pinned native Swift bridge builds successfully. GLiNER2 PII completed its
+20-text suite under the existing driver with SWAP_MAX_GB=1; 27 TP, 0 FP/FN,
+20 exact entity sets, 12.5047 ms mean and 11.9156 ms median. Word/token
+rejection probes pass; native process exited. All 329 router rows and the
+entire cache remain identical to the saved baseline. Clef Core AI int8mix
+and FP16 are integrated but refused by preflight at 22 GiB available against
+30/36 GiB required; no native Clef inference/accuracy is claimed.
+Package baseline: 166 tests pass; final suite: 176 pass /2 optional skips /
+13 engine deselections, with lint/format clean. Native release build, wheel/sdist
+contents and isolated wheel import, strict 18-page docs build, full local explorer
+and PII page/download browser checks pass. Both downloads and their hashes are
+verified. The final preflight still refuses Clef at 26 GiB available. Publication
+and live acceptance are pending. Reproducible records are retained privately.
+
 ## 2026-10-03 — Clef and CLM quantizations; download cleanup
 
 Register fourteen pinned configurations across all seven requested repositories:
