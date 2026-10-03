@@ -40,3 +40,11 @@ unfinished; package release remains separate through publish.sh.
 - [x] Publish and verify the 309-configuration Weidows MPS comparison.
 
 - [x] Review all 42 historical CPU/mixed/automatic configurations; measure safe useful alternatives and retain explicit failed/refused/deferred exclusions.
+
+## System One expansion
+
+- [x] Register fifteen pinned repositories and implement compatible native or explicitly labelled fallback readouts.
+- [x] Complete eleven guarded benchmarks and retain all 309 historical rows.
+- [ ] Verify the Rune v3 native endpoint on a host with sufficient safe memory.
+- [ ] Resolve CoreAIKit scorer startup memory growth before another guarded inference attempt.
+- [ ] Enable FluidInference Gemma when a trained artifact is published, and Nev Lite when its required runtime is accessible.

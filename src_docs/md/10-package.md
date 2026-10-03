@@ -46,6 +46,64 @@ ollaya is young and moves quickly. Its first release, v0.1.0, came out on 2026-0
 
 Models download from Hugging Face on first use, through `huggingface_hub`, into the ordinary Hugging Face cache. Set `HF_HUB_CACHE` (or `HF_HOME`) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.
 
+### Additional System One models
+
+Current `main` registers the fifteen repositories below. Each usable alias selects its compatible readout rather than routing every checkpoint through a generic letter slot. Weight revisions are pinned in the registry; CoreAI's external catalog controls its own revision.
+
+| Alias | Source | Runtime or availability |
+|---|---|---|
+| `rune-systemone-q3` | [owao/surogate-rune-26b-a4b-systemone](https://huggingface.co/owao/surogate-rune-26b-a4b-systemone) | llama |
+| `raz-nli-xsmall-openjev` | [RazvanManolache/raz-systemone-nli-xsmall-openjev](https://huggingface.co/RazvanManolache/raz-systemone-nli-xsmall-openjev) | raz-nli |
+| `raz-nli-base` | [RazvanManolache/raz-systemone-nli-base](https://huggingface.co/RazvanManolache/raz-systemone-nli-base) | raz-nli |
+| `system-one-scorer-onnx` | [developerjeremylive/system-one-qwen3.5-4b-scorer-ONNX-etheroi](https://huggingface.co/developerjeremylive/system-one-qwen3.5-4b-scorer-ONNX-etheroi) | onnx-scorer |
+| `oomu-systemone-0.6b` | [oomu/OOMU-SystemOne-0.6B-GGUF](https://huggingface.co/oomu/OOMU-SystemOne-0.6B-GGUF) | bosun-gguf |
+| `systemone-lite-0.5b` | [dwidlee/systemone-lite-0.5b](https://huggingface.co/dwidlee/systemone-lite-0.5b) | systemone-lite |
+| `system-one-gemma-coreml` | [FluidInference/system-one-gemma-coreml](https://huggingface.co/FluidInference/system-one-gemma-coreml) | Unavailable: Source-only conversion toolkit: no weights, adapter or Core ML package is published. The upstream Gemma base is gated. |
+| `system-one-scorer-coreai` | [mlboydaisuke/system-one-qwen3.5-4b-scorer-CoreAI](https://huggingface.co/mlboydaisuke/system-one-qwen3.5-4b-scorer-CoreAI) | coreai |
+| `system-one-minicpm5-2b-q8` | [mpuig/system-one-minicpm5-2b-q8](https://huggingface.co/mpuig/system-one-minicpm5-2b-q8) | system-one-mlx |
+| `system-one-qwen3-0.6b` | [mpuig/system-one-qwen3-0.6b](https://huggingface.co/mpuig/system-one-qwen3-0.6b) | system-one-mlx |
+| `nev-lite-systemone` | [shreyanbr/nev-lite-systemone](https://huggingface.co/shreyanbr/nev-lite-systemone) | Unavailable: The model card requires its custom System One runtime and calibration. The linked GitHub runtime repository returns HTTP 404 (2026-10-03); raw NLI is not an equivalent readout. |
+| `system-one-270m` | [kaivoss/system-one-270m](https://huggingface.co/kaivoss/system-one-270m) | transformers-slot |
+| `system-one-gold` | [shreyanbr/system-one-gold](https://huggingface.co/shreyanbr/system-one-gold) | transformers-nli |
+| `system-one-distilled` | [shreyanbr/system-one-distilled](https://huggingface.co/shreyanbr/system-one-distilled) | transformers-nli |
+| `system-one-zeroshot` | [shreyanbr/system-one-zeroshot](https://huggingface.co/shreyanbr/system-one-zeroshot) | transformers-nli |
+
+From a current `main` checkout, install only the runtime you need in the environment running ornotto. Transformers and ONNX adapters require Python 3.11+:
+
+```sh
+uv pip install -e ".[transformers]"     # Raz NLI, Gemma letter slot, Shreyan NLI
+uv pip install -e ".[onnx]"             # ONNX Q4 scalar scorer; use gpu=False
+uv pip install -e ".[bosun]"            # OOMU; build/install a Metal-enabled wheel on Mac
+uv pip install 'systemone-lite @ git+https://github.com/fritzprix/systemone-lite.git@fc6fbe3e9a3976d5c2976589f0f7176cfdcfb110'
+uv pip install 'system-one @ git+https://github.com/mpuig/system-one.git@ed076ed47d5e09187b66697982f6aa65263387dc'
+```
+
+The Lite runtime also needs the Transformers extra. The mpuig runtime needs its MLX dependencies and Apple silicon; it has no CPU backend. Its per-primitive temperatures are bound to an exact model identity. ornotto presents exactly the calibration-listed backbone files and preserves the upstream hash check. The Qwen adapter downloads its separately pinned base model.
+
+For Rune, install a current [llama.cpp server with System One support](https://github.com/ggml-org/llama.cpp/tree/master/tools/server), and set `ORNOTTO_LLAMA_BIN` if it is outside `PATH`. The new v3 Q3 alias uses the embedded native profile and temperature 2; the historical **rune-26b-a4b q3 / slot (llama-server)** measurement remains a separate readout and file revision. Its result is not evidence for the v3 native endpoint. The v3 command and protocol adapter are implemented, but a fresh native run was deferred after the CoreAI memory incident.
+
+For CoreAI, install the external [CoreAIKit systemone CLI](https://github.com/john-rocky/coreai-kit). It requires macOS 27 and a Mac GPU. ornotto looks for `systemone` on `PATH`, in `~/.local/bin`, or at `ORNOTTO_COREAI_BIN`, and launches `serve --model system-one-scorer-4b`. Run `systemone models` to inspect the catalog revision. This integration remains experimental: CLI 0.7.3 grew to 29.1 GB RSS and tripped the benchmark host’s swap watchdog during startup; it has no completed inference result. CoreAI downloads through its own cache, not `HF_HUB_CACHE`; its native row limit is 384 tokens and its runtime may truncate longer inputs. The ONNX adapter rejects overlong rows instead.
+
+```python
+from ornotto import Decider, shutdown
+
+try:
+    decider = Decider("system-one-minicpm5-2b-q8")
+    answer = decider.choose("Please explain kerning", {
+        "docs": "explain how the application works",
+        "code": "write a program",
+    })
+    print(answer.value, answer.probabilities)
+finally:
+    shutdown()  # release the model before loading another
+```
+
+All usable aliases support choice, yes/no and score, including async and typed consumers. `gpu=True` explicitly selects MLX, Metal or MPS; unsupported placement fails rather than silently selecting CPU. The ONNX adapter is CPU only. Raz uses the author's three-way entailment and contradiction recipe; its score is the modal level. The Gemma 270M adapter follows the card's raw letter-logit example (temperature 1), with at most 26 choices. Lite aliases caller keys to 26 distinct letter symbols and uses its upstream runtime without a prefix cache. OOMU uses Bosun's native stable decision tokens and prompt compiler, not a generic llama-server profile.
+
+Gold, Distilled and ZeroShot use the model cards' standard Transformers zero-shot NLI path: raw entailment logits across options, the default `This example is {}.` hypothesis, and expected-level score aggregation. Their author's custom runtime URL returns HTTP 404; its `calibration.json` is **not applied**. These measurements are labelled **NLI entailment logits**, separate from the unavailable calibrated System One runtime. Nev Lite uses a different custom embedding/MLP architecture, so this fallback cannot implement it faithfully.
+
+The FluidInference repository publishes a conversion toolkit without a trained adapter, weights or Core ML package. Nev Lite's required runtime is unavailable. Both aliases fail with an explicit reason before downloading or starting a process. No benchmark score is assigned to unavailable models. Temperature application on the remaining models does not establish calibration on your task; their answers keep `calibrated=False`.
+
 ### Native encoders
 
 Current `main` supports [aac6fef/laya-multilingual-mlx](https://huggingface.co/aac6fef/laya-multilingual-mlx)

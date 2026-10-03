@@ -14,6 +14,7 @@ import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
 
+from ._models import PYTHON_ENGINES
 from ._protocol import as_question
 from ._remote import validate_response
 
@@ -26,12 +27,37 @@ DEFAULT_INSTRUCTIONS = {
 XDECISION_INSTALL = "uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'"
 
 
-def load(engine: str, path: str, device: str) -> Any:
+def load(engine: str, path: str, device: str, adapter: str | None = None) -> Any:
     """Load the upstream implementation, never interpret its weights as llama.cpp."""
     if sys.version_info < (3, 11):
         raise RuntimeError("Native encoder runtimes require Python 3.11 or newer")
-    if engine not in ("laya-mlx", "xdecision"):
+    if engine not in PYTHON_ENGINES:
         raise ValueError(f"Unknown encoder engine {engine!r}")
+    try:
+        if engine in ("raz-nli", "transformers-nli", "transformers-slot"):
+            from ._transformers_decision import TorchDecision
+
+            return TorchDecision(path, engine, device)
+        if engine == "systemone-lite":
+            from ._upstream_decision import Lite
+
+            return Lite(path, device)
+        if engine == "system-one-mlx":
+            from ._upstream_decision import Mpuig
+
+            return Mpuig(path, device, adapter)
+        if engine == "onnx-scorer":
+            from ._onnx_scorer import OnnxScorer
+
+            return OnnxScorer(path, device)
+        if engine == "bosun-gguf":
+            from ._bosun_gguf import Bosun
+
+            return Bosun(path, device)
+    except ModuleNotFoundError as error:
+        raise RuntimeError(
+            f"{engine} dependency missing ({error.name}); see https://fontlab.org/ornotto/10-package/#additional-system-one-models"
+        ) from error
     module = "laya_mlx" if engine == "laya-mlx" else "xdecision"
     try:
         runtime = importlib.import_module(module)
@@ -114,13 +140,14 @@ def make_server(runtime: Any, name: str, port: int) -> HTTPServer:
 def main() -> None:
     """CLI used by Server.command; heavy imports occur only in the child process."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--engine", choices=("laya-mlx", "xdecision"), required=True)
+    parser.add_argument("--engine", choices=PYTHON_ENGINES, required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--name", required=True)
+    parser.add_argument("--adapter")
     parser.add_argument("--port", type=int, required=True)
     parser.add_argument("--device", choices=("cpu", "gpu"), required=True)
     args = parser.parse_args()
-    runtime = load(args.engine, args.model, args.device)
+    runtime = load(args.engine, args.model, args.device, args.adapter)
     try:
         with make_server(runtime, args.name, args.port) as server:
             server.serve_forever()

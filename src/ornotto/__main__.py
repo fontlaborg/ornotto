@@ -34,7 +34,8 @@ class Cli:
         rows = [f"{'name':{width}} {'engines':13} {'family':11} {'GB':>4}  licence"]
         for m in MODELS.values():
             engines = ",".join(m.engines)
-            rows.append(f"{m.name:{width}} {engines:13} {m.family:11} {m.size_gb:4.1f}  {m.license}")
+            status = f"; unavailable: {m.unavailable}" if m.unavailable else ""
+            rows.append(f"{m.name:{width}} {engines:13} {m.family:11} {m.size_gb:4.1f}  {m.license}{status}")
         rows += [
             f"{name:{width}} {'openrouter':13} {'dedicated':11} {'—':>4}  remote (R); "
             f"{','.join(OPENROUTER_KINDS[name])}"
@@ -47,6 +48,10 @@ class Cli:
         if model in OPENROUTER_MODELS or model.startswith("openrouter:"):
             raise ValueError("Remote models have no local weights to pull")
         resolved = resolve(model)
+        if resolved.engines == ("coreai",):
+            raise ValueError(
+                "Core AI downloads are owned by systemone; run systemone serve --model " + str(resolved.tag)
+            )
         if resolved.gguf is not None:
             return str(resolved.gguf)
         # A private ollaya server pulls the tag and stops without loading it.

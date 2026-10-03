@@ -2,6 +2,29 @@
 
 # Work
 
+## 2026-10-03 — Additional System One models
+
+Register all fifteen requested repositories. Implement thirteen compatible
+integration paths; eleven completed real HTTP, async and pydantic-ai typed
+smokes plus full routing benchmarks (854 distinct input records). Gold,
+Distilled and ZeroShot use an explicit uncalibrated standard NLI fallback.
+FluidInference publishes no trained model; Nev Lite's required runtime is
+unavailable. CoreAIKit 0.7.3 startup reached 29.1 GB RSS and 2 GB swap growth;
+the watchdog stopped it and excluded further loads. Rune v3's native path
+has command/protocol coverage but no fresh measured run; retain the earlier
+Q3 slot result separately. No guards were lowered.
+
+Export 320 configurations; all 309 prior rows are identical. MiniCPM5 Q8
+is 62/59 at 141.8/147.2 ms, ONNX CPU Q4 is 53/67 at 1410.8 ms. Preserve
+calibration-bound mpuig identities, published probability recipes, pinned
+base adapters, external ONNX sidecars and optional runtime installs.
+Validation: package lint/format and 156 tests (13 engine tests deselected);
+private suite 115 passed, 4 optional dependency skips. Strict 18-page build
+passes. Local browser acceptance passes all new engine filters, fallback readouts,
+CPU/GPU labels, URL reload and CSV exports; existing Jev deduplication,
+remote runs, Pareto, mobile, SVG and offline checks pass with zero page errors.
+Publication evidence will be recorded after deployment.
+
 ## 2026-10-03 — Jev identity correction
 
 Correct the two Jev runs to one TypeSafe model identity and OpenRouter engine. Retain both original measurements in the 309-run archive and ten-run remote table; show Jev once in homepage rankings. The earlier resolved build remains unlogged.

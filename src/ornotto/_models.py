@@ -12,11 +12,39 @@ be given as `ollaya:<tag>`.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-Engine = Literal["dohnuts", "pcd", "ollaya", "openrouter", "laya-mlx", "xdecision"]
+Engine = Literal[
+    "dohnuts",
+    "pcd",
+    "ollaya",
+    "openrouter",
+    "laya-mlx",
+    "xdecision",
+    "llama",
+    "raz-nli",
+    "transformers-nli",
+    "transformers-slot",
+    "systemone-lite",
+    "system-one-mlx",
+    "onnx-scorer",
+    "coreai",
+    "bosun-gguf",
+]
+PYTHON_ENGINES = (
+    "laya-mlx",
+    "xdecision",
+    "raz-nli",
+    "transformers-nli",
+    "transformers-slot",
+    "systemone-lite",
+    "system-one-mlx",
+    "onnx-scorer",
+    "bosun-gguf",
+)
 Family = Literal["dedicated", "fine-tuned", "vanilla"]
 
 
@@ -38,9 +66,14 @@ class ModelSpec:
     head: str | None = None
     note: str = ""
     tag: str | None = None
-    """ollaya only: the registry tag, which replaces `repo` and `file`."""
+    """ollaya or external CoreAI catalog tag, replacing downloaded files."""
     bundled_metadata: str | None = None
     """Profile JSON shipped with the package when the weight repository has none."""
+    revision: str | None = None
+    snapshot: tuple[str, ...] = ()
+    base_repo: str | None = None
+    base_revision: str | None = None
+    unavailable: str | None = None
 
 
 def _ollaya(name: str, tag: str, size_gb: float, note: str) -> ModelSpec:
@@ -278,6 +311,11 @@ MODELS: dict[str, ModelSpec] = {
 
 DEFAULT_MODEL = "decider-0.8b"
 
+for entry in json.loads((Path(__file__).parent / "data" / "systemone-models.json").read_text())["models"]:
+    entry["engines"] = tuple(entry["engines"])
+    entry["snapshot"] = tuple(entry.get("snapshot", ()))
+    MODELS[entry["name"]] = ModelSpec(**entry)
+
 
 @dataclass(frozen=True)
 class ResolvedModel:
@@ -290,6 +328,7 @@ class ResolvedModel:
     metadata: Path | None = None
     head: Path | None = None
     tag: str | None = None
+    adapter: Path | None = None
 
 
 def _download(repo: str, file: str) -> Path:
@@ -312,9 +351,10 @@ def resolve(
     tag with no file; the ollaya server pulls it.
     """
     if (
-        engine in ("laya-mlx", "xdecision")
+        engine in (*PYTHON_ENGINES, "llama", "coreai")
         or model in MODELS
-        and MODELS[model].engines[0] in ("laya-mlx", "xdecision")
+        and MODELS[model].engines
+        and MODELS[model].engines[0] in (*PYTHON_ENGINES, "llama", "coreai")
     ) and (metadata is not None or head is not None):
         raise ValueError(
             "Native encoders carry their own profile/head; metadata and head are dohnuts settings"
@@ -322,10 +362,41 @@ def resolve(
     if model.startswith("ollaya:"):
         return ResolvedModel(model, None, ("ollaya",), tag=model.removeprefix("ollaya:"))
     if spec := MODELS.get(model):
+        if spec.unavailable:
+            raise RuntimeError(f"{spec.name} unavailable: {spec.unavailable}")
         if engine is not None and engine not in spec.engines:
             raise ValueError(f"{spec.name} runs on {' or '.join(spec.engines)}, not {engine}")
         if spec.tag:
             return ResolvedModel(spec.name, None, spec.engines, tag=spec.tag)
+        if spec.snapshot:
+            from huggingface_hub import snapshot_download
+
+            options = {}
+            if spec.engines == ("onnx-scorer",):
+                from huggingface_hub.constants import HF_HUB_CACHE
+
+                # External ONNX data must be beside the graph, not cache blob symlinks.
+                options["local_dir"] = str(Path(HF_HUB_CACHE) / "ornotto-local" / spec.name / spec.revision)
+            checkpoint = Path(
+                snapshot_download(
+                    repo_id=spec.repo,
+                    revision=spec.revision,
+                    allow_patterns=list(spec.snapshot),
+                    max_workers=2,
+                    **options,
+                )
+            )
+            if spec.base_repo:
+                base = Path(
+                    snapshot_download(
+                        repo_id=spec.base_repo,
+                        revision=spec.base_revision,
+                        allow_patterns=["*.json", "*.safetensors", "*.txt", "*.jinja"],
+                        max_workers=2,
+                    )
+                )
+                return ResolvedModel(spec.name, base, spec.engines, adapter=checkpoint)
+            return ResolvedModel(spec.name, checkpoint, spec.engines)
         if spec.engines == ("laya-mlx",):
             from huggingface_hub import snapshot_download
 
@@ -333,7 +404,12 @@ def resolve(
                 repo_id=spec.repo, allow_patterns=["*.json", "*.safetensors", "tokenizer/*"]
             )
             return ResolvedModel(spec.name, Path(snapshot), spec.engines)
-        gguf = _download(spec.repo, spec.file)
+        if spec.revision:
+            from huggingface_hub import hf_hub_download
+
+            gguf = Path(hf_hub_download(spec.repo, spec.file, revision=spec.revision))
+        else:
+            gguf = _download(spec.repo, spec.file)
         profile = (
             Path(metadata).expanduser()
             if metadata
@@ -357,11 +433,11 @@ def resolve(
         gguf = _download(f"{owner}/{repo}", file)
     else:
         gguf = Path(model).expanduser()
-        if not (gguf.is_file() or engine in ("laya-mlx", "xdecision") and gguf.is_dir()):
+        if not (gguf.is_file() or engine in PYTHON_ENGINES and gguf.is_dir()):
             known = ", ".join(MODELS)
             raise FileNotFoundError(f"{model!r} is neither a registered model ({known}) nor a file")
     engines: tuple[Engine, ...] = (
-        (engine,) if engine in ("laya-mlx", "xdecision") else ("dohnuts", "pcd") if metadata else ("pcd",)
+        (engine,) if engine in (*PYTHON_ENGINES, "llama") else ("dohnuts", "pcd") if metadata else ("pcd",)
     )
     return ResolvedModel(
         gguf.stem,

@@ -76,15 +76,27 @@ def fake_ollaya(monkeypatch):
 
 def test_registry_when_any_model_then_default_engine_listed_and_source_consistent(monkeypatch):
     monkeypatch.setattr("ornotto._models._download", lambda repo, file: Path(file))  # no network
+    monkeypatch.setattr("huggingface_hub.hf_hub_download", lambda repo, file, **kwargs: str(Path(file)))
     monkeypatch.setattr("huggingface_hub.snapshot_download", lambda **kwargs: "/mock/snapshot")
     for spec in MODELS.values():
+        if spec.unavailable:
+            with pytest.raises(RuntimeError, match="unavailable"):
+                resolve(spec.name)
+            continue
         assert spec.engines and resolve(spec.name).engines[0] == spec.engines[0], spec.name
         assert spec.size_gb > 0, f"{spec.name} has no size"
-        assert sum([spec.file.endswith(".gguf"), bool(spec.tag), spec.engines == ("laya-mlx",)]) == 1, (
-            f"{spec.name} needs exactly one GGUF, ollaya tag, or native MLX snapshot"
-        )
-        assert (spec.tag is not None) == (spec.engines == ("ollaya",)), (
-            f"{spec.name}: tags run on ollaya only"
+        assert (
+            sum(
+                [
+                    spec.file.endswith(".gguf"),
+                    bool(spec.tag),
+                    bool(spec.snapshot) or spec.engines == ("laya-mlx",),
+                ]
+            )
+            == 1
+        ), f"{spec.name} needs exactly one GGUF, runtime tag, or checkpoint snapshot"
+        assert (spec.tag is not None) == (spec.engines in (("ollaya",), ("coreai",))), (
+            f"{spec.name}: runtime tags run on ollaya or Core AI"
         )
 
 

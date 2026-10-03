@@ -1,0 +1,264 @@
+{
+  "this_file": "src/ornotto/data/systemone-models.json",
+  "models": [
+    {
+      "name": "rune-systemone-q3",
+      "repo": "owao/surogate-rune-26b-a4b-systemone",
+      "file": "Rune-26B-A4B-v3-Q3_K_M.gguf",
+      "engines": [
+        "llama"
+      ],
+      "family": "dedicated",
+      "license": "other",
+      "size_gb": 13.2867,
+      "revision": "630284f5a4b26c09ac43dd903c4b83cf6ab6237c",
+      "note": "Metadata-only Rune v3 patch; native llama-server System One, 52 choice options, T=2. Historical slot results are separate."
+    },
+    {
+      "name": "raz-nli-xsmall-openjev",
+      "repo": "RazvanManolache/raz-systemone-nli-xsmall-openjev",
+      "file": "",
+      "engines": [
+        "raz-nli"
+      ],
+      "family": "dedicated",
+      "license": "mit",
+      "size_gb": 0.2833,
+      "revision": "c9029dcb7bd6e0e9795a4474793b1e8ff54a9b09",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ]
+    },
+    {
+      "name": "raz-nli-base",
+      "repo": "RazvanManolache/raz-systemone-nli-base",
+      "file": "",
+      "engines": [
+        "raz-nli"
+      ],
+      "family": "dedicated",
+      "license": "mit",
+      "size_gb": 0.7377,
+      "revision": "de506d61016d2606c1b04371527a5af59ab2c7b0",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ]
+    },
+    {
+      "name": "system-one-scorer-onnx",
+      "repo": "developerjeremylive/system-one-qwen3.5-4b-scorer-ONNX-etheroi",
+      "file": "",
+      "engines": [
+        "onnx-scorer"
+      ],
+      "family": "dedicated",
+      "license": "cc-by-nc-4.0",
+      "size_gb": 2.6368,
+      "revision": "3b549938380dc8d76012dc4256b5b51dfd6dd6a3",
+      "snapshot": [
+        "*.json",
+        "onnx/model_q4.onnx*"
+      ],
+      "note": "Q4 scalar graph, ONNX Runtime CPU, T=1.75; 384-token inputs, overflow rejected. Q4F16 and CoreML EP are not substituted."
+    },
+    {
+      "name": "oomu-systemone-0.6b",
+      "repo": "oomu/OOMU-SystemOne-0.6B-GGUF",
+      "file": "OOMU-SystemOne-Bosun-0.6B-Q8_0.gguf",
+      "engines": [
+        "bosun-gguf"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.6394,
+      "revision": "f7fcdf083983514de5d500a3e79a7fb7d865b200",
+      "note": "Bosun stable-slot decision-token readout; requires llama-cpp-python with Metal. No generic llama-server decision profile."
+    },
+    {
+      "name": "systemone-lite-0.5b",
+      "repo": "dwidlee/systemone-lite-0.5b",
+      "file": "",
+      "engines": [
+        "systemone-lite"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.9881,
+      "revision": "4214f92acfe5e23d3a3ad55429e117b85db9d584",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ]
+    },
+    {
+      "name": "system-one-gemma-coreml",
+      "repo": "FluidInference/system-one-gemma-coreml",
+      "file": "",
+      "engines": [],
+      "family": "dedicated",
+      "license": "other",
+      "size_gb": 0.0,
+      "revision": "56bd0a8b33823355b20e7b655e8f686665ffc751",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "unavailable": "Source-only conversion toolkit: no weights, adapter or Core ML package is published. The upstream Gemma base is gated."
+    },
+    {
+      "name": "system-one-scorer-coreai",
+      "repo": "mlboydaisuke/system-one-qwen3.5-4b-scorer-CoreAI",
+      "file": "",
+      "engines": [
+        "coreai"
+      ],
+      "family": "dedicated",
+      "license": "cc-by-nc-4.0",
+      "size_gb": 5.0954,
+      "revision": "a81514192af5849d14fb25a423af91babeba54ae",
+      "tag": "system-one-scorer-4b",
+      "note": "External coreai-kit systemone binary; its catalog controls downloads and revision. macOS 27, Mac GPU. Not bundled. External catalog revision can differ from the model card; inspect systemone models before use. Experimental integration: 0.7.3 startup grew to 29.1 GB RSS and tripped a swap watchdog on the 48 GB benchmark host; no successful inference or score is claimed."
+    },
+    {
+      "name": "system-one-minicpm5-2b-q8",
+      "repo": "mpuig/system-one-minicpm5-2b-q8",
+      "file": "",
+      "engines": [
+        "system-one-mlx"
+      ],
+      "family": "dedicated",
+      "license": "mit",
+      "size_gb": 2.6743,
+      "revision": "44736c7084bf79a9f9a18c3a4a88840e7846c223",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt",
+        "adapter/*.json"
+      ]
+    },
+    {
+      "name": "system-one-qwen3-0.6b",
+      "repo": "mpuig/system-one-qwen3-0.6b",
+      "file": "",
+      "engines": [
+        "system-one-mlx"
+      ],
+      "family": "dedicated",
+      "license": "mit",
+      "size_gb": 1.5217,
+      "revision": "1d1491933a78f0b09f76bad493ef150e666100d1",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "base_repo": "Qwen/Qwen3-0.6B",
+      "base_revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+    },
+    {
+      "name": "nev-lite-systemone",
+      "repo": "shreyanbr/nev-lite-systemone",
+      "file": "",
+      "engines": [],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.1304,
+      "revision": "11f68b4a3e1b6d0bf3ae73a74a1096cf3240cf7f",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "unavailable": "The model card requires its custom System One runtime and calibration. The linked GitHub runtime repository returns HTTP 404 (2026-10-03); raw NLI is not an equivalent readout."
+    },
+    {
+      "name": "system-one-270m",
+      "repo": "kaivoss/system-one-270m",
+      "file": "",
+      "engines": [
+        "transformers-slot"
+      ],
+      "family": "dedicated",
+      "license": "gemma",
+      "size_gb": 0.5362,
+      "revision": "a9572e32bbd8b79c03add60d708e505667ff4c9a",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ]
+    },
+    {
+      "name": "system-one-gold",
+      "repo": "shreyanbr/system-one-gold",
+      "file": "",
+      "engines": [
+        "transformers-nli"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.2833,
+      "revision": "93e22fcfd7fd248860e9a93f5df7898d163805cb",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "note": "Standard Transformers zero-shot NLI readout (entailment logits, raw softmax). The author's custom System One runtime is unavailable (GitHub HTTP 404); its calibration.json is not applied. This is a separate readout, not the author's calibrated engine."
+    },
+    {
+      "name": "system-one-distilled",
+      "repo": "shreyanbr/system-one-distilled",
+      "file": "",
+      "engines": [
+        "transformers-nli"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.2833,
+      "revision": "56c9dba8932dbb40c5cb866e413ad5a94b63c30d",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "note": "Standard Transformers zero-shot NLI readout (entailment logits, raw softmax). The author's custom System One runtime is unavailable (GitHub HTTP 404); its calibration.json is not applied. This is a separate readout, not the author's calibrated engine."
+    },
+    {
+      "name": "system-one-zeroshot",
+      "repo": "shreyanbr/system-one-zeroshot",
+      "file": "",
+      "engines": [
+        "transformers-nli"
+      ],
+      "family": "dedicated",
+      "license": "apache-2.0",
+      "size_gb": 0.2833,
+      "revision": "4b6659d5199395c72f0aaa56f1335e84ba63467d",
+      "snapshot": [
+        "*.json",
+        "*.safetensors",
+        "*.jinja",
+        "*.txt"
+      ],
+      "note": "Standard Transformers zero-shot NLI readout (entailment logits, raw softmax). The author's custom System One runtime is unavailable (GitHub HTTP 404); its calibration.json is not applied. This is a separate readout, not the author's calibrated engine."
+    }
+  ]
+}

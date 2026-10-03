@@ -33,6 +33,10 @@ dependencies = [
 pydantic-ai = ["pydantic-ai-slim[typesafe]>=2.48", "httpx2"]
 laya-mlx = ["laya-mlx>=0.3,<0.4; python_version >= '3.11' and sys_platform == 'darwin' and platform_machine == 'arm64'"]
 
+transformers = ["torch>=2.4; python_version >= '3.11'", "transformers>=5.18,<6; python_version >= '3.11'"]
+onnx = ["onnxruntime>=1.26; python_version >= '3.11'", "transformers>=5.18,<6; python_version >= '3.11'", "numpy>=1.26"]
+bosun = ["llama-cpp-python>=0.3.36", "numpy>=1.26"]
+
 [project.scripts]
 ornotto = "ornotto.__main__:main"
 

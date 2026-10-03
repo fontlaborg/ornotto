@@ -6,7 +6,7 @@ this_file: src_docs/md/results/explorer.md
 
 An extra correct answer can cost hundreds of milliseconds. Choose the score you need, then compare the runs that meet it. The default floor is **50 correct answers out of 67**. Laya on MLX clears it at **52/67 in 6.9 ms** on translated text; a model does not have to top the accuracy table to be useful.
 
-These are 309 recorded configurations, not 309 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
+These are 320 recorded configurations, not 320 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
 
 --8<-- "tables/explorer.html"
 

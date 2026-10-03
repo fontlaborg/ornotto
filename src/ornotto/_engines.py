@@ -26,15 +26,23 @@ from typing import Any
 
 import httpx
 
-from ._models import Engine, ResolvedModel
+from ._models import PYTHON_ENGINES, Engine, ResolvedModel
 from ._protocol import Question, from_pcd, to_pcd
 from ._remote import check_questions, validate_response
 
-BINARIES: dict[Engine, str] = {"dohnuts": "dohnuts-cli", "pcd": "pcd_server", "ollaya": "ollaya"}
+BINARIES: dict[Engine, str] = {
+    "dohnuts": "dohnuts-cli",
+    "pcd": "pcd_server",
+    "ollaya": "ollaya",
+    "llama": "llama-server",
+    "coreai": "systemone",
+}
 ENV: dict[Engine, str] = {
     "dohnuts": "ORNOTTO_DOHNUTS_BIN",
     "pcd": "ORNOTTO_PCD_BIN",
     "ollaya": "ORNOTTO_OLLAYA_BIN",
+    "llama": "ORNOTTO_LLAMA_BIN",
+    "coreai": "ORNOTTO_COREAI_BIN",
 }
 START_TIMEOUT = 180.0  # seconds for a server to load its model
 DOHNUTS_MAX_QUESTIONS = 64  # per request; the server default is 8
@@ -55,7 +63,7 @@ def find_binary(engine: Engine) -> Path:
     """
     name = BINARIES[engine] + (".exe" if sys.platform == "win32" else "")
     candidates: list[str | Path | None] = [os.environ.get(ENV[engine])]
-    if engine == "ollaya":
+    if engine in ("ollaya", "llama", "coreai"):
         candidates += [shutil.which(name), Path.home() / ".local" / "bin" / name]
     else:
         candidates += [Path(__file__).parent / "_bin" / name, shutil.which(name)]
@@ -64,6 +72,9 @@ def find_binary(engine: Engine) -> Path:
             return Path(candidate)
     if engine == "ollaya":
         raise EngineNotFound(f"ollaya not found. Install it with `{OLLAYA_INSTALL}` or set {ENV[engine]}.")
+    if engine in ("llama", "coreai"):
+        install = "brew install llama.cpp" if engine == "llama" else "brew install john-rocky/tap/systemone"
+        raise EngineNotFound(f"{name} not found. Install with `{install}` or set {ENV[engine]}.")
     raise EngineNotFound(
         f"{name} not found. Install a platform wheel of ornotto, put {name} on PATH, or set {ENV[engine]}."
     )
@@ -76,10 +87,10 @@ def gpu_available() -> bool:
 
 def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[str]:
     """The command line that serves `model` with `engine` on `port`; ollaya reads the port from env."""
-    if engine in ("laya-mlx", "xdecision"):
+    if engine in PYTHON_ENGINES:
         if model.gguf is None:
             raise ValueError("encoder runtime needs a checkpoint directory or custom GGUF")
-        return [
+        args = [
             sys.executable,
             "-m",
             "ornotto._encoder_server",
@@ -94,7 +105,35 @@ def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[
             "--device",
             "gpu" if gpu else "cpu",
         ]
+        return args + (["--adapter", str(model.adapter)] if model.adapter else [])
     binary = str(find_binary(engine))
+    if engine == "coreai":
+        if not gpu:
+            raise ValueError("The Core AI scalar scorer requires the upstream Mac GPU runtime")
+        if model.tag is None:
+            raise ValueError("Core AI requires a registered upstream catalog model")
+        return [binary, "serve", "--model", model.tag, "--host", "127.0.0.1", "--port", str(port)]
+    if engine == "llama":
+        if model.gguf is None:
+            raise ValueError("llama-server requires a decision-enabled GGUF")
+        return [
+            binary,
+            "--model",
+            str(model.gguf),
+            "--alias",
+            model.name,
+            "--host",
+            "127.0.0.1",
+            "--port",
+            str(port),
+            "--jinja",
+            "--ctx-size",
+            "4096",
+            "--parallel",
+            "1",
+            "--gpu-layers",
+            "-1" if gpu else "0",
+        ]
     if engine == "ollaya":
         if model.tag is None:
             raise ValueError(f"{model.name} is a GGUF file; ollaya runs ollaya models (see `ornotto models`)")
@@ -196,7 +235,15 @@ class Server:
         ollaya picks its own device (OLLAYA_DEVICE) and ignores `gpu`, so the flag is left out of its key:
         Deciders that differ only in `gpu` share one server, keeping one model resident.
         """
-        key = (engine, model.gguf, model.metadata, model.head, model.tag, None if engine == "ollaya" else gpu)
+        key = (
+            engine,
+            model.gguf,
+            model.metadata,
+            model.head,
+            model.tag,
+            model.adapter,
+            None if engine == "ollaya" else gpu,
+        )
         with cls._lock:
             server = cls._running.get(key)
             if server is None or server.process.poll() is not None:
@@ -295,7 +342,7 @@ class Adapter:
     @property
     def native(self) -> bool:
         """dohnuts and ollaya speak System One (`/v1/systemone`) themselves; pcdServer needs translating."""
-        return self.engine in ("dohnuts", "ollaya", "openrouter", "laya-mlx", "xdecision")
+        return self.engine in ("dohnuts", "ollaya", "openrouter", "llama", "coreai", *PYTHON_ENGINES)
 
     @property
     def calibrated(self) -> bool:
@@ -324,6 +371,6 @@ class Adapter:
 
     def response(self, body: dict[str, Any], questions: Mapping[str, Question]) -> dict[str, Any]:
         """The engine's reply -> a System One response."""
-        if self.engine == "openrouter":
+        if self.engine in ("openrouter", "llama", "coreai", *PYTHON_ENGINES):
             return validate_response(body, questions)
         return body if self.native else from_pcd(body, questions)

@@ -4,7 +4,7 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 21.9 ms on Core ML CPU/GPU, and laya 52/67 in 7 ms. 309 configurations finished; failed and refused alternatives are excluded from the result tables.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 21.9 ms on Core ML CPU/GPU, and laya 52/67 in 7 ms. 320 configurations finished; failed and refused alternatives are excluded from the result tables.
 
 The `jev` and `openrouter@typesafe/jev-1.13` rows are two measurements of the same TypeSafe Jev model through OpenRouter. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
@@ -115,7 +115,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 309 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 320 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -131,7 +131,7 @@ The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 309. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 320. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query | C/G |
 |---|---:|---|---|---:|---|
@@ -287,3 +287,27 @@ The same caution applies to the public boards in [Numbers others report](#number
 [^d1]: vLLM Semantic Router, "Decision-1.0-Eos-0.8B" model card, created 2026-09-21, read 2026-09-30. <https://huggingface.co/llm-semantic-router/Decision-1.0-Eos-0.8B>
 [^audit]: Lijuan Tang and Yuemeng Zheng, "Typed Decision Models: An Early Evidence Audit and Evaluation Checklist", arXiv 2609.32160, 2026-09-26. <https://arxiv.org/abs/2609.32160>
 [^openai]: The New Stack, "OpenAI Decision API on Luna", 2026-09-29. <https://thenewstack.io/openai-decision-api-luna/>
+
+## Additional System One readouts (3 October 2026)
+
+Eleven new configurations completed all 67 routing queries, using the frozen
+translations. MiniCPM5 Q8 through its native MLX runtime scored **62/67
+translated and 59/67 direct**, at **141.8/147.2 ms** per query. The Qwen3 0.6B
+adapter scored **49/52**, at 47.7 ms translated. The CPU ONNX Q4 scalar scorer
+scored **53/67**, at 1410.8 ms. Full timings, weights and readout labels are in
+the [explorer](results/explorer.md); historical rows are retained unchanged.
+
+Gold, Distilled and ZeroShot are measured through standard Transformers NLI,
+with raw entailment logits and no author calibration. They scored 42, 42 and
+37 of 67 translated queries. These are not measurements of the author's
+unavailable custom System One runtime. Raz XSmall scored 42, Raz Base 21,
+Lite 26, Gemma 270M 20, and OOMU 17; compatible protocol support does not
+guarantee good routing accuracy. English-only paths have no direct-mode score.
+
+The Rune v3 native endpoint is implemented but not measured in this update.
+The earlier Rune Q3 slot score remains **65/67 translated, 57/67 direct**.
+CoreAIKit's scalar scorer load was stopped by the memory watchdog at 29.1 GB
+RSS with 2 GB swap growth; no score is published. FluidInference's Gemma
+repository has no trained weights or Core ML artifact, and Nev Lite's custom
+runtime link is unavailable. The [package reference](10-package.md#additional-system-one-models)
+records installation, readout differences and these remaining limitations.

@@ -9,11 +9,11 @@ It gives local engines and hosted decision models one Python API:
 - **dohnuts** ([dohnuts.cpp](https://github.com/DreamBlooms/dohnuts.cpp)) runs models trained for this job (decider, kev, Dohnuts, Tev1, Jet, JPT and ThisThat) and reads their answer at a trained slot. Its probabilities follow each model's temperature recipe.
 - **pcdServer** ([pcdServer](https://github.com/stephanj/pcdServer)) runs any chat GGUF and scores only the tokens of the answers you allow. It needs no special model.
 - **ollaya** ([ollaya](https://github.com/ollaya-dev/ollaya)) is a separate install that runs decision models from its own registry (kev, decider, laya, winnow and others) on ONNX Runtime, llama.cpp or MLX. Each model ships its own calibration.
+- **Additional System One models** include Rune native llama-server, Raz NLI, OOMU/Bosun, Lite, mpuig MLX, Gemma, ONNX/CoreAI scorers and explicit NLI fallbacks. See the [runtime and availability reference](src_docs/md/10-package.md#additional-system-one-models).
 - **Laya MLX and xDecision** use their native encoder heads through optional Python runtimes. They support choice, yes/no and score without generated text.
 - **OpenRouter** serves native choice, yes/no and score questions remotely, using the same `Decider` methods.
 
-The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 309 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
-
+The book at **[fontlab.org/ornotto](https://fontlab.org/ornotto/)** explains how the engines work and which model to pick, and has the benchmarks: 320 methods over 67 queries in 30 languages, twelve chapters with diagrams, and a landing page that summarises the best results.
 The [interactive explorer](https://fontlab.org/ornotto/results/explorer/) filters by accuracy floor, engine and CPU/GPU execution, with speed and weight-size Pareto frontiers. Run `python3 src_docs/gen_diagrams.py --out explorer.html` to produce an offline report from the public JSON. Rune Q5 full Metal adds 64/64 at 153.3 ms, versus 65/65 at 962.3 ms mixed; Ornith Splash is benchmark-only at 62/63 and 322.4/328.5 ms. Rune Q4 has a separate Metal run: 63/64 at 124.8 ms, against 487.1 ms with CPU weights.
 
 ## Install
@@ -34,7 +34,7 @@ uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4
 
 For xDecision CPU, omit `[apple]` and use `gpu=False`. These runtimes are not bundled. xDecision Q8 is smaller on disk, but MLX expands it to FP16 in memory. See the [native encoder reference](src_docs/md/10-package.md#native-encoders) for source installation and limits.
 
-Models download from Hugging Face on first use into the usual Hugging Face cache. `HF_HUB_CACHE` moves it.
+Models download from Hugging Face on first use; `HF_HUB_CACHE` moves the cache. CoreAI uses its external CLI’s store.
 
 ornotto never bundles ollaya. Install it with `curl -fsSL https://ollaya.dev/install.sh | OLLAYA_INSTALL_DIR=$HOME/.local sh`; ornotto looks on `PATH`, then in `~/.local/bin`, or at `ORNOTTO_OLLAYA_BIN`. ollaya pulls its models into its own store, `OLLAYA_MODELS` (default `~/.ollaya/models`), not the Hugging Face cache.
 
@@ -115,7 +115,7 @@ such as `{"profile": "jpt", "temperature": 1.036}` for JPT 4B, or temperature
 `gpu=False` disables pcdServer GPU weights, computation and KV offload.
 Build current `main` with `./build.sh` for the October registry and engine updates.
 
-`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: Bosun, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 309 methods in the book, the mradermacher Rune Q5 on pcdServer matches hosted jev at 65/67 in both modes, with CPU weights at 962 ms/query; the registered Q3 scores 64/67 in both modes at 146 ms.
+`openjev-35b-a3b` needs about 23 GB of memory, so run it with nothing else loaded. The book also benchmarks models that need their own runtimes: Bosun, NeoHorse-Jev, Jev-Omni's decision head, lev, leo, imajev, jeb, CLM, semif, and GLiNER2.5-Decide, Julia-1, von and other encoders on MLX, ONNX Runtime, Core ML and Core AI. ornotto does not run those. Of the 320 methods in the book, the mradermacher Rune Q5 on pcdServer matches hosted jev at 65/67 in both modes, with CPU weights at 962 ms/query; the registered Q3 scores 64/67 in both modes at 146 ms.
 
 The engine starts on the first question, on a free loopback port, and stops when Python exits. Every `Decider` in a process that names the same model, engine and device shares one engine process. `ornotto.shutdown()` stops them all now.
 

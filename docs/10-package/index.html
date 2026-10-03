@@ -1068,6 +1068,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#additional-system-one-models" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Additional System One models
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
   <a href="#native-encoders" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -1354,6 +1365,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#additional-system-one-models" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Additional System One models
+
+    </span>
+  </a>
+
+</li>
+
+          <li class="md-nav__item">
   <a href="#native-encoders" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -1618,21 +1640,134 @@
 <p>ornotto looks for it at the path in <code>ORNOTTO_OLLAYA_BIN</code>, then on your <code>PATH</code>, then in <code>~/.local/bin</code>. If none has it, a question for an ollaya model raises <code>EngineNotFound</code> with the install command. ollaya keeps its models in its own store, <code>OLLAYA_MODELS</code> (default <code>~/.ollaya/models</code>), not in the Hugging Face cache; set that variable if your home volume has no room.</p>
 <p>ollaya is young and moves quickly. Its first release, v0.1.0, came out on 2026-09-23, and v0.7.5 followed on 2026-09-28, the fifteenth release in five days.<sup id="fnref:ollaya-releases"><a class="footnote-ref" href="#fn:ollaya-releases">1</a></sup> Two of those releases matter for ornotto on a Mac. v0.7.0 added llama.cpp for GGUF models, and v0.7.1 added GPU inference on Apple silicon through MLX, on macOS 14 or later. Which device a model runs on is ollaya's choice, steered by its own settings such as <code>OLLAYA_DEVICE</code>, which ornotto passes through unchanged (<a href="#engine-lifecycle">engine lifecycle</a>). The ollaya rows in this book were measured with the ollaya release installed at the time of the second benchmark round; a later release can change their speed.</p>
 <p>Models download from Hugging Face on first use, through <code>huggingface_hub</code>, into the ordinary Hugging Face cache. Set <code>HF_HUB_CACHE</code> (or <code>HF_HOME</code>) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.</p>
+<h3 id="additional-system-one-models">Additional System One models<a class="headerlink" href="#additional-system-one-models" title="Permanent link">&para;</a></h3>
+<p>Current <code>main</code> registers the fifteen repositories below. Each usable alias selects its compatible readout rather than routing every checkpoint through a generic letter slot. Weight revisions are pinned in the registry; CoreAI's external catalog controls its own revision.</p>
+<table>
+<thead>
+<tr>
+<th>Alias</th>
+<th>Source</th>
+<th>Runtime or availability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rune-systemone-q3</code></td>
+<td><a href="https://huggingface.co/owao/surogate-rune-26b-a4b-systemone">owao/surogate-rune-26b-a4b-systemone</a></td>
+<td>llama</td>
+</tr>
+<tr>
+<td><code>raz-nli-xsmall-openjev</code></td>
+<td><a href="https://huggingface.co/RazvanManolache/raz-systemone-nli-xsmall-openjev">RazvanManolache/raz-systemone-nli-xsmall-openjev</a></td>
+<td>raz-nli</td>
+</tr>
+<tr>
+<td><code>raz-nli-base</code></td>
+<td><a href="https://huggingface.co/RazvanManolache/raz-systemone-nli-base">RazvanManolache/raz-systemone-nli-base</a></td>
+<td>raz-nli</td>
+</tr>
+<tr>
+<td><code>system-one-scorer-onnx</code></td>
+<td><a href="https://huggingface.co/developerjeremylive/system-one-qwen3.5-4b-scorer-ONNX-etheroi">developerjeremylive/system-one-qwen3.5-4b-scorer-ONNX-etheroi</a></td>
+<td>onnx-scorer</td>
+</tr>
+<tr>
+<td><code>oomu-systemone-0.6b</code></td>
+<td><a href="https://huggingface.co/oomu/OOMU-SystemOne-0.6B-GGUF">oomu/OOMU-SystemOne-0.6B-GGUF</a></td>
+<td>bosun-gguf</td>
+</tr>
+<tr>
+<td><code>systemone-lite-0.5b</code></td>
+<td><a href="https://huggingface.co/dwidlee/systemone-lite-0.5b">dwidlee/systemone-lite-0.5b</a></td>
+<td>systemone-lite</td>
+</tr>
+<tr>
+<td><code>system-one-gemma-coreml</code></td>
+<td><a href="https://huggingface.co/FluidInference/system-one-gemma-coreml">FluidInference/system-one-gemma-coreml</a></td>
+<td>Unavailable: Source-only conversion toolkit: no weights, adapter or Core ML package is published. The upstream Gemma base is gated.</td>
+</tr>
+<tr>
+<td><code>system-one-scorer-coreai</code></td>
+<td><a href="https://huggingface.co/mlboydaisuke/system-one-qwen3.5-4b-scorer-CoreAI">mlboydaisuke/system-one-qwen3.5-4b-scorer-CoreAI</a></td>
+<td>coreai</td>
+</tr>
+<tr>
+<td><code>system-one-minicpm5-2b-q8</code></td>
+<td><a href="https://huggingface.co/mpuig/system-one-minicpm5-2b-q8">mpuig/system-one-minicpm5-2b-q8</a></td>
+<td>system-one-mlx</td>
+</tr>
+<tr>
+<td><code>system-one-qwen3-0.6b</code></td>
+<td><a href="https://huggingface.co/mpuig/system-one-qwen3-0.6b">mpuig/system-one-qwen3-0.6b</a></td>
+<td>system-one-mlx</td>
+</tr>
+<tr>
+<td><code>nev-lite-systemone</code></td>
+<td><a href="https://huggingface.co/shreyanbr/nev-lite-systemone">shreyanbr/nev-lite-systemone</a></td>
+<td>Unavailable: The model card requires its custom System One runtime and calibration. The linked GitHub runtime repository returns HTTP 404 (2026-10-03); raw NLI is not an equivalent readout.</td>
+</tr>
+<tr>
+<td><code>system-one-270m</code></td>
+<td><a href="https://huggingface.co/kaivoss/system-one-270m">kaivoss/system-one-270m</a></td>
+<td>transformers-slot</td>
+</tr>
+<tr>
+<td><code>system-one-gold</code></td>
+<td><a href="https://huggingface.co/shreyanbr/system-one-gold">shreyanbr/system-one-gold</a></td>
+<td>transformers-nli</td>
+</tr>
+<tr>
+<td><code>system-one-distilled</code></td>
+<td><a href="https://huggingface.co/shreyanbr/system-one-distilled">shreyanbr/system-one-distilled</a></td>
+<td>transformers-nli</td>
+</tr>
+<tr>
+<td><code>system-one-zeroshot</code></td>
+<td><a href="https://huggingface.co/shreyanbr/system-one-zeroshot">shreyanbr/system-one-zeroshot</a></td>
+<td>transformers-nli</td>
+</tr>
+</tbody>
+</table>
+<p>From a current <code>main</code> checkout, install only the runtime you need in the environment running ornotto. Transformers and ONNX adapters require Python 3.11+:</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[transformers]"</span><span class="w">     </span><span class="c1"># Raz NLI, Gemma letter slot, Shreyan NLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[onnx]"</span><span class="w">             </span><span class="c1"># ONNX Q4 scalar scorer; use gpu=False</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[bosun]"</span><span class="w">            </span><span class="c1"># OOMU; build/install a Metal-enabled wheel on Mac</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'systemone-lite @ git+https://github.com/fritzprix/systemone-lite.git@fc6fbe3e9a3976d5c2976589f0f7176cfdcfb110'</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'system-one @ git+https://github.com/mpuig/system-one.git@ed076ed47d5e09187b66697982f6aa65263387dc'</span>
+</code></pre></div>
+<p>The Lite runtime also needs the Transformers extra. The mpuig runtime needs its MLX dependencies and Apple silicon; it has no CPU backend. Its per-primitive temperatures are bound to an exact model identity. ornotto presents exactly the calibration-listed backbone files and preserves the upstream hash check. The Qwen adapter downloads its separately pinned base model.</p>
+<p>For Rune, install a current <a href="https://github.com/ggml-org/llama.cpp/tree/master/tools/server">llama.cpp server with System One support</a>, and set <code>ORNOTTO_LLAMA_BIN</code> if it is outside <code>PATH</code>. The new v3 Q3 alias uses the embedded native profile and temperature 2; the historical <strong>rune-26b-a4b q3 / slot (llama-server)</strong> measurement remains a separate readout and file revision. Its result is not evidence for the v3 native endpoint. The v3 command and protocol adapter are implemented, but a fresh native run was deferred after the CoreAI memory incident.</p>
+<p>For CoreAI, install the external <a href="https://github.com/john-rocky/coreai-kit">CoreAIKit systemone CLI</a>. It requires macOS 27 and a Mac GPU. ornotto looks for <code>systemone</code> on <code>PATH</code>, in <code>~/.local/bin</code>, or at <code>ORNOTTO_COREAI_BIN</code>, and launches <code>serve --model system-one-scorer-4b</code>. Run <code>systemone models</code> to inspect the catalog revision. This integration remains experimental: CLI 0.7.3 grew to 29.1 GB RSS and tripped the benchmark host’s swap watchdog during startup; it has no completed inference result. CoreAI downloads through its own cache, not <code>HF_HUB_CACHE</code>; its native row limit is 384 tokens and its runtime may truncate longer inputs. The ONNX adapter rejects overlong rows instead.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ornotto</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decider</span><span class="p">,</span> <span class="n">shutdown</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">decider</span> <span class="o">=</span> <span class="n">Decider</span><span class="p">(</span><span class="s2">"system-one-minicpm5-2b-q8"</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">answer</span> <span class="o">=</span> <span class="n">decider</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Please explain kerning"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"explain how the application works"</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="s2">"code"</span><span class="p">:</span> <span class="s2">"write a program"</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">})</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">answer</span><span class="o">.</span><span class="n">probabilities</span><span class="p">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">finally</span><span class="p">:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">shutdown</span><span class="p">()</span>  <span class="c1"># release the model before loading another</span>
+</code></pre></div>
+<p>All usable aliases support choice, yes/no and score, including async and typed consumers. <code>gpu=True</code> explicitly selects MLX, Metal or MPS; unsupported placement fails rather than silently selecting CPU. The ONNX adapter is CPU only. Raz uses the author's three-way entailment and contradiction recipe; its score is the modal level. The Gemma 270M adapter follows the card's raw letter-logit example (temperature 1), with at most 26 choices. Lite aliases caller keys to 26 distinct letter symbols and uses its upstream runtime without a prefix cache. OOMU uses Bosun's native stable decision tokens and prompt compiler, not a generic llama-server profile.</p>
+<p>Gold, Distilled and ZeroShot use the model cards' standard Transformers zero-shot NLI path: raw entailment logits across options, the default <code>This example is {}.</code> hypothesis, and expected-level score aggregation. Their author's custom runtime URL returns HTTP 404; its <code>calibration.json</code> is <strong>not applied</strong>. These measurements are labelled <strong>NLI entailment logits</strong>, separate from the unavailable calibrated System One runtime. Nev Lite uses a different custom embedding/MLP architecture, so this fallback cannot implement it faithfully.</p>
+<p>The FluidInference repository publishes a conversion toolkit without a trained adapter, weights or Core ML package. Nev Lite's required runtime is unavailable. Both aliases fail with an explicit reason before downloading or starting a process. No benchmark score is assigned to unavailable models. Temperature application on the remaining models does not establish calibration on your task; their answers keep <code>calibrated=False</code>.</p>
 <h3 id="native-encoders">Native encoders<a class="headerlink" href="#native-encoders" title="Permanent link">&para;</a></h3>
 <p>Current <code>main</code> supports <a href="https://huggingface.co/aac6fef/laya-multilingual-mlx">aac6fef/laya-multilingual-mlx</a>
 and <a href="https://huggingface.co/mccoysc/xDecision">mccoysc/xDecision</a>.
 Install ornotto from the checkout with <code>uv pip install -e '.[laya-mlx]'</code>
 on Apple silicon macOS, Python 3.11+. xDecision is a separate pinned source install:</p>
-<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'</span>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'</span>
 </code></pre></div>
 <p>For xDecision CPU, omit <code>[apple]</code>. MLX GPU requires Apple silicon. The runtimes
 are not bundled and must be installed in the same Python environment as ornotto.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"laya-multilingual-mlx"</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"python"</span><span class="p">,</span> <span class="s2">"docs"</span><span class="p">])</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>  <span class="c1"># stop the first model before loading another</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"xdecision-q8"</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="s2">"Does the user want code?"</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"laya-multilingual-mlx"</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"python"</span><span class="p">,</span> <span class="s2">"docs"</span><span class="p">])</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>  <span class="c1"># stop the first model before loading another</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"xdecision-q8"</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="s2">"Does the user want code?"</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </code></pre></div>
 <p>Registered names download the native checkpoint or custom GGUF into the Hugging
 Face cache. A local checkpoint directory works with <code>engine="laya-mlx"</code>;
@@ -1653,15 +1788,15 @@ ornotto starts one serial loopback HTTP process per model/engine/device and
 stops it through the existing lifecycle.</p>
 <h2 id="decider">Decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h2>
 <p>A <code>Decider</code> is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1751,8 +1886,8 @@ stops it through the existing lifecycle.</p>
 <h2 id="remote-openrouter-models">Remote OpenRouter models<a class="headerlink" href="#remote-openrouter-models" title="Permanent link">&para;</a></h2>
 <p>Use current <code>main</code> for remote support (<a href="../12-choosing/#building-from-source">source build</a>).</p>
 <p>Set <code>OPENROUTER_API_KEY</code>, then use an exact model ID:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
 </code></pre></div>
 <p>All nine IDs are listed by <code>ornotto models</code> and <code>ornotto.OPENROUTER_MODELS</code>:
 <code>liquid/d1</code>, <code>togethercomputer/tev1-4b-experimental</code>, <code>inception/mercury-decide:free</code>,
@@ -1814,16 +1949,16 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
 <p><code>decide</code> takes a mapping from question name to question. The name you choose comes back as the key of the answer. Build questions with three functions:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1914,11 +2049,11 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 <p><code>calibrated</code> identifies the readout: <code>True</code> for dohnuts and ollaya, <code>False</code> for pcdServer and the native encoders's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. <a href="../09-confidence/">Chapter 9</a> explains that check.</p>
 <p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
 <p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">})</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">})</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1956,15 +2091,15 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </table>
 <h2 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h2>
 <p><code>adecide</code> is <code>decide</code> for asyncio. It uses <code>httpx.AsyncClient</code>, so many decisions can be in flight at once. The first call may block briefly while the engine starts: starting a process and waiting for it to load a model is not asynchronous.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <p><code>ornotto.aextract</code> is the async form of <code>extract</code> (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="engine-lifecycle">Engine lifecycle<a class="headerlink" href="#engine-lifecycle" title="Permanent link">&para;</a></h2>
@@ -2337,10 +2472,10 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
 </code></pre></div>
 <p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts or ollaya.</p>
 <div class="footnote">

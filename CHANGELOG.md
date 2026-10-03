@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- Register all fifteen requested System One repositories with pinned artifacts and compatible readouts. Add native Rune llama-server, Raz NLI, Lite, Bosun/OOMU, mpuig MLX, Gemma letter-slot and ONNX scalar adapters, plus an experimental external CoreAIKit integration. Gold/Distilled/ZeroShot explicitly use standard Transformers NLI without the unavailable author calibration; FluidInference's missing weights and Nev Lite's missing runtime fail before downloading.
+- Publish eleven complete new configurations (320 total), retaining all 309 historical rows exactly. MiniCPM5 Q8 scores 62/59 translated/direct at 141.8/147.2 ms; CPU ONNX Q4 scores 53/67 at 1410.8 ms. CoreAI startup tripped the memory watchdog and Rune v3's native run was deferred; neither receives an invented score. Preserve the earlier Rune Q3 slot measurement and the single Jev model identity.
+
 - Correct the two Jev runs to one TypeSafe model identity and OpenRouter engine. Retain both original measurements in the 309-run archive and ten-run remote table; show Jev once in homepage rankings. The earlier resolved build remains unlogged.
 
 - Add the complete Weidows Q8/MPS-head comparison (309 configurations): 52/49 at 45.9/75.9 ms, identical saved probabilities to the retained CPU head but slower measured means. Preserve all 308 prior rows and the direct-mode outlier; record pinned encoder/head storage provenance only for the new row.
