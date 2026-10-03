@@ -4,7 +4,7 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 21.9 ms on Core ML CPU/GPU, and laya 52/67 in 7 ms. 308 configurations finished; failed and refused alternatives are excluded from the result tables.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 21.9 ms on Core ML CPU/GPU, and laya 52/67 in 7 ms. 309 configurations finished; failed and refused alternatives are excluded from the result tables.
 
 The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
@@ -115,7 +115,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 308 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 309 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -131,7 +131,7 @@ The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 
 
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 308. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 309. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query | C/G |
 |---|---:|---|---|---:|---|
@@ -153,7 +153,7 @@ Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 308. T
 | laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103.1 | G |
 | llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 130.8 | G |
 | llama.cpp + MLX head | 1 | `gguf-head@jev-omni-q3-last-mlx` | 64 / 64 | 908.4 | G |
-| llama.cpp + MPS head | 1 | `gguf-head@laya-neutron-ml-mps` | 54 / 51 | 50.3 | G |
+| llama.cpp + MPS head | 2 | `gguf-head@laya-neutron-ml-mps` | 54 / 51 | 50.3 | G |
 | llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44.4 | C+G |
 | llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222.3 | C+G |
 | ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891.1 | G |

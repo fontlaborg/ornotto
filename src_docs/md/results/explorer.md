@@ -6,7 +6,7 @@ this_file: src_docs/md/results/explorer.md
 
 An extra correct answer can cost hundreds of milliseconds. Choose the score you need, then compare the runs that meet it. The default floor is **50 correct answers out of 67**. Laya on MLX clears it at **52/67 in 6.9 ms** on translated text; a model does not have to top the accuracy table to be useful.
 
-These are 308 recorded configurations, not 308 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
+These are 309 recorded configurations, not 309 different models. Each point names its engine, quantization and execution device. Set **Direct** to compare original multilingual queries; its chart uses the recorded direct-mode latency. The translated-mode latency covers classification alone and excludes the translation step.
 
 --8<-- "tables/explorer.html"
 
@@ -69,6 +69,18 @@ head alone. Neutron also preserves those probabilities but is 18% slower;
 retain the mixed configuration when latency matters. MLX/MPS GPU labels refer
 to the configured encoder/head computation; HTTP and tokenization still use CPU.
 These benchmark head adapters are separate from the package's native encoder integrations.
+
+### Weidows Q8: another MPS counterexample
+
+The same Weidows Q8 encoder and decision head also completed all 106 inputs
+with the head explicitly on MPS. It scored 52/49 at 45.9/75.9 ms
+translated/direct, versus 44.4/44.6 ms for the retained CPU head. Every saved
+four-decimal probability is identical. The direct mean includes a 2020 ms
+Bengali request; it remains in the result rather than being removed as an
+outlier. This single run does not establish a general MPS penalty. The native
+Laya MLX result remains faster at 6.9 ms, with a different probability profile.
+The new row records the pinned Weidows weights and 0.37 GB encoder-plus-head
+storage size; the original row's missing size/provenance fields remain unchanged.
 
 Direct ONNX-to-CoreML attempts produced no completed runs. The von model failed
 to build a Core ML execution plan; enabling its compute-plan diagnostic first

@@ -36,3 +36,5 @@ HTTPS artifact/browser checks pass. Heavy exclusions and provider/head GPU optim
 unfinished; package release remains separate through publish.sh.
 
 - [x] Publish and verify the 308-configuration GPU provider/head comparison.
+
+- [ ] Publish and verify the 309-configuration Weidows MPS comparison.

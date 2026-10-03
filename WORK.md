@@ -2,6 +2,20 @@
 
 # Work
 
+## 2026-10-03 — Weidows MPS comparison
+
+Completed the small Weidows Q8/MPS-head alternative on all 106 cached inputs:
+52/49 at 45.9/75.9 ms translated/direct, with every saved four-decimal
+probability identical to its CPU-head row. The direct mean includes a 2020 ms
+request; it is retained. Both measured means are slower than historical
+44.4/44.6 ms. Pinned encoder/head files total 0.37 GB; metadata is added only
+to the new row. The report now has 309 configurations; all 308 prior rows and
+cached results/translations remain unchanged. This single run does not prove
+MPS is generally slower. Package lint/format and 126 tests pass (13 engine
+tests deselected); private suite 116 passed, one optional skipped. Strict
+18-page build, 309-row tables and all 25 engine counts pass. Local browser
+checks and live publication pending.
+
 ## 2026-10-03 — GPU provider and head comparisons
 
 Added three complete configurations, bringing the report to 308. All 305

@@ -29,3 +29,5 @@
 - [x] Publish and verify the 305-configuration native encoder explorer on HTTPS.
 
 - [x] Publish and verify the 308-configuration GPU provider/head comparison.
+
+- [ ] Publish and verify the 309-configuration Weidows MPS comparison.
