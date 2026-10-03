@@ -2,6 +2,16 @@
 
 # Work
 
+## 2026-10-03 — Jev identity correction
+
+Correct the two Jev runs to one TypeSafe model identity and OpenRouter engine. Retain both original measurements in the 309-run archive and ten-run remote table; show Jev once in homepage rankings. The earlier resolved build remains unlogged.
+
+Validation: 127 package tests pass (13 engine tests deselected), lint/format
+pass, 13 private export regressions pass. All numeric measurements and 307
+unrelated rows are unchanged. Strict 18-page build and actual local browser
+checks pass one homepage Jev rank, ten OpenRouter measurements and all existing
+explorer interactions with zero page errors. Live publication pending.
+
 ## 2026-10-03 — Weidows MPS comparison
 
 Completed the small Weidows Q8/MPS-head alternative on all 106 cached inputs:

@@ -1504,24 +1504,24 @@
 </div>
 <div class="ornotto-band ornotto-band--tint">
 <h2 id="what-we-measured">What we measured<a class="headerlink" href="#what-we-measured" title="Permanent link">&para;</a></h2>
-<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 309 rows and every table</a>.</p>
+<p class="ornotto-section-lead">One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Repeated measurements of TypeSafe Jev occupy one rank; both runs remain in the full report. Local and remote runs retain their execution labels. <a href="results/explorer/">Explore the speed/accuracy frontier</a>, or read <a href="results/details/">all 309 rows and every table</a>.</p>
 <p>For a fast first pass, laya on MLX scores <strong>52/67 in 6.9 ms</strong> on translated text. <a href="results/explorer/">Set your own accuracy floor and compare Pareto frontiers</a>. Rune Q4 now measures <strong>124.8 ms</strong> on GPU, against <strong>487.1 ms</strong> with CPU weights. Rune Q5 full Metal adds <strong>64/64 at 153.3 ms</strong>, 6.3× faster with one fewer correct answer in each mode than its mixed run. Ornith Splash scores <strong>62/63 at 322.4/328.5 ms</strong>. <strong>C</strong> = CPU, <strong>G</strong> = GPU, <strong>C+G</strong> = mixed, <strong>R</strong> = remote; all other device codes are explained in the full report.</p>
 <figure class="ornotto-bars">
 <figcaption>Correct answers out of 67, translated queries. Bars start at zero.</figcaption>
 <ol>
 <li class="is-ref"><span class="ornotto-bars__name">typesafe/jev-1.13 <small>OpenRouter API · R · native choice</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">364 ms</span></li>
-<li class="is-ref"><span class="ornotto-bars__name">jev <small>jev (hosted) · R</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">466 ms</span></li>
 <li><span class="ornotto-bars__name">rune-mradermacher-26b-a4b q5<small>pcdServer · C+G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">962 ms</span></li>
 <li class="is-ref"><span class="ornotto-bars__name">jaredpalmer/kev-4b <small>OpenRouter API · R · native choice</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">1653 ms</span></li>
 <li><span class="ornotto-bars__name">rune-26b-a4b q3<small>slot (llama-server) · G</small></span><span class="ornotto-bars__track"><span style="--v:65"></span></span><span class="ornotto-bars__score">65</span><span class="ornotto-bars__ms">367 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q8<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">88 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm q4<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">93 ms</span></li>
 <li><span class="ornotto-bars__name">qwen3.5-4b-hmm bf16<small>pcdServer · G</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">95 ms</span></li>
+<li class="is-ref"><span class="ornotto-bars__name">togethercomputer/tev1-4b-experimental <small>OpenRouter API · R · native choice</small></span><span class="ornotto-bars__track"><span style="--v:64"></span></span><span class="ornotto-bars__score">64</span><span class="ornotto-bars__ms">339 ms</span></li>
 </ol>
 </figure>
 <details class="ornotto-more">
 <summary><span class="ornotto-more__sign" aria-hidden="true">+</span>Show the full top 15</summary>
-<p>Each row is one method, ranked by translated score, then direct score, then speed. Click a column header to sort.</p>
+<p>Each row is one ranked method; the two TypeSafe Jev measurements share one model entry. Rows are ranked by translated score, then direct score, then speed. Click a column header to sort.</p>
 <div class="bench">
 <table class="sortable" id="top"><caption>The 15 best methods by translated score, then direct score, then speed. Click to sort.</caption><thead><tr><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th></tr></thead>
 <tbody>
@@ -1533,17 +1533,6 @@
 <td></td>
 <td class="num"></td>
 <td class="num" data-sort="364.440299">364.4</td>
-<td class="num score" data-sort="65">65/67</td>
-<td class="num score" data-sort="65">65/67</td>
-</tr>
-<tr>
-<td>jev (hosted)</td>
-<td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td>
-<td>jev</td>
-<td>dedicated</td>
-<td></td>
-<td class="num"></td>
-<td class="num" data-sort="466.104478">466.1</td>
 <td class="num score" data-sort="65">65/67</td>
 <td class="num score" data-sort="65">65/67</td>
 </tr>
@@ -1687,6 +1676,17 @@
 <td>q4</td>
 <td class="num" data-sort="21.17">21.17</td>
 <td class="num" data-sort="299.141791">299.1</td>
+<td class="num score" data-sort="64">64/67</td>
+<td class="num score" data-sort="64">64/67</td>
+</tr>
+<tr>
+<td>dohnuts (Metal)</td>
+<td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td>
+<td>jpt-4b</td>
+<td>dedicated</td>
+<td>q8</td>
+<td class="num" data-sort="4.48">4.48</td>
+<td class="num" data-sort="335.591045">335.6</td>
 <td class="num score" data-sort="64">64/67</td>
 <td class="num score" data-sort="64">64/67</td>
 </tr>

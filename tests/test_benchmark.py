@@ -4,6 +4,7 @@
 import hashlib
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -74,3 +75,20 @@ def test_remote_widget_when_generated_then_api_engine_and_readout_are_explicit()
     widget = diagrams.widget([row])
     assert '<option value="OpenRouter API">OpenRouter API</option>' in widget
     assert "<th>Readout</th>" in widget, "Remote readout must be visible beside its benchmark run"
+
+
+def test_landing_when_jev_measured_twice_then_one_model_and_both_archive_rows(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location("gen_tables", ROOT / "src_docs/gen_tables.py")
+    tables = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tables)
+    monkeypatch.setattr(tables, "OUT", tmp_path)
+    tables.main()
+    bars = (tmp_path / "landing-bars.html").read_text()
+    assert bars.count("typesafe/jev-1.13") == 1, "One hosted model must occupy one homepage rank"
+    archive = (tmp_path / "classifiers.html").read_text()
+    assert "openrouter@typesafe/jev-1.13" in archive and re.search(r">jev(?: †)?</td>", archive)
+    remote = (tmp_path / "remote.html").read_text()
+    assert "earlier run" in remote and "3 October 2026" in remote
+    assert remote.count(">typesafe/jev-1.13</td>") == 2, (
+        "Both dated measurements belong in the OpenRouter table"
+    )

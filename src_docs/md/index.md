@@ -79,7 +79,7 @@ Almeida asked this on jev's launch thread, when the discussion turned to whether
 
 ## What we measured
 
-One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 309 rows and every table](results/details.md).
+One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Repeated measurements of TypeSafe Jev occupy one rank; both runs remain in the full report. Local and remote runs retain their execution labels. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 309 rows and every table](results/details.md).
 { .ornotto-section-lead }
 
 For a fast first pass, laya on MLX scores **52/67 in 6.9 ms** on translated text. [Set your own accuracy floor and compare Pareto frontiers](results/explorer.md). Rune Q4 now measures **124.8 ms** on GPU, against **487.1 ms** with CPU weights. Rune Q5 full Metal adds **64/64 at 153.3 ms**, 6.3× faster with one fewer correct answer in each mode than its mixed run. Ornith Splash scores **62/63 at 322.4/328.5 ms**. **C** = CPU, **G** = GPU, **C+G** = mixed, **R** = remote; all other device codes are explained in the full report.
@@ -89,7 +89,7 @@ For a fast first pass, laya on MLX scores **52/67 in 6.9 ms** on translated text
 <details class="ornotto-more" markdown="1">
 <summary><span class="ornotto-more__sign" aria-hidden="true">+</span>Show the full top 15</summary>
 
-Each row is one method, ranked by translated score, then direct score, then speed. Click a column header to sort.
+Each row is one ranked method; the two TypeSafe Jev measurements share one model entry. Rows are ranked by translated score, then direct score, then speed. Click a column header to sort.
 
 --8<-- "tables/top.html"
 

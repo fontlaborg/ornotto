@@ -178,15 +178,29 @@ def main() -> None:
         "or does not apply (the direct score of a model trained on English only).",
         sorted_by="Translated",
     )
-    remote = [r for r in rows if r["method"].startswith("openrouter@")]
+    remote = [r for r in rows if r["engine"] == "OpenRouter API"]
     table(
         "remote",
-        ["Model", "Resolved version", "C/G", "Readout", "Translated", "Direct", "Translated ms", "Direct ms"],
+        [
+            "Model",
+            "Run",
+            "Resolved version",
+            "C/G",
+            "Readout",
+            "Translated",
+            "Direct",
+            "Translated ms",
+            "Direct ms",
+        ],
         [
             "".join(
                 [
                     cell(r["model"], title=r.get("note", "")),
-                    cell(", ".join(r["resolved_models"]), title=", ".join(r["providers"])),
+                    cell(r.get("measurement_label", "3 October 2026")),
+                    cell(
+                        ", ".join(r.get("resolved_models", [])) or "not logged",
+                        title=", ".join(r.get("providers", [])),
+                    ),
                     device_cell(r),
                     cell(r["readout"]),
                     score(r["translated"]),
@@ -202,7 +216,13 @@ def main() -> None:
             "R: undisclosed remote CPU/GPU."
         ),
     )
-    top = sorted(rows, key=lambda r: (high_first(r["translated"]), high_first(r["direct"]), r["ms"]))[:15]
+    top, seen = [], set()
+    for row in sorted(rows, key=lambda r: (high_first(r["translated"]), high_first(r["direct"]), r["ms"])):
+        identity = row.get("model_identity", row["method"])
+        if identity not in seen:
+            seen.add(identity)
+            top.append(row)
+    top = top[:15]
     bars = "".join(
         "<li" + (' class="is-ref"' if r["device"] == "R" else "") + ">"
         f'<span class="ornotto-bars__name">{html.escape(r["model"])} {html.escape(r["quant"])}'

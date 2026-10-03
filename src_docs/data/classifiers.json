@@ -4,6 +4,8 @@
   "engine": "OpenRouter API",
   "model": "typesafe/jev-1.13",
   "quant": "",
+  "model_identity": "typesafe/jev-1.13",
+  "measurement_label": "3 October 2026",
   "readout": "native choice",
   "family": "dedicated",
   "device": "R",
@@ -19,7 +21,7 @@
   "translated_en": 26,
   "translated_other": 39,
   "direct_other": 39,
-  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.",
+  "note": "Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded. Same TypeSafe Jev model as the earlier jev run; a later measurement, not a different model.",
   "resolved_models": [
    "typesafe/jev-1.13-20260917"
   ],
@@ -51,9 +53,12 @@
  },
  {
   "method": "jev",
-  "engine": "jev (hosted)",
-  "model": "jev",
+  "engine": "OpenRouter API",
+  "model": "typesafe/jev-1.13",
   "quant": "",
+  "model_identity": "typesafe/jev-1.13",
+  "measurement_label": "earlier run",
+  "readout": "native choice",
   "family": "dedicated",
   "device": "R",
   "device_detail": "Remote hosted service; CPU/GPU undisclosed",
@@ -67,6 +72,7 @@
   "translated_en": 26,
   "translated_other": 39,
   "direct_other": 39,
+  "note": "Earlier measurement of TypeSafe Jev through OpenRouter, identified by the benchmark author as the same model as typesafe/jev-1.13. Retain original scores and timings; the earlier cache did not log a resolved build. Network latency included; remote hardware undisclosed.",
   "ms_direct": 455.2119402985075
  },
  {

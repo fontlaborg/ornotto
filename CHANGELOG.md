@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Correct the two Jev runs to one TypeSafe model identity and OpenRouter engine. Retain both original measurements in the 309-run archive and ten-run remote table; show Jev once in homepage rankings. The earlier resolved build remains unlogged.
+
 - Add the complete Weidows Q8/MPS-head comparison (309 configurations): 52/49 at 45.9/75.9 ms, identical saved probabilities to the retained CPU head but slower measured means. Preserve all 308 prior rows and the direct-mode outlier; record pinned encoder/head storage provenance only for the new row.
 
 - Add three GPU provider/head comparisons (308 configurations), retaining all 305 earlier rows: GLiNER Core ML CPU/GPU 61/67 at 21.9 ms; Jev-Omni pooled MLX 64/64 at 908.4/904.4 ms; Neutron MPS 54/51 at 50.3/49.4 ms, a measured slowdown. Failed ONNX/CoreML attempts are excluded and explained.

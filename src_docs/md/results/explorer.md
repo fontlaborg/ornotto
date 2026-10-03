@@ -10,11 +10,13 @@ These are 309 recorded configurations, not 309 different models. Each point name
 
 --8<-- "tables/explorer.html"
 
-## OpenRouter: nine remote models
+## OpenRouter: nine remote models, ten runs
+
+The earlier `jev` row and the later `typesafe/jev-1.13` row measure the same TypeSafe Jev model over OpenRouter. They are separate runs, not different models. Both original timings and scores remain; the homepage counts Jev once.
 
 All nine requested endpoints were measured on the same 67 queries, in translated and direct modes, on 3 October 2026. Translations and local results are retained from the earlier runs. Each endpoint received 106 distinct inputs, sequentially, with duplicate inputs reused across modes. Latency includes the network trip and provider processing; **R** means the provider did not disclose CPU/GPU placement or weight precision.
 
-Six endpoints use a native five-way **choice**. Respan's three endpoints support **noul** only: each request contains five independent yes/no questions using the same task descriptions. We choose the largest P(true), then normalize the five values for the routing report. This **noul OVR** readout is labelled separately; its values are not calibrated exclusive-choice probabilities. Choose **OpenRouter API** in the explorer's engine filter to select all nine endpoints. Its table shows the readout for each run.
+Six endpoints use a native five-way **choice**. Respan's three endpoints support **noul** only: each request contains five independent yes/no questions using the same task descriptions. We choose the largest P(true), then normalize the five values for the routing report. This **noul OVR** readout is labelled separately; its values are not calibrated exclusive-choice probabilities. Choose **OpenRouter API** in the explorer's engine filter to select ten recorded runs of nine endpoints. Its table shows the readout for each run.
 
 --8<-- "tables/remote.html"
 
