@@ -63,4 +63,4 @@ unfinished; package release remains separate through publish.sh.
 - [x] Register Clef-Flash Core AI FP16/int8mix with pinned decoder, head and lexical table.
 - [x] Run and verify the separate 20-text PII benchmark while retaining every router measurement.
 - [ ] Measure both Clef Core AI variants once the unchanged RAM preflight permits (30/36 GiB available).
-- [ ] Publish the Core AI source/docs update and verify live PII evidence and retained router explorer.
+- [x] Publish the Core AI source/docs update and verify live PII evidence and retained router explorer.

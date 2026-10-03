@@ -16,7 +16,11 @@ Package baseline: 166 tests pass; final suite: 176 pass /2 optional skips /
 contents and isolated wheel import, strict 18-page docs build, full local explorer
 and PII page/download browser checks pass. Both downloads and their hashes are
 verified. The final preflight still refuses Clef at 26 GiB available. Publication
-and live acceptance are pending. Reproducible records are retained privately.
+and live acceptance complete: source 9437f62, Pages 37131183586 successful;
+all 24 live artifacts match, actual HTTPS explorer and PII page/download checks
+pass with zero page errors. Async native serialization and empty-input probes
+also pass under the driver; the child is reaped on context exit. Clef routing
+measurements remain pending on sufficient RAM. No PyPI release was made.
 
 ## 2026-10-03 — Clef and CLM quantizations; download cleanup
 
