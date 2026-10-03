@@ -26,7 +26,10 @@ Strict 18-page build and actual local browser checks pass all three plots,
 Splash engine/direct/readout CSV, Q5 accuracy comparison, Q4 regression, all
 nine remote rows, URL reload, Pareto, CSV/SVG, empty results, mobile/dark,
 offline HTML and homepage navigation with zero script exceptions.
-Publication and live acceptance are pending.
+Published commit 7eb8290; Pages deployment 37082908188 succeeded. All 15
+checked HTML/assets match the reviewed build, and fresh live browser acceptance
+passes the same interactions with zero JavaScript exceptions. No model process
+remains resident; pressure is normal and swap is zero.
 
 
 ## 2026-10-03 — full remote benchmarks and report rebuild
