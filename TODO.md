@@ -21,3 +21,8 @@
 - [ ] Stop tests coupling to `Decider._post`; stub the HTTP layer instead.
 - [ ] Reduce `_kev_in_store` coupling to the ollaya store layout.
 - [ ] Stop hard-coding benchmark counts in registry notes, which go stale.
+
+- [ ] Publish the 302-run local results and verify the actual HTTPS explorer/assets.
+- [ ] Resolve excluded heavy-load and ggmlc Metal failures before further GPU measurements.
+- [ ] Add the requested public Laya MLX integration; its private benchmark support already exists.
+- [ ] Integrate xDecision through its native runtime and verify package/benchmark behavior.

@@ -1231,6 +1231,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#choose-a-measured-gpu-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose a measured GPU configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1400,6 +1411,17 @@
     <span class="md-ellipsis">
       
         What changed in September 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-a-measured-gpu-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose a measured GPU configuration
       
     </span>
   </a>
@@ -1862,6 +1884,8 @@ flowchart TD
 <li><strong>pydantic-ai</strong> put <code>TypeSafeModel</code> under a new <code>DecisionModel</code> base; ornotto's lock stays on 2.48.0 (<a href="../11-typed/#what-changed-in-september-2026">chapter 11</a>).</li>
 </ul>
 <p>Each of these can change a row in the table at the top of this chapter. The book's numbers are dated to the runs that produced them; when you choose, check the release you are about to install against the one the book measured.</p>
+<h2 id="choose-a-measured-gpu-configuration">Choose a measured GPU configuration<a class="headerlink" href="#choose-a-measured-gpu-configuration" title="Permanent link">&para;</a></h2>
+<p>Rune Q5 full Metal scores 64/67 in both modes at 153.3 ms translated and 152.8 ms direct. The retained mixed run scores 65/67 at 962.3 ms: choose whether that extra answer on this small set merits the latency. Ornith Splash scores 62/63 at 322.4/328.5 ms and does not improve the fastest useful frontier. A failed or refused load provides no accuracy result. <a href="../results/explorer/#rune-q5-and-splash-two-completed-october-runs">The explorer keeps every completed configuration and explains exclusions</a>.</p>
 <div class="footnote">
 <hr />
 <ol>

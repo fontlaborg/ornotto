@@ -18,3 +18,18 @@ with frozen translations and an explicit noul OVR readout for Respan. All public
 Fresh live browser checks verify the OpenRouter API engine filter against all
 nine measured rows, the 300-run report and its chart/download interactions.
 Package publication remains a separate release through `publish.sh`.
+
+## Local retry and encoder integrations
+
+Publish only complete Rune Q5 Metal and Ornith Splash measurements, preserving
+all earlier records and configurations. Verify the real explorer's Splash and
+remote filters, changed Q5 accuracy, charts and downloads. Refused Qwen3.6,
+failed ggmlc Laya Metal and unresolved heavy-load exclusions remain unfinished.
+Do not lower guards or infer all-GPU placement from a provider setting.
+
+Laya MLX is already supported and measured by the private harness. The requested
+public API integration and xDecision support remain pending. Consult upstream
+load/predict schemas, add optional native encoder runtimes with the existing
+question/answer API, test transport/lifecycle and typed consumers, then measure
+small xDecision files under the same one-model guard. xDecision's custom GGUF
+architecture needs its own MLX/PyTorch runtime, not the llama.cpp engines.

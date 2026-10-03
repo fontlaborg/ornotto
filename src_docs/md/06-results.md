@@ -4,7 +4,7 @@ this_file: src_docs/md/06-results.md
 
 # 6. Results
 
-jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 300 methods finished; five failed and are left out.
+jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms `Q8_0` file that `ornotto` registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 302 methods finished; five failed and are left out.
 
 The jev row measures `jev-1.13.0`. TypeSafe's model page listed no other version in September 2026, and both public aliases, `jev-latest` and `jev-preview`, pointed to it when we checked on 30 September.[^ts-models] [Chapter 1](01-deciding.md#jev-the-hosted-reference) explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in [Numbers others report](#numbers-others-report), and are never mixed into our tables.
 
@@ -64,7 +64,7 @@ Kev uses the [FluidInference Core ML export](https://huggingface.co/FluidInferen
 
 The [mys Kev Q4 and Q8 files](https://huggingface.co/mys/kev-0.8b-GGUF) ran on ggmlc with Metal. Both fail to load in current dohnuts with `unknown model architecture: 'ggmlc'`. This is an observed runtime incompatibility, so the two measurements use the compiler's own runtime. The Q4 file is larger than Q8 because its dynamic quantization preserves additional tensors at higher precision.
 
-[Rune's mradermacher conversions](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. The original Q4 and Q5 runs keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. The fresh Q4 full-Metal rerun scores 63/64 at 124.8 ms (3.9× faster than the earlier Q4 at 487.1 ms), and is retained as a separate row. Q5 and Q8 latency is not a fair comparison with the Q3 or new Q4 GPU runs. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.
+[Rune's mradermacher conversions](https://huggingface.co/mradermacher/rune-26b-a4b-GGUF) now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. The original Q4 and Q5 runs keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. The fresh Q4 full-Metal rerun scores 63/64 at 124.8 ms (3.9× faster than the earlier Q4 at 487.1 ms), and is retained as a separate row. The new Q5 full-Metal run is separate: 64/64 at 153.3 ms translated and 152.8 ms direct, 6.3× faster than mixed Q5 but one fewer correct answer in each mode. The retained mixed Q5 and CPU Q8 timings are not a pure quantization comparison with the GPU runs. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.
 
 [JPT 4B](https://huggingface.co/prithivMLmods/jpt-4b-GGUF) and [JPT 9B](https://huggingface.co/prithivMLmods/jpt-9b-GGUF) ran at Q3, Q4, Q5 and Q8 on both requested engines. The repositories publish no Q8: we converted their pinned BF16 files locally with llama-quantize Q8_0. The [conversion manifests](https://github.com/fontlaborg/ornotto/blob/main/src_docs/data/local_conversions.json) record source revisions, input/output hashes, converter hash, sizes and tensor types. JPT is CC BY-NC 4.0. Native dohnuts uses source-matched chat prompts, contextual answer tokens and the affirmative yes/no label; its temperatures are 1.036 (4B) and 1.087 (9B). The 4B Q8 native readout scores 64/67 in both modes; pcdServer is faster but scores 63/64.
 
@@ -91,7 +91,7 @@ Five findings stand out from the first round of 208 methods, three more from the
 
 ## Every method
 
-All 300 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
+All 302 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal). [Chapter 5](05-method.md#what-the-numbers-mean) defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.
 
 --8<-- "tables/classifiers.html"
 
@@ -103,37 +103,41 @@ Some reading notes:
 - **Quantization is flat until it falls off a cliff.** Q4 to Q8 barely changes a score. Below Q3 scores drop fast: decider-0.8b at Q2 answered 17 or 18 of 67 on every engine, and Qwen3-4B at IQ1_S answered 13. [Chapter 7](07-quantization.md) has the full sweeps.
 - **Five methods failed.** A Core ML laya export fixed at 64 tokens and four options could not take a five-way question. The BF16 build of unsloth's Qwen3.5-4B was not on disk when its turn came. The earlier pcdServer build answered every request for the two surogate Rune files with HTTP 422; the October fork separately measures mradermacher Rune through its Jinja fallback. The Q5_K_M file of jeb-35b-a3b took the machine's free memory below the benchmark's safety limit while it loaded, and the run was stopped. None of the five appears in the tables.
 
+The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 63/67 direct at 328.5 ms. Only this Splash package completed. [The explorer records the refused, failed and deferred runs](results/explorer.md#runs-excluded-from-the-charts), including ggmlc Laya Metal and the unresolved Swift loading incident.
+
 ## Best method per engine and runtime
 
-Most methods run on pcdServer, because it takes any chat GGUF: 172 of the 300. The other engines and runtimes ran only the models they were built for. The best method on each:
+Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 302. The other engines and runtimes ran only the models they were built for. The best method on each:
 
 | engine or runtime | methods | best method | translated / direct | ms/query | C/G |
 |---|---:|---|---|---:|---|
-| jev (hosted) | 1 | `jev` | 65 / 65 | 466 | R |
-| slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 367 | G |
-| pcdServer | 172 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962 | C+G |
-| ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891 | G |
-| dohnuts (Metal) | 27 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266 | G |
-| System One server | 11 | `systemone@neohorse-4b-q8` | 64 / 64 | 273 | G |
-| llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222 | C+G |
-| PyTorch | 4 | `torch@decider-4b-bf16` | 63 / 65 | 348 | G |
-| MLX | 9 | `mlx@openjev-35b-a3b-4bit` | 63 / 62 | 250 | G |
-| dohnuts (CPU) | 1 | `dohnuts@decider-0.8b-dreamblooms-q8` | 62 / 60 | 275 | C |
-| laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103 | G |
-| ExecuTorch (MLX) | 2 | `executorch@decider-0.8b-fp16` | 61 / 60 | 90 | G |
-| Core AI | 3 | `coreai@gliner25-decide` | 61 / – | 27 | A |
-| ONNX Runtime | 8 | `onnx@gliner25-decide-fp32` | 61 / – | 67 | C |
-| Core ML | 2 | `coreml@gliner25-decide-fp16-l256` | 61 / – | 349 | A |
-| ggmlc (Metal) | 2 | `systemone@kev-ggmlc-0.8b-q8` | 57 / 45 | 200 | G |
-| llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 131 | G |
-| llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44 | C+G |
-| Core ML, Neural Engine | 2 | `laya-coreml-ane-w8-compact` | 48 / 49 | 5 | C+N |
+| Core AI | 3 | `coreai@gliner25-decide` | 61 / – | 26.9 | A |
+| Core ML | 2 | `coreml@gliner25-decide-fp16-l256` | 61 / – | 349.1 | A |
+| Core ML, Neural Engine | 2 | `laya-coreml-ane-w8-compact` | 48 / 49 | 4.5 | C+N |
+| ExecuTorch (MLX) | 2 | `executorch@decider-0.8b-fp16` | 61 / 60 | 89.7 | G |
+| MLX | 9 | `mlx@openjev-35b-a3b-4bit` | 63 / 62 | 250.0 | G |
+| ONNX Runtime | 8 | `onnx@gliner25-decide-fp32` | 61 / – | 67.3 | C |
+| OpenRouter API | 9 | `openrouter@typesafe/jev-1.13` | 65 / 65 | 364.4 | R |
+| PyTorch | 4 | `torch@decider-4b-bf16` | 63 / 65 | 348.2 | G |
+| Splash (Metal) | 1 | `splash@ornith-1.5-35b-a3b-splash` | 62 / 63 | 322.4 | G |
+| System One server | 11 | `systemone@neohorse-4b-q8` | 64 / 64 | 273.1 | G |
+| dohnuts (CPU) | 1 | `dohnuts@decider-0.8b-dreamblooms-q8` | 62 / 60 | 275.2 | C |
+| dohnuts (Metal) | 27 | `dohnuts-metal@decider-35b-a3b-q4` | 64 / 64 | 266.3 | G |
+| ggmlc (Metal) | 2 | `systemone@kev-ggmlc-0.8b-q8` | 57 / 45 | 199.8 | G |
+| jev (hosted) | 1 | `jev` | 65 / 65 | 466.1 | R |
+| laya.cpp | 5 | `kev-4b-gguf` | 62 / 55 | 1,103.1 | G |
+| llama-cpp-python (Metal) | 1 | `systemone@bosun-1.7b-q5` | 55 / 55 | 130.8 | G |
+| llama.cpp embeddings | 6 | `laya-wd-gguf-q8` | 52 / 49 | 44.4 | C+G |
+| llama.cpp embeddings + head | 5 | `gguf-head@jev-omni-q3` | 64 / 64 | 1,222.3 | C+G |
+| ollaya | 10 | `ollaya@winnow-12b` | 64 / 65 | 891.1 | G |
+| pcdServer | 173 | `pcdserver@rune-mradermacher-26b-a4b-q5` | 65 / 65 | 962.3 | C+G |
+| slot (llama-server) | 20 | `slot@rune-26b-a4b-q3` | 65 / 57 | 366.6 | G |
 
 A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on English only.
 
 If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms; Rune Q5 reaches 65 in both modes at 962 ms with CPU weights.
 
-The table also shows where the choice of engine is a choice of model. pcdServer ran 171 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
+The table also shows where the choice of engine is a choice of model. pcdServer ran 173 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. [Chapter 3](03-engines.md#side-by-side) lists which readout each engine uses, and [chapter 12](12-choosing.md#which-engine-and-model) turns this table into a choice.
 
 ## The second round, model by model
 

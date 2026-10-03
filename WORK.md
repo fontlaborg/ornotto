@@ -2,6 +2,33 @@
 
 # Work
 
+## 2026-10-03 — completed local retry results
+
+Exported two complete runs: Rune Q5 full Metal, 64/64 at 153.3/152.8 ms
+translated/direct, and Ornith Splash, 62/63 at 322.4/328.5 ms. Q5 is 6.3 times
+faster than mixed execution but changes one answer and loses one correct answer
+in each mode. All 300 prior public rows, 31,834 baseline query records and frozen
+translations are unchanged. Splash has its own Metal engine filter, native-choice
+readout and package/storage size; calibration and exact GPU operation placement
+are not asserted. Reports, rankings, tables and the offline explorer now have 302
+configurations. Nine remote endpoints and their readouts remain intact.
+
+Qwen3.6 preflight refused loading at 33/40 GiB. Small ggmlc Laya Q8 Metal
+loaded, then aborted on unsupported MAP_CUSTOM2; no valid records were saved.
+Related F16/Q4 attempts are deferred. Swift/storage kernel-panic investigation,
+Rune Q8 and dense Qwen3.8 exclusions remain unresolved. The GPU audit is not
+complete. Private guards now include positional GGUF bytes in preflight and
+exit unsuccessfully on classifier errors rather than accepting a report's exit 0.
+
+Validation: private suite 98 passed, one optional skip; package suite 98 passed,
+13 engine tests deselected, lint/format and JavaScript diagram mathematics pass.
+Strict 18-page build and actual local browser checks pass all three plots,
+Splash engine/direct/readout CSV, Q5 accuracy comparison, Q4 regression, all
+nine remote rows, URL reload, Pareto, CSV/SVG, empty results, mobile/dark,
+offline HTML and homepage navigation with zero script exceptions.
+Publication and live acceptance are pending.
+
+
 ## 2026-10-03 — full remote benchmarks and report rebuild
 
 Completed all nine requested endpoints on 106 distinct inputs each: 954

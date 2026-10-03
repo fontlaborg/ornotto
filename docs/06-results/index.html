@@ -1476,7 +1476,7 @@
 
 
 <h1 id="6-results">6. Results<a class="headerlink" href="#6-results" title="Permanent link">&para;</a></h1>
-<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 300 methods finished; five failed and are left out.</p>
+<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 302 methods finished; five failed and are left out.</p>
 <p>The jev row measures <code>jev-1.13.0</code>. TypeSafe's model page listed no other version in September 2026, and both public aliases, <code>jev-latest</code> and <code>jev-preview</code>, pointed to it when we checked on 30 September.<sup id="fnref:ts-models"><a class="footnote-ref" href="#fn:ts-models">1</a></sup> <a href="../01-deciding/#jev-the-hosted-reference">Chapter 1</a> explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in <a href="#numbers-others-report">Numbers others report</a>, and are never mixed into our tables.</p>
 <h2 id="openrouter-nine-remote-models">OpenRouter: nine remote models<a class="headerlink" href="#openrouter-nine-remote-models" title="Permanent link">&para;</a></h2>
 <p>The fresh <code>typesafe/jev-1.13</code> run scored <strong>65/67 in both modes</strong>, at <strong>364.4 ms translated and 375.1 ms direct</strong>. Together Tev1 scored <strong>64/67 translated at 339.3 ms</strong> and <strong>65/67 direct at 335.1 ms</strong>. Kev 4B also scored <strong>65/67 in both</strong>, at <strong>1,653.0 ms translated and 1,525.0 ms direct</strong>. The earlier hosted Jev measurement is retained; differences in end-to-end timing across dates are not a controlled model-speed comparison.</p>
@@ -1780,7 +1780,7 @@
 <p>Kev uses the <a href="https://huggingface.co/FluidInference/kev-0.8b-coreml">FluidInference Core ML export</a>, the L512/K16 single-question row on CPU and GPU. This is not the fused multi-question path. Its fitted temperature is already in the graph. Tev1 uses the native decision prompt with thinking disabled and a single forward pass over option-letter logits, on <a href="https://huggingface.co/DreamBlooms/Tev1-0.8B-experimental-GGUF">dohnuts Q8</a> and <a href="https://huggingface.co/SirSahOl/Tev1-0.8B-experimental-chat-mlx-4bit">MLX 4-bit</a>. Its release licence is unresolved, and temperature 1.0 does not establish calibration.</p>
 <p><a href="https://huggingface.co/Hanno-Labs/bosun-v3.1-1.7b-GGUF">Bosun Q5_K_M</a> runs on llama-cpp-python with Metal. Its native prompt shuffles candidates into stable slots. We verified the prompt against the pinned source renderer and tokenizer ChatML template, checked all 256 decision-token IDs, read final-position logits for the valid slots and restored the caller's order. Temperature is 1.0; these measurements do not establish calibration. <a href="https://github.com/Hanno-Labs/jev-compatible-server">Hanno's server</a> implements native Bosun through Transformers; its generic llama backend does not implement this GGUF readout.</p>
 <p>The <a href="https://huggingface.co/mys/kev-0.8b-GGUF">mys Kev Q4 and Q8 files</a> ran on ggmlc with Metal. Both fail to load in current dohnuts with <code>unknown model architecture: 'ggmlc'</code>. This is an observed runtime incompatibility, so the two measurements use the compiler's own runtime. The Q4 file is larger than Q8 because its dynamic quantization preserves additional tensors at higher precision.</p>
-<p><a href="https://huggingface.co/mradermacher/rune-26b-a4b-GGUF">Rune's mradermacher conversions</a> now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. The original Q4 and Q5 runs keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. The fresh Q4 full-Metal rerun scores 63/64 at 124.8 ms (3.9× faster than the earlier Q4 at 487.1 ms), and is retained as a separate row. Q5 and Q8 latency is not a fair comparison with the Q3 or new Q4 GPU runs. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.</p>
+<p><a href="https://huggingface.co/mradermacher/rune-26b-a4b-GGUF">Rune's mradermacher conversions</a> now run on pcdServer through the fork's Jinja chat-template fallback. Q5_K_M scores 65/67 in both modes at 962 ms/query from 19.13 GB. Q3_K_M scores 64/67 in both modes at 146 ms from 13.29 GB. These are separate conversions and a separate readout from the earlier surogate Rune rows. The original Q4 and Q5 runs keep weights on CPU with Metal computation enabled; Q8 runs entirely on CPU after device-offload attempts exceeded the guards. The fresh Q4 full-Metal rerun scores 63/64 at 124.8 ms (3.9× faster than the earlier Q4 at 487.1 ms), and is retained as a separate row. The new Q5 full-Metal run is separate: 64/64 at 153.3 ms translated and 152.8 ms direct, 6.3× faster than mixed Q5 but one fewer correct answer in each mode. The retained mixed Q5 and CPU Q8 timings are not a pure quantization comparison with the GPU runs. Swap grew during the larger-model attempts; each run remained guarded and each completed measurement ran alone.</p>
 <p><a href="https://huggingface.co/prithivMLmods/jpt-4b-GGUF">JPT 4B</a> and <a href="https://huggingface.co/prithivMLmods/jpt-9b-GGUF">JPT 9B</a> ran at Q3, Q4, Q5 and Q8 on both requested engines. The repositories publish no Q8: we converted their pinned BF16 files locally with llama-quantize Q8_0. The <a href="https://github.com/fontlaborg/ornotto/blob/main/src_docs/data/local_conversions.json">conversion manifests</a> record source revisions, input/output hashes, converter hash, sizes and tensor types. JPT is CC BY-NC 4.0. Native dohnuts uses source-matched chat prompts, contextual answer tokens and the affirmative yes/no label; its temperatures are 1.036 (4B) and 1.087 (9B). The 4B Q8 native readout scores 64/67 in both modes; pcdServer is faster but scores 63/64.</p>
 <p><a href="https://huggingface.co/DreamBlooms/jet-GGUF">Jet Q8</a> scores 62/67 translated and 63/67 direct on dohnuts, in 281 ms. Its score questions read digit logits and yes/no questions read the corresponding word logits. <a href="https://huggingface.co/mradermacher/this-that-model-1.2-GGUF">ThisThat 1.2</a> ran on dohnuts at every requested precision. Q3 scores 57/56, while Q2 falls to 21/18. Their native prompts and label mappings are part of the updated bundled engine, and response checks cover choice, yes/no and score in addition to the router benchmark.</p>
 <p>All 24 requested weight variants are covered by these 32 measurements. The two mys Kev measurements use the documented ggmlc alternative, and the four JPT Q8 engine measurements use the documented local conversions. The earlier 258 exported rows remain field-identical.</p>
@@ -1800,10 +1800,10 @@
 <tr><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>togethercomputer/tev1-4b-experimental</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="339.256716" class="num">339.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>ollaya</td><td title="ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe (configured)">G</td><td>winnow-12b</td><td>dedicated</td><td>q8_0</td><td data-sort="12.67" class="num">12.67</td><td data-sort="891.125373" class="num">891.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td></tr>
 <tr><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.29" class="num">13.29</td><td data-sort="146.055224" class="num">146.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
+<tr><td>pcdServer</td><td title="Metal; all layers requested (--gpu-layers -1); server reports MTL0; CPU request/tokenization (observed)">G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q5</td><td data-sort="19.13" class="num">19.13</td><td data-sort="153.3" class="num">153.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>neohorse-4b</td><td>dedicated</td><td>q8</td><td data-sort="5.17" class="num">5.17</td><td data-sort="273.114925" class="num">273.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 <tr><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="299.141791" class="num">299.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
-<tr><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>jpt-4b</td><td>dedicated</td><td>q8</td><td data-sort="4.48" class="num">4.48</td><td data-sort="335.591045" class="num">335.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td></tr>
 </tbody></table>
 </div>
 
@@ -1819,10 +1819,10 @@
 <li><strong>A new readout is no guarantee.</strong> The contrastive CLM scored 33 to 39, the entailment readouts 20 (ModernBERT NLI) and 51 (semif), GLiClass 26, and the small encoders Julia-1, Pulse Decide and decima-small 31 to 37. Apart from semif, they score no better than the old Qwen1.5 models, whose best was 42.</li>
 </ul>
 <h2 id="every-method">Every method<a class="headerlink" href="#every-method" title="Permanent link">&para;</a></h2>
-<p>All 300 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
+<p>All 302 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 300 rows" aria-label="Filter the table" data-table="classifiers">
-<table class="sortable" id="classifiers"><caption>All 300 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
+<input class="table-filter" type="search" placeholder="Filter 302 rows" aria-label="Filter the table" data-table="classifiers">
+<table class="sortable" id="classifiers"><caption>All 302 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
 <tbody>
 <tr><td class="method" title="Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.">openrouter@typesafe/jev-1.13 †</td><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>typesafe/jev-1.13</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@rune-26b-a4b-q3</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="31" class="num score">31/39</td><td data-sort="608.070417" class="num">608</td></tr>
@@ -1833,6 +1833,7 @@
 <tr><td class="method">pcdserver@qwen3.5-4b-hmm-q4</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>q4</td><td data-sort="2.71" class="num">2.71</td><td data-sort="92.625373" class="num">92.6</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="295.528125" class="num">296</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-4b-hmm-bf16</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>bf16</td><td data-sort="8.42" class="num">8.42</td><td data-sort="94.831343" class="num">94.8</td><td data-sort="64" class="num score">64/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="341.305334" class="num">341</td></tr>
 <tr><td class="method">pcdserver@rune-mradermacher-26b-a4b-q3</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.29" class="num">13.29</td><td data-sort="146.055224" class="num">146.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="25" class="num score">25/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="354.109542" class="num">354</td></tr>
+<tr><td class="method" title="Fresh full-Metal run, 2026-10-03; --gpu-layers -1; server reports MTL0. Same Q5 weights and frozen translations; 64/67 in both modes versus the retained mixed run at 65/67. Configured offload and observed Metal device are not a per-operation GPU trace.">pcdserver@rune-mradermacher-26b-a4b-q5-metal †</td><td>pcdServer</td><td title="Metal; all layers requested (--gpu-layers -1); server reports MTL0; CPU request/tokenization (observed)">G</td><td>rune-mradermacher-26b-a4b</td><td>dedicated</td><td>q5</td><td data-sort="19.13" class="num">19.13</td><td data-sort="153.3" class="num">153.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="25" class="num score">25/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="506.961292" class="num">507</td></tr>
 <tr><td class="method">dohnuts-metal@decider-35b-a3b-q4</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="266.304478" class="num">266.3</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
 <tr><td class="method">systemone@neohorse-4b-q8</td><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>neohorse-4b</td><td>dedicated</td><td>q8</td><td data-sort="5.17" class="num">5.17</td><td data-sort="273.114925" class="num">273.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="25" class="num score">25/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@decider-35b-a3b-q4</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>decider-35b-a3b</td><td>dedicated</td><td>q4</td><td data-sort="21.17" class="num">21.17</td><td data-sort="299.141791" class="num">299.1</td><td data-sort="64" class="num score">64/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="375.170416" class="num">375</td></tr>
@@ -1888,6 +1889,7 @@
 <tr><td class="method">slot@qwen3.5-4b-hmm-q8</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>q8</td><td data-sort="4.48" class="num">4.48</td><td data-sort="287.337313" class="num">287.3</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="285.293375" class="num">285</td></tr>
 <tr><td class="method" title="JPT weights use CC BY-NC 4.0 (non-commercial).">dohnuts-metal@jpt-4b-q4 †</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>jpt-4b</td><td>dedicated</td><td>q4</td><td data-sort="2.71" class="num">2.71</td><td data-sort="290.641791" class="num">290.6</td><td data-sort="62" class="num score">62/67</td><td data-sort="62" class="num score">62/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@qwen3.5-4b-hmm-q4</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-4b-hmm</td><td>fine-tuned</td><td>q4</td><td data-sort="2.71" class="num">2.71</td><td data-sort="303.091045" class="num">303.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="25" class="num score">25/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="38" class="num score">38/39</td><td data-sort="292.977584" class="num">293</td></tr>
+<tr><td class="method" title="Splash 1.1.0 native Metal choice logits, zero generated tokens; calibration on this task is unverified. Size is prepared package/storage bytes including target, draft and tokenizer, not runtime RAM. Packed mixed q4/q8 MoE sections. Ornith is fine-tuned; no licence clearance or pinned source revision is asserted.">splash@ornith-1.5-35b-a3b-splash †</td><td>Splash (Metal)</td><td title="Splash 1.1.0 native Metal; packed 4-bit weights, native choice logits; CPU HTTP/tokenization (configured)">G</td><td>ornith-1.5-35b-a3b-splash</td><td>fine-tuned</td><td>splash-packed-q4-moe</td><td data-sort="20.95" class="num">20.95</td><td data-sort="322.437313" class="num">322.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@jevk5-4b-q4</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>jevk5-4b</td><td>dedicated</td><td>q4</td><td data-sort="2.71" class="num">2.71</td><td data-sort="350.51791" class="num">350.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="429.022958" class="num">429</td></tr>
 <tr><td class="method">systemone@imajev-4b</td><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>imajev-4b</td><td>dedicated</td><td></td><td data-sort="9.81" class="num">9.81</td><td data-sort="363.062687" class="num">363.1</td><td data-sort="62" class="num score">62/67</td><td data-sort="64" class="num score">64/67</td><td data-sort="25" class="num score">25/28</td><td data-sort="37" class="num score">37/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@bonsai-27b-q1</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>bonsai-27b</td><td>vanilla</td><td>q1</td><td data-sort="3.8" class="num">3.80</td><td data-sort="513.526866" class="num">513.5</td><td data-sort="62" class="num score">62/67</td><td data-sort="63" class="num score">63/67</td><td data-sort="24" class="num score">24/28</td><td data-sort="38" class="num score">38/39</td><td data-sort="39" class="num score">39/39</td><td data-sort="1826.799167" class="num">1,827</td></tr>
@@ -2135,8 +2137,9 @@
 <li><strong>Quantization is flat until it falls off a cliff.</strong> Q4 to Q8 barely changes a score. Below Q3 scores drop fast: decider-0.8b at Q2 answered 17 or 18 of 67 on every engine, and Qwen3-4B at IQ1_S answered 13. <a href="../07-quantization/">Chapter 7</a> has the full sweeps.</li>
 <li><strong>Five methods failed.</strong> A Core ML laya export fixed at 64 tokens and four options could not take a five-way question. The BF16 build of unsloth's Qwen3.5-4B was not on disk when its turn came. The earlier pcdServer build answered every request for the two surogate Rune files with HTTP 422; the October fork separately measures mradermacher Rune through its Jinja fallback. The Q5_K_M file of jeb-35b-a3b took the machine's free memory below the benchmark's safety limit while it loaded, and the run was stopped. None of the five appears in the tables.</li>
 </ul>
+<p>The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 63/67 direct at 328.5 ms. Only this Splash package completed. <a href="../results/explorer/#runs-excluded-from-the-charts">The explorer records the refused, failed and deferred runs</a>, including ggmlc Laya Metal and the unresolved Swift loading incident.</p>
 <h2 id="best-method-per-engine-and-runtime">Best method per engine and runtime<a class="headerlink" href="#best-method-per-engine-and-runtime" title="Permanent link">&para;</a></h2>
-<p>Most methods run on pcdServer, because it takes any chat GGUF: 172 of the 300. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
+<p>Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 302. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
 <table>
 <thead>
 <tr>
@@ -2150,67 +2153,35 @@
 </thead>
 <tbody>
 <tr>
-<td>jev (hosted)</td>
-<td style="text-align: right;">1</td>
-<td><code>jev</code></td>
-<td>65 / 65</td>
-<td style="text-align: right;">466</td>
-<td>R</td>
+<td>Core AI</td>
+<td style="text-align: right;">3</td>
+<td><code>coreai@gliner25-decide</code></td>
+<td>61 / –</td>
+<td style="text-align: right;">26.9</td>
+<td>A</td>
 </tr>
 <tr>
-<td>slot (llama-server)</td>
-<td style="text-align: right;">20</td>
-<td><code>slot@rune-26b-a4b-q3</code></td>
-<td>65 / 57</td>
-<td style="text-align: right;">367</td>
-<td>G</td>
+<td>Core ML</td>
+<td style="text-align: right;">2</td>
+<td><code>coreml@gliner25-decide-fp16-l256</code></td>
+<td>61 / –</td>
+<td style="text-align: right;">349.1</td>
+<td>A</td>
 </tr>
 <tr>
-<td>pcdServer</td>
-<td style="text-align: right;">172</td>
-<td><code>pcdserver@rune-mradermacher-26b-a4b-q5</code></td>
-<td>65 / 65</td>
-<td style="text-align: right;">962</td>
-<td>C+G</td>
+<td>Core ML, Neural Engine</td>
+<td style="text-align: right;">2</td>
+<td><code>laya-coreml-ane-w8-compact</code></td>
+<td>48 / 49</td>
+<td style="text-align: right;">4.5</td>
+<td>C+N</td>
 </tr>
 <tr>
-<td>ollaya</td>
-<td style="text-align: right;">10</td>
-<td><code>ollaya@winnow-12b</code></td>
-<td>64 / 65</td>
-<td style="text-align: right;">891</td>
-<td>G</td>
-</tr>
-<tr>
-<td>dohnuts (Metal)</td>
-<td style="text-align: right;">27</td>
-<td><code>dohnuts-metal@decider-35b-a3b-q4</code></td>
-<td>64 / 64</td>
-<td style="text-align: right;">266</td>
-<td>G</td>
-</tr>
-<tr>
-<td>System One server</td>
-<td style="text-align: right;">11</td>
-<td><code>systemone@neohorse-4b-q8</code></td>
-<td>64 / 64</td>
-<td style="text-align: right;">273</td>
-<td>G</td>
-</tr>
-<tr>
-<td>llama.cpp embeddings + head</td>
-<td style="text-align: right;">5</td>
-<td><code>gguf-head@jev-omni-q3</code></td>
-<td>64 / 64</td>
-<td style="text-align: right;">1,222</td>
-<td>C+G</td>
-</tr>
-<tr>
-<td>PyTorch</td>
-<td style="text-align: right;">4</td>
-<td><code>torch@decider-4b-bf16</code></td>
-<td>63 / 65</td>
-<td style="text-align: right;">348</td>
+<td>ExecuTorch (MLX)</td>
+<td style="text-align: right;">2</td>
+<td><code>executorch@decider-0.8b-fp16</code></td>
+<td>61 / 60</td>
+<td style="text-align: right;">89.7</td>
 <td>G</td>
 </tr>
 <tr>
@@ -2218,7 +2189,47 @@
 <td style="text-align: right;">9</td>
 <td><code>mlx@openjev-35b-a3b-4bit</code></td>
 <td>63 / 62</td>
-<td style="text-align: right;">250</td>
+<td style="text-align: right;">250.0</td>
+<td>G</td>
+</tr>
+<tr>
+<td>ONNX Runtime</td>
+<td style="text-align: right;">8</td>
+<td><code>onnx@gliner25-decide-fp32</code></td>
+<td>61 / –</td>
+<td style="text-align: right;">67.3</td>
+<td>C</td>
+</tr>
+<tr>
+<td>OpenRouter API</td>
+<td style="text-align: right;">9</td>
+<td><code>openrouter@typesafe/jev-1.13</code></td>
+<td>65 / 65</td>
+<td style="text-align: right;">364.4</td>
+<td>R</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td style="text-align: right;">4</td>
+<td><code>torch@decider-4b-bf16</code></td>
+<td>63 / 65</td>
+<td style="text-align: right;">348.2</td>
+<td>G</td>
+</tr>
+<tr>
+<td>Splash (Metal)</td>
+<td style="text-align: right;">1</td>
+<td><code>splash@ornith-1.5-35b-a3b-splash</code></td>
+<td>62 / 63</td>
+<td style="text-align: right;">322.4</td>
+<td>G</td>
+</tr>
+<tr>
+<td>System One server</td>
+<td style="text-align: right;">11</td>
+<td><code>systemone@neohorse-4b-q8</code></td>
+<td>64 / 64</td>
+<td style="text-align: right;">273.1</td>
 <td>G</td>
 </tr>
 <tr>
@@ -2226,55 +2237,39 @@
 <td style="text-align: right;">1</td>
 <td><code>dohnuts@decider-0.8b-dreamblooms-q8</code></td>
 <td>62 / 60</td>
-<td style="text-align: right;">275</td>
+<td style="text-align: right;">275.2</td>
 <td>C</td>
 </tr>
 <tr>
-<td>laya.cpp</td>
-<td style="text-align: right;">5</td>
-<td><code>kev-4b-gguf</code></td>
-<td>62 / 55</td>
-<td style="text-align: right;">1,103</td>
-<td>G</td>
-</tr>
-<tr>
-<td>ExecuTorch (MLX)</td>
-<td style="text-align: right;">2</td>
-<td><code>executorch@decider-0.8b-fp16</code></td>
-<td>61 / 60</td>
-<td style="text-align: right;">90</td>
-<td>G</td>
-</tr>
-<tr>
-<td>Core AI</td>
-<td style="text-align: right;">3</td>
-<td><code>coreai@gliner25-decide</code></td>
-<td>61 / –</td>
+<td>dohnuts (Metal)</td>
 <td style="text-align: right;">27</td>
-<td>A</td>
-</tr>
-<tr>
-<td>ONNX Runtime</td>
-<td style="text-align: right;">8</td>
-<td><code>onnx@gliner25-decide-fp32</code></td>
-<td>61 / –</td>
-<td style="text-align: right;">67</td>
-<td>C</td>
-</tr>
-<tr>
-<td>Core ML</td>
-<td style="text-align: right;">2</td>
-<td><code>coreml@gliner25-decide-fp16-l256</code></td>
-<td>61 / –</td>
-<td style="text-align: right;">349</td>
-<td>A</td>
+<td><code>dohnuts-metal@decider-35b-a3b-q4</code></td>
+<td>64 / 64</td>
+<td style="text-align: right;">266.3</td>
+<td>G</td>
 </tr>
 <tr>
 <td>ggmlc (Metal)</td>
 <td style="text-align: right;">2</td>
 <td><code>systemone@kev-ggmlc-0.8b-q8</code></td>
 <td>57 / 45</td>
-<td style="text-align: right;">200</td>
+<td style="text-align: right;">199.8</td>
+<td>G</td>
+</tr>
+<tr>
+<td>jev (hosted)</td>
+<td style="text-align: right;">1</td>
+<td><code>jev</code></td>
+<td>65 / 65</td>
+<td style="text-align: right;">466.1</td>
+<td>R</td>
+</tr>
+<tr>
+<td>laya.cpp</td>
+<td style="text-align: right;">5</td>
+<td><code>kev-4b-gguf</code></td>
+<td>62 / 55</td>
+<td style="text-align: right;">1,103.1</td>
 <td>G</td>
 </tr>
 <tr>
@@ -2282,7 +2277,7 @@
 <td style="text-align: right;">1</td>
 <td><code>systemone@bosun-1.7b-q5</code></td>
 <td>55 / 55</td>
-<td style="text-align: right;">131</td>
+<td style="text-align: right;">130.8</td>
 <td>G</td>
 </tr>
 <tr>
@@ -2290,22 +2285,46 @@
 <td style="text-align: right;">6</td>
 <td><code>laya-wd-gguf-q8</code></td>
 <td>52 / 49</td>
-<td style="text-align: right;">44</td>
+<td style="text-align: right;">44.4</td>
 <td>C+G</td>
 </tr>
 <tr>
-<td>Core ML, Neural Engine</td>
-<td style="text-align: right;">2</td>
-<td><code>laya-coreml-ane-w8-compact</code></td>
-<td>48 / 49</td>
+<td>llama.cpp embeddings + head</td>
 <td style="text-align: right;">5</td>
-<td>C+N</td>
+<td><code>gguf-head@jev-omni-q3</code></td>
+<td>64 / 64</td>
+<td style="text-align: right;">1,222.3</td>
+<td>C+G</td>
+</tr>
+<tr>
+<td>ollaya</td>
+<td style="text-align: right;">10</td>
+<td><code>ollaya@winnow-12b</code></td>
+<td>64 / 65</td>
+<td style="text-align: right;">891.1</td>
+<td>G</td>
+</tr>
+<tr>
+<td>pcdServer</td>
+<td style="text-align: right;">173</td>
+<td><code>pcdserver@rune-mradermacher-26b-a4b-q5</code></td>
+<td>65 / 65</td>
+<td style="text-align: right;">962.3</td>
+<td>C+G</td>
+</tr>
+<tr>
+<td>slot (llama-server)</td>
+<td style="text-align: right;">20</td>
+<td><code>slot@rune-26b-a4b-q3</code></td>
+<td>65 / 57</td>
+<td style="text-align: right;">366.6</td>
+<td>G</td>
 </tr>
 </tbody>
 </table>
 <p>A dash is a direct score that does not apply: GLiNER2.5-Decide was trained on English only.</p>
 <p>If you need an answer in under 10 ms on a Mac, only laya delivers it at a useful score, 52/67; Julia-1 on MLX answers in 6.8 ms but scores 31. Between 10 and 30 ms, laya in ollaya answers in 12 ms (52/67), and GLiNER2.5-Decide on Core AI in 27 ms (61/67, translated text only). If you can spend 40 to 55 ms, pcdServer with a 2B chat model or dohnuts with decider-0.8b reaches 61 or 62. Every method above 62 took at least 85 ms; Rune Q5 reaches 65 in both modes at 962 ms with CPU weights.</p>
-<p>The table also shows where the choice of engine is a choice of model. pcdServer ran 171 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. <a href="../03-engines/#side-by-side">Chapter 3</a> lists which readout each engine uses, and <a href="../12-choosing/#which-engine-and-model">chapter 12</a> turns this table into a choice.</p>
+<p>The table also shows where the choice of engine is a choice of model. pcdServer ran 173 methods, including the October mradermacher Rune conversions through the new Jinja fallback. The earlier failed surogate Rune runs remain excluded. ollaya and the authors' System One servers ran the models they ship, and nothing else. The hosted jev and the five fastest local engines answer the same five-way question, but they do not compete for the same models. <a href="../03-engines/#side-by-side">Chapter 3</a> lists which readout each engine uses, and <a href="../12-choosing/#which-engine-and-model">chapter 12</a> turns this table into a choice.</p>
 <h2 id="the-second-round-model-by-model">The second round, model by model<a class="headerlink" href="#the-second-round-model-by-model" title="Permanent link">&para;</a></h2>
 <p>The 50 methods added in the second round were mostly dedicated decision models that appeared on Hugging Face in the second half of September 2026. Their authors describe them against jev and against each other. Our numbers put them on one question and one machine, which is a narrower test than the authors' own, and a more even one.</p>
 <p><strong>rune-26b-a4b</strong> is the only local model that matched jev on translated text: 65/67 at <code>Q3_K_M</code> on slot, in 367 ms from 13.52 GB. On the original, untranslated text it scored 57/67, the largest gap between the two modes among the top methods. The <code>Q4_K_M</code> file scored 64/67 and 55/67 in 335 ms from 17.03 GB. The file we measured is version 1 of the model, from a gated revision of the repository. The later v3, which leads the Decision Index board, was not published as GGUF when we ran the benchmark, so the two are not the same weights.</p>

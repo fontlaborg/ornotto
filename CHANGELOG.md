@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Add two complete local configurations while preserving all 300 prior rows: Rune Q5 full Metal (64/64, 153.3/152.8 ms) and Ornith Splash (62/63, 322.4/328.5 ms translated/direct). Add the Splash Metal engine and native-choice readout, package storage provenance, updated charts and explicit failed/refused/deferred exclusions. Q5 is 6.3 times faster but loses one correct answer in each mode.
+
 - Add full translated/direct benchmarks for all nine OpenRouter endpoints: 954 successful unique-input requests, 300 public runs, and all 291 earlier rows unchanged. Add the OpenRouter API engine filter, explicit native-choice/noul OVR readouts, resolved versions, remote timing tables and CSV fields. Generate the homepage ranking from benchmark data.
 
 - Verify all nine remote endpoints with authenticated requests. Record and enforce Respan's noul-only capability, including its pydantic-ai boolean bridge; unsupported choice/score calls fail before HTTP.

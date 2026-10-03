@@ -4,7 +4,7 @@ this_file: src_docs/md/results/details.md
 
 # Results: every table
 
-This page collects every table the benchmark produced, with enough context to read each one on its own. The chapters that discuss them carry the same tables beside the argument. Every number comes from one run on one 48 GB Mac, on one 67-query router question; [chapter 5](../05-method.md) describes the run. For the headline figures, start at [Results: the short version](tldr.md).
+This page collects every table the benchmark produced, with enough context to read each one on its own. The chapters that discuss them carry the same tables beside the argument. Local measurements come from distinct saved runs on one 48 GB Mac; remote rows include network/provider latency, on one 67-query router question; [chapter 5](../05-method.md) describes the run. For the headline figures, start at [Results: the short version](tldr.md).
 
 Scores count correct answers out of 67. **Translated** means the 39 non-English queries were first translated into English; **direct** means the classifier got the original text. **ms/query** is the mean wall-clock time per query, without model loading. [Chapter 5](../05-method.md#what-the-numbers-mean) defines every column.
 
@@ -22,9 +22,9 @@ Six endpoints use a native five-way **choice**. Respan's three endpoints support
 
 --8<-- "tables/remote.html"
 
-## All 300 methods
+## All 302 methods
 
-A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Five more failed and are left out; [chapter 6](../06-results.md#every-method) says why.
+A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Incomplete and failed attempts are left out; [the latest exclusions](explorer.md#runs-excluded-from-the-charts) complement the earlier failures; [chapter 6](../06-results.md#every-method) says why.
 
 Type in the box to keep only the rows that contain every word you type: `pcdServer hmm` keeps the Hmm model on pcdServer, and `dedicated Metal` keeps the dedicated models on dohnuts (Metal).
 

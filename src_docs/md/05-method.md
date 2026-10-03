@@ -115,9 +115,11 @@ pcdServer cannot attach a description to each allowed value, which is why its ta
 
 Every model was loaded alone, measured, and unloaded before the next one started. The rule comes from an accident. An early driver loaded several GGUF files per batch (up to 9 GB of weights at once) next to the resident translation model, while other experiments ran beside it. The machine, an Apple M4 Max with 48 GB of memory, swapped until its boot disk was full and macOS stopped responding.
 
-Since then the harness checks that no model process is running before it loads one. A watchdog polls every two seconds and aborts a model's run if swap grows by more than 4 GB, free space on the boot disk falls below 30 GB, available memory falls below 4 GB, or the run passes 30 minutes. With those guards in place, swap stayed flat at about 2.7 GB for every model, the 21 GB decider-35b-a3b included. [Chapter 8](08-speed.md#memory-one-model-at-a-time) turns this into rules for your own code.
+In the original campaign the harness checked that no model process was running before loading one. A watchdog polled every two seconds and aborted a model's run if swap grew by more than 4 GB, free space on the boot disk fell below 30 GB, available memory fell below 4 GB, or the run passed 30 minutes. With those guards in place, swap stayed flat at about 2.7 GB for every model, the 21 GB decider-35b-a3b included. [Chapter 8](08-speed.md#memory-one-model-at-a-time) turns this into rules for your own code.
 
 One model at a time also makes the timings fair: no model competes with another for the GPU or for memory bandwidth.
+
+For the October retry, preflight also refuses loaded LM Studio models, unknown memory pressure, and available RAM below 1.5 times the stored package/weight size plus a 10 GiB reserve. The watchdog uses a 10 GiB available-memory floor; the conservative retry limits swap growth to 1 GiB and duration to five minutes. These are refusal rules, not proven runtime-memory bounds. A userspace watchdog cannot prevent a kernel/storage panic. Failed classifiers now cause guarded runs to exit unsuccessfully; successful process exit alone does not establish a complete measurement.
 
 ## What the numbers mean
 
@@ -251,7 +253,7 @@ Every board in this section was created in the second half of September, after j
 
 ## Interactive comparisons
 
-The [benchmark explorer](results/explorer.md) recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 290 earlier timings and answers are preserved.
+The [benchmark explorer](results/explorer.md) recomputes speed and weight-size Pareto frontiers after filtering. Direct mode uses the mean of the cached original-text timings; translated mode uses the existing classification timings. Neither includes translation or server startup. Rune Q4 has a separately identified Metal rerun, with the earlier CPU-weight result retained. All 300 earlier public classifier rows and saved answers are preserved. Rune Q5 full Metal and Ornith Splash add two complete, separately identified configurations; the exclusions remain explicit.
 
 
 ## October remote measurements

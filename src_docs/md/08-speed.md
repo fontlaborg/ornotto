@@ -272,3 +272,7 @@ The `ornotto` package applies the same discipline to itself. Each `Decider` shar
 [^jeff]: firelex, "jeff" README, read 2026-09-30. <https://github.com/firelex/jeff>
 [^redhat]: Lucas Wilkinson and Rob Greenberg, Red Hat Developer, "Run decision models on vLLM and Red Hat AI using DiffusionGemma", 2026-09-28. <https://developers.redhat.com/articles/2026/09/28/run-decision-model-vllm-and-red-hat-ai>
 [^techcrunch]: TechCrunch, "A new kind of AI model from a ChatGPT inventor is thrilling developers", 2026-09-18. <https://techcrunch.com/2026/09/18/a-new-kind-of-ai-model-from-a-chatgpt-inventor-is-thrilling-developers/>
+
+## Saved device comparisons in October
+
+The same Rune Q5 file measures 962.3 ms translated with CPU weights and Metal computation, and 153.3 ms with all layers requested on Metal: 6.3× faster. It changes one answer in each mode and scores 64/64 rather than 65/65. The Q4 comparison is 487.1 versus 124.8 ms, with unchanged answers. Ornith Splash measures 322.4/328.5 ms translated/direct through native choice logits; those are decision-request latencies, not generated tokens per second. Package bytes and a Metal cap are not measurements of total resident RAM. [Compare the retained runs and exclusions](results/explorer.md#rune-q5-and-splash-two-completed-october-runs).

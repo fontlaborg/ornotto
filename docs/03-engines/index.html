@@ -932,6 +932,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#splash-native-choice-readout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splash native choice readout
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1560,6 +1571,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#splash-native-choice-readout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splash native choice readout
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2046,6 +2068,8 @@ flowchart TD
 <li><strong>pcdServer has been quiet.</strong> Its only release, v0.1.0, came out on 2026-09-18, and the repository has had no commit, issue or pull request since that day.<sup id="fnref2:pcdserver-repo"><a class="footnote-ref" href="#fn:pcdserver-repo">11</a></sup> The October ornotto build carries a <a href="https://github.com/fontlaborg/pcdServer/tree/issue102-jinja-fallback">fork</a> with a Jinja chat-template fallback, automatic-BOS deduplication and a CPU-weight option; the new Rune runs verify that path. The upstream activity statement describes the September snapshot.</li>
 <li><strong>dohnuts kept moving.</strong> Upstream aligned its System One replies with TypeSafe's on 2026-09-23, merged our prefix-reuse change on 2026-09-24, added its own cache of decoded prefixes across calls eight minutes after the merge, and added a new Dohnuts-family model and a flash-attention switch on 2026-09-29.<sup id="fnref2:dohnuts-repo"><a class="footnote-ref" href="#fn:dohnuts-repo">10</a></sup> <a href="../08-speed/#prefix-caching-in-dohnuts">Chapter 8</a> covers the caches, <a href="../04-models/">chapter 4</a> the models, and <a href="../12-choosing/#contributing-upstream">chapter 12</a> the state of our fork.</li>
 </ul>
+<h2 id="splash-native-choice-readout">Splash native choice readout<a class="headerlink" href="#splash-native-choice-readout" title="Permanent link">&para;</a></h2>
+<p>Splash 1.1.0 runs prepared Qwen-derived packages on native Metal. Our benchmark calls its System One choice endpoint and reads final-position option probabilities, with zero generated tokens. Only Ornith 1.5 completed: 62/67 translated and 63/67 direct, at 322.4 and 328.5 ms. The package stores mixed q4/q8 MoE sections and occupies 20.95 GB including target, draft and tokenizer. Neither that size nor the configured Metal memory cap measures total process RAM. This runtime is benchmark-only here; the Python package does not launch it. <a href="../results/explorer/#rune-q5-and-splash-two-completed-october-runs">Read the measured comparison and unresolved exclusions</a>, and the <a href="https://github.com/incoai/splash">runtime source</a>.</p>
 <div class="footnote">
 <hr />
 <ol>

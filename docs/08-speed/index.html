@@ -1075,6 +1075,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#saved-device-comparisons-in-october" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saved device comparisons in October
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1434,6 +1445,17 @@
     <span class="md-ellipsis">
       
         What changed in September 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saved-device-comparisons-in-october" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saved device comparisons in October
       
     </span>
   </a>
@@ -2055,6 +2077,8 @@ flowchart TD
 <li><strong>Hosted decision services</strong> multiplied. OpenAI announced a Decision API with a 150 ms claim on 2026-09-29, and Liquid AI's d1 and meraGPT's Decider 1 joined jev on the typed-decisions board with p50 latencies near 525 ms (<a href="#speed-claims-by-others">speed claims by others</a>).</li>
 <li><strong>The September timings</strong> use engine builds pinned to llama.cpp v0.4.1 of 2026-09-14. The October dohnuts additions use <code>7fe450e</code> (0.5.0-dev), while pcdServer retains v0.4.1; those new rows do not revise the older timings (<a href="../03-engines/">chapter 3</a>).</li>
 </ul>
+<h2 id="saved-device-comparisons-in-october">Saved device comparisons in October<a class="headerlink" href="#saved-device-comparisons-in-october" title="Permanent link">&para;</a></h2>
+<p>The same Rune Q5 file measures 962.3 ms translated with CPU weights and Metal computation, and 153.3 ms with all layers requested on Metal: 6.3× faster. It changes one answer in each mode and scores 64/64 rather than 65/65. The Q4 comparison is 487.1 versus 124.8 ms, with unchanged answers. Ornith Splash measures 322.4/328.5 ms translated/direct through native choice logits; those are decision-request latencies, not generated tokens per second. Package bytes and a Metal cap are not measurements of total resident RAM. <a href="../results/explorer/#rune-q5-and-splash-two-completed-october-runs">Compare the retained runs and exclusions</a>.</p>
 <div class="footnote">
 <hr />
 <ol>

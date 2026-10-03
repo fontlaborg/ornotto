@@ -421,3 +421,7 @@ Both engines that `ornotto` bundles were written in September 2026, and both sti
 [^dohnuts-repo]: DreamBlooms, dohnuts.cpp repository and commit history, read 2026-09-30. <https://github.com/DreamBlooms/dohnuts.cpp>
 [^pcdserver-repo]: stephanj, pcdServer repository, v0.1.0, 2026-09-18, read 2026-09-30. <https://github.com/stephanj/pcdServer>
 [^llamacpp-batch]: ggml-org, llama.cpp pull request 29385, "batch: migrate speculative, mtmd and server to batch_ext", merged 2026-09-28. <https://github.com/ggml-org/llama.cpp/pull/29385>
+
+## Splash native choice readout
+
+Splash 1.1.0 runs prepared Qwen-derived packages on native Metal. Our benchmark calls its System One choice endpoint and reads final-position option probabilities, with zero generated tokens. Only Ornith 1.5 completed: 62/67 translated and 63/67 direct, at 322.4 and 328.5 ms. The package stores mixed q4/q8 MoE sections and occupies 20.95 GB including target, draft and tokenizer. Neither that size nor the configured Metal memory cap measures total process RAM. This runtime is benchmark-only here; the Python package does not launch it. [Read the measured comparison and unresolved exclusions](results/explorer.md#rune-q5-and-splash-two-completed-october-runs), and the [runtime source](https://github.com/incoai/splash).

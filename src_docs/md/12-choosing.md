@@ -250,3 +250,7 @@ Each of these can change a row in the table at the top of this chapter. The book
 [^pr1]: DreamBlooms/dohnuts.cpp, "Reuse the state prefix across side-model rows", pull request #1, 2026-09-24. <https://github.com/DreamBlooms/dohnuts.cpp/pull/1>
 [^dohnuts-commits]: DreamBlooms, "dohnuts.cpp" commit history, read 2026-09-30. <https://github.com/DreamBlooms/dohnuts.cpp/commits/main>
 [^pcdserver]: stephanj, "pcdServer", read 2026-09-30. <https://github.com/stephanj/pcdServer>
+
+## Choose a measured GPU configuration
+
+Rune Q5 full Metal scores 64/67 in both modes at 153.3 ms translated and 152.8 ms direct. The retained mixed run scores 65/67 at 962.3 ms: choose whether that extra answer on this small set merits the latency. Ornith Splash scores 62/63 at 322.4/328.5 ms and does not improve the fastest useful frontier. A failed or refused load provides no accuracy result. [The explorer keeps every completed configuration and explains exclusions](results/explorer.md#rune-q5-and-splash-two-completed-october-runs).
