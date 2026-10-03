@@ -31,6 +31,6 @@ Native Laya MLX and xDecision support is implemented and measured. The public
 API uses optional upstream runtimes and existing native System One transport;
 package/typed/lifecycle tests and three complete guarded benchmark runs pass.
 All 302 previous configurations remain identical; 305 are built and local
-browser acceptance passes. Publish source/built docs and verify the actual
-HTTPS deployment. Heavy exclusions and provider/head GPU optimization remain
+browser acceptance passes. Source/built docs are published; Pages 37084662597 and actual
+HTTPS artifact/browser checks pass. Heavy exclusions and provider/head GPU optimization remain
 unfinished; package release remains separate through publish.sh.

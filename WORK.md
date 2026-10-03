@@ -22,7 +22,9 @@ tests deselected); private suite 103 passed, one optional skipped. Strict
 18-page docs build succeeds. Pure wheel/sdist build and installed-wheel import
 smoke succeed. Local browser checks pass native engine filters/readouts, reload
 and CSV plus the existing remote, Splash, Q5/Q4, Pareto, dark/mobile, offline,
-SVG and navigation checks with zero JavaScript exceptions. Deployment pending.
+SVG and navigation checks with zero JavaScript exceptions. Published source
+659c291, final HTML formatting 942ebdf; Pages 37084662597 succeeded. All 15
+live artifacts match the build and fresh HTTPS browser acceptance passes.
 The earlier memory refusals and excluded failures remain unresolved; no claim
 that every benchmark now runs exclusively on GPU is made.
 
