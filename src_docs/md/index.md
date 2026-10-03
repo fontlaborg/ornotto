@@ -30,7 +30,7 @@ Send a message and a closed list of answers. The model returns one of them and a
 </div>
 
 <div class="ornotto-numbers" role="list">
-<div role="listitem"><span class="ornotto-numbers__value">302</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
+<div role="listitem"><span class="ornotto-numbers__value">305</span><span class="ornotto-numbers__label">methods measured</span><span class="ornotto-numbers__note">a model, read one way on one engine or remote API</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">67</span><span class="ornotto-numbers__label">queries in 30 languages</span><span class="ornotto-numbers__note">each asking for one of five tasks</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">65<small>/67</small></span><span class="ornotto-numbers__label">best local score</span><span class="ornotto-numbers__note">Rune q5 on pcdServer, level with jev in both modes</span></div>
 <div role="listitem"><span class="ornotto-numbers__value">26.9<small> ms</small></span><span class="ornotto-numbers__label">fastest at 60/67 or better</span><span class="ornotto-numbers__note">gliner25-decide on Core AI, 61/67</span></div>
@@ -79,7 +79,7 @@ Almeida asked this on jev's launch thread, when the discussion turned to whether
 
 ## What we measured
 
-One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 302 rows and every table](results/details.md).
+One router question, asked of every method: which of five tasks does a FontLab user want? The chart ranks the best eight by translated score, then direct score and speed. Local and remote runs retain their execution labels. [Explore the speed/accuracy frontier](results/explorer.md), or read [all 305 rows and every table](results/details.md).
 { .ornotto-section-lead }
 
 For a fast first pass, laya on MLX scores **52/67 in 6.9 ms** on translated text. [Set your own accuracy floor and compare Pareto frontiers](results/explorer.md). Rune Q4 now measures **124.8 ms** on GPU, against **487.1 ms** with CPU weights. Rune Q5 full Metal adds **64/64 at 153.3 ms**, 6.3× faster with one fewer correct answer in each mode than its mixed run. Ornith Splash scores **62/63 at 322.4/328.5 ms**. **C** = CPU, **G** = GPU, **C+G** = mixed, **R** = remote; all other device codes are explained in the full report.
@@ -99,7 +99,7 @@ Each row is one method, ranked by translated score, then direct score, then spee
 
 ## Local engines and remote models, one API
 
-The package runs two open-source C++ engines on llama.cpp behind one Python API, drives ollaya if you install it, and calls the nine measured OpenRouter endpoints remotely. [Chapter 3](03-engines.md) explains how each one reads an answer.
+The package runs two open-source C++ engines on llama.cpp behind one Python API, drives ollaya if you install it, supports optional native Laya MLX/xDecision encoders, and calls the nine measured OpenRouter endpoints remotely. [Chapter 3](03-engines.md) explains how each one reads an answer.
 { .ornotto-section-lead }
 
 <div class="ornotto-features" markdown="1">
@@ -184,7 +184,7 @@ Benchmarks
 { .ornotto-chapters__group }
 
 5. [How we measured](05-method.md) One router question, 67 queries, labels fixed before the run.
-6. [Results](06-results.md) All 302 methods against jev, the hosted reference.
+6. [Results](06-results.md) All 305 methods against jev, the hosted reference.
 7. [Quantization and size](07-quantization.md) What precision changes: file size, memory and the answers that survive.
 8. [Speed, memory and caching](08-speed.md) One forward pass per decision, and what an engine avoids prefilling twice.
 9. [Confidence and fallback](09-confidence.md) Whether the probabilities mean what they say, and what a fallback buys.

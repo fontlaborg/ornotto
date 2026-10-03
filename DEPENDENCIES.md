@@ -26,3 +26,15 @@ offline. Sources: [release](https://github.com/plotly/plotly.js/releases/tag/v3.
 the browser mathematics tests when available; package tests skip that check on
 environments without Node. Playwright was used for local browser acceptance
 and is not a package or site dependency.
+
+Native encoders reuse the existing model downloader, transport and managed
+process lifecycle. Their loopback server uses Python's standard `http.server`.
+**laya-mlx** (optional `laya-mlx` extra, 0.3 series) implements the native MLX
+encoder on Apple silicon, Python 3.11+. **xDecision** is installed separately
+from [the pinned source](https://github.com/xnetsc/xDecision/tree/4082689a093393358534fda26a945699080eb572),
+with `[apple]` for MLX GPU or its base dependencies for PyTorch CPU. It is not
+on PyPI and is not a direct-URL package dependency. Both runtimes implement
+choice, noul and score; their GGUF/checkpoint formats are not interchangeable
+with the bundled llama.cpp engines. Optional runtime imports occur only in the
+child process. Model cards: [Laya MLX](https://huggingface.co/aac6fef/laya-multilingual-mlx),
+[xDecision](https://huggingface.co/mccoysc/xDecision).

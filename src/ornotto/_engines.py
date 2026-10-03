@@ -76,6 +76,24 @@ def gpu_available() -> bool:
 
 def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[str]:
     """The command line that serves `model` with `engine` on `port`; ollaya reads the port from env."""
+    if engine in ("laya-mlx", "xdecision"):
+        if model.gguf is None:
+            raise ValueError("encoder runtime needs a checkpoint directory or custom GGUF")
+        return [
+            sys.executable,
+            "-m",
+            "ornotto._encoder_server",
+            "--engine",
+            engine,
+            "--model",
+            str(model.gguf),
+            "--name",
+            model.name,
+            "--port",
+            str(port),
+            "--device",
+            "gpu" if gpu else "cpu",
+        ]
     binary = str(find_binary(engine))
     if engine == "ollaya":
         if model.tag is None:
@@ -277,7 +295,7 @@ class Adapter:
     @property
     def native(self) -> bool:
         """dohnuts and ollaya speak System One (`/v1/systemone`) themselves; pcdServer needs translating."""
-        return self.engine in ("dohnuts", "ollaya", "openrouter")
+        return self.engine in ("dohnuts", "ollaya", "openrouter", "laya-mlx", "xdecision")
 
     @property
     def calibrated(self) -> bool:

@@ -4,7 +4,7 @@ this_file: src_docs/md/results/tldr.md
 
 # Results: the short version
 
-We asked 302 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small local dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.
+We asked 305 methods one router question: which of five tasks does a FontLab user want? There were 67 queries in 30 languages, and each method was scored twice, on English translations and on the original text. The hosted reference, jev, answered 65 of 67 either way. Rune Q5 on pcdServer matches it in both modes at 962 ms/query with CPU weights. An earlier local method matched it on translated text: rune-26b-a4b version 1 at Q3_K_M, which scored 65/67 but fell to 57/67 on the original text. Among the 4B models, Qwen3.5-4B-Hmm on pcdServer scored 64/67 and 65/67 in 88 ms, and the best small local dedicated model, NeoHorse-Jev-4B, scored 64/67 in both modes in 273 ms. The fastest method at 60/67 or better is GLiNER2.5-Decide on Core AI: 61/67 on translated text in 26.9 ms.
 
 Rune Q5 full Metal adds a separate **64/64 at 153.3 ms** run: 6.3× faster, with one fewer correct answer in each mode than its retained mixed run. **Ornith Splash** adds **62/63 at 322.4/328.5 ms** translated/direct. Only these completed new runs appear; [the explorer explains exclusions and device evidence](explorer.md#rune-q5-and-splash-two-completed-october-runs).
 
@@ -38,7 +38,7 @@ The full list, one row per engine and runtime, is in [chapter 6](../06-results.m
 
 ## Where to read more
 
-- [Results: every table](details.md) has all 302 rows, filterable and sortable, and every other table the benchmark produced.
+- [Results: every table](details.md) has all 305 rows, filterable and sortable, and every other table the benchmark produced.
 - [Chapter 5](../05-method.md) explains how we measured and what each column means.
 - [Chapter 6](../06-results.md) reads the results model by model.
 - [Chapter 7](../07-quantization.md) covers quantization and file size.

@@ -31,6 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 pydantic-ai = ["pydantic-ai-slim[typesafe]>=2.48", "httpx2"]
+laya-mlx = ["laya-mlx>=0.3,<0.4; python_version >= '3.11' and sys_platform == 'darwin' and platform_machine == 'arm64'"]
 
 [project.scripts]
 ornotto = "ornotto.__main__:main"

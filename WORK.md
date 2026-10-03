@@ -2,6 +2,30 @@
 
 # Work
 
+## 2026-10-03 — native encoder integrations
+
+Added optional Laya MLX and xDecision runtimes with three registered artifacts,
+existing managed process sharing/shutdown, sync/async and typed/pydantic-ai
+consumers. Native choice/noul/score, action and usage are retained; invalid
+responses and reported state truncation fail. Calibration remains unverified.
+xDecision source is pinned, separately installed; Q8 storage expands to FP16
+for MLX. Optional dependencies stay out of the default install.
+
+All three guarded one-model runs completed 106 inputs, with unchanged frozen
+translations, no swap growth and clean shutdown. Laya MLX 0.3.0 scores 52/49
+at 11.4/11.2 ms; xDecision F16 44/43 at 14.9/15.1 ms; Q8 45/43 at 14.3/14.2 ms.
+All fields of 302 prior public configurations are identical. The report now
+has 305 configurations and separate native engine filters/provenance.
+
+Validation: package test.sh passes lint/format and 126 tests (13 bundled-engine
+tests deselected); private suite 103 passed, one optional skipped. Strict
+18-page docs build succeeds. Pure wheel/sdist build and installed-wheel import
+smoke succeed. Local browser checks pass native engine filters/readouts, reload
+and CSV plus the existing remote, Splash, Q5/Q4, Pareto, dark/mobile, offline,
+SVG and navigation checks with zero JavaScript exceptions. Deployment pending.
+The earlier memory refusals and excluded failures remain unresolved; no claim
+that every benchmark now runs exclusively on GPU is made.
+
 ## 2026-10-03 — completed local retry results
 
 Exported two complete runs: Rune Q5 full Metal, 64/64 at 153.3/152.8 ms

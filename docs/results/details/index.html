@@ -3,75 +3,75 @@
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
-    
+
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      
+
         <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
-      
-      
+
+
         <meta name="author" content="Fontlab Ltd.">
-      
-      
+
+
         <link rel="canonical" href="https://fontlab.org/ornotto/results/details/">
-      
-      
+
+
         <link rel="prev" href="../tldr/">
-      
-      
+
+
         <link rel="next" href="../../01-deciding/">
-      
-      
-        
-      
-      
-      
-      
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
           <link rel="icon" href="../../assets/images/favicon.png">
-        
-      
+
+
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
-    
-    
-      
+
+
+
         <title>Results: every table - ornotto</title>
-      
-    
-    
+
+
+
       <link rel="stylesheet" href="../../assets/stylesheets/main.d7aee198.min.css">
-      
-        
+
+
         <link rel="stylesheet" href="../../assets/stylesheets/palette.a45159b5.min.css">
-      
-    
-    
 
-    
 
-    
-      
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
       <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
-    
-      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
-    
-      <link rel="stylesheet" href="../../css/site.css">
-    
-      <link rel="stylesheet" href="../../css/benchmark.13b021a7aaa8.css">
-    
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
 
-    
-    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+
+      <link rel="stylesheet" href="../../css/site.css">
+
+      <link rel="stylesheet" href="../../css/benchmark.13b021a7aaa8.css">
+
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
 
   <link rel="stylesheet" href="https://use.typekit.net/gav0zux.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,39 +104,39 @@
   <script src="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.js" defer></script>
 
   </head>
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
     <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
-  
-    
+
+
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <label class="md-overlay" for="__toc"></label>
     <div data-md-component="skip">
-      
-        
+
+
         <a href="#results-every-table" class="md-skip">
           Skip to content
         </a>
-      
+
     </div>
     <div data-md-component="announce">
-      
+
     </div>
-    
-    
-  
+
+
+
   <header class="md-header" data-md-component="header" aria-hidden="true">
     <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
@@ -144,19 +144,19 @@
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
-        
+
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
+
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
-      
+
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0">
@@ -174,142 +174,142 @@
   <fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
 
     <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-            
+
+
+
+
+
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
+
+
+
+
+
+
     <li class="md-tabs__item">
       <a href="../.." class="md-tabs__link">
-        
-  
-  
-    
-  
+
+
+
+
+
   Home
 
       </a>
     </li>
-  
 
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../explorer/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Results
 
         </a>
       </li>
-    
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
-      
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../../01-deciding/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Book
 
         </a>
       </li>
-    
-  
 
-    
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../../10-package/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Use ornotto
 
         </a>
       </li>
-    
-  
 
-      
+
+
+
     </ul>
   </div>
 </nav>
-          
-        
-      
+
+
+
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
-          
-  
-            
-              
+
+
+
+
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
 
 
-  
+
+
 
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
-      
-  
+
+
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ornotto
   </label>
-  
+
     <div class="md-nav__source">
       <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
-    
+
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
@@ -317,1081 +317,1081 @@
   </div>
 </a>
     </div>
-  
+
   <ul class="md-nav__list">
-    
-      
-      
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Home
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+
+
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Results
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Results
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../explorer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Explore speed and accuracy
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Explore speed and accuracy
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../tldr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: the short version
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Results: the short version
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: every table
-  
 
-    
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Results: every table
+
+
+
   </span>
-  
-  
+
+
 
           <span class="md-nav__icon md-icon"></span>
         </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: every table
-  
 
-    
+      <a href="./" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Results: every table
+
+
+
   </span>
-  
-  
+
+
 
       </a>
-      
-        
+
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
         <li class="md-nav__item">
   <a href="#openrouter-nine-remote-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         OpenRouter: nine remote models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
-  <a href="#all-302-methods" class="md-nav__link">
+  <a href="#all-305-methods" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        All 302 methods
-      
+
+        All 305 methods
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#cpu-and-mixed-runs" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         CPU and mixed runs
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#one-set-of-weights-on-several-engines" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         One set of weights on several engines
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#best-model-per-family" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Best model per family
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#quantization-sweeps" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Quantization sweeps
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#every-query" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Every query
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-translator" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The translator
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#language-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Language detection
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Calibration
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#a-fallback-gate" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         A fallback gate
-      
+
     </span>
   </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
 
-              
-            
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Book
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+
+
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Book
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Book
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+
+
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Concepts
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Concepts
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../01-deciding/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1. Deciding, not generating
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    1. Deciding, not generating
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../02-decisions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2. The shape of a decision
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    2. The shape of a decision
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../03-engines/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3. Ways to read an answer
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    3. Ways to read an answer
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../04-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4. Dedicated, fine-tuned and vanilla models
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    4. Dedicated, fine-tuned and vanilla models
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Method and analysis
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+
+
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Method and analysis
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Method and analysis
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../05-method/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    5. How we measured
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    5. How we measured
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../06-results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    6. Results
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    6. Results
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../07-quantization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    7. Quantization and size
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    7. Quantization and size
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../08-speed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Speed, memory and caching
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    8. Speed, memory and caching
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../09-confidence/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. Confidence and fallback
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    9. Confidence and fallback
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-              
-            
+    </li>
+
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Use ornotto
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+
+
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Use ornotto
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Use ornotto
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../10-package/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. The ornotto package
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    10. The ornotto package
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../11-typed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Typed decisions and pydantic-ai
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    11. Typed decisions and pydantic-ai
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../../12-choosing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Choosing, building and contributing
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    12. Choosing, building and contributing
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
+    </li>
+
+
+
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
-            
-            
-              
+
+
+
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
         <li class="md-nav__item">
   <a href="#openrouter-nine-remote-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         OpenRouter: nine remote models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
-  <a href="#all-302-methods" class="md-nav__link">
+  <a href="#all-305-methods" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        All 302 methods
-      
+
+        All 305 methods
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#cpu-and-mixed-runs" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         CPU and mixed runs
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#one-set-of-weights-on-several-engines" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         One set of weights on several engines
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#best-model-per-family" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Best model per family
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#quantization-sweeps" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Quantization sweeps
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#every-query" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Every query
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-translator" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The translator
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#language-detection" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Language detection
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#calibration" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Calibration
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#a-fallback-gate" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         A fallback gate
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
     </ul>
-  
+
 </nav>
                   </div>
                 </div>
               </div>
-            
-          
+
+
   <!-- Subtheme switcher: injected into the tabs nav (div[4]/nav) by fontlab-theme.js -->
   <template id="fl-theme-menu-template">
     <div class="fl-theme" data-fl-theme>
@@ -1417,18 +1417,18 @@
     </button>
   </template>
 
-          
+
             <div class="md-content" data-md-component="content">
-              
-              
-              
+
+
+
               <article class="md-content__inner md-typeset" data-pagefind-body>
-                
+
 <!--email_off-->
 
-                  
-  
-  
+
+
+
 
 
 <h1 id="results-every-table">Results: every table<a class="headerlink" href="#results-every-table" title="Permanent link">&para;</a></h1>
@@ -1455,7 +1455,7 @@
 </tbody></table>
 </div>
 
-<h2 id="all-302-methods">All 302 methods<a class="headerlink" href="#all-302-methods" title="Permanent link">&para;</a></h2>
+<h2 id="all-305-methods">All 305 methods<a class="headerlink" href="#all-305-methods" title="Permanent link">&para;</a></h2>
 <p>A method is one model file, read one way, on one engine or runtime. This is every method that finished, best first. Incomplete and failed attempts are left out; <a href="../explorer/#runs-excluded-from-the-charts">the latest exclusions</a> complement the earlier failures; <a href="../../06-results/#every-method">chapter 6</a> says why.</p>
 <p>Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal).</p>
 <div class="admonition note">
@@ -1467,8 +1467,8 @@
 </ul>
 </div>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 302 rows" aria-label="Filter the table" data-table="classifiers">
-<table class="sortable" id="classifiers"><caption>All 302 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
+<input class="table-filter" type="search" placeholder="Filter 305 rows" aria-label="Filter the table" data-table="classifiers">
+<table class="sortable" id="classifiers"><caption>All 305 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
 <tbody>
 <tr><td class="method" title="Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.">openrouter@typesafe/jev-1.13 †</td><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>typesafe/jev-1.13</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@rune-26b-a4b-q3</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="31" class="num score">31/39</td><td data-sort="608.070417" class="num">608</td></tr>
@@ -1658,6 +1658,7 @@
 <tr><td class="method">dohnuts-metal@this-that-model-1.2-q8</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>this-that-model-1.2</td><td>dedicated</td><td>q8</td><td data-sort="2.01" class="num">2.01</td><td data-sort="107.758209" class="num">107.8</td><td data-sort="53" class="num score">53/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="20" class="num score">20/28</td><td data-sort="33" class="num score">33/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
 <tr><td class="method">laya-mlx</td><td>MLX</td><td title="MLX Metal GPU (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="1796.539916" class="num">1,797</td></tr>
 <tr><td class="method">laya-coreai</td><td>Core AI</td><td title="Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded (configured)">A</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="10.025373" class="num">10.0</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="3164.4525" class="num">3,164</td></tr>
+<tr><td class="method" title="Native laya-mlx 0.3.0 choice, noul and score heads; FP16 MLX GPU, CPU tokenization. Weight revision f2b4faf51023039425946074e2cf1361d2db11d5. Calibration on this task is unverified. Earlier Laya MLX measurements are retained separately.">systemone@laya-mlx-package-fp16 †</td><td>Laya MLX (native)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td>fp16</td><td data-sort="0.64" class="num">0.64</td><td data-sort="11.402985" class="num">11.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td class="num"></td></tr>
 <tr><td class="method">ollaya@laya-multilingual</td><td>ollaya</td><td title="ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td>fp32</td><td data-sort="0.68" class="num">0.68</td><td data-sort="12.259701" class="num">12.3</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="1217.387125" class="num">1,217</td></tr>
 <tr><td class="method">laya-coreai-mlb</td><td>Core AI</td><td title="Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded (configured)">A</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="19.402985" class="num">19.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="2403.659791" class="num">2,404</td></tr>
 <tr><td class="method">laya-ml-onnx-fp32</td><td>ONNX Runtime</td><td title="ONNX Runtime CPUExecutionProvider (configured)">C</td><td>laya-multilingual</td><td>dedicated</td><td>fp32</td><td class="num"></td><td data-sort="23.41194" class="num">23.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="824.984417" class="num">825</td></tr>
@@ -1691,7 +1692,9 @@
 <tr><td class="method">laya-wd-gguf-q5</td><td>llama.cpp embeddings</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td>laya-multilingual</td><td>dedicated</td><td>q5</td><td class="num"></td><td data-sort="45.48806" class="num">45.5</td><td data-sort="47" class="num score">47/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="30" class="num score">30/39</td><td data-sort="26" class="num score">26/39</td><td data-sort="2350.379417" class="num">2,350</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-0.8b-q3</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-0.8b</td><td>vanilla</td><td>q3</td><td data-sort="0.52" class="num">0.52</td><td data-sort="31.265672" class="num">31.3</td><td data-sort="46" class="num score">46/67</td><td data-sort="40" class="num score">40/67</td><td data-sort="15" class="num score">15/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="25" class="num score">25/39</td><td data-sort="218.470167" class="num">218</td></tr>
 <tr><td class="method">gguf-head@laya-neutron-en</td><td>llama.cpp embeddings + head</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td>laya-en</td><td>dedicated</td><td>q4_0</td><td data-sort="0.29" class="num">0.29</td><td data-sort="62.443284" class="num">62.4</td><td data-sort="46" class="num score">46/67</td><td class="num"></td><td data-sort="16" class="num score">16/28</td><td data-sort="30" class="num score">30/39</td><td class="num"></td><td data-sort="1664.353417" class="num">1,664</td></tr>
+<tr><td class="method" title="Native xDecision choice, noul and score heads; MLX FP16 GPU, CPU tokenization. Q8_0 is storage quantization: expanded to FP16 at load, not quantized matmul. Calibration on this task is unverified. Runtime revision 4082689a093393358534fda26a945699080eb572; weights d97731bc72664e06722e5ca64fcdbc8e0e2f9c95.">systemone@xdecision-q8-mlx †</td><td>xDecision (MLX)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>xDecision</td><td>dedicated</td><td>q8</td><td data-sort="0.4" class="num">0.40</td><td data-sort="14.329851" class="num">14.3</td><td data-sort="45" class="num score">45/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="26" class="num score">26/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@qwen3.8-2b-distill-q5</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.8-2b-distill</td><td>fine-tuned</td><td>q5</td><td data-sort="1.45" class="num">1.45</td><td data-sort="46.067164" class="num">46.1</td><td data-sort="45" class="num score">45/67</td><td data-sort="45" class="num score">45/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="140.064125" class="num">140</td></tr>
+<tr><td class="method" title="Native xDecision choice, noul and score heads; MLX FP16 GPU, CPU tokenization. Q8_0 is storage quantization: expanded to FP16 at load, not quantized matmul. Calibration on this task is unverified. Runtime revision 4082689a093393358534fda26a945699080eb572; weights d97731bc72664e06722e5ca64fcdbc8e0e2f9c95.">systemone@xdecision-f16-mlx †</td><td>xDecision (MLX)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>xDecision</td><td>dedicated</td><td>f16</td><td data-sort="0.7" class="num">0.70</td><td data-sort="14.88209" class="num">14.9</td><td data-sort="44" class="num score">44/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="16" class="num score">16/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="27" class="num score">27/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@qwen3-1.7b-unsloth-q2</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3-1.7b-unsloth</td><td>vanilla</td><td>q2</td><td data-sort="0.78" class="num">0.78</td><td data-sort="37.398507" class="num">37.4</td><td data-sort="44" class="num score">44/67</td><td data-sort="46" class="num score">46/67</td><td data-sort="18" class="num score">18/28</td><td data-sort="26" class="num score">26/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="276.358584" class="num">276</td></tr>
 <tr><td class="method">pcdserver@qwen3.8-2b-distill-q8</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.8-2b-distill</td><td>fine-tuned</td><td>q8</td><td data-sort="2.08" class="num">2.08</td><td data-sort="39.479104" class="num">39.5</td><td data-sort="44" class="num score">44/67</td><td data-sort="45" class="num score">45/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="27" class="num score">27/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="128.991458" class="num">129</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-2b-unsloth-iq2</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-2b-unsloth</td><td>vanilla</td><td>iq2</td><td data-sort="0.77" class="num">0.77</td><td data-sort="40.774627" class="num">40.8</td><td data-sort="44" class="num score">44/67</td><td data-sort="39" class="num score">39/67</td><td data-sort="15" class="num score">15/28</td><td data-sort="29" class="num score">29/39</td><td data-sort="24" class="num score">24/39</td><td data-sort="128.806625" class="num">129</td></tr>
@@ -1875,7 +1878,7 @@
 <h2 id="best-model-per-family">Best model per family<a class="headerlink" href="#best-model-per-family" title="Permanent link">&para;</a></h2>
 <p>The best row of every model, grouped by family. A <strong>dedicated</strong> model was trained for this kind of question and has its own readout; a <strong>fine-tuned</strong> model is a chat model tuned by someone for a task; a <strong>vanilla</strong> model is a stock chat model. <strong>Best method</strong> names the row the other columns come from. <a href="../../04-models/">Chapter 4</a> describes the families.</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 87 rows" aria-label="Filter the table" data-table="families">
+<input class="table-filter" type="search" placeholder="Filter 88 rows" aria-label="Filter the table" data-table="families">
 <table class="sortable" id="families"><caption>Click a column header to sort.</caption><thead><tr><th>Family</th><th>Model</th><th>Engine</th><th>C/G</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th><th>Best method</th></tr></thead>
 <tbody>
 <tr><td>dedicated</td><td>typesafe/jev-1.13</td><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td class="method">openrouter@typesafe/jev-1.13</td></tr>
@@ -1921,6 +1924,7 @@
 <tr><td>dedicated</td><td>semif-4b-nli</td><td>MLX</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="8.41" class="num">8.41</td><td data-sort="120.608955" class="num">120.6</td><td data-sort="51" class="num score">51/67</td><td data-sort="49" class="num score">49/67</td><td class="method">mlx@semif-4b-nli</td></tr>
 <tr><td>dedicated</td><td>laya-typed-decisions</td><td>PyTorch</td><td title="PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged (configured)">G</td><td class="num"></td><td data-sort="17.659701" class="num">17.7</td><td data-sort="48" class="num score">48/67</td><td data-sort="43" class="num score">43/67</td><td class="method">laya-typed-decisions</td></tr>
 <tr><td>dedicated</td><td>laya-en</td><td>llama.cpp embeddings + head</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td data-sort="0.29" class="num">0.29</td><td data-sort="62.443284" class="num">62.4</td><td data-sort="46" class="num score">46/67</td><td class="num"></td><td class="method">gguf-head@laya-neutron-en</td></tr>
+<tr><td>dedicated</td><td>xDecision</td><td>xDecision (MLX)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td data-sort="0.4" class="num">0.40</td><td data-sort="14.329851" class="num">14.3</td><td data-sort="45" class="num score">45/67</td><td data-sort="43" class="num score">43/67</td><td class="method">systemone@xdecision-q8-mlx</td></tr>
 <tr><td>dedicated</td><td>clm-8b</td><td>System One server</td><td title="Metal/MLX backbone; CLM decision head configured --device cpu (configured)">C+G</td><td data-sort="8.25" class="num">8.25</td><td data-sort="107.644776" class="num">107.6</td><td data-sort="39" class="num score">39/67</td><td data-sort="28" class="num score">28/67</td><td class="method">systemone@clm-8b-q8</td></tr>
 <tr><td>dedicated</td><td>decima-small</td><td>ONNX Runtime</td><td title="ONNX Runtime CPUExecutionProvider (configured)">C</td><td data-sort="0.13" class="num">0.13</td><td data-sort="12.380597" class="num">12.4</td><td data-sort="37" class="num score">37/67</td><td data-sort="38" class="num score">38/67</td><td class="method">onnx@decima-small-int8</td></tr>
 <tr><td>dedicated</td><td>pulse-decide-150m</td><td>PyTorch</td><td title="PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged (configured)">G</td><td data-sort="0.6" class="num">0.60</td><td data-sort="17.932836" class="num">17.9</td><td data-sort="34" class="num score">34/67</td><td class="num"></td><td class="method">torch@pulse-decide-150m</td></tr>
@@ -2010,73 +2014,73 @@
 <input class="table-filter" type="search" placeholder="Filter 67 rows" aria-label="Filter the table" data-table="queries">
 <table class="sortable" id="queries"><caption>Click a column header to sort.</caption><thead><tr><th>Query</th><th>Lang</th><th>Task</th><th>Right, translated</th><th>Right, direct</th><th>jev</th></tr></thead>
 <tbody>
-<tr><td class="query">How do I write a liga feature?</td><td>en</td><td>docs</td><td data-sort="10.299999999999999" class="num">10 %</td><td data-sort="10.299999999999999" class="num">10 %</td><td>fea</td></tr>
-<tr><td class="query">Which words should I look at to judge the spacing of round letters?</td><td>en</td><td>sample</td><td data-sort="22.8" class="num">23 %</td><td data-sort="22.8" class="num">23 %</td><td>sample</td></tr>
-<tr><td class="query">Show me how a glyph is stored in a VFJ file</td><td>en</td><td>docs</td><td data-sort="26.5" class="num">26 %</td><td data-sort="26.5" class="num">26 %</td><td>vfj</td></tr>
-<tr><td class="query">Text with lots of kerning pairs</td><td>en</td><td>sample</td><td data-sort="38.1" class="num">38 %</td><td data-sort="38.1" class="num">38 %</td><td>sample</td></tr>
-<tr><td class="query">VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘</td><td>ko</td><td>vfj</td><td data-sort="39.1" class="num">39 %</td><td data-sort="90.8" class="num">91 %</td><td>vfj</td></tr>
-<tr><td class="query">Loop through masters and print their names</td><td>en</td><td>python</td><td data-sort="48.699999999999996" class="num">49 %</td><td data-sort="48.699999999999996" class="num">49 %</td><td>python</td></tr>
-<tr><td class="query">Rename all glyphs in every open font, I don&#x27;t want to click</td><td>en</td><td>python</td><td data-sort="52.0" class="num">52 %</td><td data-sort="52.0" class="num">52 %</td><td>python</td></tr>
-<tr><td class="query">Positioning rule that lifts the acute over capital letters</td><td>en</td><td>fea</td><td data-sort="57.599999999999994" class="num">58 %</td><td data-sort="57.599999999999994" class="num">58 %</td><td>fea</td></tr>
-<tr><td class="query">Script the kerning for A V</td><td>en</td><td>fea</td><td data-sort="59.599999999999994" class="num">60 %</td><td data-sort="59.599999999999994" class="num">60 %</td><td>fea</td></tr>
-<tr><td class="query">Can FontLab batch rename glyphs?</td><td>en</td><td>docs</td><td data-sort="60.9" class="num">61 %</td><td data-sort="60.9" class="num">61 %</td><td>docs</td></tr>
-<tr><td class="query">پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے</td><td>ur</td><td>python</td><td data-sort="61.9" class="num">62 %</td><td data-sort="69.5" class="num">70 %</td><td>python</td></tr>
-<tr><td class="query">I need substitutions so that 1/2 becomes onehalf</td><td>en</td><td>fea</td><td data-sort="62.3" class="num">62 %</td><td data-sort="62.3" class="num">62 %</td><td>fea</td></tr>
+<tr><td class="query">How do I write a liga feature?</td><td>en</td><td>docs</td><td data-sort="10.8" class="num">11 %</td><td data-sort="10.8" class="num">11 %</td><td>fea</td></tr>
+<tr><td class="query">Which words should I look at to judge the spacing of round letters?</td><td>en</td><td>sample</td><td data-sort="22.6" class="num">23 %</td><td data-sort="22.6" class="num">23 %</td><td>sample</td></tr>
+<tr><td class="query">Show me how a glyph is stored in a VFJ file</td><td>en</td><td>docs</td><td data-sort="26.6" class="num">27 %</td><td data-sort="26.6" class="num">27 %</td><td>vfj</td></tr>
+<tr><td class="query">Text with lots of kerning pairs</td><td>en</td><td>sample</td><td data-sort="38.0" class="num">38 %</td><td data-sort="38.0" class="num">38 %</td><td>sample</td></tr>
+<tr><td class="query">VFJ 형식으로 이름이 hyphen이고 너비가 300인 글리프 정의를 작성해 줘</td><td>ko</td><td>vfj</td><td data-sort="38.7" class="num">39 %</td><td data-sort="90.2" class="num">90 %</td><td>vfj</td></tr>
+<tr><td class="query">Loop through masters and print their names</td><td>en</td><td>python</td><td data-sort="48.199999999999996" class="num">48 %</td><td data-sort="48.199999999999996" class="num">48 %</td><td>python</td></tr>
+<tr><td class="query">Rename all glyphs in every open font, I don&#x27;t want to click</td><td>en</td><td>python</td><td data-sort="51.5" class="num">52 %</td><td data-sort="51.5" class="num">52 %</td><td>python</td></tr>
+<tr><td class="query">Positioning rule that lifts the acute over capital letters</td><td>en</td><td>fea</td><td data-sort="57.4" class="num">57 %</td><td data-sort="57.4" class="num">57 %</td><td>fea</td></tr>
+<tr><td class="query">Script the kerning for A V</td><td>en</td><td>fea</td><td data-sort="59.3" class="num">59 %</td><td data-sort="59.3" class="num">59 %</td><td>fea</td></tr>
+<tr><td class="query">Can FontLab batch rename glyphs?</td><td>en</td><td>docs</td><td data-sort="61.3" class="num">61 %</td><td data-sort="61.3" class="num">61 %</td><td>docs</td></tr>
+<tr><td class="query">پائتھن اسکرپٹ لکھو جو تمام گلفس کی چوڑائی 600 کر دے</td><td>ur</td><td>python</td><td data-sort="61.6" class="num">62 %</td><td data-sort="69.19999999999999" class="num">69 %</td><td>python</td></tr>
+<tr><td class="query">I need substitutions so that 1/2 becomes onehalf</td><td>en</td><td>fea</td><td data-sort="62.0" class="num">62 %</td><td data-sort="62.0" class="num">62 %</td><td>fea</td></tr>
 <tr><td class="query">Can you automate adding sidebearings of 40 to every glyph in the selection?</td><td>en</td><td>python</td><td data-sort="62.6" class="num">63 %</td><td data-sort="62.6" class="num">63 %</td><td>python</td></tr>
 <tr><td class="query">Donne-moi un pangramme français pour tester mes accents</td><td>fr</td><td>sample</td><td data-sort="66.2" class="num">66 %</td><td data-sort="66.8" class="num">67 %</td><td>sample</td></tr>
-<tr><td class="query">Come faccio a esportare il font in OTF?</td><td>it</td><td>docs</td><td data-sort="68.2" class="num">68 %</td><td data-sort="72.6" class="num">73 %</td><td>docs</td></tr>
-<tr><td class="query">fi と fl の liga フィーチャーを書いてください</td><td>ja</td><td>fea</td><td data-sort="68.2" class="num">68 %</td><td data-sort="79.80000000000001" class="num">80 %</td><td>fea</td></tr>
-<tr><td class="query">תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח</td><td>he</td><td>sample</td><td data-sort="68.5" class="num">68 %</td><td data-sort="75.3" class="num">75 %</td><td>sample</td></tr>
-<tr><td class="query">Ge mig ett pangram på svenska för att testa typsnittet</td><td>sv</td><td>sample</td><td data-sort="71.2" class="num">71 %</td><td data-sort="72.3" class="num">72 %</td><td>sample</td></tr>
-<tr><td class="query">Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl</td><td>pl</td><td>sample</td><td data-sort="71.5" class="num">72 %</td><td data-sort="67.5" class="num">68 %</td><td>sample</td></tr>
-<tr><td class="query">I want a pangram that uses all Cyrillic letters to test in the Glyph window</td><td>en</td><td>sample</td><td data-sort="71.89999999999999" class="num">72 %</td><td data-sort="71.89999999999999" class="num">72 %</td><td>sample</td></tr>
-<tr><td class="query">چطور فونت را به صورت OTF خروجی بگیرم؟</td><td>fa</td><td>docs</td><td data-sort="73.5" class="num">74 %</td><td data-sort="64.4" class="num">64 %</td><td>docs</td></tr>
-<tr><td class="query">Describe the letter O as JSON with nodes for the FontLab format</td><td>en</td><td>vfj</td><td data-sort="75.2" class="num">75 %</td><td data-sort="75.2" class="num">75 %</td><td>vfj</td></tr>
-<tr><td class="query">Hoe voeg ik een nieuwe as toe aan een variabel font?</td><td>nl</td><td>docs</td><td data-sort="75.2" class="num">75 %</td><td data-sort="69.5" class="num">70 %</td><td>docs</td></tr>
-<tr><td class="query">Як змінити сімейну назву шрифту?</td><td>uk</td><td>docs</td><td data-sort="75.5" class="num">76 %</td><td data-sort="71.2" class="num">71 %</td><td>docs</td></tr>
-<tr><td class="query">Jak vyexportovat font jako OTF?</td><td>cs</td><td>docs</td><td data-sort="76.2" class="num">76 %</td><td data-sort="65.4" class="num">65 %</td><td>docs</td></tr>
-<tr><td class="query">Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia</td><td>fi</td><td>sample</td><td data-sort="76.2" class="num">76 %</td><td data-sort="71.6" class="num">72 %</td><td>sample</td></tr>
-<tr><td class="query">Escreva o código da feature smcp para versaletes</td><td>pt</td><td>fea</td><td data-sort="77.2" class="num">77 %</td><td data-sort="79.10000000000001" class="num">79 %</td><td>fea</td></tr>
-<tr><td class="query">Գրիր kern feature Ա և Վ տառերի համար</td><td>hy</td><td>fea</td><td data-sort="77.8" class="num">78 %</td><td data-sort="79.10000000000001" class="num">79 %</td><td>fea</td></tr>
-<tr><td class="query">Give me the code that makes ff become a ligature</td><td>en</td><td>fea</td><td data-sort="78.10000000000001" class="num">78 %</td><td data-sort="78.10000000000001" class="num">78 %</td><td>fea</td></tr>
-<tr><td class="query">The font exports fine but the OTF name shows wrong in Word, why?</td><td>en</td><td>docs</td><td data-sort="78.5" class="num">78 %</td><td data-sort="78.5" class="num">78 %</td><td>docs</td></tr>
-<tr><td class="query">Écris une fonctionnalité liga pour fi et fl</td><td>fr</td><td>fea</td><td data-sort="78.5" class="num">78 %</td><td data-sort="77.7" class="num">78 %</td><td>fea</td></tr>
-<tr><td class="query">Something to type in the preview so I can see all my ligatures</td><td>en</td><td>sample</td><td data-sort="79.5" class="num">80 %</td><td data-sort="79.5" class="num">80 %</td><td>sample</td></tr>
-<tr><td class="query">Which menu has the option to flip the selection?</td><td>en</td><td>docs</td><td data-sort="79.80000000000001" class="num">80 %</td><td data-sort="79.80000000000001" class="num">80 %</td><td>docs</td></tr>
-<tr><td class="query">What would the JSON for a glyph look like?</td><td>en</td><td>vfj</td><td data-sort="79.80000000000001" class="num">80 %</td><td data-sort="79.80000000000001" class="num">80 %</td><td>vfj</td></tr>
-<tr><td class="query">Jak zmienić kąt pochylenia kursywy w FontLab?</td><td>pl</td><td>docs</td><td data-sort="80.80000000000001" class="num">81 %</td><td data-sort="71.6" class="num">72 %</td><td>docs</td></tr>
-<tr><td class="query">Írj egy kern feature-t az A és V betűk közé</td><td>hu</td><td>fea</td><td data-sort="81.10000000000001" class="num">81 %</td><td data-sort="79.80000000000001" class="num">80 %</td><td>fea</td></tr>
-<tr><td class="query">Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;</td><td>el</td><td>docs</td><td data-sort="81.10000000000001" class="num">81 %</td><td data-sort="72.89999999999999" class="num">73 %</td><td>docs</td></tr>
-<tr><td class="query">Write a liga feature that substitutes f i with fi and f l with fl</td><td>en</td><td>fea</td><td data-sort="81.5" class="num">82 %</td><td data-sort="81.5" class="num">82 %</td><td>fea</td></tr>
-<tr><td class="query">Schreib mir ein kern-Feature für die Buchstaben A V W T</td><td>de</td><td>fea</td><td data-sort="81.5" class="num">82 %</td><td data-sort="74.3" class="num">74 %</td><td>fea</td></tr>
-<tr><td class="query">FontLabでイタリック角度を変更するには？</td><td>ja</td><td>docs</td><td data-sort="81.5" class="num">82 %</td><td data-sort="75.3" class="num">75 %</td><td>docs</td></tr>
-<tr><td class="query">How do I change the italic angle of my font in FontLab?</td><td>en</td><td>docs</td><td data-sort="81.8" class="num">82 %</td><td data-sort="81.8" class="num">82 %</td><td>docs</td></tr>
-<tr><td class="query">Wo stelle ich die vertikalen Metriken ein?</td><td>de</td><td>docs</td><td data-sort="82.5" class="num">82 %</td><td data-sort="77.7" class="num">78 %</td><td>docs</td></tr>
-<tr><td class="query">اكتب كود feature للربط بين الحرفين f و i</td><td>ar</td><td>fea</td><td data-sort="82.8" class="num">83 %</td><td data-sort="83.89999999999999" class="num">84 %</td><td>fea</td></tr>
-<tr><td class="query">Something to type in the Glyph window that shows off my ligatures</td><td>en</td><td>sample</td><td data-sort="82.8" class="num">83 %</td><td data-sort="82.8" class="num">83 %</td><td>sample</td></tr>
-<tr><td class="query">I need kern feature code with classes for round letters versus flat letters</td><td>en</td><td>fea</td><td data-sort="83.1" class="num">83 %</td><td data-sort="83.1" class="num">83 %</td><td>fea</td></tr>
-<tr><td class="query">FontLab में kerning पैनल कहाँ है?</td><td>hi</td><td>docs</td><td data-sort="83.8" class="num">84 %</td><td data-sort="82.5" class="num">82 %</td><td>docs</td></tr>
-<tr><td class="query">A와 V 사이의 커닝 feature 코드를 작성해 줘</td><td>ko</td><td>fea</td><td data-sort="84.39999999999999" class="num">84 %</td><td data-sort="81.2" class="num">81 %</td><td>fea</td></tr>
-<tr><td class="query">What does the Match Masters command actually do?</td><td>en</td><td>docs</td><td data-sort="85.1" class="num">85 %</td><td data-sort="85.1" class="num">85 %</td><td>docs</td></tr>
-<tr><td class="query">დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს</td><td>ka</td><td>python</td><td data-sort="86.1" class="num">86 %</td><td data-sort="92.5" class="num">92 %</td><td>python</td></tr>
-<tr><td class="query">给我一段包含所有拼音字母的示例文本，用来检查字体</td><td>zh</td><td>sample</td><td data-sort="86.1" class="num">86 %</td><td data-sort="85.3" class="num">85 %</td><td>sample</td></tr>
-<tr><td class="query">Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300</td><td>vi</td><td>vfj</td><td data-sort="87.1" class="num">87 %</td><td data-sort="90.10000000000001" class="num">90 %</td><td>vfj</td></tr>
-<tr><td class="query">Give me a script to export every open font as OTF into ~/Desktop/out</td><td>en</td><td>python</td><td data-sort="88.7" class="num">89 %</td><td data-sort="88.7" class="num">89 %</td><td>python</td></tr>
-<tr><td class="query">写一个 Python 脚本，把所有字形的宽度设为 600</td><td>zh</td><td>python</td><td data-sort="90.10000000000001" class="num">90 %</td><td data-sort="91.8" class="num">92 %</td><td>python</td></tr>
-<tr><td class="query">Дай мне текст-образец с кириллицей для окна Glyph</td><td>ru</td><td>sample</td><td data-sort="90.7" class="num">91 %</td><td data-sort="84.89999999999999" class="num">85 %</td><td>sample</td></tr>
+<tr><td class="query">תן לי טקסט לדוגמה בעברית כדי לבדוק את הריווח</td><td>he</td><td>sample</td><td data-sort="67.9" class="num">68 %</td><td data-sort="75.6" class="num">76 %</td><td>sample</td></tr>
+<tr><td class="query">fi と fl の liga フィーチャーを書いてください</td><td>ja</td><td>fea</td><td data-sort="67.9" class="num">68 %</td><td data-sort="79.3" class="num">79 %</td><td>fea</td></tr>
+<tr><td class="query">Come faccio a esportare il font in OTF?</td><td>it</td><td>docs</td><td data-sort="68.2" class="num">68 %</td><td data-sort="72.89999999999999" class="num">73 %</td><td>docs</td></tr>
+<tr><td class="query">Ge mig ett pangram på svenska för att testa typsnittet</td><td>sv</td><td>sample</td><td data-sort="71.1" class="num">71 %</td><td data-sort="72.2" class="num">72 %</td><td>sample</td></tr>
+<tr><td class="query">Napisz coś do okna Glyph, żeby sprawdzić ligatury fi fl</td><td>pl</td><td>sample</td><td data-sort="71.5" class="num">72 %</td><td data-sort="66.8" class="num">67 %</td><td>sample</td></tr>
+<tr><td class="query">I want a pangram that uses all Cyrillic letters to test in the Glyph window</td><td>en</td><td>sample</td><td data-sort="72.1" class="num">72 %</td><td data-sort="72.1" class="num">72 %</td><td>sample</td></tr>
+<tr><td class="query">چطور فونت را به صورت OTF خروجی بگیرم؟</td><td>fa</td><td>docs</td><td data-sort="73.8" class="num">74 %</td><td data-sort="64.4" class="num">64 %</td><td>docs</td></tr>
+<tr><td class="query">Describe the letter O as JSON with nodes for the FontLab format</td><td>en</td><td>vfj</td><td data-sort="75.4" class="num">75 %</td><td data-sort="75.4" class="num">75 %</td><td>vfj</td></tr>
+<tr><td class="query">Hoe voeg ik een nieuwe as toe aan een variabel font?</td><td>nl</td><td>docs</td><td data-sort="75.4" class="num">75 %</td><td data-sort="69.8" class="num">70 %</td><td>docs</td></tr>
+<tr><td class="query">Як змінити сімейну назву шрифту?</td><td>uk</td><td>docs</td><td data-sort="75.4" class="num">75 %</td><td data-sort="71.2" class="num">71 %</td><td>docs</td></tr>
+<tr><td class="query">Anna esimerkkiteksti, jossa on paljon ä- ja ö-kirjaimia</td><td>fi</td><td>sample</td><td data-sort="76.1" class="num">76 %</td><td data-sort="71.5" class="num">72 %</td><td>sample</td></tr>
+<tr><td class="query">Jak vyexportovat font jako OTF?</td><td>cs</td><td>docs</td><td data-sort="76.4" class="num">76 %</td><td data-sort="65.4" class="num">65 %</td><td>docs</td></tr>
+<tr><td class="query">Escreva o código da feature smcp para versaletes</td><td>pt</td><td>fea</td><td data-sort="76.7" class="num">77 %</td><td data-sort="78.60000000000001" class="num">79 %</td><td>fea</td></tr>
+<tr><td class="query">Գրիր kern feature Ա և Վ տառերի համար</td><td>hy</td><td>fea</td><td data-sort="77.4" class="num">77 %</td><td data-sort="78.60000000000001" class="num">79 %</td><td>fea</td></tr>
+<tr><td class="query">Give me the code that makes ff become a ligature</td><td>en</td><td>fea</td><td data-sort="77.7" class="num">78 %</td><td data-sort="77.7" class="num">78 %</td><td>fea</td></tr>
+<tr><td class="query">Écris une fonctionnalité liga pour fi et fl</td><td>fr</td><td>fea</td><td data-sort="78.0" class="num">78 %</td><td data-sort="77.3" class="num">77 %</td><td>fea</td></tr>
+<tr><td class="query">The font exports fine but the OTF name shows wrong in Word, why?</td><td>en</td><td>docs</td><td data-sort="78.7" class="num">79 %</td><td data-sort="78.7" class="num">79 %</td><td>docs</td></tr>
+<tr><td class="query">Something to type in the preview so I can see all my ligatures</td><td>en</td><td>sample</td><td data-sort="79.3" class="num">79 %</td><td data-sort="79.3" class="num">79 %</td><td>sample</td></tr>
+<tr><td class="query">Which menu has the option to flip the selection?</td><td>en</td><td>docs</td><td data-sort="80.0" class="num">80 %</td><td data-sort="80.0" class="num">80 %</td><td>docs</td></tr>
+<tr><td class="query">What would the JSON for a glyph look like?</td><td>en</td><td>vfj</td><td data-sort="80.0" class="num">80 %</td><td data-sort="80.0" class="num">80 %</td><td>vfj</td></tr>
+<tr><td class="query">Írj egy kern feature-t az A és V betűk közé</td><td>hu</td><td>fea</td><td data-sort="80.7" class="num">81 %</td><td data-sort="79.3" class="num">79 %</td><td>fea</td></tr>
+<tr><td class="query">Write a liga feature that substitutes f i with fi and f l with fl</td><td>en</td><td>fea</td><td data-sort="81.0" class="num">81 %</td><td data-sort="81.0" class="num">81 %</td><td>fea</td></tr>
+<tr><td class="query">Jak zmienić kąt pochylenia kursywy w FontLab?</td><td>pl</td><td>docs</td><td data-sort="81.0" class="num">81 %</td><td data-sort="71.5" class="num">72 %</td><td>docs</td></tr>
+<tr><td class="query">Schreib mir ein kern-Feature für die Buchstaben A V W T</td><td>de</td><td>fea</td><td data-sort="81.0" class="num">81 %</td><td data-sort="73.9" class="num">74 %</td><td>fea</td></tr>
+<tr><td class="query">Πώς αλλάζω τη γωνία των πλάγιων γραμμάτων στο FontLab;</td><td>el</td><td>docs</td><td data-sort="81.3" class="num">81 %</td><td data-sort="72.89999999999999" class="num">73 %</td><td>docs</td></tr>
+<tr><td class="query">FontLabでイタリック角度を変更するには？</td><td>ja</td><td>docs</td><td data-sort="81.6" class="num">82 %</td><td data-sort="75.6" class="num">76 %</td><td>docs</td></tr>
+<tr><td class="query">How do I change the italic angle of my font in FontLab?</td><td>en</td><td>docs</td><td data-sort="82.0" class="num">82 %</td><td data-sort="82.0" class="num">82 %</td><td>docs</td></tr>
+<tr><td class="query">اكتب كود feature للربط بين الحرفين f و i</td><td>ar</td><td>fea</td><td data-sort="82.3" class="num">82 %</td><td data-sort="83.7" class="num">84 %</td><td>fea</td></tr>
+<tr><td class="query">I need kern feature code with classes for round letters versus flat letters</td><td>en</td><td>fea</td><td data-sort="82.6" class="num">83 %</td><td data-sort="82.6" class="num">83 %</td><td>fea</td></tr>
+<tr><td class="query">Wo stelle ich die vertikalen Metriken ein?</td><td>de</td><td>docs</td><td data-sort="82.6" class="num">83 %</td><td data-sort="78.0" class="num">78 %</td><td>docs</td></tr>
+<tr><td class="query">Something to type in the Glyph window that shows off my ligatures</td><td>en</td><td>sample</td><td data-sort="83.0" class="num">83 %</td><td data-sort="83.0" class="num">83 %</td><td>sample</td></tr>
+<tr><td class="query">FontLab में kerning पैनल कहाँ है?</td><td>hi</td><td>docs</td><td data-sort="83.89999999999999" class="num">84 %</td><td data-sort="82.69999999999999" class="num">83 %</td><td>docs</td></tr>
+<tr><td class="query">A와 V 사이의 커닝 feature 코드를 작성해 줘</td><td>ko</td><td>fea</td><td data-sort="83.89999999999999" class="num">84 %</td><td data-sort="80.7" class="num">81 %</td><td>fea</td></tr>
+<tr><td class="query">What does the Match Masters command actually do?</td><td>en</td><td>docs</td><td data-sort="85.2" class="num">85 %</td><td data-sort="85.2" class="num">85 %</td><td>docs</td></tr>
+<tr><td class="query">დამიწერე Python სკრიპტი, რომელიც ყველა გლიფს გაასწორებს</td><td>ka</td><td>python</td><td data-sort="86.2" class="num">86 %</td><td data-sort="92.5" class="num">92 %</td><td>python</td></tr>
+<tr><td class="query">给我一段包含所有拼音字母的示例文本，用来检查字体</td><td>zh</td><td>sample</td><td data-sort="86.2" class="num">86 %</td><td data-sort="85.39999999999999" class="num">85 %</td><td>sample</td></tr>
+<tr><td class="query">Viết định nghĩa VFJ cho glyph dấu gạch ngang rộng 300</td><td>vi</td><td>vfj</td><td data-sort="87.2" class="num">87 %</td><td data-sort="90.2" class="num">90 %</td><td>vfj</td></tr>
+<tr><td class="query">Give me a script to export every open font as OTF into ~/Desktop/out</td><td>en</td><td>python</td><td data-sort="88.2" class="num">88 %</td><td data-sort="88.2" class="num">88 %</td><td>python</td></tr>
+<tr><td class="query">写一个 Python 脚本，把所有字形的宽度设为 600</td><td>zh</td><td>python</td><td data-sort="90.2" class="num">90 %</td><td data-sort="91.9" class="num">92 %</td><td>python</td></tr>
+<tr><td class="query">Дай мне текст-образец с кириллицей для окна Glyph</td><td>ru</td><td>sample</td><td data-sort="90.8" class="num">91 %</td><td data-sort="85.1" class="num">85 %</td><td>sample</td></tr>
 <tr><td class="query">Give me a JSON glyph entry in VFJ format for a composite eacute made of e and acutecomb</td><td>en</td><td>vfj</td><td data-sort="91.10000000000001" class="num">91 %</td><td data-sort="91.10000000000001" class="num">91 %</td><td>vfj</td></tr>
-<tr><td class="query">Dame un texto de muestra con muchas letras redondas</td><td>es</td><td>sample</td><td data-sort="92.10000000000001" class="num">92 %</td><td data-sort="90.10000000000001" class="num">90 %</td><td>sample</td></tr>
-<tr><td class="query">Escribe un script en Python que elimine los glifos sin unicode</td><td>es</td><td>python</td><td data-sort="92.10000000000001" class="num">92 %</td><td data-sort="94.5" class="num">94 %</td><td>python</td></tr>
-<tr><td class="query">Give me a sample text with lots of round letters so I can check my o and c</td><td>en</td><td>sample</td><td data-sort="92.4" class="num">92 %</td><td data-sort="92.4" class="num">92 %</td><td>sample</td></tr>
-<tr><td class="query">Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp</td><td>pl</td><td>python</td><td data-sort="92.4" class="num">92 %</td><td data-sort="87.0" class="num">87 %</td><td>python</td></tr>
-<tr><td class="query">Напиши VFJ-описание глифа «точка» с юникодом 002E</td><td>bg</td><td>vfj</td><td data-sort="92.7" class="num">93 %</td><td data-sort="90.8" class="num">91 %</td><td>vfj</td></tr>
-<tr><td class="query">Напиши скрипт на Python, который удалит все направляющие</td><td>ru</td><td>python</td><td data-sort="93.0" class="num">93 %</td><td data-sort="89.0" class="num">89 %</td><td>python</td></tr>
-<tr><td class="query">เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก</td><td>th</td><td>python</td><td data-sort="93.0" class="num">93 %</td><td data-sort="88.7" class="num">89 %</td><td>python</td></tr>
+<tr><td class="query">Dame un texto de muestra con muchas letras redondas</td><td>es</td><td>sample</td><td data-sort="92.10000000000001" class="num">92 %</td><td data-sort="90.2" class="num">90 %</td><td>sample</td></tr>
+<tr><td class="query">Escribe un script en Python que elimine los glifos sin unicode</td><td>es</td><td>python</td><td data-sort="92.10000000000001" class="num">92 %</td><td data-sort="94.6" class="num">95 %</td><td>python</td></tr>
+<tr><td class="query">Give me a sample text with lots of round letters so I can check my o and c</td><td>en</td><td>sample</td><td data-sort="92.5" class="num">92 %</td><td data-sort="92.5" class="num">92 %</td><td>sample</td></tr>
+<tr><td class="query">Napisz skrypt Python, który zmieni nazwy wszystkich glifów z .sc na .smcp</td><td>pl</td><td>python</td><td data-sort="92.5" class="num">92 %</td><td data-sort="86.8" class="num">87 %</td><td>python</td></tr>
+<tr><td class="query">Напиши VFJ-описание глифа «точка» с юникодом 002E</td><td>bg</td><td>vfj</td><td data-sort="92.80000000000001" class="num">93 %</td><td data-sort="90.8" class="num">91 %</td><td>vfj</td></tr>
+<tr><td class="query">Напиши скрипт на Python, который удалит все направляющие</td><td>ru</td><td>python</td><td data-sort="93.10000000000001" class="num">93 %</td><td data-sort="89.2" class="num">89 %</td><td>python</td></tr>
+<tr><td class="query">เขียนสคริปต์ Python ที่เปลี่ยนชื่อ glyph ทั้งหมดเป็นตัวพิมพ์เล็ก</td><td>th</td><td>python</td><td data-sort="93.10000000000001" class="num">93 %</td><td data-sort="87.8" class="num">88 %</td><td>python</td></tr>
 <tr><td class="query">Tüm glifleri 50 birim sağa kaydıran bir Python betiği yaz</td><td>tr</td><td>python</td><td data-sort="93.4" class="num">93 %</td><td data-sort="93.2" class="num">93 %</td><td>python</td></tr>
-<tr><td class="query">একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250</td><td>bn</td><td>vfj</td><td data-sort="93.7" class="num">94 %</td><td data-sort="88.4" class="num">88 %</td><td>vfj</td></tr>
-<tr><td class="query">Write a Python script that renames all glyphs ending in .sc to .smcp</td><td>en</td><td>python</td><td data-sort="94.0" class="num">94 %</td><td data-sort="94.0" class="num">94 %</td><td>python</td></tr>
-<tr><td class="query">Write the VFJ definition of a glyph named A with a triangular outline, unicode 0041, width 600</td><td>en</td><td>vfj</td><td data-sort="95.0" class="num">95 %</td><td data-sort="95.0" class="num">95 %</td><td>vfj</td></tr>
-<tr><td class="query">Scrivimi la definizione VFJ di un glifo quadrato largo 500</td><td>it</td><td>vfj</td><td data-sort="95.7" class="num">96 %</td><td data-sort="93.8" class="num">94 %</td><td>vfj</td></tr>
+<tr><td class="query">একটি VFJ গ্লিফ সংজ্ঞা লিখুন যার নাম period এবং প্রস্থ 250</td><td>bn</td><td>vfj</td><td data-sort="93.8" class="num">94 %</td><td data-sort="87.8" class="num">88 %</td><td>vfj</td></tr>
+<tr><td class="query">Write a Python script that renames all glyphs ending in .sc to .smcp</td><td>en</td><td>python</td><td data-sort="94.1" class="num">94 %</td><td data-sort="94.1" class="num">94 %</td><td>python</td></tr>
+<tr><td class="query">Write the VFJ definition of a glyph named A with a triangular outline, unicode 0041, width 600</td><td>en</td><td>vfj</td><td data-sort="95.1" class="num">95 %</td><td data-sort="95.1" class="num">95 %</td><td>vfj</td></tr>
+<tr><td class="query">Scrivimi la definizione VFJ di un glifo quadrato largo 500</td><td>it</td><td>vfj</td><td data-sort="95.7" class="num">96 %</td><td data-sort="93.89999999999999" class="num">94 %</td><td>vfj</td></tr>
 </tbody></table>
 </div>
 
@@ -2133,9 +2137,9 @@
 <div class="bench" markdown="0">
 <table class="sortable" id="detectors"><thead><tr><th>Detector</th><th>Correct</th><th>Mean µs</th><th>Calls/s</th></tr></thead>
 <tbody>
-<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="551.869059" class="num">551.9</td><td data-sort="1812.024036" class="num">1,812</td></tr>
-<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="11.129951" class="num">11.1</td><td data-sort="89847.65847" class="num">89,848</td></tr>
-<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="562.99901" class="num">563.0</td><td data-sort="1776.202058" class="num">1,776</td></tr>
+<tr><td>lingua</td><td data-sort="63" class="num score">63/67</td><td data-sort="563.928303" class="num">563.9</td><td data-sort="1773.275067" class="num">1,773</td></tr>
+<tr><td>papagan</td><td data-sort="43" class="num score">43/67</td><td data-sort="11.127741" class="num">11.1</td><td data-sort="89865.496429" class="num">89,865</td></tr>
+<tr><td>majority</td><td data-sort="63" class="num score">63/67</td><td data-sort="575.056045" class="num">575.1</td><td data-sort="1738.96094" class="num">1,739</td></tr>
 </tbody></table>
 </div>
 
@@ -2204,13 +2208,13 @@
 
 
 
-                
+
 <!--/email_off-->
 
               </article>
             </div>
-          
-          
+
+
   <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -2218,40 +2222,40 @@
           <div class="md-top" data-md-component="top" hidden>
   <div class="md-top__center">
     <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
-      
+
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
       <span>Back to top</span>
     </button>
-    
-      
-      
+
+
+
       <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
       </label>
-    
-    
-      
-      
+
+
+
+
       <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
       </label>
-    
+
   </div>
 </div>
       </main>
-      
+
   <div class="ornotto-book-footer">
     <nav aria-label="Chapters">
-      
+
       <a href="../tldr/" rel="prev">← Results: the short version</a>
-      
-      
+
+
       <a href="../../01-deciding/" rel="next">1. Deciding, not generating →</a>
-      
+
     </nav>
-    
+
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
-    
+
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 
@@ -2259,33 +2263,33 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    
-    
-    
-      
-      
-      
-      
-        
-        
-          
-          
-        
+
+
+
+
+
+
+
+
+
+
+
+
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "code": null, "features": ["navigation.tabs", "navigation.top", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "../..", "bundleUrl": "../../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
+
+
       <script src="../../assets/javascripts/bundle.44453a05.min.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
+
         <script src="../../js/tables.js"></script>
-      
+
         <script src="../../js/benchmark-math.da51227706b3.js"></script>
-      
+
         <script src="../../js/benchmark.040f05193bf1.js"></script>
-      
-    
+
+
   </body>
 </html>

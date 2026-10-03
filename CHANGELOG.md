@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- Add optional native Laya MLX and xDecision engines, three registered models, managed loopback lifecycle, CPU/GPU selection, sync/async and typed/pydantic-ai consumers. Preserve native heads, action and usage, reject invalid probabilities and reported truncation, and keep calibration unverified. xDecision uses a separately installed pinned runtime; its Q8 MLX weights expand to FP16 at load.
+- Measure three complete native encoder configurations (318 distinct-input records): Laya MLX 52/49 at 11.4/11.2 ms, xDecision F16 44/43 at 14.9/15.1 ms, Q8 45/43 at 14.3/14.2 ms translated/direct. Export 305 configurations, preserving all 302 earlier rows and translations, with separate native engine filters, GPU evidence and pinned weight provenance.
+
 - Add two complete local configurations while preserving all 300 prior rows: Rune Q5 full Metal (64/64, 153.3/152.8 ms) and Ornith Splash (62/63, 322.4/328.5 ms translated/direct). Add the Splash Metal engine and native-choice readout, package storage provenance, updated charts and explicit failed/refused/deferred exclusions. Q5 is 6.3 times faster but loses one correct answer in each mode.
 
 - Add full translated/direct benchmarks for all nine OpenRouter endpoints: 954 successful unique-input requests, 300 public runs, and all 291 earlier rows unchanged. Add the OpenRouter API engine filter, explicit native-choice/noul OVR readouts, resolved versions, remote timing tables and CSV fields. Generate the homepage ranking from benchmark data.

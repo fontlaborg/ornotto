@@ -27,9 +27,10 @@ remote filters, changed Q5 accuracy, charts and downloads. Refused Qwen3.6,
 failed ggmlc Laya Metal and unresolved heavy-load exclusions remain unfinished.
 Do not lower guards or infer all-GPU placement from a provider setting.
 
-Laya MLX is already supported and measured by the private harness. The requested
-public API integration and xDecision support remain pending. Consult upstream
-load/predict schemas, add optional native encoder runtimes with the existing
-question/answer API, test transport/lifecycle and typed consumers, then measure
-small xDecision files under the same one-model guard. xDecision's custom GGUF
-architecture needs its own MLX/PyTorch runtime, not the llama.cpp engines.
+Native Laya MLX and xDecision support is implemented and measured. The public
+API uses optional upstream runtimes and existing native System One transport;
+package/typed/lifecycle tests and three complete guarded benchmark runs pass.
+All 302 previous configurations remain identical; 305 are built and local
+browser acceptance passes. Publish source/built docs and verify the actual
+HTTPS deployment. Heavy exclusions and provider/head GPU optimization remain
+unfinished; package release remains separate through publish.sh.

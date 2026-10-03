@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-Engine = Literal["dohnuts", "pcd", "ollaya", "openrouter"]
+Engine = Literal["dohnuts", "pcd", "ollaya", "openrouter", "laya-mlx", "xdecision"]
 Family = Literal["dedicated", "fine-tuned", "vanilla"]
 
 
@@ -61,6 +61,36 @@ def _ollaya(name: str, tag: str, size_gb: float, note: str) -> ModelSpec:
 MODELS: dict[str, ModelSpec] = {
     m.name: m
     for m in (
+        ModelSpec(
+            "laya-multilingual-mlx",
+            "aac6fef/laya-multilingual-mlx",
+            "",
+            ("laya-mlx",),
+            "dedicated",
+            "apache-2.0",
+            0.64,
+            note="Native MLX FP16 encoder; optional laya-mlx runtime, Apple silicon, Python 3.11+.",
+        ),
+        ModelSpec(
+            "xdecision-f16",
+            "mccoysc/xDecision",
+            "models/gguf/xDecision-F16.gguf",
+            ("xdecision",),
+            "dedicated",
+            "apache-2.0",
+            0.7041,
+            note="Custom xdecision GGUF; native MLX or PyTorch CPU. Install upstream runtime separately.",
+        ),
+        ModelSpec(
+            "xdecision-q8",
+            "mccoysc/xDecision",
+            "models/gguf/xDecision-Q8_0.gguf",
+            ("xdecision",),
+            "dedicated",
+            "apache-2.0",
+            0.40255,
+            note="Q8_0 is dequantized to dense weights at load; requires the upstream xdecision runtime.",
+        ),
         ModelSpec(
             "decider-0.8b",
             "DreamBlooms/decider-0.8b-GGUF",
@@ -251,7 +281,7 @@ DEFAULT_MODEL = "decider-0.8b"
 
 @dataclass(frozen=True)
 class ResolvedModel:
-    """Files on disk for one model."""
+    """A GGUF file or native encoder checkpoint directory on disk, or an ollaya tag."""
 
     name: str
     gguf: Path | None
@@ -269,7 +299,11 @@ def _download(repo: str, file: str) -> Path:
 
 
 def resolve(
-    model: str, *, metadata: str | Path | None = None, head: str | Path | None = None
+    model: str,
+    *,
+    metadata: str | Path | None = None,
+    head: str | Path | None = None,
+    engine: Engine | None = None,
 ) -> ResolvedModel:
     """Turn a registered name, a local .gguf path or `hf:owner/repo/file.gguf` into files on disk.
 
@@ -277,11 +311,28 @@ def resolve(
     profile JSON) and, for kev or Dohnuts, `head`. `ollaya:<tag>` and registered ollaya models resolve to a
     tag with no file; the ollaya server pulls it.
     """
+    if (
+        engine in ("laya-mlx", "xdecision")
+        or model in MODELS
+        and MODELS[model].engines[0] in ("laya-mlx", "xdecision")
+    ) and (metadata is not None or head is not None):
+        raise ValueError(
+            "Native encoders carry their own profile/head; metadata and head are dohnuts settings"
+        )
     if model.startswith("ollaya:"):
         return ResolvedModel(model, None, ("ollaya",), tag=model.removeprefix("ollaya:"))
     if spec := MODELS.get(model):
+        if engine is not None and engine not in spec.engines:
+            raise ValueError(f"{spec.name} runs on {' or '.join(spec.engines)}, not {engine}")
         if spec.tag:
             return ResolvedModel(spec.name, None, spec.engines, tag=spec.tag)
+        if spec.engines == ("laya-mlx",):
+            from huggingface_hub import snapshot_download
+
+            snapshot = snapshot_download(
+                repo_id=spec.repo, allow_patterns=["*.json", "*.safetensors", "tokenizer/*"]
+            )
+            return ResolvedModel(spec.name, Path(snapshot), spec.engines)
         gguf = _download(spec.repo, spec.file)
         profile = (
             Path(metadata).expanduser()
@@ -306,10 +357,12 @@ def resolve(
         gguf = _download(f"{owner}/{repo}", file)
     else:
         gguf = Path(model).expanduser()
-        if not gguf.is_file():
+        if not (gguf.is_file() or engine in ("laya-mlx", "xdecision") and gguf.is_dir()):
             known = ", ".join(MODELS)
             raise FileNotFoundError(f"{model!r} is neither a registered model ({known}) nor a file")
-    engines: tuple[Engine, ...] = ("dohnuts", "pcd") if metadata else ("pcd",)
+    engines: tuple[Engine, ...] = (
+        (engine,) if engine in ("laya-mlx", "xdecision") else ("dohnuts", "pcd") if metadata else ("pcd",)
+    )
     return ResolvedModel(
         gguf.stem,
         gguf,

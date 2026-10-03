@@ -3,75 +3,75 @@
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
-    
+
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      
+
         <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
-      
-      
+
+
         <meta name="author" content="Fontlab Ltd.">
-      
-      
+
+
         <link rel="canonical" href="https://fontlab.org/ornotto/10-package/">
-      
-      
+
+
         <link rel="prev" href="../09-confidence/">
-      
-      
+
+
         <link rel="next" href="../11-typed/">
-      
-      
-        
-      
-      
-      
-      
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
           <link rel="icon" href="../assets/images/favicon.png">
-        
-      
+
+
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
-    
-    
-      
+
+
+
         <title>10. The ornotto package - ornotto</title>
-      
-    
-    
+
+
+
       <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
-      
-        
+
+
         <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
-      
-    
-    
 
-    
 
-    
-      
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
       <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
-    
-      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
-    
-      <link rel="stylesheet" href="../css/site.css">
-    
-      <link rel="stylesheet" href="../css/benchmark.13b021a7aaa8.css">
-    
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
 
-    
-    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+
+      <link rel="stylesheet" href="../css/site.css">
+
+      <link rel="stylesheet" href="../css/benchmark.13b021a7aaa8.css">
+
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
 
   <link rel="stylesheet" href="https://use.typekit.net/gav0zux.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,39 +104,39 @@
   <script src="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.js" defer></script>
 
   </head>
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
     <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
-  
-    
+
+
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <label class="md-overlay" for="__toc"></label>
     <div data-md-component="skip">
-      
-        
+
+
         <a href="#10-the-ornotto-package" class="md-skip">
           Skip to content
         </a>
-      
+
     </div>
     <div data-md-component="announce">
-      
+
     </div>
-    
-    
-  
+
+
+
   <header class="md-header" data-md-component="header" aria-hidden="true">
     <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
@@ -144,19 +144,19 @@
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
-        
+
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
+
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
-      
+
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0">
@@ -174,142 +174,142 @@
   <fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
 
     <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-            
+
+
+
+
+
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
+
+
+
+
+
+
     <li class="md-tabs__item">
       <a href=".." class="md-tabs__link">
-        
-  
-  
-    
-  
+
+
+
+
+
   Home
 
       </a>
     </li>
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../results/explorer/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Results
 
         </a>
       </li>
-    
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
-      
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../01-deciding/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Book
 
         </a>
       </li>
-    
-  
 
-    
-  
 
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item md-tabs__item--active">
         <a href="./" class="md-tabs__link">
-          
-  
-  
+
+
+
   Use ornotto
 
         </a>
       </li>
-    
-  
 
-      
+
+
+
     </ul>
   </div>
 </nav>
-          
-        
-      
+
+
+
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
-          
-  
-            
-              
+
+
+
+
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
 
 
-  
+
+
 
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
-      
-  
+
+
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ornotto
   </label>
-  
+
     <div class="md-nav__source">
       <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
-    
+
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
@@ -317,1193 +317,1215 @@
   </div>
 </a>
     </div>
-  
+
   <ul class="md-nav__list">
-    
-      
-      
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Home
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+
+
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Results
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Results
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/explorer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Explore speed and accuracy
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Explore speed and accuracy
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/tldr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: the short version
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Results: the short version
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/details/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: every table
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Results: every table
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Book
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+
+
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Book
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Book
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+
+
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Concepts
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Concepts
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../01-deciding/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1. Deciding, not generating
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    1. Deciding, not generating
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../02-decisions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2. The shape of a decision
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    2. The shape of a decision
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../03-engines/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3. Ways to read an answer
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    3. Ways to read an answer
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../04-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4. Dedicated, fine-tuned and vanilla models
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    4. Dedicated, fine-tuned and vanilla models
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Method and analysis
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+
+
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Method and analysis
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Method and analysis
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../05-method/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    5. How we measured
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    5. How we measured
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../06-results/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    6. Results
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    6. Results
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../07-quantization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    7. Quantization and size
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    7. Quantization and size
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../08-speed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Speed, memory and caching
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    8. Speed, memory and caching
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../09-confidence/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. Confidence and fallback
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    9. Confidence and fallback
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-              
-            
+    </li>
+
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Use ornotto
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+
+
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Use ornotto
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Use ornotto
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. The ornotto package
-  
 
-    
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--active">
+
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+
+
+    10. The ornotto package
+
+
+
   </span>
-  
-  
+
+
 
           <span class="md-nav__icon md-icon"></span>
         </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. The ornotto package
-  
 
-    
+      <a href="./" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+
+
+    10. The ornotto package
+
+
+
   </span>
-  
-  
+
+
 
       </a>
-      
-        
+
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
         <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Install
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Install">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#ollaya" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         ollaya
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
+          <li class="md-nav__item">
+  <a href="#native-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Native encoders
+
+    </span>
+  </a>
+
+</li>
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#decider" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Decider
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#remote-openrouter-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Remote OpenRouter models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#module-functions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Module functions
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#questions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Questions
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Questions">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#limits-per-request" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Limits per request
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#answers" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Answers
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#async" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Async
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#engine-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Engine lifecycle
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#registered-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Registered models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#ornotto-and-ollaya" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         ornotto and ollaya
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What changed in September 2026
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#errors" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Errors
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#command-line" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Command line
-      
+
     </span>
   </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../11-typed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Typed decisions and pydantic-ai
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    11. Typed decisions and pydantic-ai
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../12-choosing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Choosing, building and contributing
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    12. Choosing, building and contributing
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
+    </li>
+
+
+
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
-            
-            
-              
+
+
+
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
         <li class="md-nav__item">
   <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Install
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Install">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#ollaya" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         ollaya
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
+          <li class="md-nav__item">
+  <a href="#native-encoders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Native encoders
+
+    </span>
+  </a>
+
+</li>
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#decider" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Decider
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#remote-openrouter-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Remote OpenRouter models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#module-functions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Module functions
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#questions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Questions
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Questions">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#limits-per-request" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Limits per request
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#answers" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Answers
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#async" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Async
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#engine-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Engine lifecycle
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#registered-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Registered models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#ornotto-and-ollaya" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         ornotto and ollaya
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What changed in September 2026
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#errors" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Errors
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#command-line" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Command line
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
     </ul>
-  
+
 </nav>
                   </div>
                 </div>
               </div>
-            
-          
+
+
   <!-- Subtheme switcher: injected into the tabs nav (div[4]/nav) by fontlab-theme.js -->
   <template id="fl-theme-menu-template">
     <div class="fl-theme" data-fl-theme>
@@ -1529,22 +1551,22 @@
     </button>
   </template>
 
-          
+
             <div class="md-content" data-md-component="content">
-              
-              
-              
+
+
+
               <article class="md-content__inner md-typeset" data-pagefind-body>
-                
+
 <!--email_off-->
 
-                  
-  
-  
+
+
+
 
 
 <h1 id="10-the-ornotto-package">10. The ornotto package<a class="headerlink" href="#10-the-ornotto-package" title="Permanent link">&para;</a></h1>
-<p><code>ornotto</code> is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to the local engines, starts and stops them for you, and downloads the models they need. Two engines, dohnuts and pcdServer, ship inside the wheel; a third, ollaya, is a separate install that <code>ornotto</code> drives when it finds it. This chapter is the reference: what each object takes, what it returns, and what happens underneath.</p>
+<p><code>ornotto</code> is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to the local engines, starts and stops them for you, and downloads the models they need. Two engines, dohnuts and pcdServer, ship inside the wheel; ollaya and the native Laya MLX/xDecision runtimes are separate installs that <code>ornotto</code> drives when it finds it. This chapter is the reference: what each object takes, what it returns, and what happens underneath.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
 <div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>add<span class="w"> </span>ornotto<span class="w">                      </span><span class="c1"># or: pip install ornotto</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"ornotto[pydantic-ai]"</span><span class="w">       </span><span class="c1"># adds pydantic-ai-slim[typesafe] for chapter 11</span>
@@ -1596,17 +1618,50 @@
 <p>ornotto looks for it at the path in <code>ORNOTTO_OLLAYA_BIN</code>, then on your <code>PATH</code>, then in <code>~/.local/bin</code>. If none has it, a question for an ollaya model raises <code>EngineNotFound</code> with the install command. ollaya keeps its models in its own store, <code>OLLAYA_MODELS</code> (default <code>~/.ollaya/models</code>), not in the Hugging Face cache; set that variable if your home volume has no room.</p>
 <p>ollaya is young and moves quickly. Its first release, v0.1.0, came out on 2026-09-23, and v0.7.5 followed on 2026-09-28, the fifteenth release in five days.<sup id="fnref:ollaya-releases"><a class="footnote-ref" href="#fn:ollaya-releases">1</a></sup> Two of those releases matter for ornotto on a Mac. v0.7.0 added llama.cpp for GGUF models, and v0.7.1 added GPU inference on Apple silicon through MLX, on macOS 14 or later. Which device a model runs on is ollaya's choice, steered by its own settings such as <code>OLLAYA_DEVICE</code>, which ornotto passes through unchanged (<a href="#engine-lifecycle">engine lifecycle</a>). The ollaya rows in this book were measured with the ollaya release installed at the time of the second benchmark round; a later release can change their speed.</p>
 <p>Models download from Hugging Face on first use, through <code>huggingface_hub</code>, into the ordinary Hugging Face cache. Set <code>HF_HUB_CACHE</code> (or <code>HF_HOME</code>) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.</p>
+<h3 id="native-encoders">Native encoders<a class="headerlink" href="#native-encoders" title="Permanent link">&para;</a></h3>
+<p>Current <code>main</code> supports <a href="https://huggingface.co/aac6fef/laya-multilingual-mlx">aac6fef/laya-multilingual-mlx</a>
+and <a href="https://huggingface.co/mccoysc/xDecision">mccoysc/xDecision</a>.
+Install ornotto from the checkout with <code>uv pip install -e '.[laya-mlx]'</code>
+on Apple silicon macOS, Python 3.11+. xDecision is a separate pinned source install:</p>
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'</span>
+</code></pre></div>
+<p>For xDecision CPU, omit <code>[apple]</code>. MLX GPU requires Apple silicon. The runtimes
+are not bundled and must be installed in the same Python environment as ornotto.</p>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"laya-multilingual-mlx"</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"python"</span><span class="p">,</span> <span class="s2">"docs"</span><span class="p">])</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>  <span class="c1"># stop the first model before loading another</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">encoder</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"xdecision-q8"</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="s2">"Rename glyphs with a Python script"</span><span class="p">,</span> <span class="s2">"Does the user want code?"</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</code></pre></div>
+<p>Registered names download the native checkpoint or custom GGUF into the Hugging
+Face cache. A local checkpoint directory works with <code>engine="laya-mlx"</code>;
+a local xDecision GGUF works with <code>engine="xdecision"</code>. These formats cannot be
+sent to pcdServer or dohnuts. Native metadata/head overrides are rejected.
+The default device is GPU; <code>gpu=False</code> selects native MLX CPU for Laya and
+PyTorch CPU for xDecision. MLX expands xDecision Q8_0 to FP16 at load, so the
+smaller file does not imply proportionally smaller memory or quantized matmul.</p>
+<p>The usual sync/async calls, typed extraction and pydantic-ai bridge use the same
+questions and answers. Native probability, confidence, action and usage fields
+are preserved in the raw response. <code>calibrated</code> remains false because task
+calibration has not been established. Missing instructions get a default for
+the question kind; explicit instructions are passed through. Reported state
+truncation raises <code>DecisionError</code>; a runtime that omits truncation metadata
+cannot establish that every input token was retained. Keep inputs within its
+context (1,024 tokens for this Laya checkpoint), including questions/options.
+ornotto starts one serial loopback HTTP process per model/engine/device and
+stops it through the existing lifecycle.</p>
 <h2 id="decider">Decider<a class="headerlink" href="#decider" title="Permanent link">&para;</a></h2>
 <p>A <code>Decider</code> is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ornotto</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">fast</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>                        <span class="c1"># dohnuts, the default engine for this model</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">same</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">"pcd"</span><span class="p">)</span>          <span class="c1"># the same weights on pcdServer</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">mine</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"~/models/my-model.gguf"</span><span class="p">)</span>              <span class="c1"># any chat GGUF, on pcdServer</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">hf</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"hf:bartowski/Qwen_Qwen3.5-2B-GGUF/Qwen_Qwen3.5-2B-Q4_K_M.gguf"</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">up</span>   <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">"http://127.0.0.1:8298"</span><span class="p">)</span> <span class="c1"># an engine you started yourself</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">laya</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya-laya-multilingual"</span><span class="p">)</span>             <span class="c1"># a registered ollaya model</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">tag</span>  <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"ollaya:kev:4b"</span><span class="p">)</span>                        <span class="c1"># any ollaya tag; same as Decider("kev:4b", engine="ollaya")</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1625,7 +1680,7 @@
 <tr>
 <td><code>engine</code></td>
 <td>first engine the model supports</td>
-<td><code>"dohnuts"</code>, <code>"pcd"</code> or <code>"ollaya"</code>. With <code>"ollaya"</code>, a plain tag such as <code>kev:4b</code> also works. Asking a model for an engine it cannot run raises <code>ValueError</code>.</td>
+<td><code>"dohnuts"</code>, <code>"pcd"</code>, <code>"ollaya"</code>, <code>"laya-mlx"</code> or <code>"xdecision"</code>. With <code>"ollaya"</code>, a plain tag such as <code>kev:4b</code> also works. Asking a model for an engine it cannot run raises <code>ValueError</code>.</td>
 </tr>
 <tr>
 <td><code>url</code></td>
@@ -1696,8 +1751,8 @@
 <h2 id="remote-openrouter-models">Remote OpenRouter models<a class="headerlink" href="#remote-openrouter-models" title="Permanent link">&para;</a></h2>
 <p>Use current <code>main</code> for remote support (<a href="../12-choosing/#building-from-source">source build</a>).</p>
 <p>Set <code>OPENROUTER_API_KEY</code>, then use an exact model ID:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">remote</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"liquid/d1"</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">answer</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Build a kern feature"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])</span>
 </code></pre></div>
 <p>All nine IDs are listed by <code>ornotto models</code> and <code>ornotto.OPENROUTER_MODELS</code>:
 <code>liquid/d1</code>, <code>togethercomputer/tev1-4b-experimental</code>, <code>inception/mercury-decide:free</code>,
@@ -1759,16 +1814,16 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"qwen3.5-4b-hmm"</span><span class="p">)</span>        <span class="c1"># every module function now runs Qwen3.5-4B-Hmm on pcdServer</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="s2">"Kern the class of round lowercase letters against the period"</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>               <span class="p">[</span><span class="s2">"kern pair"</span><span class="p">,</span> <span class="s2">"kern class"</span><span class="p">,</span> <span class="s2">"class definition"</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
 <p><code>decide</code> takes a mapping from question name to question. The name you choose comes back as the key of the answer. Build questions with three functions:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"docs"</span><span class="p">:</span> <span class="s2">"an explanation from the manual"</span><span class="p">,</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>                                             <span class="s2">"python"</span><span class="p">:</span> <span class="s2">"a script"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">:</span> <span class="s2">"feature code"</span><span class="p">})</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="s2">"runnable code"</span><span class="p">,</span> <span class="n">no</span><span class="o">=</span><span class="s2">"an explanation"</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">ornotto</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">"How urgent is it?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"can wait"</span><span class="p">,</span> <span class="s2">"this week"</span><span class="p">,</span> <span class="s2">"today"</span><span class="p">])</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1856,14 +1911,14 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tbody>
 </table>
 <p><code>bool(answer)</code> is <code>bool(answer.value)</code>, so <code>if ornotto.check(text, "Is it spam?"):</code> reads as it should.</p>
-<p><code>calibrated</code> identifies the readout: <code>True</code> for dohnuts and ollaya, <code>False</code> for pcdServer's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. <a href="../09-confidence/">Chapter 9</a> explains that check.</p>
+<p><code>calibrated</code> identifies the readout: <code>True</code> for dohnuts and ollaya, <code>False</code> for pcdServer and the native encoders's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. <a href="../09-confidence/">Chapter 9</a> explains that check.</p>
 <p><code>raw</code> keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes <code>native.confidence</code> (the top probability) and <code>native.certainty</code> (1 − H/ln K); for isolated scores it adds <code>native.level_fit</code> and <code>native.fit_mass</code>.</p>
 <p>A <code>Decision</code> holds all answers to one request. It is a read-only mapping from question name to <code>Answer</code>, and it also answers attribute access:</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">})</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="s2">"Rename every .sc glyph to .smcp in all open fonts"</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">]),</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="s2">"code"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">yes_no</span><span class="p">(</span><span class="s2">"Does the user want code they can run?"</span><span class="p">),</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">})</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">d</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">"code"</span><span class="p">]</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </code></pre></div>
 <table>
 <thead>
@@ -1883,7 +1938,7 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 <tr>
 <td><code>engine</code></td>
-<td><code>"dohnuts"</code>, <code>"pcd"</code> or <code>"ollaya"</code></td>
+<td><code>"dohnuts"</code>, <code>"pcd"</code>, <code>"ollaya"</code>, <code>"laya-mlx"</code> or <code>"xdecision"</code></td>
 </tr>
 <tr>
 <td><code>usage</code></td>
@@ -1901,15 +1956,15 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </table>
 <h2 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h2>
 <p><code>adecide</code> is <code>decide</code> for asyncio. It uses <code>httpx.AsyncClient</code>, so many decisions can be in flight at once. The first call may block briefly while the engine starts: starting a process and waiting for it to load a model is not asynchronous.</p>
-<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<div class="language-python highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">d</span> <span class="o">=</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">Decider</span><span class="p">(</span><span class="s2">"decider-0.8b"</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"How do I open the Glyph window?"</span><span class="p">,</span> <span class="s2">"Build a kern feature for A V"</span><span class="p">]</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">ornotto</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="s2">"What does the user want?"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"docs"</span><span class="p">,</span> <span class="s2">"python"</span><span class="p">,</span> <span class="s2">"fea"</span><span class="p">])}</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">adecide</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <p><code>ornotto.aextract</code> is the async form of <code>extract</code> (<a href="../11-typed/">chapter 11</a>).</p>
 <h2 id="engine-lifecycle">Engine lifecycle<a class="headerlink" href="#engine-lifecycle" title="Permanent link">&para;</a></h2>
@@ -2282,10 +2337,10 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 </tr>
 </tbody>
 </table>
-<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
+<div class="language-sh highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ornotto<span class="w"> </span>serve<span class="w"> </span>qwen3.5-4b-hmm<span class="w"> </span>--engine<span class="o">=</span>pcd
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ornotto<span class="w"> </span>pull<span class="w"> </span>ollaya-kev-0.8b
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>ornotto<span class="w"> </span>choose<span class="w"> </span><span class="s2">"Build a kern feature for A V W T"</span><span class="w"> </span>docs<span class="w"> </span>python<span class="w"> </span>fea<span class="w"> </span>--model<span class="o">=</span>kev:4b<span class="w"> </span>--engine<span class="o">=</span>ollaya
 </code></pre></div>
 <p><code>ornotto serve</code> is the easy way to get a server that another process can reach. Pass its URL to <code>Decider(url=...)</code>, or point any System One client at it if the engine is dohnuts or ollaya.</p>
 <div class="footnote">
@@ -2314,13 +2369,13 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
 
 
 
-                
+
 <!--/email_off-->
 
               </article>
             </div>
-          
-          
+
+
   <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -2328,40 +2383,40 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
           <div class="md-top" data-md-component="top" hidden>
   <div class="md-top__center">
     <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
-      
+
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
       <span>Back to top</span>
     </button>
-    
-      
-      
+
+
+
       <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
       </label>
-    
-    
-      
-      
+
+
+
+
       <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
       </label>
-    
+
   </div>
 </div>
       </main>
-      
+
   <div class="ornotto-book-footer">
     <nav aria-label="Chapters">
-      
+
       <a href="../09-confidence/" rel="prev">← 9. Confidence and fallback</a>
-      
-      
+
+
       <a href="../11-typed/" rel="next">11. Typed decisions and pydantic-ai →</a>
-      
+
     </nav>
-    
+
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
-    
+
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 
@@ -2369,33 +2424,33 @@ Availability and access are controlled by OpenRouter, including <code>:free</cod
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    
-    
-    
-      
-      
-      
-      
-        
-        
-          
-          
-        
+
+
+
+
+
+
+
+
+
+
+
+
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.tabs", "navigation.top", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
+
+
       <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
+
         <script src="../js/tables.js"></script>
-      
+
         <script src="../js/benchmark-math.da51227706b3.js"></script>
-      
+
         <script src="../js/benchmark.040f05193bf1.js"></script>
-      
-    
+
+
   </body>
 </html>

@@ -3,75 +3,75 @@
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
-    
+
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      
+
         <meta name="description" content="Typed decisions on local models: dohnuts, pcdServer, and the ornotto Python package. Benchmarks against jev.">
-      
-      
+
+
         <meta name="author" content="Fontlab Ltd.">
-      
-      
+
+
         <link rel="canonical" href="https://fontlab.org/ornotto/06-results/">
-      
-      
+
+
         <link rel="prev" href="../05-method/">
-      
-      
+
+
         <link rel="next" href="../07-quantization/">
-      
-      
-        
-      
-      
-      
-      
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
           <link rel="icon" href="../assets/images/favicon.png">
-        
-      
+
+
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-materialx-10.2.0">
-    
-    
-      
+
+
+
         <title>6. Results - ornotto</title>
-      
-    
-    
+
+
+
       <link rel="stylesheet" href="../assets/stylesheets/main.d7aee198.min.css">
-      
-        
+
+
         <link rel="stylesheet" href="../assets/stylesheets/palette.a45159b5.min.css">
-      
-    
-    
 
-    
 
-    
-      
-    
-    
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
       <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/components.css">
-    
-      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
-    
-      <link rel="stylesheet" href="../css/site.css">
-    
-      <link rel="stylesheet" href="../css/benchmark.13b021a7aaa8.css">
-    
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
-    
-      
 
-    
-    
+      <link rel="stylesheet" href="https://i.fontlab.com/fltheme26/1.0.0/theme.css">
+
+      <link rel="stylesheet" href="../css/site.css">
+
+      <link rel="stylesheet" href="../css/benchmark.13b021a7aaa8.css">
+
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
 
   <link rel="stylesheet" href="https://use.typekit.net/gav0zux.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,39 +104,39 @@
   <script src="https://i.fontlab.com/fltheme26/1.0.0/editorial/fontlab-theme.js" defer></script>
 
   </head>
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
     <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="red" data-mx-topbar="glass">
-  
-    
+
+
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="toc" type="checkbox" id="__toc" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <label class="md-overlay" for="__toc"></label>
     <div data-md-component="skip">
-      
-        
+
+
         <a href="#6-results" class="md-skip">
           Skip to content
         </a>
-      
+
     </div>
     <div data-md-component="announce">
-      
+
     </div>
-    
-    
-  
+
+
+
   <header class="md-header" data-md-component="header" aria-hidden="true">
     <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
@@ -144,19 +144,19 @@
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.25 2a8.25 8.25 0 0 1 6.34 13.53l5.69 5.69a.749.749 0 0 1-.326 1.275.75.75 0 0 1-.734-.215l-5.69-5.69A8.25 8.25 0 1 1 10.25 2M3.5 10.25a6.75 6.75 0 1 0 13.5 0 6.75 6.75 0 0 0-13.5 0"/></svg>
-        
+
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
-        
+
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
+
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
-      
+
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0">
@@ -174,144 +174,144 @@
   <fontlab-menu mode="dark" site-label="ornotto" site-url="https://fontlab.org/ornotto/"></fontlab-menu>
 
     <div class="md-container" data-md-component="container">
-      
-      
-        
-          
-            
+
+
+
+
+
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
-      
-        
-  
-  
-  
-  
+
+
+
+
+
+
     <li class="md-tabs__item">
       <a href=".." class="md-tabs__link">
-        
-  
-  
-    
-  
+
+
+
+
+
   Home
 
       </a>
     </li>
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../results/explorer/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Results
 
         </a>
       </li>
-    
-  
 
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      
-  
-  
-  
-    
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../01-deciding/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Book
 
         </a>
       </li>
-    
-  
 
-    
-  
 
-      
-        
-  
-  
-  
-  
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
       <li class="md-tabs__item">
         <a href="../10-package/" class="md-tabs__link">
-          
-  
-  
+
+
+
   Use ornotto
 
         </a>
       </li>
-    
-  
 
-      
+
+
+
     </ul>
   </div>
 </nav>
-          
-        
-      
+
+
+
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
-          
-  
-            
-              
+
+
+
+
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
 
 
-  
+
+
 
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="ornotto" class="md-nav__button md-logo" aria-label="ornotto" data-md-component="logo">
-      
-  
+
+
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ornotto
   </label>
-  
+
     <div class="md-nav__source">
       <a href="https://github.com/fontlaborg/ornotto" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
-    
+
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
@@ -319,1123 +319,1145 @@
   </div>
 </a>
     </div>
-  
+
   <ul class="md-nav__list">
-    
-      
-      
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Home
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+
+
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Results
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Results
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/explorer/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Explore speed and accuracy
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Explore speed and accuracy
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/tldr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: the short version
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Results: the short version
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../results/details/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Results: every table
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    Results: every table
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Book
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+
+
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Book
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Book
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+
+
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Concepts
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Concepts
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../01-deciding/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    1. Deciding, not generating
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    1. Deciding, not generating
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../02-decisions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    2. The shape of a decision
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    2. The shape of a decision
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../03-engines/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    3. Ways to read an answer
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    3. Ways to read an answer
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../04-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    4. Dedicated, fine-tuned and vanilla models
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    4. Dedicated, fine-tuned and vanilla models
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
+
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Method and analysis
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+
+
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Method and analysis
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3_2">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Method and analysis
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../05-method/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    5. How we measured
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    5. How we measured
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    6. Results
-  
 
-    
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+
+
+    6. Results
+
+
+
   </span>
-  
-  
+
+
 
           <span class="md-nav__icon md-icon"></span>
         </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    6. Results
-  
 
-    
+      <a href="./" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+
+
+    6. Results
+
+
+
   </span>
-  
-  
+
+
 
       </a>
-      
-        
+
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
+        <li class="md-nav__item">
+  <a href="#native-laya-mlx-and-xdecision" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Native Laya MLX and xDecision
+
+    </span>
+  </a>
+
+</li>
+
         <li class="md-nav__item">
   <a href="#openrouter-nine-remote-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         OpenRouter: nine remote models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#issue-102-october-additions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Issue 102: October additions
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-top-of-the-table" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The top of the table
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#every-method" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Every method
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#best-method-per-engine-and-runtime" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Best method per engine and runtime
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-second-round-model-by-model" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The second round, model by model
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#numbers-others-report" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Numbers others report
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Numbers others report">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#typed-decisions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         typed-decisions
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
           <li class="md-nav__item">
   <a href="#decision-10" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Decision 1.0
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What changed in September 2026
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#one-set-of-weights-three-scores" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         One set of weights, three scores
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-the-results-do-not-say" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What the results do not say
-      
+
     </span>
   </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../07-quantization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    7. Quantization and size
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    7. Quantization and size
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../08-speed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    8. Speed, memory and caching
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    8. Speed, memory and caching
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../09-confidence/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    9. Confidence and fallback
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    9. Confidence and fallback
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-              
-            
+    </li>
+
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Use ornotto
-  
 
-    
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+
+
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Use ornotto
+
+
+
   </span>
-  
-  
+
+
 
             <span class="md-nav__icon md-icon"></span>
           </label>
-        
+
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            
-  
+
+
     Use ornotto
-  
+
 
           </label>
           <ul class="md-nav__list">
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../10-package/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    10. The ornotto package
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    10. The ornotto package
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../11-typed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    11. Typed decisions and pydantic-ai
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    11. Typed decisions and pydantic-ai
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
-              
-                
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
     <li class="md-nav__item">
       <a href="../12-choosing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    12. Choosing, building and contributing
-  
 
-    
+
+
+  <span class="md-ellipsis">
+
+
+    12. Choosing, building and contributing
+
+
+
   </span>
-  
-  
+
+
 
       </a>
     </li>
-  
 
-              
-            
+
+
+
           </ul>
         </nav>
-      
-    </li>
-  
 
-    
+    </li>
+
+
+
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
-            
-            
-              
+
+
+
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
+
 
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc">
-      
+
+        <li class="md-nav__item">
+  <a href="#native-laya-mlx-and-xdecision" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Native Laya MLX and xDecision
+
+    </span>
+  </a>
+
+</li>
+
         <li class="md-nav__item">
   <a href="#openrouter-nine-remote-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         OpenRouter: nine remote models
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#issue-102-october-additions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Issue 102: October additions
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-top-of-the-table" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The top of the table
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#every-method" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Every method
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#best-method-per-engine-and-runtime" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Best method per engine and runtime
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#the-second-round-model-by-model" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         The second round, model by model
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#numbers-others-report" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Numbers others report
-      
+
     </span>
   </a>
-  
+
     <nav class="md-nav" aria-label="Numbers others report">
       <ul class="md-nav__list">
-        
+
           <li class="md-nav__item">
   <a href="#typed-decisions" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         typed-decisions
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
           <li class="md-nav__item">
   <a href="#decision-10" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         Decision 1.0
-      
+
     </span>
   </a>
-  
+
 </li>
-        
+
       </ul>
     </nav>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-changed-in-september-2026" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What changed in September 2026
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#one-set-of-weights-three-scores" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         One set of weights, three scores
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
         <li class="md-nav__item">
   <a href="#what-the-results-do-not-say" class="md-nav__link">
     <span class="md-ellipsis">
-      
+
         What the results do not say
-      
+
     </span>
   </a>
-  
+
 </li>
-      
+
     </ul>
-  
+
 </nav>
                   </div>
                 </div>
               </div>
-            
-          
+
+
   <!-- Subtheme switcher: injected into the tabs nav (div[4]/nav) by fontlab-theme.js -->
   <template id="fl-theme-menu-template">
     <div class="fl-theme" data-fl-theme>
@@ -1461,23 +1483,76 @@
     </button>
   </template>
 
-          
+
             <div class="md-content" data-md-component="content">
-              
-              
-              
+
+
+
               <article class="md-content__inner md-typeset" data-pagefind-body>
-                
+
 <!--email_off-->
 
-                  
-  
-  
+
+
+
 
 
 <h1 id="6-results">6. Results<a class="headerlink" href="#6-results" title="Permanent link">&para;</a></h1>
-<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 302 methods finished; five failed and are left out.</p>
+<p>jev, the hosted reference, answered 65 of the 67 router queries correctly in both modes, at 466 ms per query. In September, one local method matched it on translated text: rune-26b-a4b at Q3_K_M on llama-server scored 65/67 at 367 ms from a 13.5 GB file, but only 57/67 on the original text. Rune Q5 on pcdServer now matches jev in both modes (65/67 each), using CPU weights at 962 ms/query from 19.13 GB. The best local model near 90 ms remains Qwen3.5-4B-Hmm on pcdServer: 64/67 on translated text and 65/67 on direct text, at 88 ms per query from a 4.5 GB file, or 93 ms from the 2.7 GB Q4_K_M file. The dedicated decider-0.8b on dohnuts (Metal) scored 62/67 and 61/67 at 52 ms from the 0.81 GB DreamBlooms <code>Q8_0</code> file that <code>ornotto</code> registers. Among encoders, GLiNER2.5-Decide scored 61/67 on translated text in 27 ms on Core AI, and laya 52/67 in 7 ms. 305 methods finished; five failed and are left out.</p>
 <p>The jev row measures <code>jev-1.13.0</code>. TypeSafe's model page listed no other version in September 2026, and both public aliases, <code>jev-latest</code> and <code>jev-preview</code>, pointed to it when we checked on 30 September.<sup id="fnref:ts-models"><a class="footnote-ref" href="#fn:ts-models">1</a></sup> <a href="../01-deciding/#jev-the-hosted-reference">Chapter 1</a> explains why the version behind an alias matters. Every benchmark number in this chapter comes from our own 67-query routing test. Local inference ran on one Mac; remote calls used that Mac as the client, with provider hardware undisclosed. Numbers that other people published about the same models are collected separately, in <a href="#numbers-others-report">Numbers others report</a>, and are never mixed into our tables.</p>
+<h2 id="native-laya-mlx-and-xdecision">Native Laya MLX and xDecision<a class="headerlink" href="#native-laya-mlx-and-xdecision" title="Permanent link">&para;</a></h2>
+<p>Three new configurations completed the same 106 distinct inputs and both
+67-query modes on 3 October. All 302 earlier configurations and their frozen
+translations are retained. Each model ran alone on MLX with GPU selected;
+HTTP and tokenization use CPU. This is configured placement, not an operation
+trace. The native heads return choice, noul and score; the router uses choice.</p>
+<table>
+<thead>
+<tr>
+<th>native runtime / storage</th>
+<th style="text-align: right;">translated</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">translated ms</th>
+<th style="text-align: right;">direct ms</th>
+<th style="text-align: right;">weights GB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Laya MLX 0.3.0 / FP16</td>
+<td style="text-align: right;">52/67</td>
+<td style="text-align: right;">49/67</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">11.2</td>
+<td style="text-align: right;">0.64</td>
+</tr>
+<tr>
+<td>xDecision / F16</td>
+<td style="text-align: right;">44/67</td>
+<td style="text-align: right;">43/67</td>
+<td style="text-align: right;">14.9</td>
+<td style="text-align: right;">15.1</td>
+<td style="text-align: right;">0.70</td>
+</tr>
+<tr>
+<td>xDecision / Q8_0</td>
+<td style="text-align: right;">45/67</td>
+<td style="text-align: right;">43/67</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: right;">14.2</td>
+<td style="text-align: right;">0.40</td>
+</tr>
+</tbody>
+</table>
+<p>xDecision Q8_0 expands to dense FP16 at load. Its size column measures the
+stored file, not resident RAM. Its runtime is pinned to
+<a href="https://github.com/xnetsc/xDecision/tree/4082689a093393358534fda26a945699080eb572"><code>4082689</code></a>
+and weights to <code>d97731bc72664e06722e5ca64fcdbc8e0e2f9c95</code>.
+<a href="https://huggingface.co/aac6fef/laya-multilingual-mlx">Laya's native checkpoint</a>
+is pinned to <code>f2b4faf51023039425946074e2cf1361d2db11d5</code>.
+These are separate runtime configurations, not replacements for earlier Laya
+rows. Calibration on this routing task is unverified. Both runtimes are now
+available through the <a href="../10-package/#native-encoders">package's optional native engines</a>.</p>
 <h2 id="openrouter-nine-remote-models">OpenRouter: nine remote models<a class="headerlink" href="#openrouter-nine-remote-models" title="Permanent link">&para;</a></h2>
 <p>The fresh <code>typesafe/jev-1.13</code> run scored <strong>65/67 in both modes</strong>, at <strong>364.4 ms translated and 375.1 ms direct</strong>. Together Tev1 scored <strong>64/67 translated at 339.3 ms</strong> and <strong>65/67 direct at 335.1 ms</strong>. Kev 4B also scored <strong>65/67 in both</strong>, at <strong>1,653.0 ms translated and 1,525.0 ms direct</strong>. The earlier hosted Jev measurement is retained; differences in end-to-end timing across dates are not a controlled model-speed comparison.</p>
 <p>All nine requested endpoints were measured on the same 67 queries, in translated and direct modes, on 3 October 2026. Translations and local results are retained from the earlier runs. Each endpoint received 106 distinct inputs, sequentially, with duplicate inputs reused across modes. Latency includes the network trip and provider processing; <strong>R</strong> means the provider did not disclose CPU/GPU placement or weight precision.</p>
@@ -1819,10 +1894,10 @@
 <li><strong>A new readout is no guarantee.</strong> The contrastive CLM scored 33 to 39, the entailment readouts 20 (ModernBERT NLI) and 51 (semif), GLiClass 26, and the small encoders Julia-1, Pulse Decide and decima-small 31 to 37. Apart from semif, they score no better than the old Qwen1.5 models, whose best was 42.</li>
 </ul>
 <h2 id="every-method">Every method<a class="headerlink" href="#every-method" title="Permanent link">&para;</a></h2>
-<p>All 302 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
+<p>All 305 methods are in the table below. Click a column header to sort by it, and click again to reverse the order. Type in the box to keep only the rows that contain every word you type: <code>pcdServer hmm</code> keeps the Hmm model on pcdServer, and <code>dedicated Metal</code> keeps the dedicated models on dohnuts (Metal). <a href="../05-method/#what-the-numbers-mean">Chapter 5</a> defines every column. An empty direct cell means the model was trained on English only and was sent the translated text alone. A method marked † carries a licence note, which its tooltip shows.</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 302 rows" aria-label="Filter the table" data-table="classifiers">
-<table class="sortable" id="classifiers"><caption>All 302 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
+<input class="table-filter" type="search" placeholder="Filter 305 rows" aria-label="Filter the table" data-table="classifiers">
+<table class="sortable" id="classifiers"><caption>All 305 methods, best first. Click to sort; an empty cell was not measured, or does not apply (the direct score of a model trained on English only).</caption><thead><tr><th>Method</th><th>Engine</th><th>C/G</th><th>Model</th><th>Family</th><th>Quant</th><th>GB</th><th>ms/query</th><th aria-sort="descending">Translated</th><th>Direct</th><th>English</th><th>Other, translated</th><th>Other, direct</th><th>Load ms</th></tr></thead>
 <tbody>
 <tr><td class="method" title="Measured through OpenRouter System One on 3 October 2026; latency includes network and provider processing. Remote hardware and precision are undisclosed; R does not assert CPU or GPU. Provider calibration is unrecorded.">openrouter@typesafe/jev-1.13 †</td><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td>typesafe/jev-1.13</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="39" class="num score">39/39</td><td class="num"></td></tr>
 <tr><td class="method">slot@rune-26b-a4b-q3</td><td>slot (llama-server)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>rune-26b-a4b</td><td>dedicated</td><td>q3</td><td data-sort="13.52" class="num">13.52</td><td data-sort="366.592537" class="num">366.6</td><td data-sort="65" class="num score">65/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="26" class="num score">26/28</td><td data-sort="39" class="num score">39/39</td><td data-sort="31" class="num score">31/39</td><td data-sort="608.070417" class="num">608</td></tr>
@@ -2012,6 +2087,7 @@
 <tr><td class="method">dohnuts-metal@this-that-model-1.2-q8</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>this-that-model-1.2</td><td>dedicated</td><td>q8</td><td data-sort="2.01" class="num">2.01</td><td data-sort="107.758209" class="num">107.8</td><td data-sort="53" class="num score">53/67</td><td data-sort="57" class="num score">57/67</td><td data-sort="20" class="num score">20/28</td><td data-sort="33" class="num score">33/39</td><td data-sort="38" class="num score">38/39</td><td class="num"></td></tr>
 <tr><td class="method">laya-mlx</td><td>MLX</td><td title="MLX Metal GPU (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="6.922388" class="num">6.9</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="1796.539916" class="num">1,797</td></tr>
 <tr><td class="method">laya-coreai</td><td>Core AI</td><td title="Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded (configured)">A</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="10.025373" class="num">10.0</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="3164.4525" class="num">3,164</td></tr>
+<tr><td class="method" title="Native laya-mlx 0.3.0 choice, noul and score heads; FP16 MLX GPU, CPU tokenization. Weight revision f2b4faf51023039425946074e2cf1361d2db11d5. Calibration on this task is unverified. Earlier Laya MLX measurements are retained separately.">systemone@laya-mlx-package-fp16 †</td><td>Laya MLX (native)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td>fp16</td><td data-sort="0.64" class="num">0.64</td><td data-sort="11.402985" class="num">11.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td class="num"></td></tr>
 <tr><td class="method">ollaya@laya-multilingual</td><td>ollaya</td><td title="ollaya llama.cpp Metal (Winnow) or MLX (Laya/NLI); recorded runtime recipe (configured)">G</td><td>laya-multilingual</td><td>dedicated</td><td>fp32</td><td data-sort="0.68" class="num">0.68</td><td data-sort="12.259701" class="num">12.3</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="1217.387125" class="num">1,217</td></tr>
 <tr><td class="method">laya-coreai-mlb</td><td>Core AI</td><td title="Core AI automatic placement; CPU/GPU/Neural Engine selection unrecorded (configured)">A</td><td>laya-multilingual</td><td>dedicated</td><td></td><td class="num"></td><td data-sort="19.402985" class="num">19.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="2403.659791" class="num">2,404</td></tr>
 <tr><td class="method">laya-ml-onnx-fp32</td><td>ONNX Runtime</td><td title="ONNX Runtime CPUExecutionProvider (configured)">C</td><td>laya-multilingual</td><td>dedicated</td><td>fp32</td><td class="num"></td><td data-sort="23.41194" class="num">23.4</td><td data-sort="52" class="num score">52/67</td><td data-sort="49" class="num score">49/67</td><td data-sort="21" class="num score">21/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="824.984417" class="num">825</td></tr>
@@ -2045,7 +2121,9 @@
 <tr><td class="method">laya-wd-gguf-q5</td><td>llama.cpp embeddings</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td>laya-multilingual</td><td>dedicated</td><td>q5</td><td class="num"></td><td data-sort="45.48806" class="num">45.5</td><td data-sort="47" class="num score">47/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="30" class="num score">30/39</td><td data-sort="26" class="num score">26/39</td><td data-sort="2350.379417" class="num">2,350</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-0.8b-q3</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-0.8b</td><td>vanilla</td><td>q3</td><td data-sort="0.52" class="num">0.52</td><td data-sort="31.265672" class="num">31.3</td><td data-sort="46" class="num score">46/67</td><td data-sort="40" class="num score">40/67</td><td data-sort="15" class="num score">15/28</td><td data-sort="31" class="num score">31/39</td><td data-sort="25" class="num score">25/39</td><td data-sort="218.470167" class="num">218</td></tr>
 <tr><td class="method">gguf-head@laya-neutron-en</td><td>llama.cpp embeddings + head</td><td title="Metal encoder; CPU decision head (NumPy/PyTorch) (configured)">C+G</td><td>laya-en</td><td>dedicated</td><td>q4_0</td><td data-sort="0.29" class="num">0.29</td><td data-sort="62.443284" class="num">62.4</td><td data-sort="46" class="num score">46/67</td><td class="num"></td><td data-sort="16" class="num score">16/28</td><td data-sort="30" class="num score">30/39</td><td class="num"></td><td data-sort="1664.353417" class="num">1,664</td></tr>
+<tr><td class="method" title="Native xDecision choice, noul and score heads; MLX FP16 GPU, CPU tokenization. Q8_0 is storage quantization: expanded to FP16 at load, not quantized matmul. Calibration on this task is unverified. Runtime revision 4082689a093393358534fda26a945699080eb572; weights d97731bc72664e06722e5ca64fcdbc8e0e2f9c95.">systemone@xdecision-q8-mlx †</td><td>xDecision (MLX)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>xDecision</td><td>dedicated</td><td>q8</td><td data-sort="0.4" class="num">0.40</td><td data-sort="14.329851" class="num">14.3</td><td data-sort="45" class="num score">45/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="26" class="num score">26/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@qwen3.8-2b-distill-q5</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.8-2b-distill</td><td>fine-tuned</td><td>q5</td><td data-sort="1.45" class="num">1.45</td><td data-sort="46.067164" class="num">46.1</td><td data-sort="45" class="num score">45/67</td><td data-sort="45" class="num score">45/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="140.064125" class="num">140</td></tr>
+<tr><td class="method" title="Native xDecision choice, noul and score heads; MLX FP16 GPU, CPU tokenization. Q8_0 is storage quantization: expanded to FP16 at load, not quantized matmul. Calibration on this task is unverified. Runtime revision 4082689a093393358534fda26a945699080eb572; weights d97731bc72664e06722e5ca64fcdbc8e0e2f9c95.">systemone@xdecision-f16-mlx †</td><td>xDecision (MLX)</td><td title="Native encoder MLX FP16 on explicitly selected GPU; CPU HTTP/tokenization. Q8 files dequantize at load. (configured)">G</td><td>xDecision</td><td>dedicated</td><td>f16</td><td data-sort="0.7" class="num">0.70</td><td data-sort="14.88209" class="num">14.9</td><td data-sort="44" class="num score">44/67</td><td data-sort="43" class="num score">43/67</td><td data-sort="16" class="num score">16/28</td><td data-sort="28" class="num score">28/39</td><td data-sort="27" class="num score">27/39</td><td class="num"></td></tr>
 <tr><td class="method">pcdserver@qwen3-1.7b-unsloth-q2</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3-1.7b-unsloth</td><td>vanilla</td><td>q2</td><td data-sort="0.78" class="num">0.78</td><td data-sort="37.398507" class="num">37.4</td><td data-sort="44" class="num score">44/67</td><td data-sort="46" class="num score">46/67</td><td data-sort="18" class="num score">18/28</td><td data-sort="26" class="num score">26/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="276.358584" class="num">276</td></tr>
 <tr><td class="method">pcdserver@qwen3.8-2b-distill-q8</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.8-2b-distill</td><td>fine-tuned</td><td>q8</td><td data-sort="2.08" class="num">2.08</td><td data-sort="39.479104" class="num">39.5</td><td data-sort="44" class="num score">44/67</td><td data-sort="45" class="num score">45/67</td><td data-sort="17" class="num score">17/28</td><td data-sort="27" class="num score">27/39</td><td data-sort="28" class="num score">28/39</td><td data-sort="128.991458" class="num">129</td></tr>
 <tr><td class="method">pcdserver@qwen3.5-2b-unsloth-iq2</td><td>pcdServer</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td>qwen3.5-2b-unsloth</td><td>vanilla</td><td>iq2</td><td data-sort="0.77" class="num">0.77</td><td data-sort="40.774627" class="num">40.8</td><td data-sort="44" class="num score">44/67</td><td data-sort="39" class="num score">39/67</td><td data-sort="15" class="num score">15/28</td><td data-sort="29" class="num score">29/39</td><td data-sort="24" class="num score">24/39</td><td data-sort="128.806625" class="num">129</td></tr>
@@ -2139,7 +2217,7 @@
 </ul>
 <p>The October retry also measured Ornith on Splash: 62/67 translated at 322.4 ms, 63/67 direct at 328.5 ms. Only this Splash package completed. <a href="../results/explorer/#runs-excluded-from-the-charts">The explorer records the refused, failed and deferred runs</a>, including ggmlc Laya Metal and the unresolved Swift loading incident.</p>
 <h2 id="best-method-per-engine-and-runtime">Best method per engine and runtime<a class="headerlink" href="#best-method-per-engine-and-runtime" title="Permanent link">&para;</a></h2>
-<p>Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 302. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
+<p>Most methods run on pcdServer, because it takes any chat GGUF: 173 of the 305. The other engines and runtimes ran only the models they were built for. The best method on each:</p>
 <table>
 <thead>
 <tr>
@@ -2614,13 +2692,13 @@
 
 
 
-                
+
 <!--/email_off-->
 
               </article>
             </div>
-          
-          
+
+
   <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
 
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -2628,40 +2706,40 @@
           <div class="md-top" data-md-component="top" hidden>
   <div class="md-top__center">
     <button type="button" class="md-top__button md-top__button--main" data-md-action="top">
-      
+
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
       <span>Back to top</span>
     </button>
-    
-      
-      
+
+
+
       <label class="md-top__button md-top__side md-top__side--nav" for="__drawer" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-left" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
       </label>
-    
-    
-      
-      
+
+
+
+
       <label class="md-top__button md-top__side md-top__side--toc" for="__toc" >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-panel-right" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></svg>
       </label>
-    
+
   </div>
 </div>
       </main>
-      
+
   <div class="ornotto-book-footer">
     <nav aria-label="Chapters">
-      
+
       <a href="../05-method/" rel="prev">← 5. How we measured</a>
-      
-      
+
+
       <a href="../07-quantization/" rel="next">7. Quantization and size →</a>
-      
+
     </nav>
-    
+
     <p>Copyright &copy; 2026 Fontlab Ltd. Text and data CC BY 4.0, code Apache-2.0.</p>
-    
+
   </div>
   <fontlab-footer mode="dark"></fontlab-footer>
 
@@ -2669,33 +2747,33 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    
-    
-    
-      
-      
-      
-      
-        
-        
-          
-          
-        
+
+
+
+
+
+
+
+
+
+
+
+
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "code": null, "features": ["navigation.tabs", "navigation.top", "navigation.sections", "toc.follow", "search.highlight", "content.code.copy", "content.tabs.link", "content.tooltips"], "search": {"options": {"baseUrl": "..", "bundleUrl": "../search/", "highlight": true, "searchOptions": {}}, "provider": "pagefind"}, "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "code.collapse": "Collapse", "code.download": "Download", "code.expand": "Expand remaining # lines", "code.select": "Toggle line selection", "search.offline": "Switch to Lunr for offline search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-    
-    
+
+
       <script src="../assets/javascripts/bundle.44453a05.min.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/basecoat.js"></script>
-      
+
         <script src="https://i.fontlab.com/fltheme26/1.0.0/theme.js"></script>
-      
+
         <script src="../js/tables.js"></script>
-      
+
         <script src="../js/benchmark-math.da51227706b3.js"></script>
-      
+
         <script src="../js/benchmark.040f05193bf1.js"></script>
-      
-    
+
+
   </body>
 </html>

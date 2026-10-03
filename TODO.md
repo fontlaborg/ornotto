@@ -24,5 +24,6 @@
 
 - [x] Publish the 302-run local results and verify the actual HTTPS explorer/assets.
 - [ ] Resolve excluded heavy-load and ggmlc Metal failures before further GPU measurements.
-- [ ] Add the requested public Laya MLX integration; its private benchmark support already exists.
-- [ ] Integrate xDecision through its native runtime and verify package/benchmark behavior.
+- [x] Add and verify the public Laya MLX native integration and a separate current-runtime benchmark.
+- [x] Integrate and verify native xDecision F16/Q8 with package tests and full benchmarks.
+- [ ] Publish and verify the 305-configuration native encoder explorer on HTTPS.

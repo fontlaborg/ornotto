@@ -37,7 +37,8 @@ class Decider:
     Args:
         model: a registered name (see `ornotto.MODELS`), a local .gguf path, `hf:owner/repo/file.gguf`, or an
             ollaya tag (`ollaya:kev:4b`, or plain `kev:4b` with engine="ollaya").
-        engine: "dohnuts", "pcd", "ollaya" or "openrouter". Registered remote IDs infer OpenRouter.
+        engine: "dohnuts", "pcd", "ollaya", "openrouter", "laya-mlx" or "xdecision".
+            Registered models infer their native engine.
         url: talk to an engine that is already running instead of starting one.
         gpu: offload to the GPU (Metal on macOS). Defaults to on where the bundled build has a GPU backend.
         metadata, head: dohnuts profile JSON and scorer head, for a model that is not registered.
@@ -95,7 +96,7 @@ class Decider:
         else:
             if engine == "ollaya" and model not in MODELS and not model.startswith("ollaya:"):
                 model = "ollaya:" + model
-            resolved = resolve(model, metadata=metadata, head=head)
+            resolved = resolve(model, metadata=metadata, head=head, engine=engine)
             chosen = engine or resolved.engines[0]
             if chosen not in resolved.engines:
                 raise ValueError(f"{resolved.name} runs on {' or '.join(resolved.engines)}, not {chosen}")

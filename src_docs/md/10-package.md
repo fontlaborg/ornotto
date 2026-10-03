@@ -4,7 +4,7 @@ this_file: src_docs/md/10-package.md
 
 # 10. The ornotto package
 
-`ornotto` is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to the local engines, starts and stops them for you, and downloads the models they need. Two engines, dohnuts and pcdServer, ship inside the wheel; a third, ollaya, is a separate install that `ornotto` drives when it finds it. This chapter is the reference: what each object takes, what it returns, and what happens underneath.
+`ornotto` is the Python side of this book. It speaks System One (a state, plus named questions of three kinds) to the local engines, starts and stops them for you, and downloads the models they need. Two engines, dohnuts and pcdServer, ship inside the wheel; ollaya and the native Laya MLX/xDecision runtimes are separate installs that `ornotto` drives when it finds it. This chapter is the reference: what each object takes, what it returns, and what happens underneath.
 
 ## Install
 
@@ -46,6 +46,48 @@ ollaya is young and moves quickly. Its first release, v0.1.0, came out on 2026-0
 
 Models download from Hugging Face on first use, through `huggingface_hub`, into the ordinary Hugging Face cache. Set `HF_HUB_CACHE` (or `HF_HOME`) if your home volume has no room: decider-0.8b needs 0.81 GB, and Qwen3.5-4B-Hmm needs 2.7 GB.
 
+### Native encoders
+
+Current `main` supports [aac6fef/laya-multilingual-mlx](https://huggingface.co/aac6fef/laya-multilingual-mlx)
+and [mccoysc/xDecision](https://huggingface.co/mccoysc/xDecision).
+Install ornotto from the checkout with `uv pip install -e '.[laya-mlx]'`
+on Apple silicon macOS, Python 3.11+. xDecision is a separate pinned source install:
+
+```sh
+uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'
+```
+
+For xDecision CPU, omit `[apple]`. MLX GPU requires Apple silicon. The runtimes
+are not bundled and must be installed in the same Python environment as ornotto.
+
+```python
+encoder = ornotto.Decider("laya-multilingual-mlx")
+answer = encoder.choose("Rename glyphs with a Python script", ["python", "docs"])
+ornotto.shutdown()  # stop the first model before loading another
+encoder = ornotto.Decider("xdecision-q8", gpu=False)
+answer = encoder.check("Rename glyphs with a Python script", "Does the user want code?")
+ornotto.shutdown()
+```
+
+Registered names download the native checkpoint or custom GGUF into the Hugging
+Face cache. A local checkpoint directory works with `engine="laya-mlx"`;
+a local xDecision GGUF works with `engine="xdecision"`. These formats cannot be
+sent to pcdServer or dohnuts. Native metadata/head overrides are rejected.
+The default device is GPU; `gpu=False` selects native MLX CPU for Laya and
+PyTorch CPU for xDecision. MLX expands xDecision Q8_0 to FP16 at load, so the
+smaller file does not imply proportionally smaller memory or quantized matmul.
+
+The usual sync/async calls, typed extraction and pydantic-ai bridge use the same
+questions and answers. Native probability, confidence, action and usage fields
+are preserved in the raw response. `calibrated` remains false because task
+calibration has not been established. Missing instructions get a default for
+the question kind; explicit instructions are passed through. Reported state
+truncation raises `DecisionError`; a runtime that omits truncation metadata
+cannot establish that every input token was retained. Keep inputs within its
+context (1,024 tokens for this Laya checkpoint), including questions/options.
+ornotto starts one serial loopback HTTP process per model/engine/device and
+stops it through the existing lifecycle.
+
 ## Decider
 
 A `Decider` is one model on one engine. Creating one resolves the model (downloading it if needed) but does not start the engine. The engine starts on the first question.
@@ -65,7 +107,7 @@ tag  = ornotto.Decider("ollaya:kev:4b")                        # any ollaya tag;
 | Argument | Default | Meaning |
 |---|---|---|
 | `model` | `"decider-0.8b"` | A registered name, a local `.gguf` path (`~` expands), `hf:owner/repo/file.gguf`, or an ollaya tag as `ollaya:<tag>`. |
-| `engine` | first engine the model supports | `"dohnuts"`, `"pcd"` or `"ollaya"`. With `"ollaya"`, a plain tag such as `kev:4b` also works. Asking a model for an engine it cannot run raises `ValueError`. |
+| `engine` | first engine the model supports | `"dohnuts"`, `"pcd"`, `"ollaya"`, `"laya-mlx"` or `"xdecision"`. With `"ollaya"`, a plain tag such as `kev:4b` also works. Asking a model for an engine it cannot run raises `ValueError`. |
 | `url` | `None` | Talk to a running engine at this base URL instead of starting one. `engine` then defaults to `"dohnuts"`, and `model` is only a label. |
 | `gpu` | `True` on macOS, `False` elsewhere | Offload all layers to the GPU. The bundled macOS build has Metal; the Linux and Windows builds are CPU only. Affects both engines. With `False`, pcdServer disables GPU weights, computation and KV offload. |
 | `metadata` | `None` | Explicit dohnuts profile JSON, overriding the registered profile too. Without it, an unregistered GGUF runs on pcdServer only. |
@@ -179,7 +221,7 @@ An `Answer` is one answer. Its fields mean slightly different things for the thr
 
 `bool(answer)` is `bool(answer.value)`, so `if ornotto.check(text, "Is it spam?"):` reads as it should.
 
-`calibrated` identifies the readout: `True` for dohnuts and ollaya, `False` for pcdServer's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. [Chapter 9](09-confidence.md) explains that check.
+`calibrated` identifies the readout: `True` for dohnuts and ollaya, `False` for pcdServer and the native encoders's plain token softmax. Native profiles apply the temperature in their metadata. That can be a fitted temperature, as in decider, or 1.0, as in the experimental Tev1 and ThisThat profiles. The flag is not evidence that a probability of 0.8 will be right 80 percent of the time on your task. Check the profile and your own labelled examples before using a confidence threshold. [Chapter 9](09-confidence.md) explains that check.
 
 `raw` keeps everything the engine sent, including fields ornotto does not model. From dohnuts that includes `native.confidence` (the top probability) and `native.certainty` (1 − H/ln K); for isolated scores it adds `native.level_fit` and `native.fit_mass`.
 
@@ -197,7 +239,7 @@ d.task.value, d["code"].probability, d.to_dict()
 |---|---|
 | `answers` | the dict of answers |
 | `model` | the model name |
-| `engine` | `"dohnuts"`, `"pcd"` or `"ollaya"` |
+| `engine` | `"dohnuts"`, `"pcd"`, `"ollaya"`, `"laya-mlx"` or `"xdecision"` |
 | `usage` | numeric usage fields summed over the requests, for example `input_tokens` from dohnuts or `elapsed_ms` from pcdServer |
 | `ms` | client wall-clock time for the whole call, engine start excluded |
 | `to_dict()` | just the values, by question name |
