@@ -34,7 +34,9 @@ three new runtime modules, native format and licence notice. Strict 18-page
 docs build and local browser acceptance pass: all new native engine/readout
 filters, retained low CLM rows, reload/CSV, all fourteen documented aliases,
 Jev identity, remote history, Pareto, mobile/dark, SVG and offline HTML.
-Zero browser errors. Actual HTTPS publication verification remains pending.
+Zero browser errors. Published content commit d36d244; Pages run
+37120340580 succeeded. All 23 HTTPS artifacts match the reviewed build;
+actual live browser acceptance passes with zero script errors.
 
 ## 2026-10-03 — Additional System One models
 

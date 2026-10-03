@@ -54,5 +54,5 @@ unfinished; package release remains separate through publish.sh.
 - [x] Remove failed-only and below-50 downloads while preserving low results and shared successful weights.
 - [x] Integrate fourteen pinned native configurations and verify all nine safely completed benchmarks.
 - [x] Preserve all 320 earlier rows and publishable low-scoring CLM measurements after weight pruning.
-- [ ] Publish the 329-configuration build and verify the actual HTTPS artifacts and explorer.
+- [x] Publish the 329-configuration build and verify the actual HTTPS artifacts and explorer.
 - [ ] Measure Clef Q3/Q4/Q5, Clef MLX 4-bit and Clef-Flash MLX 8-bit when the unchanged memory preflight permits.
