@@ -10,7 +10,9 @@ Validation: 127 package tests pass (13 engine tests deselected), lint/format
 pass, 13 private export regressions pass. All numeric measurements and 307
 unrelated rows are unchanged. Strict 18-page build and actual local browser
 checks pass one homepage Jev rank, ten OpenRouter measurements and all existing
-explorer interactions with zero page errors. Live publication pending.
+explorer interactions with zero page errors. Published 8ece9db; Pages
+37111772839 succeeded. All 23 live artifacts match and actual HTTPS browser
+checks confirm one homepage Jev rank and both OpenRouter measurements.
 
 ## 2026-10-03 — Weidows MPS comparison
 
