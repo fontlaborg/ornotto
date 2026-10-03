@@ -55,5 +55,7 @@
 - [x] Build the pinned native bridge and expose PII spans/redaction with explicit full-input rejection.
 - [x] Register Clef-Flash Core AI FP16/int8mix with pinned decoder, head and lexical table.
 - [x] Run and verify the separate 20-text PII benchmark while retaining every router measurement.
-- [ ] Measure both Clef Core AI variants once the unchanged RAM preflight permits (30/36 GiB available).
+- [x] Close this benchmark edition with Clef Core AI skipped by user; retain the experimental integration without fabricated measurements.
 - [x] Publish the Core AI source/docs update and verify live PII evidence and retained router explorer.
+
+- [x] Publish finalized benchmark and PyPI 0.1.3; verify deployed artifacts, release hashes and clean installed native engines.

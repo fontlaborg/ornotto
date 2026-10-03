@@ -10,9 +10,18 @@ latest unmodified guard refused at 25 GiB available vs30/36 GiB required.
 No inference scores were added. Local model consolidation does not remove
 historical benchmark results; reproduction requires re-downloading removed
 variants. Strict 18-page docs build passes; package 176 pass /2 skips /13
-engine deselections; private 121 pass /4 optional skips. The historical cleanup
+engine deselections; private 121 pass /4 optional skips.
+Lint/format and both rendered browser checks pass. All 329 score rows and
+benchmark cache/report SHA-256 hashes remain unchanged. The historical cleanup
 regression now accounts for explicitly audited later variant removal and
 checks the latest retained payloads and evidence hashes directly.
+Release tag v0.1.3 points to 3fff006; final Pages run 37154194346 succeeded.
+All 24 live artifacts match the build, and live explorer/PII browser checks
+pass with zero page errors. PyPI 0.1.3 is published: macOS arm64, Linux arm64/x86_64 and sdist.
+All four PyPI hashes match CI artifacts; clean PyPI installation imports
+version 0.1.3 and CoreAIExtractor, finds both bundled engines, and each engine
+executes --help successfully. The optional Windows build failed in bundled
+dohnuts sys.cpp:99 under MSVC; this release has no Windows wheel.
 
 ## 2026-10-03 — native Core AI additions, benchmark finalized
 
