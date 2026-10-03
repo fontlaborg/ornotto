@@ -2,7 +2,19 @@
 
 # Work
 
-## 2026-10-03 — native Core AI additions, in progress
+## 2026-10-03 — final benchmark publication
+
+Final edition retains all 329 router configurations and the measured 20-text
+PII suite. User explicitly skipped Clef Core AI for this edition after the
+latest unmodified guard refused at 25 GiB available vs30/36 GiB required.
+No inference scores were added. Local model consolidation does not remove
+historical benchmark results; reproduction requires re-downloading removed
+variants. Strict 18-page docs build passes; package 176 pass /2 skips /13
+engine deselections; private 121 pass /4 optional skips. The historical cleanup
+regression now accounts for explicitly audited later variant removal and
+checks the latest retained payloads and evidence hashes directly.
+
+## 2026-10-03 — native Core AI additions, benchmark finalized
 
 Pinned native Swift bridge builds successfully. GLiNER2 PII completed its
 20-text suite under the existing driver with SWAP_MAX_GB=1; 27 TP, 0 FP/FN,

@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+## 0.1.3 (2026-10-03)
+
+- Finalize the benchmark edition at 329 routing configurations plus the separate PII smoke suite. Skip unmeasured Clef Core AI variants after RAM preflight refusal; document reproduction after local weight consolidation while preserving all scores and translations.
+
 - Add the optional native macOS 27 Core AI bridge for pinned Clef-Flash FP16/int8mix joint-schema decisions and GLiNER2 PII entity spans/redaction. Preserve native heads and confidence, serialize persistent requests, bound pipe waits and reject PII word/token overflow.
 - Publish the separate 20-text PII smoke benchmark: 20 exact entity sets, 27 true positives, no false positives/negatives, 12.5 ms mean warm latency. Retain all 329 router configurations and the full cache unchanged. Clef Core AI inference remains unmeasured: FP16/int8mix preflight requires 36/30 GiB available against 22 GiB at check.
 

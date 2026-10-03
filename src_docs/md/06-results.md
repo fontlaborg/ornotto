@@ -332,10 +332,19 @@ passed, and the managed native process exited after the run. The
 [measured responses and expected entity sets](downloads/coreai-pii.json)
 include timings, native spans and redactions.
 
-Clef-Flash Core AI FP16 and int8mix are registered with their native
-joint-schema head, but the unchanged preflight refused both on this host:
-36 and 30 GiB available RAM required, respectively; 22 GiB available at the
-check. No new Core AI Clef accuracy or timing enters the router rankings.
-All 329 existing router configurations and cached results are retained.
+This benchmark edition closes with **329 router configurations** and the
+separate 20-text PII extraction suite. Clef-Flash Core AI FP16 and int8mix
+are skipped for this edition after the memory preflight refused execution:
+36 and 30 GiB available RAM required, respectively; 25 GiB available at the
+final check. Their native joint-schema integrations remain experimental,
+with no measured Core AI Clef accuracy or timing in the rankings.
+
+Historical measurements remain available after local storage consolidation.
+Where complete alternatives existed, the cleanup preferred MLX and retained
+one quantization using saved accuracy and memory fit; without measurements,
+approximately four-bit precision was the storage/quality default. Distinct
+fine-tunes, shared components and benchmark evidence were preserved. A removed
+weight variant must be downloaded again before reproducing its historical run.
+All 329 router records and frozen translations remain unchanged.
 [The package chapter](10-package.md#native-core-ai-clef-flash-and-pii)
 explains how to run both integrations.
