@@ -33,6 +33,9 @@ Engine = Literal[
     "onnx-scorer",
     "coreai",
     "bosun-gguf",
+    "clef-mlx",
+    "clm-gguf",
+    "clm-mlx",
 ]
 PYTHON_ENGINES = (
     "laya-mlx",
@@ -44,6 +47,9 @@ PYTHON_ENGINES = (
     "system-one-mlx",
     "onnx-scorer",
     "bosun-gguf",
+    "clef-mlx",
+    "clm-gguf",
+    "clm-mlx",
 )
 Family = Literal["dedicated", "fine-tuned", "vanilla"]
 
@@ -74,6 +80,10 @@ class ModelSpec:
     base_repo: str | None = None
     base_revision: str | None = None
     unavailable: str | None = None
+    decision_repo: str | None = None
+    decision_revision: str | None = None
+    head_repo: str | None = None
+    head_revision: str | None = None
 
 
 def _ollaya(name: str, tag: str, size_gb: float, note: str) -> ModelSpec:
@@ -368,6 +378,11 @@ def resolve(
             raise ValueError(f"{spec.name} runs on {' or '.join(spec.engines)}, not {engine}")
         if spec.tag:
             return ResolvedModel(spec.name, None, spec.engines, tag=spec.tag)
+        native_head = None
+        if spec.head_repo:
+            from huggingface_hub import hf_hub_download
+
+            native_head = Path(hf_hub_download(spec.head_repo, spec.head, revision=spec.head_revision))
         if spec.snapshot:
             from huggingface_hub import snapshot_download
 
@@ -396,7 +411,7 @@ def resolve(
                     )
                 )
                 return ResolvedModel(spec.name, base, spec.engines, adapter=checkpoint)
-            return ResolvedModel(spec.name, checkpoint, spec.engines)
+            return ResolvedModel(spec.name, checkpoint, spec.engines, head=native_head)
         if spec.engines == ("laya-mlx",):
             from huggingface_hub import snapshot_download
 
@@ -410,6 +425,20 @@ def resolve(
             gguf = Path(hf_hub_download(spec.repo, spec.file, revision=spec.revision))
         else:
             gguf = _download(spec.repo, spec.file)
+        if spec.decision_repo:
+            from huggingface_hub import snapshot_download
+
+            from ._clef_gguf import prepare
+
+            checkpoint = Path(
+                snapshot_download(
+                    repo_id=spec.decision_repo,
+                    revision=spec.decision_revision,
+                    allow_patterns=["joint_head.safetensors", "joint_head_config.json"],
+                    max_workers=2,
+                )
+            )
+            gguf = prepare(gguf, checkpoint)
         profile = (
             Path(metadata).expanduser()
             if metadata
@@ -426,7 +455,9 @@ def resolve(
             gguf,
             spec.engines,
             profile,
-            Path(head).expanduser() if head else _download(spec.repo, spec.head) if spec.head else None,
+            Path(head).expanduser()
+            if head
+            else native_head or (_download(spec.repo, spec.head) if spec.head else None),
         )
     if model.startswith("hf:"):
         owner, repo, file = model[3:].split("/", 2)

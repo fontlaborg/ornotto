@@ -856,6 +856,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#joint-schema-head-clef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joint schema head: Clef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#servers-that-model-authors-publish" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1495,6 +1506,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#joint-schema-head-clef" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joint schema head: Clef
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#servers-that-model-authors-publish" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1837,7 +1859,11 @@ flowchart TD
     K --&gt; X["Softmax over the options"]
     X --&gt; R["Probability per option"]</code></pre>
 <p>In the <em>contrastive</em> family the option texts carry most of the meaning of the decision, and the state is matched to whichever option it most resembles in the learned space. Because each option is embedded on its own, an option's embedding can in principle be computed once and reused for every request that offers the same option.</p>
-<p>The GGUF builds (<a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">czl/CLM-v0.1-8B-GGUF</a>) run in llama-server with <code>--pooling last</code>, and the heads run in the authors' <code>clm-serve</code>, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. Every CLM method scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.</p>
+<p>The GGUF builds (<a href="https://huggingface.co/czl/CLM-v0.1-8B-GGUF">czl/CLM-v0.1-8B-GGUF</a>) run in llama-server with <code>--pooling last</code>, and the heads run in the authors' <code>clm-serve</code>, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. The earlier CLM methods scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.</p>
+<p>The new native package adapter embeds locally with llama-cpp-python or the author's MLX encoder and passes the embeddings to the reference <code>contrastive-lm</code> Engine. Its FP32 projection heads run on CPU; the encoder runs on Metal or MLX. The plain Q4_K_M, Q5_K_M, Q6_K and MLX 6-bit runs keep separate identities from the earlier <code>outq2</code> quantizations.</p>
+<h2 id="joint-schema-head-clef">Joint schema head: Clef<a class="headerlink" href="#joint-schema-head-clef" title="Permanent link">&para;</a></h2>
+<p><a href="https://huggingface.co/Cloudflare/clef">Cloudflare Clef</a> and <a href="https://huggingface.co/Cloudflare/clef-flash">Clef-Flash</a> encode the state and all questions together, then route evidence into a trained joint head. Clef uses Qwen3.8-27B; Clef-Flash uses Qwen3.5-9B. Their probabilities come from that head, with no generated answer tokens. Splitting a request into independent questions changes what the head sees, so ornotto keeps the entire schema in one prefill.</p>
+<p>The registered GGUF quantizations need the official head attached: the published bartowski files contain the quantized backbone alone. ornotto preserves those bytes in a separate native Clef artifact for llama.cpp's System One endpoint. MLX uses the checkpoint author's native head and runtime. Both paths reject an overlong complete prompt. These integrations currently accept text states, and do not claim that the probabilities are calibrated for this router. <a href="../10-package/#clef-and-clm-quantizations">Chapter 10</a> lists all fourteen Clef, Clef-Flash and CLM configurations and their runtime requirements.</p>
 <h2 id="servers-that-model-authors-publish">Servers that model authors publish<a class="headerlink" href="#servers-that-model-authors-publish" title="Permanent link">&para;</a></h2>
 <p>Several decision models ship with a server of their own that answers the System One request from <a href="../02-decisions/">chapter 2</a>. The benchmark sends each one the request it sends jev, and the tables list them under the engine <em>System One server</em>. The readouts behind that one API differ:</p>
 <ul>

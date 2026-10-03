@@ -78,6 +78,7 @@ def test_registry_when_any_model_then_default_engine_listed_and_source_consisten
     monkeypatch.setattr("ornotto._models._download", lambda repo, file: Path(file))  # no network
     monkeypatch.setattr("huggingface_hub.hf_hub_download", lambda repo, file, **kwargs: str(Path(file)))
     monkeypatch.setattr("huggingface_hub.snapshot_download", lambda **kwargs: "/mock/snapshot")
+    monkeypatch.setattr("ornotto._clef_gguf.prepare", lambda source, checkpoint: source)
     for spec in MODELS.values():
         if spec.unavailable:
             with pytest.raises(RuntimeError, match="unavailable"):

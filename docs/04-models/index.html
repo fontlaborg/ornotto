@@ -851,6 +851,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#clef-and-clef-flash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clef and Clef-Flash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#licences-and-provenance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1424,6 +1435,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#clef-and-clef-flash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clef and Clef-Flash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#licences-and-provenance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1590,7 +1612,7 @@
 </table>
 <p>The best row of every model in the benchmark, grouped by family:</p>
 <div class="bench" markdown="0">
-<input class="table-filter" type="search" placeholder="Filter 98 rows" aria-label="Filter the table" data-table="families">
+<input class="table-filter" type="search" placeholder="Filter 99 rows" aria-label="Filter the table" data-table="families">
 <table class="sortable" id="families"><caption>Click a column header to sort.</caption><thead><tr><th>Family</th><th>Model</th><th>Engine</th><th>C/G</th><th>GB</th><th>ms/query</th><th>Translated</th><th>Direct</th><th>Best method</th></tr></thead>
 <tbody>
 <tr><td>dedicated</td><td>typesafe/jev-1.13</td><td>OpenRouter API</td><td title="Remote hosted service; CPU/GPU undisclosed (remote)">R</td><td class="num"></td><td data-sort="364.440299" class="num">364.4</td><td data-sort="65" class="num score">65/67</td><td data-sort="65" class="num score">65/67</td><td class="method">openrouter@typesafe/jev-1.13</td></tr>
@@ -1609,6 +1631,7 @@
 <tr><td>dedicated</td><td>openjev-35b-a3b</td><td>MLX</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="20.99" class="num">20.99</td><td data-sort="250.031343" class="num">250.0</td><td data-sort="63" class="num score">63/67</td><td data-sort="62" class="num score">62/67</td><td class="method">mlx@openjev-35b-a3b-4bit</td></tr>
 <tr><td>dedicated</td><td>jeb-35b-a3b</td><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="17.17" class="num">17.17</td><td data-sort="333.186567" class="num">333.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="63" class="num score">63/67</td><td class="method">systemone@jeb-35b-a3b-q3</td></tr>
 <tr><td>dedicated</td><td>decider-4b</td><td>PyTorch</td><td title="PyTorch MPS selected on this Mac; conditional CPU fallback was not separately logged (configured)">G</td><td class="num"></td><td data-sort="348.210448" class="num">348.2</td><td data-sort="63" class="num score">63/67</td><td data-sort="65" class="num score">65/67</td><td class="method">torch@decider-4b-bf16</td></tr>
+<tr><td>dedicated</td><td>clef-flash</td><td>Clef joint head (MLX)</td><td title="Native Clef joint-schema head; MLX or llama.cpp Metal, CPU HTTP/tokenization; operation placement unprofiled (configured)">G</td><td data-sort="5.28" class="num">5.28</td><td data-sort="554.802985" class="num">554.8</td><td data-sort="63" class="num score">63/67</td><td data-sort="63" class="num score">63/67</td><td class="method">systemone@clef-flash-mlx4</td></tr>
 <tr><td>dedicated</td><td>lev-4b</td><td>System One server</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="9.49" class="num">9.49</td><td data-sort="2203.832836" class="num">2,203.8</td><td data-sort="63" class="num score">63/67</td><td data-sort="64" class="num score">64/67</td><td class="method">systemone@lev-4b</td></tr>
 <tr><td>dedicated</td><td>decider-0.8b</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="0.81" class="num">0.81</td><td data-sort="51.379104" class="num">51.4</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-q8</td></tr>
 <tr><td>dedicated</td><td>decider-0.8b-dreamblooms</td><td>dohnuts (Metal)</td><td title="Metal GPU; recorded runtime/launch configuration (configured)">G</td><td data-sort="0.81" class="num">0.81</td><td data-sort="52.238806" class="num">52.2</td><td data-sort="62" class="num score">62/67</td><td data-sort="61" class="num score">61/67</td><td class="method">dohnuts-metal@decider-0.8b-dreamblooms-q8</td></tr>
@@ -2061,6 +2084,8 @@ flowchart LR
 <li><strong>CLM</strong> comes from a Stanford and Nvidia group and was built for agent, game and tool-calling states. Its low score here is a question of fit as much as of quality (<a href="../03-engines/#contrastive-similarity-clm">chapter 3</a>).</li>
 </ul>
 <p>Where these models also appear on public leaderboards, their positions are in <a href="../05-method/#other-public-boards">chapter 5</a>. Those boards use other questions and other scales, and their numbers are not comparable with the 67-query scores in this table.</p>
+<h2 id="clef-and-clef-flash">Clef and Clef-Flash<a class="headerlink" href="#clef-and-clef-flash" title="Permanent link">&para;</a></h2>
+<p>Cloudflare's <a href="https://huggingface.co/Cloudflare/clef">Clef</a> (Qwen3.8-27B) and <a href="https://huggingface.co/Cloudflare/clef-flash">Clef-Flash</a> (Qwen3.5-9B) use a joint schema head that scores typed questions together. The weights are Apache-2.0. ornotto registers Clef Q3/Q4/Q5 and MLX 4-bit, Clef-Flash Q3/Q4/Q5/Q6 and MLX 4/8-bit, plus the CLM Q4/Q5/Q6 and MLX 6-bit builds. Exact repositories, pinned native heads and installation are in <a href="../10-package/#clef-and-clm-quantizations">chapter 10</a>. Completed measurements appear in the full tables; a supported configuration has no accuracy row until its entire guarded run completes.</p>
 <h2 id="licences-and-provenance">Licences and provenance<a class="headerlink" href="#licences-and-provenance" title="Permanent link">&para;</a></h2>
 <p>A decision model has three things you might need to clear before shipping it: the licence of its weights, the licence of its base model, and where its training labels came from. The table above takes the first from each model card. The other two need a closer look.</p>
 <div class="admonition warning">

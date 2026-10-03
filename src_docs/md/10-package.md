@@ -104,6 +104,41 @@ Gold, Distilled and ZeroShot use the model cards' standard Transformers zero-sho
 
 The FluidInference repository publishes a conversion toolkit without a trained adapter, weights or Core ML package. Nev Lite's required runtime is unavailable. Both aliases fail with an explicit reason before downloading or starting a process. No benchmark score is assigned to unavailable models. Temperature application on the remaining models does not establish calibration on your task; their answers keep `calibrated=False`.
 
+### Clef and CLM quantizations
+
+Current `main` registers fourteen variants from seven requested repositories:
+
+| Aliases | Quantization | Source | Readout |
+|---|---|---|---|
+| `clef-q3`, `clef-q4`, `clef-q5` | Q3_K_M, Q4_K_M, Q5_K_M | [bartowski/Cloudflare_clef-GGUF](https://huggingface.co/bartowski/Cloudflare_clef-GGUF) | Joint schema, llama.cpp |
+| `clef-mlx4` | MLX 4-bit | [mlx-community/clef-4bit](https://huggingface.co/mlx-community/clef-4bit) | Author MLX joint head |
+| `clm-8b-q4-km`, `clm-8b-q5-km`, `clm-8b-q6-k` | Q4_K_M, Q5_K_M, Q6_K | [czl/CLM-v0.1-8B-GGUF](https://huggingface.co/czl/CLM-v0.1-8B-GGUF) | Last-token encoder + reference heads |
+| `clm-8b-mlx6` | MLX 6-bit | [czl/CLM-v0.1-8B-MLX-6bit](https://huggingface.co/czl/CLM-v0.1-8B-MLX-6bit) | Author encoder + reference heads |
+| `clef-flash-q3`, `clef-flash-q4`, `clef-flash-q5`, `clef-flash-q6` | Q3_K_M, Q4_K_M, Q5_K_M, Q6_K | [bartowski/Cloudflare_clef-flash-GGUF](https://huggingface.co/bartowski/Cloudflare_clef-flash-GGUF) | Joint schema, llama.cpp |
+| `clef-flash-mlx8` | MLX 8-bit | [TrevorJS/clef-flash-mlx-8bit](https://huggingface.co/TrevorJS/clef-flash-mlx-8bit) | Author MLX joint head |
+| `clef-flash-mlx4` | MLX 4-bit | [TrevorJS/clef-flash-mlx-4bit](https://huggingface.co/TrevorJS/clef-flash-mlx-4bit) | Author MLX joint head |
+
+Use Python 3.11+ and install the required runtime from the checkout:
+
+```sh
+uv pip install -e '.[clef]'        # attach native head to a Clef GGUF
+uv pip install -e '.[clef-mlx]'    # Apple silicon MLX, including MLX-VLM
+uv pip install -e '.[clm]'         # CLM GGUF embeddings, Torch heads
+uv pip install --no-deps contrastive-lm==0.1.0
+# CLM MLX also needs the mlx-lm and Transformers dependencies:
+uv pip install -e '.[clef-mlx,transformers]'
+```
+
+The CLM package is installed with `--no-deps` because its server dependency list includes vLLM; this adapter uses local embeddings instead. The `clm` extra supplies NumPy, Torch and requests. For GPU GGUF execution, install a Metal- or CUDA-enabled llama-cpp-python build. Clef GGUF uses a separate [llama.cpp b11371 server](https://github.com/ggml-org/llama.cpp/releases/tag/b11371), selected by `ORNOTTO_LLAMA_BIN`. It is not the llama.cpp bundled inside the ornotto wheel.
+
+The pinned bartowski GGUFs contain a Qwen backbone without Clef's decision tensors or metadata. On first use, ornotto downloads only the matching [Cloudflare Clef](https://huggingface.co/Cloudflare/clef) or [Clef-Flash](https://huggingface.co/Cloudflare/clef-flash) head and creates a head-hash-keyed `-clef-native-….gguf` beside the immutable source file. It copies quantized backbone tensors byte for byte, adds the FP32 joint head, native schema template and decision metadata using llama.cpp's pinned conversion layout, and publishes the derived file atomically. Allow disk space for both the original and derived GGUF; the derivation preserves the original download. The native head adds storage and resident memory beyond the quantizer's listed backbone size.
+
+Clef answers all questions jointly in one prefill and supports text states in this adapter. The managed server reserves a 4096-token context and equally sized batch/microbatch. MLX adapters reject an overlong complete schema before inference; no state is silently sliced. CLM uses the original context-plus-question rendering, last-token pooling, normalized state/action projections and native temperature recipe from `contrastive-lm==0.1.0`. Its small FP32 projection heads run on CPU, with the encoder on Metal or MLX. CLM accepts up to 2048 tokens per encoded text, rejecting longer inputs. Its reference head has a separately pinned revision. Plain K_M/K GGUF variants have distinct benchmark identities from earlier `outq2` files.
+
+All aliases use the same choice, yes/no, score, async and typed API. Call `shutdown()` between models. Calibration on your task is unverified (`calibrated=False`). Registered support and downloaded files do not imply a completed accuracy measurement; only successful full runs enter the benchmark.
+
+The October 3 campaign completed nine of these configurations. Clef-Flash Q3 scores 62/64 translated/direct; Q4, Q5 and Q6 each score 63/64; MLX 4-bit scores 63/63. CLM Q4/Q5/Q6 and MLX 6-bit score 36, 38, 38 and 39 translated, respectively. Their low-scoring rows remain, but their downloaded weights were pruned. Clef Q3/Q4/Q5, Clef MLX 4-bit and Clef-Flash MLX 8-bit have pinned integrations and completed downloads; their benchmarks were deferred by the available-memory preflight. No accuracy is assigned to them. The 48 GiB host had 22 GiB available; these configurations required 30, 35, 40, 33 and 24 GiB, respectively, under the unchanged reserve rule.
+
 ### Native encoders
 
 Current `main` supports [aac6fef/laya-multilingual-mlx](https://huggingface.co/aac6fef/laya-multilingual-mlx)
@@ -391,7 +426,7 @@ ornotto solves a neighbouring problem. It is a Python package that puts several 
 
 The practical difference is what happens when you change your mind about a model. With ollaya alone, you choose among the models its registry offers. With ornotto, a vanilla chat GGUF, a dedicated model on dohnuts and an ollaya tag are three `Decider` lines in the same script, and the benchmark in [chapter 6](06-results.md) is the reason you might want all three: the fastest, the most accurate and the easiest-to-install model are not the same model.
 
-The overlap is also real. The laya encoders, winnow, von, GLiClass, the ModernBERT NLI model, Decision 1.0 Eos and CLM run in ornotto only through ollaya ([registered models](#registered-models)). ornotto adds no readout of its own for them. It starts a private ollaya server, pulls the tag, and reads ollaya's answer, calibration included.
+The overlap is also real. The laya encoders, winnow, von, GLiClass, the ModernBERT NLI model, Decision 1.0 Eos run in ornotto only through ollaya ([registered models](#registered-models)). ornotto adds no readout of its own for them. It starts a private ollaya server, pulls the tag, and reads ollaya's answer, calibration included.
 
 ollaya's releases add features that ornotto does not wrap. v0.4.0 added an MCP server, v0.6.0 a `--preset agent` that decides whether an agent's action should run, ask or be blocked, and v0.7.5 image input through `decider:2b-vision`.[^ollaya-releases] None of them was part of our benchmark. From v0.7.4 ollaya's release notes recommend `winnow:e4b` for general use; ornotto registers `winnow:12b`, which is the one we measured, and `winnow:e4b` runs as `Decider("winnow:e4b", engine="ollaya")` without a registry entry.
 

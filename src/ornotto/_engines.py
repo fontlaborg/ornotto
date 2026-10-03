@@ -105,7 +105,11 @@ def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[
             "--device",
             "gpu" if gpu else "cpu",
         ]
-        return args + (["--adapter", str(model.adapter)] if model.adapter else [])
+        return (
+            args
+            + (["--adapter", str(model.adapter)] if model.adapter else [])
+            + (["--head", str(model.head)] if model.head else [])
+        )
     binary = str(find_binary(engine))
     if engine == "coreai":
         if not gpu:
@@ -133,7 +137,11 @@ def command(engine: Engine, model: ResolvedModel, port: int, gpu: bool) -> list[
             "1",
             "--gpu-layers",
             "-1" if gpu else "0",
-        ]
+        ] + (
+            ["--batch-size", "4096", "--ubatch-size", "4096", "--no-context-shift"]
+            if model.name.startswith("clef")
+            else []
+        )
     if engine == "ollaya":
         if model.tag is None:
             raise ValueError(f"{model.name} is a GGUF file; ollaya runs ollaya models (see `ornotto models`)")
@@ -350,6 +358,8 @@ class Adapter:
 
     @property
     def max_questions(self) -> int:
+        if self.engine == "clef-mlx" or self.engine == "llama" and self.model_name.startswith("clef"):
+            return sys.maxsize  # Clef fields must stay joint; the full prompt context is the limit.
         if self.engine == "openrouter":
             return sys.maxsize  # the documented API specifies no fixed client-side question limit
         return {"dohnuts": DOHNUTS_MAX_QUESTIONS, "ollaya": OLLAYA_MAX_QUESTIONS}.get(self.engine, 63)

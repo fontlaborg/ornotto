@@ -48,3 +48,11 @@ unfinished; package release remains separate through publish.sh.
 - [ ] Verify the Rune v3 native endpoint on a host with sufficient safe memory.
 - [ ] Resolve CoreAIKit scorer startup memory growth before another guarded inference attempt.
 - [ ] Enable FluidInference Gemma when a trained artifact is published, and Nev Lite when its required runtime is accessible.
+
+## Clef and CLM quantizations
+
+- [x] Remove failed-only and below-50 downloads while preserving low results and shared successful weights.
+- [x] Integrate fourteen pinned native configurations and verify all nine safely completed benchmarks.
+- [x] Preserve all 320 earlier rows and publishable low-scoring CLM measurements after weight pruning.
+- [ ] Publish the 329-configuration build and verify the actual HTTPS artifacts and explorer.
+- [ ] Measure Clef Q3/Q4/Q5, Clef MLX 4-bit and Clef-Flash MLX 8-bit when the unchanged memory preflight permits.

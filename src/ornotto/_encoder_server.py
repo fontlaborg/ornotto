@@ -27,7 +27,7 @@ DEFAULT_INSTRUCTIONS = {
 XDECISION_INSTALL = "uv pip install 'xdecision[apple] @ git+https://github.com/xnetsc/xDecision.git@4082689a093393358534fda26a945699080eb572'"
 
 
-def load(engine: str, path: str, device: str, adapter: str | None = None) -> Any:
+def load(engine: str, path: str, device: str, adapter: str | None = None, head: str | None = None) -> Any:
     """Load the upstream implementation, never interpret its weights as llama.cpp."""
     if sys.version_info < (3, 11):
         raise RuntimeError("Native encoder runtimes require Python 3.11 or newer")
@@ -50,13 +50,26 @@ def load(engine: str, path: str, device: str, adapter: str | None = None) -> Any
             from ._onnx_scorer import OnnxScorer
 
             return OnnxScorer(path, device)
+        if engine == "clef-mlx":
+            from ._clef_mlx import Clef
+
+            return Clef(path, device)
+        if engine in ("clm-gguf", "clm-mlx"):
+            from ._clm_decision import CLM
+
+            return CLM(path, engine, device, head)
         if engine == "bosun-gguf":
             from ._bosun_gguf import Bosun
 
             return Bosun(path, device)
     except ModuleNotFoundError as error:
+        section = (
+            "clef-and-clm-quantizations"
+            if engine in ("clef-mlx", "clm-gguf", "clm-mlx")
+            else "additional-system-one-models"
+        )
         raise RuntimeError(
-            f"{engine} dependency missing ({error.name}); see https://fontlab.org/ornotto/10-package/#additional-system-one-models"
+            f"{engine} dependency missing ({error.name}); see https://fontlab.org/ornotto/10-package/#{section}"
         ) from error
     module = "laya_mlx" if engine == "laya-mlx" else "xdecision"
     try:
@@ -144,10 +157,11 @@ def main() -> None:
     parser.add_argument("--model", required=True)
     parser.add_argument("--name", required=True)
     parser.add_argument("--adapter")
+    parser.add_argument("--head")
     parser.add_argument("--port", type=int, required=True)
     parser.add_argument("--device", choices=("cpu", "gpu"), required=True)
     args = parser.parse_args()
-    runtime = load(args.engine, args.model, args.device, args.adapter)
+    runtime = load(args.engine, args.model, args.device, args.adapter, args.head)
     try:
         with make_server(runtime, args.name, args.port) as server:
             server.serve_forever()

@@ -1,0 +1,7 @@
+Clef GGUF layout and prompt data are derived from llama.cpp (MIT):
+https://github.com/ggml-org/llama.cpp/tree/99b95488c
+conversion/clef.py and gguf-py/gguf/{constants,tensor_mapping}.py.
+Copyright (c) 2023-2026 The ggml and llama.cpp authors.
+The complete MIT licence is included in licenses/llama.cpp-LICENSE.
+Model weights and downloaded MLX runtime code retain their respective
+Apache-2.0 licences; they are not bundled in this package.

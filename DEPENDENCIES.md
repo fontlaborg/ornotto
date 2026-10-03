@@ -63,3 +63,21 @@ Model licences and availability are recorded per pinned repository in
 NLI fallback does not apply the unavailable author's runtime/calibration.
 FluidInference's source-only toolkit and Nev Lite's missing custom runtime
 remain explicitly unavailable. See the package chapter for all fifteen aliases.
+
+## Clef and CLM
+
+Optional `clef` uses gguf >=0.18, safetensors, NumPy, Torch and filelock to
+stream quantized tensors into an atomic native decision GGUF; the original
+Hub download is preserved. The tensor map and schema template are extracted
+from [llama.cpp 99b95488c](https://github.com/ggml-org/llama.cpp/tree/99b95488c),
+with MIT attribution in `licenses/clef-NOTICE`. The external server is b11371.
+The `clef-mlx` extra uses mlx-lm 0.32 and mlx-vlm 0.7.4, on Apple silicon.
+Model-local runtime code is imported only from pinned Hub snapshots.
+
+Optional `clm` supplies Torch, NumPy, requests and llama-cpp-python >=0.3.36.
+The official [contrastive-lm 0.1.0](https://github.com/Contrastive-LM/CLM) is
+installed separately with `--no-deps`, avoiding its unused vLLM server. Its
+Engine handles exact reference rendering, projection and probability recipes;
+the adapter supplies a local GGUF or the pinned author MLX encoder. The
+reference projection checkpoint is pinned to e939398d4556fcd9400c76fa8c5a513202f42b0a.
+These CLM heads explicitly run on CPU; the model encoder uses Metal or MLX.

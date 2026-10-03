@@ -299,7 +299,15 @@ flowchart TD
 
 In the *contrastive* family the option texts carry most of the meaning of the decision, and the state is matched to whichever option it most resembles in the learned space. Because each option is embedded on its own, an option's embedding can in principle be computed once and reused for every request that offers the same option.
 
-The GGUF builds ([czl/CLM-v0.1-8B-GGUF](https://huggingface.co/czl/CLM-v0.1-8B-GGUF)) run in llama-server with `--pooling last`, and the heads run in the authors' `clm-serve`, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. Every CLM method scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.
+The GGUF builds ([czl/CLM-v0.1-8B-GGUF](https://huggingface.co/czl/CLM-v0.1-8B-GGUF)) run in llama-server with `--pooling last`, and the heads run in the authors' `clm-serve`, which answers System One requests. The MLX builds run behind the authors' own MLX embedding server. The earlier CLM methods scored between 33 and 39 translated and between 27 and 31 direct, on llama.cpp, MLX and ollaya alike. ollaya describes the model as built for agent, game and tool-calling states, and a five-way question about a user's message is none of those.
+
+The new native package adapter embeds locally with llama-cpp-python or the author's MLX encoder and passes the embeddings to the reference `contrastive-lm` Engine. Its FP32 projection heads run on CPU; the encoder runs on Metal or MLX. The plain Q4_K_M, Q5_K_M, Q6_K and MLX 6-bit runs keep separate identities from the earlier `outq2` quantizations.
+
+## Joint schema head: Clef
+
+[Cloudflare Clef](https://huggingface.co/Cloudflare/clef) and [Clef-Flash](https://huggingface.co/Cloudflare/clef-flash) encode the state and all questions together, then route evidence into a trained joint head. Clef uses Qwen3.8-27B; Clef-Flash uses Qwen3.5-9B. Their probabilities come from that head, with no generated answer tokens. Splitting a request into independent questions changes what the head sees, so ornotto keeps the entire schema in one prefill.
+
+The registered GGUF quantizations need the official head attached: the published bartowski files contain the quantized backbone alone. ornotto preserves those bytes in a separate native Clef artifact for llama.cpp's System One endpoint. MLX uses the checkpoint author's native head and runtime. Both paths reject an overlong complete prompt. These integrations currently accept text states, and do not claim that the probabilities are calibrated for this router. [Chapter 10](10-package.md#clef-and-clm-quantizations) lists all fourteen Clef, Clef-Flash and CLM configurations and their runtime requirements.
 
 ## Servers that model authors publish
 

@@ -223,6 +223,10 @@ Some notes on the rows, from the models' own cards:
 
 Where these models also appear on public leaderboards, their positions are in [chapter 5](05-method.md#other-public-boards). Those boards use other questions and other scales, and their numbers are not comparable with the 67-query scores in this table.
 
+## Clef and Clef-Flash
+
+Cloudflare's [Clef](https://huggingface.co/Cloudflare/clef) (Qwen3.8-27B) and [Clef-Flash](https://huggingface.co/Cloudflare/clef-flash) (Qwen3.5-9B) use a joint schema head that scores typed questions together. The weights are Apache-2.0. ornotto registers Clef Q3/Q4/Q5 and MLX 4-bit, Clef-Flash Q3/Q4/Q5/Q6 and MLX 4/8-bit, plus the CLM Q4/Q5/Q6 and MLX 6-bit builds. Exact repositories, pinned native heads and installation are in [chapter 10](10-package.md#clef-and-clm-quantizations). Completed measurements appear in the full tables; a supported configuration has no accuracy row until its entire guarded run completes.
+
 ## Licences and provenance
 
 A decision model has three things you might need to clear before shipping it: the licence of its weights, the licence of its base model, and where its training labels came from. The table above takes the first from each model card. The other two need a closer look.

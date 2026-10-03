@@ -2,6 +2,40 @@
 
 # Work
 
+## 2026-10-03 — Clef and CLM quantizations; download cleanup
+
+Register fourteen pinned configurations across all seven requested repositories:
+Clef GGUF Q3/Q4/Q5 and MLX 4-bit; Clef-Flash GGUF Q3/Q4/Q5/Q6 and MLX
+4/8-bit; CLM plain GGUF Q4/Q5/Q6 and MLX 6-bit. Native adapters preserve
+joint schema decisions and the reference contrastive projection heads. Backbone-only
+Clef GGUF downloads receive the pinned official FP32 head in a separate atomic
+artifact. All four measured GGUFs retain all 427 original tensor byte sequences
+and add 160 native head tensors. Full schemas stay joint; overlong inputs fail.
+
+Before downloads, remove failed-only weights and weights whose best completed
+score is below 50/67, protecting shared files used by stronger configurations.
+Keep successful low-scoring rows, original probabilities and frozen translations.
+After measuring the four new CLM configurations (36/38/38/39), prune their
+weights too. Fresh audit verifies all 236 removed filesystem links remain absent.
+Failed/refused executions remain excluded from accuracy rankings.
+
+Nine full guarded runs add 798 distinct-input records. Clef-Flash Q3 is 62/64;
+Q4/Q5/Q6 are each 63/64; MLX 4-bit is 63/63 translated/direct. Export 329
+configurations with all 320 earlier rows and 33,603 saved records unchanged.
+Clef Q3/Q4/Q5, Clef MLX 4-bit and Flash MLX 8-bit remain unmeasured: the
+unchanged preflight refused their 30/35/40/33/24 GiB requirements with 22 GiB
+available. All pinned downloads completed; no guard was lowered or user app stopped.
+
+Validation: lint/format clean; package 166 passed, two optional-dependency skips,
+13 engine tests deselected; all 12 native tests pass with runtime dependencies.
+Private regression suite: 118 passed, four optional skips. Source distribution
+and pure wheel build; isolated installed wheel exposes all fourteen aliases,
+three new runtime modules, native format and licence notice. Strict 18-page
+docs build and local browser acceptance pass: all new native engine/readout
+filters, retained low CLM rows, reload/CSV, all fourteen documented aliases,
+Jev identity, remote history, Pareto, mobile/dark, SVG and offline HTML.
+Zero browser errors. Actual HTTPS publication verification remains pending.
+
 ## 2026-10-03 — Additional System One models
 
 Register all fifteen requested repositories. Implement thirteen compatible

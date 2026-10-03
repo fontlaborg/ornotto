@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+- Add fourteen pinned Clef, Clef-Flash and CLM GGUF/MLX configurations with native joint-schema or contrastive heads, managed lifecycle, full-input rejection and optional runtime installs. Attach official Clef heads to backbone-only GGUFs without changing quantized tensor bytes; keep joint questions in one prefill.
+- Publish nine complete new configurations (329 total), preserving all 320 earlier rows. Clef-Flash Q3 scores 62/64 translated/direct; Q4/Q5/Q6 each 63/64; MLX 4-bit 63/63. The four CLM variants score 36/38/38/39 translated. Five larger configurations have support and pinned downloads but no measurement after the unchanged RAM preflight refused them.
+- Remove failed-only downloads and downloaded weights whose best completed score is below 50/67, including the four newly measured CLM variants. Retain low-scoring benchmark rows, cached probabilities, translations and shared weights used by stronger configurations; keep failed/refused executions out of rankings.
+
 - Register all fifteen requested System One repositories with pinned artifacts and compatible readouts. Add native Rune llama-server, Raz NLI, Lite, Bosun/OOMU, mpuig MLX, Gemma letter-slot and ONNX scalar adapters, plus an experimental external CoreAIKit integration. Gold/Distilled/ZeroShot explicitly use standard Transformers NLI without the unavailable author calibration; FluidInference's missing weights and Nev Lite's missing runtime fail before downloading.
 - Publish eleven complete new configurations (320 total), retaining all 309 historical rows exactly. MiniCPM5 Q8 scores 62/59 translated/direct at 141.8/147.2 ms; CPU ONNX Q4 scores 53/67 at 1410.8 ms. CoreAI startup tripped the memory watchdog and Rune v3's native run was deferred; neither receives an invented score. Preserve the earlier Rune Q3 slot measurement and the single Jev model identity.
 

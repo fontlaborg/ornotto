@@ -63,6 +63,10 @@ The 39 translations, with the time each took:
 
 Each query was translated once and the English text was cached, so every classifier in translated mode saw the same English.
 
+## Retaining results and pruning downloads
+
+A failed or refused execution has no accuracy row. The failure record remains in the run notes, separate from completed measurements. Download cleanup considers all methods sharing a physical weight file: if any completed configuration scores at least 50/67 in either measured mode, that file is retained. We remove failed-only downloads and weights whose best completed score is below 50/67. Their successful low-scoring benchmark rows, saved probabilities and frozen translations remain available. The new CLM Q4/Q5/Q6 and MLX 6-bit runs follow this rule too; removing their downloads does not remove their results.
+
 ## From query to table
 
 The whole run, from a labelled query to a row in this book, has five stages. Translation happens once per query. Classification happens once per query, per mode, per method.
