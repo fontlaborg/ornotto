@@ -30,4 +30,6 @@
 
 - [x] Publish and verify the 308-configuration GPU provider/head comparison.
 
-- [ ] Publish and verify the 309-configuration Weidows MPS comparison.
+- [x] Publish and verify the 309-configuration Weidows MPS comparison.
+
+- [x] Review all 42 historical CPU/mixed/automatic configurations; measure safe useful alternatives and retain explicit failed/refused/deferred exclusions.

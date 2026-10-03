@@ -14,7 +14,11 @@ cached results/translations remain unchanged. This single run does not prove
 MPS is generally slower. Package lint/format and 126 tests pass (13 engine
 tests deselected); private suite 116 passed, one optional skipped. Strict
 18-page build, 309-row tables and all 25 engine counts pass. Local browser
-checks and live publication pending.
+acceptance passes the two-row MPS engine, both direct means and CSV plus all
+existing controls with zero page errors. Published decd674; Pages 37088932347
+succeeded; all 23 live artifacts match and actual HTTPS browser checks pass.
+All 42 historical C/C+G/A rows have recorded dispositions; excluded unsafe
+loads and unmeasured lower-priority variants remain explicit.
 
 ## 2026-10-03 — GPU provider and head comparisons
 
