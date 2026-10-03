@@ -23,7 +23,10 @@ private suite 115 passed, 4 optional dependency skips. Strict 18-page build
 passes. Local browser acceptance passes all new engine filters, fallback readouts,
 CPU/GPU labels, URL reload and CSV exports; existing Jev deduplication,
 remote runs, Pareto, mobile, SVG and offline checks pass with zero page errors.
-Publication evidence will be recorded after deployment.
+Published content commit 4ffddf2; Pages run 37115264525 succeeded. All 23
+live artifacts match the reviewed build and actual HTTPS browser acceptance
+passes the new engine/readout filters plus the retained explorer checks,
+with zero page errors.
 
 ## 2026-10-03 — Jev identity correction
 
